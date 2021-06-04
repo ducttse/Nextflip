@@ -11,14 +11,14 @@ namespace Nextflip.utils
     {
         public static string ConnectionString { get; set; }
 
-        public static void TestConnection()
+        public static async void TestConnection()
         {
             using (var connection = new MySqlConnection(ConnectionString))
             {
-                connection.Open();
+                await connection.OpenAsync(); ///tech: connection pooling ado.net
                 using (var command = new MySqlCommand("SELECT fullname FROM account", connection))
                 {
-                    using (var reader = command.ExecuteReader())
+                    using (var reader = await command.ExecuteReaderAsync())
                     {
                         while (reader.Read())
                         {

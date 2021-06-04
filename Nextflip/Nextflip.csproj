@@ -14,4 +14,9 @@
     <PackageReference Include="MySql.Data" Version="8.0.25" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Pages\" />
+    <Folder Include="Views\WatchMedia\" />
+  </ItemGroup>
+
 </Project>

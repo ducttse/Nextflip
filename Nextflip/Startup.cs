@@ -10,8 +10,10 @@ using Microsoft.Extensions.Hosting;
 using Nextflip.Data;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Nextflip.utils;
 
 namespace Nextflip
 {
@@ -35,6 +37,11 @@ namespace Nextflip
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
+
+            ///create connection string
+            Debug.WriteLine("Hello " + Configuration.GetConnectionString("MySql"));
+            DbUtil.ConnectionString = Configuration.GetConnectionString("MySql");
+            DbUtil.TestConnection();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

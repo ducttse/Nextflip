@@ -7,12 +7,10 @@ trigger:
 - master
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'windows-latest'
 
 variables:
   buildConfiguration: 'Release'
-
-
 steps:
 - task: UseDotNet@2
   inputs:
@@ -22,12 +20,6 @@ steps:
   inputs:
     version: '5.0.x'
     packageType: runtime
-- task: NuGetToolInstaller@1
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
-
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'
-  
 - task: PublishBuildArtifacts@1

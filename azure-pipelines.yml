@@ -22,11 +22,10 @@ steps:
   inputs:
     version: '5.0.x'
     packageType: runtime
-- task: DotNetCoreCLI@2
+- task: NuGetToolInstaller@1
+- task: NuGetCommand@2
   inputs:
-    command: 'restore'
-    feedsToUse: 'select'
-    vstsFeed: 'my-vsts-feed'
+    restoreSolution: '$(solution)'
 
 - script: dotnet build --configuration $(buildConfiguration)
   displayName: 'dotnet build $(buildConfiguration)'

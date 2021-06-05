@@ -1,0 +1,59 @@
+﻿@{
+    Layout = "_Layout";
+}
+<div id="name" class="fixed-top mt-2 ml-5" style="color: white">
+    <div class="row">
+        <i id="icon" class="fas fa-arrow-left h5 pt-1"></i>
+        <!-- put video name -->
+        <p class="h4 ml-2">Video name</p>
+    </div>
+    <div class="ml-3">
+        <!-- put episode name -->
+        <p>Episode</p>
+    </div>
+</div>
+<div id="wapper">
+    <video id="video"
+           class="video-js vjs-default-skin vjs-big-play-centered"
+           data-setup="{}"
+           controls
+           preload="none"
+           data-setup='{ "aspectRatio":"16:9", "playbackRates": [1, 1.5, 2] }'>
+        <!-- put media URL from DTO -->
+        <source src="@ViewBag.episodeUrl" type="video/mp4" />
+    </video>
+</div>
+<!-- CSHTML end here -->
+
+<!-- videojs script ///////////-->
+<script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
+
+<!-- bootstrap script /////////////////////-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+        crossorigin="anonymous"></script>
+
+<!-- custom script /////////////////-->
+<script type="text/javascript">
+    function hideName() {
+        var name = document.getElementById("name");
+        if (name.classList.contains("show")) {
+            name.classList.remove("show");
+        }
+        name.classList.add("hide");
+    }
+    function showName() {
+        var name = document.getElementById("name");
+        if (name.classList.contains("hide")) {
+            name.classList.remove("hide");
+        }
+        name.classList.add("show");
+    }
+    var video = document.querySelector("video");
+    video.addEventListener("play", () => {
+        setTimeout(hideName, 5000);
+    });
+    video.addEventListener("pause", () => {
+        setTimeout(showName, 500);
+    });
+</script>

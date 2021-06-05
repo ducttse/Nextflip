@@ -22,7 +22,7 @@ namespace Nextflip.utils
                     {
                         while (reader.Read())
                         {
-                            Debug.WriteLine(reader.GetValue(0));
+                            Console.WriteLine(reader.GetValue(0));
                         }
                     }
                 }

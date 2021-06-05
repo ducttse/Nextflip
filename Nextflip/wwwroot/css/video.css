@@ -1,0 +1,91 @@
+#wapper {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
+#video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  font-size: small;
+}
+#icon {
+  cursor: pointer;
+  z-index: 999;
+}
+#icon:hover {
+  color: white;
+  filter: drop-shadow(0 0 4rem crimson);
+  margin-right: ;
+}
+#name {
+  width: 70%;
+  transition: transform 1s ease;
+}
+.hide {
+  transform: translate(-400px, 0px);
+  animation: hideName 1s;
+}
+.show {
+  transform: translate(0px, 0px);
+  animation: showName 1s;
+}
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+  #video {
+    font-size: medium;
+  }
+}
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+  #video {
+    font-size: large;
+  }
+}
+
+/* Extra large devices (large laptops and desktops, 1200px and up) */
+@media only screen and (min-width: 1200px) {
+  #video {
+    font-size: large;
+  }
+}
+
+@keyframes showName {
+  0% {
+    opacity: 0.1;
+  }
+  25% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  75% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes hideName {
+  0% {
+    opacity: 0.9;
+  }
+  25% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  75% {
+    opacity: 0.2;
+  }
+  100% {
+    opacity: 0;
+  }
+}

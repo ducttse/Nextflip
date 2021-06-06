@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.Data.SqlClient;
+using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -9,26 +11,38 @@ namespace Nextflip.Models.account
     public class AccountDAO : BaseDAL, IAccountDAO
     {
         public AccountDAO() {}
+        public static string ConnectionString { get; set; }
+
         public IEnumerable<Account> GetAccountListByEmail(string searchValue)
         {
             var accounts = new List<Account>();
-            IDataReader dataReader = null;
-            string Sql = "Select userID, userEmail, roleID, fullname" +
-                        "From account " +
-                        "Where userEmail LIKE @userEmail";
             try
             {
-                var param = dataProvider.CreateParameter("@userEmail", 40, $"%{searchValue}%", DbType.String);
-                dataReader = dataProvider.GetDataReader(Sql, CommandType.Text, out connection, param);
-                while (dataReader.Read())
+                using (var connection = new MySqlConnection(ConnectionString))
                 {
-                    accounts.Add(new Account
+                    connection.Open();
+                    string Sql = "Select userID, userEmail, roleID, fullname" +
+                            "From account " +
+                            "Where userEmail LIKE @userEmail";
+                    using (var command = new MySqlCommand(Sql, connection))
                     {
-                        userID = dataReader.GetString(0),
-                        userEmail = dataReader.GetString(1),
-                        roleID = dataReader.GetInt32(2),
-                        fullname = dataReader.GetString(3)
-                    });
+                        SqlParameter param = new SqlParameter();
+                        param.ParameterName = "@userEmail";
+                        param.Value = searchValue;
+                        command.Parameters.Add(param);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read()) { 
+                            accounts.Add(new Account
+                            {
+                                userID = reader.GetString(0),
+                                userEmail = reader.GetString(1),
+                                roleID = reader.GetInt32(2),
+                                fullname = reader.GetString(3)
+                            });
+                            }
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -37,12 +51,12 @@ namespace Nextflip.Models.account
             }
             finally
             {
-                dataReader.Close();
-                CloseConnection();
+                connection.Close();
             }
-            return accounts;
+                    return accounts;
+                
         }
-
+        
         public bool ChangeAccountStatus(string userID)
         {
             throw new NotImplementedException();

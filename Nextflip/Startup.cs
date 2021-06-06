@@ -14,6 +14,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Nextflip.utils;
+using Nextflip.Models.account;
 
 namespace Nextflip
 {
@@ -31,6 +32,7 @@ namespace Nextflip
         {
             services.AddDatabaseDeveloperPageExceptionFilter();
 
+            services.AddTransient<IAccountDAO, AccountDAO>();
             //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();

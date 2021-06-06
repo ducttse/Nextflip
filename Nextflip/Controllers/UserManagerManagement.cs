@@ -12,7 +12,7 @@ namespace Nextflip.Controllers
     {
         public ActionResult GetAccountListByEmail(UserManagerManagementService userManagerManagementService,[FromForm] string searchValue)
         {
-                IEnumerable<Account> medias = (List<Account>)userManagerManagementService.GetAccountListByEmail(searchValue);
+                IEnumerable<Account> acounts = (List<Account>)userManagerManagementService.GetAccountListByEmail(searchValue);
             return View(searchValue);
         }
     }

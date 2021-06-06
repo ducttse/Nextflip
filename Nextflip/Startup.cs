@@ -14,6 +14,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Nextflip.utils;
+using Nextflip.Services.Interfaces;
+using Nextflip.Services.Implementations;
 
 namespace Nextflip
 {
@@ -31,6 +33,11 @@ namespace Nextflip
         {
             services.AddDatabaseDeveloperPageExceptionFilter();
 
+            services.AddTransient<ICategoryService,CategoryService>();
+            services.AddTransient<IEpisodeService, EpisodeService>();
+            services.AddTransient<IMediaService, MediaService>();
+            services.AddTransient<ISeasonService, SeasonService>();
+            services.AddTransient<ISubtitleService, SubtitleService>();
             //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();

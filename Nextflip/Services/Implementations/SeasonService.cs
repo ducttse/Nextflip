@@ -6,11 +6,10 @@ namespace Nextflip.Services.Implementations
 {
     public class SeasonService : ISeasonService
     {
-        public SeasonService(ISeasonDAO seasonDAO)
-        {
-            SeasonDAO = seasonDAO;
-        }
-        public ISeasonDAO SeasonDAO { get; }
-        public IEnumerable<SeasonDTO> GetSeasonsByMediaID(string mediaID) => SeasonDAO.GetSeasonsByMediaID(mediaID);
+        private readonly ISeasonDAO _seasonDAO; 
+        public SeasonService(ISeasonDAO seasonDAO) => _seasonDAO = seasonDAO;
+
+        
+        public IEnumerable<SeasonDTO> GetSeasonsByMediaID(string mediaID) => _seasonDAO.GetSeasonsByMediaID(mediaID);
     }
 }

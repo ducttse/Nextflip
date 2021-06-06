@@ -4,14 +4,10 @@ using Nextflip.Services.Interfaces;
 using Nextflip.Models.season;
 using Nextflip.Models.episode;
 
-namespace Nextflip.Controllers
+namespace Nextflip.APIControllers
 {
-    public class ViewMediaDetails : Controller
+    public class ViewMediaDetails : ControllerBase
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
 
         public JsonResult GetSeasons(ISeasonService seasonService,[FromForm] string mediaID)
         {

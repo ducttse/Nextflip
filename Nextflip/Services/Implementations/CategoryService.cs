@@ -11,22 +11,22 @@ namespace Nextflip.Services.Implementations
 {
     public class CategoryService : ICategoryService
     {
-        public ICategoryDAO CategoryDAO { get; }
-        public IMediaCategoryDAO MediaCategoryDAO { get;}
+        private readonly ICategoryDAO _categoryDAO;
+        private readonly IMediaCategoryDAO _mediaCategoryDAO;
         public CategoryService (ICategoryDAO categoryDAO, IMediaCategoryDAO mediaCategoryDAO)
         {
-            CategoryDAO = categoryDAO;
-            MediaCategoryDAO = mediaCategoryDAO;
+            _categoryDAO = categoryDAO;
+            _mediaCategoryDAO = mediaCategoryDAO;
         }
-        public IEnumerable<CategoryDTO> GetCategories() => CategoryDAO.GetCategories();
+        public IEnumerable<CategoryDTO> GetCategories() => _categoryDAO.GetCategories();
 
         public IEnumerable<CategoryDTO> GetCategoriesByMediaID(string mediaID)
         {
             var categories = new List<CategoryDTO>();
-            IList<int> categoryIDs =   MediaCategoryDAO.GetCategoryIDs(mediaID);
+            IList<int> categoryIDs =   _mediaCategoryDAO.GetCategoryIDs(mediaID);
             foreach(var categoryID in categoryIDs)
             {
-                CategoryDTO category = CategoryDAO.GetCategoryByID(categoryID);
+                CategoryDTO category = _categoryDAO.GetCategoryByID(categoryID);
                 categories.Add(category);
             }
             return categories;

@@ -5,12 +5,9 @@ namespace Nextflip.Services.Implementations
 {
     public class SubtitleService : ISubtitleService
     {
-        public SubtitleService(ISubtitleDAO subtitleDAO)
-        {
-            SubtitleDAO = subtitleDAO;
-        }
-        public ISubtitleDAO SubtitleDAO { get;  }
+        private readonly ISubtitleDAO _subtitleDAO; 
+        public SubtitleService(ISubtitleDAO subtitleDAO) => _subtitleDAO = subtitleDAO;
         public SubtitleDTO GetSubtitleByEpisodeID(string episodeID) 
-                                                        =>  SubtitleDAO.GetSubtitleByEpisodeID(episodeID);
+                                                        =>  _subtitleDAO.GetSubtitleByEpisodeID(episodeID);
     }
 }

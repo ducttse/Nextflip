@@ -4,14 +4,11 @@ using Nextflip.Services.Interfaces;
 using Nextflip.Models.category;
 using Nextflip.Models.media;
 
-namespace Nextflip.Controllers
+namespace Nextflip.APIControllers
 {
-    public class ViewSubscribedUserDashboard : Controller
+    public class ViewSubscribedUserDashboard : ControllerBase
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
+
         public JsonResult GetCategories(ICategoryService categoryService)
         {
             IEnumerable<CategoryDTO> categories = categoryService.GetCategories();

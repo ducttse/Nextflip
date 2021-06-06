@@ -1,9 +1,5 @@
-﻿using Nextflip.Models.DTO;
-using Nextflip.Models.episode;
-using System;
+﻿using Nextflip.Models.episode;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Nextflip.Services.Interfaces
 {

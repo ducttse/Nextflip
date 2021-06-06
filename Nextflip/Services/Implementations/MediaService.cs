@@ -1,5 +1,6 @@
 ﻿using Nextflip.Models.favoriteList;
 using Nextflip.Models.media;
+using Nextflip.Models.mediaCategory;
 using Nextflip.Models.mediaFavorite;
 using Nextflip.Services.Interfaces;
 using System.Collections.Generic;
@@ -10,12 +11,15 @@ namespace Nextflip.Services.Implementations
     {
         private readonly IFavoriteListDAO _favoriteListDAO;
         private readonly IMediaDAO _mediaDAO;
-        private readonly IMediaFavoriteDAO _mediaFavoriteDAO; 
-        public MediaService( IFavoriteListDAO favoriteListDAO, IMediaDAO mediaDAO, IMediaFavoriteDAO mediaFavoriteDAO)
+        private readonly IMediaFavoriteDAO _mediaFavoriteDAO;
+        private readonly IMediaCategoryDAO _mediaCategoryDAO;
+        public MediaService( IFavoriteListDAO favoriteListDAO, IMediaDAO mediaDAO, 
+                            IMediaFavoriteDAO mediaFavoriteDAO, IMediaCategoryDAO mediaCategoryDAO)
         {
             _favoriteListDAO = favoriteListDAO;
             _mediaDAO = mediaDAO;
             _mediaFavoriteDAO = mediaFavoriteDAO;
+            _mediaCategoryDAO = mediaCategoryDAO;
         }
 
         public IEnumerable<MediaDTO> GetFavoriteMediasByUserID(string userID)
@@ -32,5 +36,17 @@ namespace Nextflip.Services.Implementations
         }
 
         public IEnumerable<MediaDTO> GetMediasByTitle(string title) => _mediaDAO.GetMediasByTitle(title);
+
+        public IEnumerable<MediaDTO> GetMediasByCategoryID(int categoryID)
+        {
+            var medias = new List<MediaDTO>();
+            IList<string> mediaIDs = _mediaCategoryDAO.GetMediaIDs(categoryID);
+            foreach (var mediaID in mediaIDs)
+            {
+                MediaDTO media = _mediaDAO.GetMediasByID(mediaID);
+                medias.Add(media);
+            }
+            return medias;
+        }
     }
 }

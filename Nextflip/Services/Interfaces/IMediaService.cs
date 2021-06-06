@@ -7,5 +7,7 @@ namespace Nextflip.Services.Interfaces
     { 
         IEnumerable<MediaDTO> GetFavoriteMediasByUserID(string userID);
         IEnumerable<MediaDTO> GetMediasByTitle(string title);
+
+        IEnumerable<MediaDTO> GetMediasByCategoryID(int categoryID);
     }
 }

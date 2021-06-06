@@ -7,6 +7,6 @@ namespace Nextflip.Models.favoriteList
 {
     public interface IFavoriteListDAO
     {
-        Task<FavoriteListDTO> GetFavoriteList(string userID);
+        FavoriteListDTO GetFavoriteList(string userID);
     }
 }

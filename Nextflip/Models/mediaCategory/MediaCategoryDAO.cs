@@ -11,17 +11,17 @@ namespace Nextflip.Models.mediaCategory
     {
         public string ConnectionString { get; set; }
 
-        public async Task<IList<int>> GetCategoryIDs(string mediaID)
+        public IList<int> GetCategoryIDs(string mediaID)
         {
             var categoryIDs = new List<int>();
             using (var connection = new MySqlConnection(ConnectionString))
             {
-                await connection.OpenAsync();
+                connection.Open();
                 string Sql = "Select categoryID, name From category";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
 
-                    using (var reader = await command.ExecuteReaderAsync())
+                    using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
@@ -34,17 +34,17 @@ namespace Nextflip.Models.mediaCategory
             return categoryIDs;
         }
 
-        public async Task<IList<string>> GetMediaIDs(int categoryID)
+        public IList<string> GetMediaIDs(int categoryID)
         {
             var mediaIDs = new List<string>();
             using (var connection = new MySqlConnection(ConnectionString))
             {
-                await connection.OpenAsync();
+                connection.Open();
                 string Sql = $"Select mediaID From MediaCategory Where categoryID = {categoryID}";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
 
-                    using (var reader = await command.ExecuteReaderAsync())
+                    using (var reader =  command.ExecuteReader())
                     {
                         while (reader.Read())
                         {

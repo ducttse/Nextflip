@@ -9,17 +9,17 @@ namespace Nextflip.Models.episode
     public class EpisodeDAO : IEpisodeDAO
     {
         public string ConnectionString { get; set; }
-        public async Task<IEnumerable<EpisodeDTO>> GetEpisodesBySeasonID(string seasonID)
+        public IEnumerable<EpisodeDTO> GetEpisodesBySeasonID(string seasonID)
         {
             var episodes = new List<EpisodeDTO>();
             using (var connection = new MySqlConnection(ConnectionString))
             {
-                await connection.OpenAsync();
+                connection.Open();
                 string Sql = $"Select episodeID, status, number From season Where seasonID = {seasonID}";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
 
-                    using (var reader = await command.ExecuteReaderAsync())
+                    using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {

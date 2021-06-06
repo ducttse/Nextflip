@@ -9,18 +9,18 @@ namespace Nextflip.Models.season
     public class SeasonDAO: ISeasonDAO
     {
         public string ConnectionString { get; set; }
-        public async Task<IEnumerable<SeasonDTO>> GetSeasonsByMediaID(string mediaID)
+        public IEnumerable<SeasonDTO> GetSeasonsByMediaID(string mediaID)
         {
             var seasons = new List<SeasonDTO>();
             using (var connection = new MySqlConnection(ConnectionString))
             {
-                await connection.OpenAsync();
+                connection.Open();
                 string Sql = $"Select seasonID, status, number From season Where mediaID = {mediaID}";
 
                 using (var command = new MySqlCommand(Sql, connection))
                 {
 
-                    using (var reader = await command.ExecuteReaderAsync())
+                    using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {

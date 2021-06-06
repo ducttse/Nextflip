@@ -7,6 +7,6 @@ namespace Nextflip.Models.mediaFavorite
 {
     public interface IMediaFavoriteDAO
     {
-        Task<IList<string>> GetMediaIDs(string favoriteListID);
+        IList<string> GetMediaIDs(string favoriteListID);
     }
 }

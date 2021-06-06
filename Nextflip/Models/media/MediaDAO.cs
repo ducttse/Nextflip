@@ -10,18 +10,18 @@ namespace Nextflip.Models.media
     {
         public string ConnectionString { get; set; }
 
-        public async Task<IEnumerable<MediaDTO>> GetMediasByTitle(string searchValue)
+        public IEnumerable<MediaDTO> GetMediasByTitle(string searchValue)
         {
             var medias = new List<MediaDTO>();
             using (var connection = new MySqlConnection(ConnectionString))
             {
-                await connection.OpenAsync();
+                connection.Open();
                 string Sql = $"Select mediaID, title, bannerURL, language, description " +
                                 $"From Media Where title LIKE %{searchValue}%";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
 
-                    using (var reader = await command.ExecuteReaderAsync())
+                    using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
@@ -41,18 +41,18 @@ namespace Nextflip.Models.media
             return medias;
         }
 
-        public async Task<MediaDTO> GetMediasByID(string mediaID)
+        public MediaDTO GetMediasByID(string mediaID)
         {
             var media = new MediaDTO();
             using (var connection = new MySqlConnection(ConnectionString))
             {
-                await connection.OpenAsync();
+                connection.Open();
                 string Sql = $"Select mediaID, status, title, bannerURL, language, description " +
                         $"From Media Where mediaID = {mediaID}";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
 
-                    using (var reader = await command.ExecuteReaderAsync())
+                    using (var reader = command.ExecuteReader())
                     {
                         if (reader.Read())
                         {

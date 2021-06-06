@@ -12,16 +12,16 @@ namespace Nextflip.Models.subtitle
     {
         public string ConnectionString { get; set; }
 
-        public async Task<SubtitleDTO> GetSubtitleByEpisodeID(string episodeID)
+        public SubtitleDTO GetSubtitleByEpisodeID(string episodeID)
         {
             SubtitleDTO subtitle = null;
             using (var connection = new MySqlConnection(ConnectionString))
             {
-                await connection.OpenAsync();
+                connection.Open();
                 string Sql = $"Select subtitleID, language, status, subtitleURL From Subtitle Where episodeID = {episodeID}";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
-                    using (var reader = await command.ExecuteReaderAsync())
+                    using (var reader = command.ExecuteReader())
                     {
                         if (reader.Read())
                         {

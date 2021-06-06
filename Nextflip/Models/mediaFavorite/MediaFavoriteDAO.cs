@@ -11,17 +11,17 @@ namespace Nextflip.Models.mediaFavorite
     {
         public string ConnectionString { get; set; }
 
-        public async Task<IList<string>> GetMediaIDs(string favoriteListID)
+        public IList<string> GetMediaIDs(string favoriteListID)
         {
             var mediaIDs = new List<string>();
             using (var connection = new MySqlConnection(ConnectionString))
             {
-                await connection.OpenAsync();
+                connection.Open();
                 string Sql = $"Select mediaID From MediaCategory Where favoriteListID = {favoriteListID}";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
 
-                    using (var reader = await command.ExecuteReaderAsync())
+                    using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {

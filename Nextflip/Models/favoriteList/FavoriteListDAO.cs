@@ -12,17 +12,17 @@ namespace Nextflip.Models.favoriteList
     {
         public string ConnectionString { get; set; }
 
-        public async Task<FavoriteListDTO> GetFavoriteList(string userID)
+        public FavoriteListDTO GetFavoriteList(string userID)
         {
             FavoriteListDTO favoriteList = null;
             using (var connection = new MySqlConnection(ConnectionString))
             {
-                await connection.OpenAsync();
+                connection.Open();
                 string Sql = $"Select favoriteListID From favoriteList Where userID = {userID}";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
 
-                    using (var reader = await command.ExecuteReaderAsync())
+                    using (var reader = command.ExecuteReader())
                     {
                         if (reader.Read())
                         {

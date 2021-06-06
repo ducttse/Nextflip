@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,17 +11,17 @@ namespace Nextflip.Models.category
     {
         public string ConnectionString { get; set; }
 
-        public async Task<IEnumerable<CategoryDTO>> GetCategories()
+        public IEnumerable<CategoryDTO> GetCategories()
         {
             var categories = new List<CategoryDTO>();
             using (var connection = new MySqlConnection(ConnectionString))
             {
-                await connection.OpenAsync();
+                connection.Open();
                 string Sql = "Select categoryID, name From category";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
 
-                    using (var reader = await command.ExecuteReaderAsync())
+                    using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
@@ -38,17 +38,17 @@ namespace Nextflip.Models.category
             return categories;
         }
 
-        public async Task<CategoryDTO> GetCategoryByID(int categoryID)
+        public CategoryDTO GetCategoryByID(int categoryID)
         {
             CategoryDTO category = null;
             using (var connection = new MySqlConnection(ConnectionString))
             {
-                await connection.OpenAsync();
+                connection.Open();
                 string Sql = $"Select categoryID, name From category Where categoryID = {categoryID}";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
 
-                    using (var reader = await command.ExecuteReaderAsync())
+                    using (var reader = command.ExecuteReader())
                     {
                         if (reader.Read())
                         {

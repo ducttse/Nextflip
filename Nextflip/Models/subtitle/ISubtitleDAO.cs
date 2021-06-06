@@ -4,6 +4,6 @@ namespace Nextflip.Models.subtitle
 {
     public interface ISubtitleDAO
     {
-        Task<SubtitleDTO> GetSubtitleByEpisodeID(string episodeID);
+        SubtitleDTO GetSubtitleByEpisodeID(string episodeID);
     }
 }

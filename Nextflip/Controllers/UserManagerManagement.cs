@@ -12,8 +12,8 @@ namespace Nextflip.Controllers
     {
         public ActionResult GetAccountListByEmail(UserManagerManagementService userManagerManagementService,[FromForm] string searchValue)
         {
-                IEnumerable<Account> acounts = (List<Account>)userManagerManagementService.GetAccountListByEmail(searchValue);
-            return View(searchValue);
+                IEnumerable<Account> accounts = (List<Account>)userManagerManagementService.GetAccountListByEmail(searchValue);
+            return View(accounts);
         }
     }
 }

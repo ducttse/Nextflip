@@ -3,73 +3,66 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Data;
+using MySql.Data.MySqlClient;
 
 namespace Nextflip.Models.category
 {
-    public class CategoryDAO: BaseDAL, ICategoryDAO
+    public class CategoryDAO: ICategoryDAO
     {
-        public CategoryDAO() { }
+        public string ConnectionString { get; set; }
 
-        public IEnumerable<CategoryDTO> GetCategories()
+        public async Task<IEnumerable<CategoryDTO>> GetCategories()
         {
             var categories = new List<CategoryDTO>();
-            IDataReader dataReader = null;
-            string Sql = "Select categoryID, name " +
-                        "From category";
-            try
+            using (var connection = new MySqlConnection(ConnectionString))
             {
-                dataReader = dataProvider.GetDataReader(Sql, CommandType.Text, out connection);
-                while (dataReader.Read())
+                await connection.OpenAsync();
+                string Sql = "Select categoryID, name From category";
+                using (var command = new MySqlCommand(Sql, connection))
                 {
-                    categories.Add(new CategoryDTO
+
+                    using (var reader = await command.ExecuteReaderAsync())
                     {
-                        CategoryID = dataReader.GetInt32(0),
-                        Name = dataReader.GetString(1),
-                    });
+                        while (reader.Read())
+                        {
+                            categories.Add(new CategoryDTO
+                            {
+                                CategoryID = reader.GetInt32(0),
+                                Name = reader.GetString(1),
+                            });
+                        }
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            finally
-            {
-                dataReader.Close();
-                CloseConnection();
+                connection.Close();
             }
             return categories;
         }
 
-        public CategoryDTO GetCategoryByID(int categoryID)
+        public async Task<CategoryDTO> GetCategoryByID(int categoryID)
         {
-            var category = new CategoryDTO();
-            IDataReader dataReader = null;
-            string Sql = "Select categoryID, name " +
-                        "From category " +
-                        "Where categoryID = @CategoryID";
-            try
+            CategoryDTO category = null;
+            using (var connection = new MySqlConnection(ConnectionString))
             {
-                var param = dataProvider.CreateParameter("@CategoryID", 4, categoryID, DbType.Int32);
-                dataReader = dataProvider.GetDataReader(Sql, CommandType.Text, out connection, param);
-                if (dataReader.Read())
+                await connection.OpenAsync();
+                string Sql = $"Select categoryID, name From category Where categoryID = {categoryID}";
+                using (var command = new MySqlCommand(Sql, connection))
                 {
-                    category = new CategoryDTO
+
+                    using (var reader = await command.ExecuteReaderAsync())
                     {
-                        CategoryID = dataReader.GetInt32(0),
-                        Name = dataReader.GetString(1),
-                    };
+                        if (reader.Read())
+                        {
+                            category = new CategoryDTO
+                            {
+                                CategoryID = reader.GetInt32(0),
+                                Name = reader.GetString(1),
+                            };
+                        }
+                    }
                 }
+                connection.Close();
             }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            finally
-            {
-                dataReader.Close();
-                CloseConnection();
-            }
-            return category;
+            return category;            
         }
     }
 }

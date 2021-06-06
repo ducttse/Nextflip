@@ -1,66 +1,58 @@
 ﻿
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
 
 namespace Nextflip.Models.mediaCategory
 {
-    public class MediaCategoryDAO : BaseDAL, IMediaCategoryDAO
+    public class MediaCategoryDAO : IMediaCategoryDAO
     {
-        public MediaCategoryDAO() { }
+        public string ConnectionString { get; set; }
 
-        public IList<int> GetCategoryIDs(string mediaID)
+        public async Task<IList<int>> GetCategoryIDs(string mediaID)
         {
             var categoryIDs = new List<int>();
-            IDataReader dataReader = null;
-            string Sql = "Select categoryID " +
-                        "From MediaCategory " +
-                        "Where mediaID = @MediaID";
-            try
+            using (var connection = new MySqlConnection(ConnectionString))
             {
-                var param = dataProvider.CreateParameter("@MediaID", 20, mediaID,DbType.String);
-                dataReader = dataProvider.GetDataReader(Sql, CommandType.Text, out connection, param);
-                while (dataReader.Read())
+                await connection.OpenAsync();
+                string Sql = "Select categoryID, name From category";
+                using (var command = new MySqlCommand(Sql, connection))
                 {
-                    categoryIDs.Add(dataReader.GetInt32(0));
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (reader.Read())
+                        {
+                            categoryIDs.Add(reader.GetInt32(0));
+                        }
+                    }
                 }
-            }
-            catch(Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            finally
-            {
-                dataReader.Close();
-                CloseConnection();
+                connection.Close();
             }
             return categoryIDs;
         }
 
-        public IList<string> GetMediaIDs(int categoryID)
+        public async Task<IList<string>> GetMediaIDs(int categoryID)
         {
             var mediaIDs = new List<string>();
-            IDataReader dataReader = null;
-            string Sql = "Select mediaID " +
-                        "From MediaCategory " +
-                        "Where categoryID = @CategoryID";
-            try
+            using (var connection = new MySqlConnection(ConnectionString))
             {
-                var param = dataProvider.CreateParameter("@CategoryID", 4, categoryID, DbType.Int32);
-                dataReader = dataProvider.GetDataReader(Sql, CommandType.Text, out connection, param);
-                while (dataReader.Read())
+                await connection.OpenAsync();
+                string Sql = $"Select mediaID From MediaCategory Where categoryID = {categoryID}";
+                using (var command = new MySqlCommand(Sql, connection))
                 {
-                    mediaIDs.Add(dataReader.GetString(0));
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (reader.Read())
+                        {
+                            mediaIDs.Add(reader.GetString(0));
+                        }
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            finally
-            {
-                dataReader.Close();
-                CloseConnection();
+                connection.Close();
             }
             return mediaIDs;
         }

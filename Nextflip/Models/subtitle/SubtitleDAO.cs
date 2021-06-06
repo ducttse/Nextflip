@@ -4,44 +4,39 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Data;
 using Nextflip.Models;
+using MySql.Data.MySqlClient;
 
 namespace Nextflip.Models.subtitle
 {
-    public class SubtitleDAO : BaseDAL,ISubtitleDAO
+    public class SubtitleDAO : ISubtitleDAO
     {
-        public SubtitleDAO() { }
+        public string ConnectionString { get; set; }
 
-        public SubtitleDTO GetSubtitleByEpisodeID(string episodeID)
+        public async Task<SubtitleDTO> GetSubtitleByEpisodeID(string episodeID)
         {
             SubtitleDTO subtitle = null;
-            IDataReader dataReader = null;
-            string Sql = "Select subtitleID, language, status, subtitleURL " +
-                        "From Subtitle " +
-                        "Where episodeID = @EpisodeID";
-            try
+            using (var connection = new MySqlConnection(ConnectionString))
             {
-                var param = dataProvider.CreateParameter("@EpisodeID", 20, episodeID, DbType.String);
-                dataReader = dataProvider.GetDataReader(Sql, CommandType.Text, out connection, param);
-                if (dataReader.Read())
+                await connection.OpenAsync();
+                string Sql = $"Select subtitleID, language, status, subtitleURL From Subtitle Where episodeID = {episodeID}";
+                using (var command = new MySqlCommand(Sql, connection))
                 {
-                    subtitle = new SubtitleDTO
+                    using (var reader = await command.ExecuteReaderAsync())
                     {
-                        SubtitleID = dataReader.GetString(0),
-                        EpisodeID = episodeID,
-                        Language = dataReader.GetString(1),
-                        Status = dataReader.GetString(2),
-                        SubtitleURL = dataReader.GetString(3)
-                    };
+                        if (reader.Read())
+                        {
+                            subtitle = new SubtitleDTO
+                            {
+                                SubtitleID = reader.GetString(0),
+                                EpisodeID = episodeID,
+                                Language = reader.GetString(1),
+                                Status = reader.GetString(2),
+                                SubtitleURL = reader.GetString(3)
+                            };
+                        }
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            finally
-            {
-                dataReader.Close();
-                CloseConnection();
+                connection.Close();
             }
             return subtitle;
         }

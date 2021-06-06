@@ -1,7 +1,9 @@
-﻿namespace Nextflip.Models.subtitle
+﻿using System.Threading.Tasks;
+
+namespace Nextflip.Models.subtitle
 {
     public interface ISubtitleDAO
     {
-        SubtitleDTO GetSubtitleByEpisodeID(string episodeID);
+        Task<SubtitleDTO> GetSubtitleByEpisodeID(string episodeID);
     }
 }

@@ -1,80 +1,74 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Threading.Tasks;
 
 namespace Nextflip.Models.media
 {
-    public class MediaDAO: BaseDAL, IMediaDAO
+    public class MediaDAO: IMediaDAO
     {
-        public MediaDAO() { }
+        public string ConnectionString { get; set; }
 
-        public IEnumerable<MediaDTO> GetMediasByTitle(string searchValue)
+        public async Task<IEnumerable<MediaDTO>> GetMediasByTitle(string searchValue)
         {
             var medias = new List<MediaDTO>();
-            IDataReader dataReader = null;
-            string Sql = "Select mediaID, title, bannerURL, language, description " +
-                        "From Media " +
-                        "Where title LIKE @Title";
-            try
+            using (var connection = new MySqlConnection(ConnectionString))
             {
-                var param = dataProvider.CreateParameter("@Title", 40, $"%{searchValue}%",DbType.String);
-                dataReader = dataProvider.GetDataReader(Sql, CommandType.Text, out connection, param);
-                while (dataReader.Read())
+                await connection.OpenAsync();
+                string Sql = $"Select mediaID, title, bannerURL, language, description " +
+                                $"From Media Where title LIKE %{searchValue}%";
+                using (var command = new MySqlCommand(Sql, connection))
                 {
-                    medias.Add(new MediaDTO
+
+                    using (var reader = await command.ExecuteReaderAsync())
                     {
-                        MediaID = dataReader.GetString(0),
-                        Title = dataReader.GetString(1),
-                        BannerURL = dataReader.GetString(2),
-                        Language = dataReader.GetString(3),
-                        Description = dataReader.GetString(4),
-                    }) ;
+                        while (reader.Read())
+                        {
+                            medias.Add(new MediaDTO
+                            {
+                                MediaID = reader.GetString(0),
+                                Title = reader.GetString(1),
+                                BannerURL = reader.GetString(2),
+                                Language = reader.GetString(3),
+                                Description = reader.GetString(4),
+                            });
+                        }
+                    }
                 }
-            }
-            catch(Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            finally
-            {
-                dataReader.Close();
-                CloseConnection();
+                connection.Close();
             }
             return medias;
         }
 
-        public MediaDTO GetMediasByID(string mediaID)
+        public async Task<MediaDTO> GetMediasByID(string mediaID)
         {
             var media = new MediaDTO();
-            IDataReader dataReader = null;
-            string Sql = "Select mediaID, status, title, bannerURL, language, description " +
-                        "From Media " +
-                        "Where mediaID = @MediaID";
-            try
+            using (var connection = new MySqlConnection(ConnectionString))
             {
-                var param = dataProvider.CreateParameter("@MediaID", 20, mediaID, DbType.String);
-                dataReader = dataProvider.GetDataReader(Sql, CommandType.Text, out connection, param);
-                if (dataReader.Read())
+                await connection.OpenAsync();
+                string Sql = $"Select mediaID, status, title, bannerURL, language, description " +
+                        $"From Media Where mediaID = {mediaID}";
+                using (var command = new MySqlCommand(Sql, connection))
                 {
-                    media = new MediaDTO
+
+                    using (var reader = await command.ExecuteReaderAsync())
                     {
-                        MediaID = dataReader.GetString(0),
-                        Status = dataReader.GetString(1),
-                        Title = dataReader.GetString(2),
-                        BannerURL = dataReader.GetString(3),
-                        Language = dataReader.GetString(4),
-                        Description = dataReader.GetString(5),
-                    };
+                        if (reader.Read())
+                        {
+                            media = new MediaDTO
+                            {
+                                MediaID = reader.GetString(0),
+                                Status = reader.GetString(1),
+                                Title = reader.GetString(2),
+                                BannerURL = reader.GetString(3),
+                                Language = reader.GetString(4),
+                                Description = reader.GetString(5),
+                            };
+                        }
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            finally
-            {
-                dataReader.Close();
-                CloseConnection();
+                connection.Close();
             }
             return media;
         }

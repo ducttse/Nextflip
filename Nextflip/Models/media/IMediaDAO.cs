@@ -7,7 +7,7 @@ namespace Nextflip.Models.media
 {
     public interface IMediaDAO
     {
-        IEnumerable<MediaDTO> GetMediasByTitle(string searchValue);
-        MediaDTO GetMediasByID(string mediaID);
+        Task<IEnumerable<MediaDTO>> GetMediasByTitle(string searchValue);
+        Task<MediaDTO> GetMediasByID(string mediaID);
     }
 }

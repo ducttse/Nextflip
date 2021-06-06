@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MySql.Data.MySqlClient;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -6,34 +7,29 @@ using System.Threading.Tasks;
 
 namespace Nextflip.Models.mediaFavorite
 {
-    public class MediaFavoriteDAO : BaseDAL, IMediaFavoriteDAO
+    public class MediaFavoriteDAO : IMediaFavoriteDAO
     {
-        public MediaFavoriteDAO() { }
+        public string ConnectionString { get; set; }
 
-        public IList<string> GetMediaIDs(string favoriteListID)
+        public async Task<IList<string>> GetMediaIDs(string favoriteListID)
         {
             var mediaIDs = new List<string>();
-            IDataReader dataReader = null;
-            string Sql = "Select mediaID " +
-                        "From MediaCategory " +
-                        "Where favoriteListID = @FavoriteListID";
-            try
+            using (var connection = new MySqlConnection(ConnectionString))
             {
-                var param = dataProvider.CreateParameter("@CategoryID", 20, favoriteListID, DbType.String);
-                dataReader = dataProvider.GetDataReader(Sql, CommandType.Text, out connection, param);
-                while (dataReader.Read())
+                await connection.OpenAsync();
+                string Sql = $"Select mediaID From MediaCategory Where favoriteListID = {favoriteListID}";
+                using (var command = new MySqlCommand(Sql, connection))
                 {
-                    mediaIDs.Add(dataReader.GetString(0));
+
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        while (reader.Read())
+                        {
+                            mediaIDs.Add(reader.GetString(0));
+                        }
+                    }
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            finally
-            {
-                dataReader.Close();
-                CloseConnection();
+                connection.Close();
             }
             return mediaIDs;
         }

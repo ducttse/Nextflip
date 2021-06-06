@@ -1,5 +1,6 @@
-﻿using Nextflip.Models.DTO;
-using Nextflip.Models.DAO;
+﻿
+using Nextflip.Models.category;
+using Nextflip.Models.mediaCategory;
 using Nextflip.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -10,15 +11,22 @@ namespace Nextflip.Services.Implementations
 {
     public class CategoryService : ICategoryService
     {
-        public IEnumerable<Category> GetCategories() => CategoryDAO.Instance.GetCategories();
-
-        public IEnumerable<Category> GetCategoriesByMediaID(string mediaID)
+        public ICategoryDAO CategoryDAO { get; }
+        public IMediaCategoryDAO MediaCategoryDAO { get;}
+        public CategoryService (ICategoryDAO categoryDAO, IMediaCategoryDAO mediaCategoryDAO)
         {
-            var categories = new List<Category>();
-            List<int> categoryIDs = MediaCategoryDAO.Instance.GetCategoryIDs(mediaID);
+            CategoryDAO = categoryDAO;
+            MediaCategoryDAO = mediaCategoryDAO;
+        }
+        public IEnumerable<CategoryDTO> GetCategories() => CategoryDAO.GetCategories();
+
+        public IEnumerable<CategoryDTO> GetCategoriesByMediaID(string mediaID)
+        {
+            var categories = new List<CategoryDTO>();
+            IList<int> categoryIDs =   MediaCategoryDAO.GetCategoryIDs(mediaID);
             foreach(var categoryID in categoryIDs)
             {
-                Category category = CategoryDAO.Instance.GetCategoryByID(categoryID);
+                CategoryDTO category = CategoryDAO.GetCategoryByID(categoryID);
                 categories.Add(category);
             }
             return categories;

@@ -4,29 +4,13 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Nextflip.Models.DAO
+namespace Nextflip.Models.mediaFavorite
 {
-    public class MediaFavoriteDAO : BaseDAL
+    public class MediaFavoriteDAO : BaseDAL, IMediaFavoriteDAO
     {
-        private static MediaFavoriteDAO instance = null;
-        private static readonly object instanceLock = new object();
-        private MediaFavoriteDAO() { }
-        public static MediaFavoriteDAO Instance
-        {
-            get
-            {
-                lock (instanceLock)
-                {
-                    if (instance == null)
-                    {
-                        instance = new MediaFavoriteDAO();
-                    }
-                    return instance;
-                }
-            }
-        }
+        public MediaFavoriteDAO() { }
 
-        public List<string> GetMediaIDs(string favoriteListID)
+        public IList<string> GetMediaIDs(string favoriteListID)
         {
             var mediaIDs = new List<string>();
             IDataReader dataReader = null;
@@ -53,5 +37,7 @@ namespace Nextflip.Models.DAO
             }
             return mediaIDs;
         }
+
+        
     }
 }

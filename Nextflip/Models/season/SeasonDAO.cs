@@ -4,30 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Data;
 using Nextflip.Models.DTO;
-namespace Nextflip.Models.DAO
+namespace Nextflip.Models.season
 {
-    public class SeasonDAO:BaseDAL
+    public class SeasonDAO:BaseDAL,ISeasonDAO
     {
-        private static SeasonDAO instance = null;
-        private static readonly object instanceLock = new object();
-        private SeasonDAO() { }
-        public static SeasonDAO Instance
+        public SeasonDAO() { }
+        public IEnumerable<SeasonDTO> GetSeasonsByMediaID(string mediaID)
         {
-            get
-            {
-                lock (instanceLock)
-                {
-                    if (instance == null)
-                    {
-                        instance = new SeasonDAO();
-                    }
-                    return instance;
-                }
-            }
-        }
-        public IEnumerable<Season> GetSeasonsByMediaID(string mediaID)
-        {
-            var seasons = new List<Season>();
+            var seasons = new List<SeasonDTO>();
             IDataReader dataReader = null;
             string Sql = "Select seasonID, status, number " +
                         "From season " +
@@ -38,7 +22,7 @@ namespace Nextflip.Models.DAO
                 dataReader = dataProvider.GetDataReader(Sql, CommandType.Text, out connection, param);
                 while (dataReader.Read())
                 {
-                    seasons.Add(new Season
+                    seasons.Add(new SeasonDTO
                     {
                         SeasonID = dataReader.GetString(0),
                         MediaID = mediaID,

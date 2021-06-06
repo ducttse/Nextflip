@@ -1,15 +1,13 @@
-﻿using Nextflip.Models.DTO;
-using System;
+﻿using Nextflip.Models.category;
+using Nextflip.Models.mediaCategory;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Nextflip.Services.Interfaces
 {
     public interface ICategoryService
     {
-        IEnumerable<Category> GetCategories();
+        IEnumerable<CategoryDTO> GetCategories();
 
-        IEnumerable<Category> GetCategoriesByMediaID(string mediaID);
+        IEnumerable<CategoryDTO> GetCategoriesByMediaID(string mediaID);
     }
 }

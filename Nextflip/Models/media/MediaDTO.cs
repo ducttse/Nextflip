@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Nextflip.Models.DTO
+namespace Nextflip.Models.media
 {
-    public class Media
+    public class MediaDTO
     {
         public string MediaID { get; set; }
         public string Status { get; set; }

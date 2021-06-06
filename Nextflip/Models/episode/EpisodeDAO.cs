@@ -5,30 +5,14 @@ using System.Threading.Tasks;
 using System.Data;
 using Nextflip.Models.DTO;
 
-namespace Nextflip.Models.DAO
+namespace Nextflip.Models.episode
 {
-    public class EpisodeDAO : BaseDAL
+    public class EpisodeDAO : BaseDAL, IEpisodeDAO
     {
-        private static EpisodeDAO instance = null;
-        private static readonly object instanceLock = new object();
-        private EpisodeDAO() { }
-        public static EpisodeDAO Instance
+        public EpisodeDAO() { }
+        public IEnumerable<EpisodeDTO> GetEpisodesBySeasonID(string seasonID)
         {
-            get
-            {
-                lock (instanceLock)
-                {
-                    if (instance == null)
-                    {
-                        instance = new EpisodeDAO();
-                    }
-                    return instance;
-                }
-            }
-        }
-        public IEnumerable<Episode> GetEpisodesBySeasonID(string seasonID)
-        {
-            var episodes = new List<Episode>();
+            var episodes = new List<EpisodeDTO>();
             IDataReader dataReader = null;
             string Sql = "Select episodeID, status, number " +
                         "From season " +
@@ -39,7 +23,7 @@ namespace Nextflip.Models.DAO
                 dataReader = dataProvider.GetDataReader(Sql, CommandType.Text, out connection, param);
                 while (dataReader.Read())
                 {
-                    episodes.Add(new Episode
+                    episodes.Add(new EpisodeDTO
                     {
                         EpisodeID = dataReader.GetString(0),
                         SeasonID = seasonID,

@@ -2,34 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Nextflip.Models.DTO;
 using System.Data;
 
-namespace Nextflip.Models.DAO
+namespace Nextflip.Models.category
 {
-    public class CategoryDAO: BaseDAL
+    public class CategoryDAO: BaseDAL, ICategoryDAO
     {
-        private static CategoryDAO instance = null;
-        private static readonly object instanceLock = new object();
-        private CategoryDAO() { }
-        public static CategoryDAO Instance
-        {
-            get
-            {
-                lock (instanceLock)
-                {
-                    if (instance == null)
-                    {
-                        instance = new CategoryDAO();
-                    }
-                    return instance;
-                }
-            }
-        }
+        public CategoryDAO() { }
 
-        public IEnumerable<Category> GetCategories()
+        public IEnumerable<CategoryDTO> GetCategories()
         {
-            var categories = new List<Category>();
+            var categories = new List<CategoryDTO>();
             IDataReader dataReader = null;
             string Sql = "Select categoryID, name " +
                         "From category";
@@ -38,7 +21,7 @@ namespace Nextflip.Models.DAO
                 dataReader = dataProvider.GetDataReader(Sql, CommandType.Text, out connection);
                 while (dataReader.Read())
                 {
-                    categories.Add(new Category
+                    categories.Add(new CategoryDTO
                     {
                         CategoryID = dataReader.GetInt32(0),
                         Name = dataReader.GetString(1),
@@ -57,9 +40,9 @@ namespace Nextflip.Models.DAO
             return categories;
         }
 
-        public Category GetCategoryByID(int categoryID)
+        public CategoryDTO GetCategoryByID(int categoryID)
         {
-            var category = new Category();
+            var category = new CategoryDTO();
             IDataReader dataReader = null;
             string Sql = "Select categoryID, name " +
                         "From category " +
@@ -70,7 +53,7 @@ namespace Nextflip.Models.DAO
                 dataReader = dataProvider.GetDataReader(Sql, CommandType.Text, out connection, param);
                 if (dataReader.Read())
                 {
-                    category = new Category
+                    category = new CategoryDTO
                     {
                         CategoryID = dataReader.GetInt32(0),
                         Name = dataReader.GetString(1),

@@ -1,13 +1,11 @@
-﻿using Nextflip.Models.DTO;
-using Nextflip.Models.episode;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Nextflip.Services.Interfaces
+namespace Nextflip.Models.episode
 {
-    public interface IEpisodeService
+    public interface IEpisodeDAO
     {
         IEnumerable<EpisodeDTO> GetEpisodesBySeasonID(string seasonID);
     }

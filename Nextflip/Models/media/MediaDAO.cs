@@ -7,31 +7,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data;
 
-namespace Nextflip.Models.DAO
+namespace Nextflip.Models.media
 {
-    public class MediaDAO: BaseDAL
+    public class MediaDAO: BaseDAL, IMediaDAO
     {
-        private static MediaDAO instance = null;
-        private static readonly object instanceLock = new object();
-        private MediaDAO() { }
-        public static MediaDAO Instance
-        {
-            get
-            {
-                lock (instanceLock)
-                {
-                    if (instance == null)
-                    {
-                        instance = new MediaDAO();
-                    }
-                    return instance;
-                }
-            }
-        }
+        public MediaDAO() { }
 
-        public IEnumerable<Media> GetMediasByTitle(string searchValue)
+        public IEnumerable<MediaDTO> GetMediasByTitle(string searchValue)
         {
-            var medias = new List<Media>();
+            var medias = new List<MediaDTO>();
             IDataReader dataReader = null;
             string Sql = "Select mediaID, title, bannerURL, language, description " +
                         "From Media " +
@@ -42,7 +26,7 @@ namespace Nextflip.Models.DAO
                 dataReader = dataProvider.GetDataReader(Sql, CommandType.Text, out connection, param);
                 while (dataReader.Read())
                 {
-                    medias.Add(new Media
+                    medias.Add(new MediaDTO
                     {
                         MediaID = dataReader.GetString(0),
                         Title = dataReader.GetString(1),
@@ -64,9 +48,9 @@ namespace Nextflip.Models.DAO
             return medias;
         }
 
-        public Media GetMediasByID(string mediaID)
+        public MediaDTO GetMediasByID(string mediaID)
         {
-            var media = new Media();
+            var media = new MediaDTO();
             IDataReader dataReader = null;
             string Sql = "Select mediaID, status, title, bannerURL, language, description " +
                         "From Media " +
@@ -77,7 +61,7 @@ namespace Nextflip.Models.DAO
                 dataReader = dataProvider.GetDataReader(Sql, CommandType.Text, out connection, param);
                 if (dataReader.Read())
                 {
-                    media = new Media
+                    media = new MediaDTO
                     {
                         MediaID = dataReader.GetString(0),
                         Status = dataReader.GetString(1),

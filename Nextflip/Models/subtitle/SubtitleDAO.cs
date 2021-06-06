@@ -3,33 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Data;
-using Nextflip.Models.DTO;
+using Nextflip.Models;
 
-namespace Nextflip.Models.DAO
+namespace Nextflip.Models.subtitle
 {
-    public class SubtitleDAO : BaseDAL
+    public class SubtitleDAO : BaseDAL,ISubtitleDAO
     {
-        private static SubtitleDAO instance = null;
-        private static readonly object instanceLock = new object();
-        private SubtitleDAO() { }
-        public static SubtitleDAO Instance
-        {
-            get
-            {
-                lock (instanceLock)
-                {
-                    if (instance == null)
-                    {
-                        instance = new SubtitleDAO();
-                    }
-                    return instance;
-                }
-            }
-        }
+        public SubtitleDAO() { }
 
-        public Subtitle GetSubtitleByEpisodeID(string episodeID)
+        public SubtitleDTO GetSubtitleByEpisodeID(string episodeID)
         {
-            Subtitle subtitle = null;
+            SubtitleDTO subtitle = null;
             IDataReader dataReader = null;
             string Sql = "Select subtitleID, language, status, subtitleURL " +
                         "From Subtitle " +
@@ -40,7 +24,7 @@ namespace Nextflip.Models.DAO
                 dataReader = dataProvider.GetDataReader(Sql, CommandType.Text, out connection, param);
                 if (dataReader.Read())
                 {
-                    subtitle = new Subtitle
+                    subtitle = new SubtitleDTO
                     {
                         SubtitleID = dataReader.GetString(0),
                         EpisodeID = episodeID,

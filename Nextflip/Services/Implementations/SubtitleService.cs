@@ -1,15 +1,16 @@
-﻿using Nextflip.Models.DTO;
-using Nextflip.Models.DAO;
-using Nextflip.Services.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Nextflip.Services.Interfaces;
+using Nextflip.Models.subtitle;
 
 namespace Nextflip.Services.Implementations
 {
     public class SubtitleService : ISubtitleService
     {
-        public Subtitle GetSubtitleByEpisodeID(string episodeID) => SubtitleDAO.Instance.GetSubtitleByEpisodeID(episodeID);
+        public SubtitleService(ISubtitleDAO subtitleDAO)
+        {
+            SubtitleDAO = subtitleDAO;
+        }
+        public ISubtitleDAO SubtitleDAO { get;  }
+        public SubtitleDTO GetSubtitleByEpisodeID(string episodeID) 
+                                                        =>  SubtitleDAO.GetSubtitleByEpisodeID(episodeID);
     }
 }

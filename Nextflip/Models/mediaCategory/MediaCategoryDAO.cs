@@ -1,32 +1,13 @@
 ﻿
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data;
 
-namespace Nextflip.Models.DAO
+namespace Nextflip.Models.mediaCategory
 {
-    public class MediaCategoryDAO : BaseDAL
+    public class MediaCategoryDAO : BaseDAL, IMediaCategoryDAO
     {
-        private static MediaCategoryDAO instance = null;
-        private static readonly object instanceLock = new object();
-        private MediaCategoryDAO() { }
-        public static MediaCategoryDAO Instance
-        {
-            get
-            {
-                lock (instanceLock)
-                {
-                    if (instance == null)
-                    {
-                        instance = new MediaCategoryDAO();
-                    }
-                    return instance;
-                }
-            }
-        }
+        public MediaCategoryDAO() { }
 
         public List<int> GetCategoryIDs(string mediaID)
         {

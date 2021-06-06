@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Nextflip.Models.DTO
+namespace Nextflip.Models.episode
 {
-    public class Season
+    public class EpisodeDTO
     {
+        public string EpisodeID { get; set; }
         public string SeasonID { get; set; }
-        public string MediaID { get; set; }
         public string Status { get; set; }
         public int Number { get; set; }
+        public string EpisodeURL { get; set; }
     }
 }

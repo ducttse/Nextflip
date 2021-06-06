@@ -3,33 +3,17 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
-using Nextflip.Models.DTO;
 
-namespace Nextflip.Models.DAO
+
+namespace Nextflip.Models.favoriteList
 {
-    public class FavoriteListDAO : BaseDAL
+    public class FavoriteListDAO : BaseDAL, IFavoriteListDAO
     {
-        private static FavoriteListDAO instance = null;
-        private static readonly object instanceLock = new object();
-        private FavoriteListDAO() { }
-        public static FavoriteListDAO Instance
-        {
-            get
-            {
-                lock (instanceLock)
-                {
-                    if (instance == null)
-                    {
-                        instance = new FavoriteListDAO();
-                    }
-                    return instance;
-                }
-            }
-        }
+        public FavoriteListDAO() { }
 
-        public FavoriteList GetFavoriteList(string userID)
+        public FavoriteListDTO GetFavoriteList(string userID)
         {
-            FavoriteList favoriteList = null;
+            FavoriteListDTO favoriteList = null;
             IDataReader dataReader = null;
             string Sql = "Select favoriteListID " +
                         "From favoriteList " +
@@ -40,7 +24,7 @@ namespace Nextflip.Models.DAO
                 dataReader = dataProvider.GetDataReader(Sql, CommandType.Text, out connection, param);
                 if (dataReader.Read())
                 {
-                    favoriteList = new FavoriteList
+                    favoriteList = new FavoriteListDTO
                     {
                         FavoriteListID = dataReader.GetString(0),
                         UserID = userID,

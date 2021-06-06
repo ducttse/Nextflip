@@ -3,16 +3,20 @@ using Nextflip.Models.account;
 using Nextflip.Services.Implementations;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Nextflip.Services.Interfaces;
 
 namespace Nextflip.APIControllers
 {
     public class UserManagerManagement : ControllerBase
     {
-        public JsonResult GetAccountListByEmail(UserManagerManagementService userManagerManagementService, [FromForm] string searchValue)
+        [Route("api/UserManagerManagement/{searchValue}")]
+        public JsonResult GetAccountListByEmail([FromServices] IUserManagerManagementService userManagerManagementService, string searchValue)
         {
-            IEnumerable<Account> accounts = (List<Account>)userManagerManagementService.GetAccountListByEmail(searchValue);
+            IEnumerable<Account> accounts = userManagerManagementService.GetAccountListByEmail(searchValue);
+            Debug.WriteLine("FLAG");
             return new JsonResult(accounts);
         }
     }

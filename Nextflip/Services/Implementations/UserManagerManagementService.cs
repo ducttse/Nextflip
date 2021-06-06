@@ -9,8 +9,10 @@ namespace Nextflip.Services.Implementations
 {
     public class UserManagerManagementService : IUserManagerManagementService
     {
-        public IEnumerable<Account> GetAccountListByEmail(string searchValue) =>
-            GetAccountListByEmail(searchValue);
+        private IAccountDAO _accountDao;
+
+        public UserManagerManagementService(IAccountDAO accountDao) => _accountDao = accountDao;
+        public IEnumerable<Account> GetAccountListByEmail(string searchValue) => _accountDao.GetAccountListByEmail(searchValue);
 
     }
 }

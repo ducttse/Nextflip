@@ -3,33 +3,33 @@ using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Nextflip.utils;
 
 namespace Nextflip.Models.account
 {
-    public class AccountDAO : BaseDAL, IAccountDAO
+    public class AccountDAO : IAccountDAO
     {
-        public AccountDAO() {}
-        public static string ConnectionString { get; set; }
+
+        public AccountDAO() { }
 
         public IEnumerable<Account> GetAccountListByEmail(string searchValue)
         {
             var accounts = new List<Account>();
             try
             {
-                using (var connection = new MySqlConnection(ConnectionString))
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select userID, userEmail, roleID, fullname" +
+                    string Sql = "Select userID, userEmail, roleID, fullname " +
                             "From account " +
-                            "Where userEmail LIKE @userEmail";
+                            "Where userEmail = @userEmail";
+                    Debug.WriteLine(Sql);
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        SqlParameter param = new SqlParameter();
-                        param.ParameterName = "@userEmail";
-                        param.Value = searchValue;
-                        command.Parameters.Add(param);
+                        command.Parameters.AddWithValue("@userEmail", searchValue);
                         using (var reader = command.ExecuteReader())
                         {
                             while (reader.Read()) { 
@@ -49,12 +49,7 @@ namespace Nextflip.Models.account
             {
                 throw new Exception(ex.Message);
             }
-            finally
-            {
-                connection.Close();
-            }
-                    return accounts;
-                
+            return accounts;
         }
         
         public bool ChangeAccountStatus(string userID)

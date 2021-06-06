@@ -9,7 +9,7 @@ namespace Nextflip.Models.mediaCategory
     {
         public MediaCategoryDAO() { }
 
-        public List<int> GetCategoryIDs(string mediaID)
+        public IList<int> GetCategoryIDs(string mediaID)
         {
             var categoryIDs = new List<int>();
             IDataReader dataReader = null;
@@ -37,7 +37,7 @@ namespace Nextflip.Models.mediaCategory
             return categoryIDs;
         }
 
-        public List<string> GetMediaIDs(int categoryID)
+        public IList<string> GetMediaIDs(int categoryID)
         {
             var mediaIDs = new List<string>();
             IDataReader dataReader = null;

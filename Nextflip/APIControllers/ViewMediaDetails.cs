@@ -6,16 +6,18 @@ using Nextflip.Models.episode;
 
 namespace Nextflip.APIControllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class ViewMediaDetails : ControllerBase
     {
-        [Route("api/ViewMediaDetails/{mediaID}")]
+        [Route("GetSeasons/{mediaID}")]
         public JsonResult GetSeasons([FromServices] ISeasonService seasonService,string mediaID)
         {
             IEnumerable<SeasonDTO> seasons = seasonService.GetSeasonsByMediaID(mediaID);
             return new JsonResult(seasons);
         }
 
-        [Route("api/ViewMediaDetails/{seasonID}")]
+        [Route("GetEpisodes/{seasonID}")]
         public JsonResult GetEpisodes([FromServices] IEpisodeService episodeService,string seasonID)
         { 
             IEnumerable<EpisodeDTO> episodes = episodeService.GetEpisodesBySeasonID(seasonID);

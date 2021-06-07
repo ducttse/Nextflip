@@ -10,7 +10,7 @@ namespace Nextflip.Services.Implementations
         private readonly IEpisodeDAO _episodeDAO ;
         public EpisodeService(IEpisodeDAO episodeDAO) =>_episodeDAO = episodeDAO;
         
-        IEnumerable<EpisodeDTO> IEpisodeService.GetEpisodesBySeasonID(string seasonID) 
+        IEnumerable<Episode> IEpisodeService.GetEpisodesBySeasonID(string seasonID) 
                                             => _episodeDAO.GetEpisodesBySeasonID(seasonID);
 
         

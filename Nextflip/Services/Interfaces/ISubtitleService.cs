@@ -5,6 +5,6 @@ namespace Nextflip.Services.Interfaces
 {
     public interface ISubtitleService
     {
-        IEnumerable<SubtitleDTO> GetSubtitlesByEpisodeID(string episodeID);
+        IEnumerable<Subtitle> GetSubtitlesByEpisodeID(string episodeID);
     }
 }

@@ -18,15 +18,15 @@ namespace Nextflip.Services.Implementations
             _categoryDAO = categoryDAO;
             _mediaCategoryDAO = mediaCategoryDAO;
         }
-        public IEnumerable<CategoryDTO> GetCategories() => _categoryDAO.GetCategories();
+        public IEnumerable<Category> GetCategories() => _categoryDAO.GetCategories();
 
-        public IEnumerable<CategoryDTO> GetCategoriesByMediaID(string mediaID)
+        public IEnumerable<Category> GetCategoriesByMediaID(string mediaID)
         {
-            var categories = new List<CategoryDTO>();
+            var categories = new List<Category>();
             IList<int> categoryIDs =   _mediaCategoryDAO.GetCategoryIDs(mediaID);
             foreach(var categoryID in categoryIDs)
             {
-                CategoryDTO category = _categoryDAO.GetCategoryByID(categoryID);
+                Category category = _categoryDAO.GetCategoryByID(categoryID);
                 categories.Add(category);
             }
             return categories;

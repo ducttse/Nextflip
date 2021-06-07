@@ -17,10 +17,10 @@ namespace Nextflip.Models.mediaCategory
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = $"Select categoryID From mediaCategory Where mediaID ='{mediaID}'";
+                string Sql = "Select categoryID From mediaCategory Where mediaID =@mediaID";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
-
+                    command.Parameters.AddWithValue("@mediaID", mediaID);
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())

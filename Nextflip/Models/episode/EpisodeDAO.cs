@@ -10,21 +10,21 @@ namespace Nextflip.Models.episode
     public class EpisodeDAO : IEpisodeDAO
     {
 
-        public IEnumerable<EpisodeDTO> GetEpisodesBySeasonID(string seasonID)
+        public IEnumerable<Episode> GetEpisodesBySeasonID(string seasonID)
         {
-            var episodes = new List<EpisodeDTO>();
+            var episodes = new List<Episode>();
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = $"Select episodeID, status, number, episodeURL From episode Where seasonID = '{seasonID}'";
+                string Sql = "Select episodeID, status, number, episodeURL From episode Where seasonID = @seasonID";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
-
+                    command.Parameters.AddWithValue("@seasonID", seasonID);
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            episodes.Add(new EpisodeDTO
+                            episodes.Add(new Episode
                             {
                                 EpisodeID = reader.GetString(0),
                                 SeasonID = seasonID,

@@ -12,20 +12,21 @@ namespace Nextflip.Models.subtitle
     public class SubtitleDAO : ISubtitleDAO
     {
         
-        public IEnumerable<SubtitleDTO> GetSubtitlesByEpisodeID(string episodeID)
+        public IEnumerable<Subtitle> GetSubtitlesByEpisodeID(string episodeID)
         {
-            var subtitles = new List<SubtitleDTO>();
+            var subtitles = new List<Subtitle>();
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = $"Select subtitleID, language, status, subtitleURL From subtitle Where episodeID = '{episodeID}'";
+                string Sql = "Select subtitleID, language, status, subtitleURL From subtitle Where episodeID = @episodeID";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     using (var reader = command.ExecuteReader())
                     {
+                        command.Parameters.AddWithValue("@episodeID",episodeID);
                         while (reader.Read())
                         {
-                            subtitles.Add( new SubtitleDTO
+                            subtitles.Add( new Subtitle
                             {
                                 SubtitleID = reader.GetString(0),
                                 EpisodeID = episodeID,

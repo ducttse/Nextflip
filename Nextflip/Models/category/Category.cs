@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Nextflip.Models.category
 {
-    public class CategoryDTO
+    public class Category
     {
         public int CategoryID { get; set; }
         public string Name { get; set; }

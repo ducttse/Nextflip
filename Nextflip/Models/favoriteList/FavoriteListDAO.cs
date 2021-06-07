@@ -12,21 +12,21 @@ namespace Nextflip.Models.favoriteList
     public class FavoriteListDAO : IFavoriteListDAO
     {
         
-        public FavoriteListDTO GetFavoriteList(string userID)
+        public FavoriteList GetFavoriteList(string userID)
         {
-            FavoriteListDTO favoriteList = null;
+            FavoriteList favoriteList = null;
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = $"Select favoriteListID From favoriteList Where userID = '{userID}'";
+                string Sql = "Select favoriteListID From favoriteList Where userID = @userID";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
-
+                    command.Parameters.AddWithValue("@userID", userID);
                     using (var reader = command.ExecuteReader())
                     {
                         if (reader.Read())
                         {
-                            favoriteList = new FavoriteListDTO
+                            favoriteList = new FavoriteList
                             {
                                 FavoriteListID = reader.GetString(0),
                                 UserID = userID

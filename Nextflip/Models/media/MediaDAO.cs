@@ -10,22 +10,22 @@ namespace Nextflip.Models.media
     public class MediaDAO: IMediaDAO
     {
 
-        public IEnumerable<MediaDTO> GetMediasByTitle(string searchValue)
+        public IEnumerable<Media> GetMediasByTitle(string searchValue)
         {
-            var medias = new List<MediaDTO>();
+            var medias = new List<Media>();
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = $"Select mediaID,status, title, bannerURL, language, description " +
-                                $"From media Where title LIKE '%{searchValue}%'";
+                string Sql = "Select mediaID,status, title, bannerURL, language, description " +
+                                "From media Where title LIKE @searchValue";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
-
+                    command.Parameters.AddWithValue("@searchValue", $"%{searchValue}%");
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            medias.Add(new MediaDTO
+                            medias.Add(new Media
                             {
                                 MediaID = reader.GetString(0),
                                 Status = reader.GetString(1),
@@ -42,9 +42,9 @@ namespace Nextflip.Models.media
             return medias;
         }
 
-        public MediaDTO GetMediaByID(string mediaID)
+        public Media GetMediaByID(string mediaID)
         {
-            var media = new MediaDTO();
+            var media = new Media();
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
@@ -57,7 +57,7 @@ namespace Nextflip.Models.media
                     {
                         if (reader.Read())
                         {
-                            media = new MediaDTO
+                            media = new Media
                             {
                                 MediaID = reader.GetString(0),
                                 Status = reader.GetString(1),

@@ -22,10 +22,10 @@ namespace Nextflip.Services.Implementations
             _mediaCategoryDAO = mediaCategoryDAO;
         }
 
-        public IEnumerable<MediaDTO> GetFavoriteMediasByUserID(string userID)
+        public IEnumerable<Media> GetFavoriteMediasByUserID(string userID)
         {
-            var favoriteMedias = new List<MediaDTO>();
-            FavoriteListDTO favoriteList = _favoriteListDAO.GetFavoriteList(userID);
+            var favoriteMedias = new List<Media>();
+            FavoriteList favoriteList = _favoriteListDAO.GetFavoriteList(userID);
             IList<string> favoriteMediaIDs = _mediaFavoriteDAO.GetMediaIDs(favoriteList.FavoriteListID);
             foreach (string mediaID in favoriteMediaIDs)
             {
@@ -35,15 +35,15 @@ namespace Nextflip.Services.Implementations
             return favoriteMedias;
         }
 
-        public IEnumerable<MediaDTO> GetMediasByTitle(string title) => _mediaDAO.GetMediasByTitle(title);
+        public IEnumerable<Media> GetMediasByTitle(string title) => _mediaDAO.GetMediasByTitle(title);
 
-        public IEnumerable<MediaDTO> GetMediasByCategoryID(int categoryID)
+        public IEnumerable<Media> GetMediasByCategoryID(int categoryID)
         {
-            var medias = new List<MediaDTO>();
+            var medias = new List<Media>();
             IList<string> mediaIDs = _mediaCategoryDAO.GetMediaIDs(categoryID);
             foreach (var mediaID in mediaIDs)
             {
-                MediaDTO media = _mediaDAO.GetMediaByID(mediaID);
+                Media media = _mediaDAO.GetMediaByID(mediaID);
                 medias.Add(media);
             }
             return medias;

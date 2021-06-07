@@ -11,9 +11,9 @@ namespace Nextflip.Models.category
     public class CategoryDAO: ICategoryDAO
     { 
 
-        public IEnumerable<CategoryDTO> GetCategories()
+        public IEnumerable<Category> GetCategories()
         {
-            var categories = new List<CategoryDTO>();
+            var categories = new List<Category>();
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
@@ -25,7 +25,7 @@ namespace Nextflip.Models.category
                     {
                         while (reader.Read())
                         {
-                            categories.Add(new CategoryDTO
+                            categories.Add(new Category
                             {
                                 CategoryID = reader.GetInt32(0),
                                 Name = reader.GetString(1),
@@ -38,21 +38,21 @@ namespace Nextflip.Models.category
             return categories;
         }
 
-        public CategoryDTO GetCategoryByID(int categoryID)
+        public Category GetCategoryByID(int categoryID)
         {
-            CategoryDTO category = null;
+            Category category = null;
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = $"Select categoryID, name From category Where categoryID = '{categoryID}'";
+                string Sql = "Select categoryID, name From category Where categoryID = @categoryID";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
-
+                    command.Parameters.AddWithValue("@categoryID", categoryID);
                     using (var reader = command.ExecuteReader())
                     {
                         if (reader.Read())
                         {
-                            category = new CategoryDTO
+                            category = new Category
                             {
                                 CategoryID = reader.GetInt32(0),
                                 Name = reader.GetString(1),

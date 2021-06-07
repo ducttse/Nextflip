@@ -6,8 +6,8 @@ namespace Nextflip.Services.Interfaces
 {
     public interface ICategoryService
     {
-        IEnumerable<CategoryDTO> GetCategories();
+        IEnumerable<Category> GetCategories();
 
-        IEnumerable<CategoryDTO> GetCategoriesByMediaID(string mediaID);
+        IEnumerable<Category> GetCategoriesByMediaID(string mediaID);
     }
 }

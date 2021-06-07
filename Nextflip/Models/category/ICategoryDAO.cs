@@ -7,7 +7,7 @@ namespace Nextflip.Models.category
 {
     public interface ICategoryDAO
     {
-        IEnumerable<CategoryDTO> GetCategories();
-        CategoryDTO GetCategoryByID(int categoryID);
+        IEnumerable<Category> GetCategories();
+        Category GetCategoryByID(int categoryID);
     }
 }

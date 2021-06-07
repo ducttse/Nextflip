@@ -9,22 +9,23 @@ namespace Nextflip.Models.season
 {
     public class SeasonDAO: ISeasonDAO
     {
-        public IEnumerable<SeasonDTO> GetSeasonsByMediaID(string mediaID)
+        public IEnumerable<Season> GetSeasonsByMediaID(string mediaID)
         {
-            var seasons = new List<SeasonDTO>();
+            var seasons = new List<Season>();
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = $"Select seasonID, status, number From season Where mediaID = '{mediaID}'";
+                string Sql = "Select seasonID, status, number From season Where mediaID = @mediaID";
 
                 using (var command = new MySqlCommand(Sql, connection))
                 {
 
                     using (var reader = command.ExecuteReader())
                     {
+                        command.Parameters.AddWithValue("@mediaID", mediaID);
                         while (reader.Read())
                         {
-                            seasons.Add(new SeasonDTO
+                            seasons.Add(new Season
                             {
                                 SeasonID = reader.GetString(0),
                                 MediaID = mediaID,

@@ -10,6 +10,6 @@ namespace Nextflip.Services.Implementations
         public SeasonService(ISeasonDAO seasonDAO) => _seasonDAO = seasonDAO;
 
         
-        public IEnumerable<SeasonDTO> GetSeasonsByMediaID(string mediaID) => _seasonDAO.GetSeasonsByMediaID(mediaID);
+        public IEnumerable<Season> GetSeasonsByMediaID(string mediaID) => _seasonDAO.GetSeasonsByMediaID(mediaID);
     }
 }

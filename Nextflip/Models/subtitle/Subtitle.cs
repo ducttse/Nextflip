@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Nextflip.Models.subtitle
 {
-    public class SubtitleDTO
+    public class Subtitle
     {
         public string SubtitleID { get; set; }
         public string EpisodeID { get; set; }

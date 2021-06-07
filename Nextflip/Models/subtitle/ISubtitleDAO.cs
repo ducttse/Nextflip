@@ -5,6 +5,6 @@ namespace Nextflip.Models.subtitle
 {
     public interface ISubtitleDAO
     {
-        IEnumerable<SubtitleDTO> GetSubtitlesByEpisodeID(string episodeID);
+        IEnumerable<Subtitle> GetSubtitlesByEpisodeID(string episodeID);
     }
 }

@@ -5,6 +5,6 @@ namespace Nextflip.Services.Interfaces
 {
     public interface ISeasonService
     {
-        IEnumerable<SeasonDTO> GetSeasonsByMediaID(string mediaID);
+        IEnumerable<Season> GetSeasonsByMediaID(string mediaID);
     }
 }

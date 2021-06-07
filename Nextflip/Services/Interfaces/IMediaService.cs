@@ -5,9 +5,9 @@ namespace Nextflip.Services.Interfaces
 {
     public interface IMediaService
     { 
-        IEnumerable<MediaDTO> GetFavoriteMediasByUserID(string userID);
-        IEnumerable<MediaDTO> GetMediasByTitle(string title);
+        IEnumerable<Media> GetFavoriteMediasByUserID(string userID);
+        IEnumerable<Media> GetMediasByTitle(string title);
 
-        IEnumerable<MediaDTO> GetMediasByCategoryID(int categoryID);
+        IEnumerable<Media> GetMediasByCategoryID(int categoryID);
     }
 }

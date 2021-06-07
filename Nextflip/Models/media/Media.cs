@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Nextflip.Models.media
 {
-    public class MediaDTO
+    public class Media
     {
         public string MediaID { get; set; }
         public string Status { get; set; }

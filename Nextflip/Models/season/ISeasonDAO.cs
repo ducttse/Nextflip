@@ -7,6 +7,6 @@ namespace Nextflip.Models.season
 {
     public interface ISeasonDAO
     {
-        IEnumerable<SeasonDTO> GetSeasonsByMediaID(string mediaID);
+        IEnumerable<Season> GetSeasonsByMediaID(string mediaID);
     }
 }

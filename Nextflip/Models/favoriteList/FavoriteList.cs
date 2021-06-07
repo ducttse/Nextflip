@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Nextflip.Models.favoriteList
 {
-    public class FavoriteListDTO
+    public class FavoriteList
     {
         public string FavoriteListID { get; set; }
         public string UserID { get; set; }

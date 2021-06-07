@@ -122,13 +122,20 @@ function renderUser(user) {
     </tr>`;
 }
 function renderPagination(length, rowsPerPage) {
-  return `
+    let numberOfPage = Math.ceil(length / rowsPerPage);
+    console.log(numberOfPage);
+    let Pages = "";
+    for (let i = 1; i <= numberOfPage; i++) {
+        Pages += `<li class="page-item"><a class="page-link" href="#">${i}</a></li>`;
+    }
+
+    return `
   <nav>
     <ul class="pagination">
       <li class="page-item disabled">
         <a class="page-link" href="#">Previous</a>
       </li>
-      <li class="page-item"><a class="page-link" href="#">3</a></li>
+      ${Pages}
       <li class="page-item"><a class="page-link" href="#">Next</a></li>
     </ul>
   </nav>`;
@@ -165,16 +172,37 @@ function appendUserToWrapper(start, end) {
     .insertAdjacentHTML("afterbegin", userArray);
 }
 
-function appendPagination(length) {
-  document
-    .getElementById("pagination")
-    .insertAdjacentHTML("afterbegin", renderPagination(length));
+function appendPagination(length, rowsPerPage) {
+    document
+        .getElementById("pagination")
+        .insertAdjacentHTML("afterbegin", renderPagination(length, rowsPerPage));
 }
-function displayList() {}
 
 let rowsPerPage = 10;
 let currentPage = 1;
+///
+let searchValue = {
+    searchValue:"dSRFgJ2L3CqrZJrmOkWD@gmail.com"
+    };
+////
+let reqHeader = new Headers();
+reqHeader.append('Content-Type', 'text/json');
+reqHeader.append('Accept', 'application/json, text/plain, */*');
 
-appendUserToWrapper(0, rowsPerPage);
-reRenderCheckbox();
-appendPagination();
+let initObject = {
+    method: 'POST',
+    headers: reqHeader,
+    body: JSON.stringify(searchValue)
+};
+////
+
+fetch("/api/UserManagerManagement", initObject)
+    .then((response) => response.json())
+        .then((json) => {
+            console.log(json);
+            Data.data = json;
+            console.log(json);
+            appendUserToWrapper(0, rowsPerPage);
+            reRenderCheckbox();
+            appendPagination(Data.data.length, rowsPerPage);
+        });

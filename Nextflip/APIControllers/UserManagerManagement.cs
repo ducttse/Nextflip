@@ -12,8 +12,8 @@ namespace Nextflip.APIControllers
 {
     public class UserManagerManagement : ControllerBase
     {
-        [Route("api/UserManagerManagement/{searchValue}")]
-        public JsonResult GetAccountListByEmail([FromServices] IUserManagerManagementService userManagerManagementService, string searchValue)
+        [Route("api/UserManagerManagement/")]
+        public JsonResult GetAccountListByEmail([FromServices] IUserManagerManagementService userManagerManagementService, [FromBody] string searchValue)
         {
             IEnumerable<Account> accounts = userManagerManagementService.GetAccountListByEmail(searchValue);
             Debug.WriteLine("FLAG");

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Nextflip.Models.subtitle.SubtitleDTO>
+﻿
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -8,9 +8,3 @@
     <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
 </div>
 
-@foreach (var i in Model)
-{
-    
-    <p>@i.SubtitleID, @i.EpisodeID , @i.Language, @i.Status,@i.SubtitleURL</p>
-
-}

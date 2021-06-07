@@ -16,7 +16,7 @@ namespace Nextflip.Models.episode
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = $"Select episodeID, status, number From season Where seasonID = '{seasonID}'";
+                string Sql = $"Select episodeID, status, number, episodeURL From episode Where seasonID = '{seasonID}'";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
 
@@ -29,7 +29,8 @@ namespace Nextflip.Models.episode
                                 EpisodeID = reader.GetString(0),
                                 SeasonID = seasonID,
                                 Status = reader.GetString(1),
-                                Number = reader.GetInt32(2)
+                                Number = reader.GetInt32(2),
+                                EpisodeURL = reader.GetString(3)
                             });
                         }
                     }

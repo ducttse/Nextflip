@@ -1,19 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nextflip.Models;
-using Nextflip.Models.category;
-using Nextflip.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
+
 namespace Nextflip.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -22,7 +22,6 @@ namespace Nextflip.Controllers
         
         public IActionResult Index()
         {
-
             return View();
         }
 

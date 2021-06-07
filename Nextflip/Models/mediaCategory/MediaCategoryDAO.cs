@@ -17,7 +17,7 @@ namespace Nextflip.Models.mediaCategory
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = "Select categoryID From mediaCategory";
+                string Sql = $"Select categoryID From mediaCategory Where mediaID ='{mediaID}'";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
 

@@ -16,7 +16,7 @@ namespace Nextflip.Models.media
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = $"Select mediaID, title, bannerURL, language, description " +
+                string Sql = $"Select mediaID,status, title, bannerURL, language, description " +
                                 $"From media Where title LIKE '%{searchValue}%'";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
@@ -28,10 +28,11 @@ namespace Nextflip.Models.media
                             medias.Add(new MediaDTO
                             {
                                 MediaID = reader.GetString(0),
-                                Title = reader.GetString(1),
-                                BannerURL = reader.GetString(2),
-                                Language = reader.GetString(3),
-                                Description = reader.GetString(4),
+                                Status = reader.GetString(1),
+                                Title = reader.GetString(2),
+                                BannerURL = reader.GetString(3),
+                                Language = reader.GetString(4),
+                                Description = reader.GetString(5),
                             });
                         }
                     }

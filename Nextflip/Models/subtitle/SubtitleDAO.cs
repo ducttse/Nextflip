@@ -12,9 +12,9 @@ namespace Nextflip.Models.subtitle
     public class SubtitleDAO : ISubtitleDAO
     {
         
-        public SubtitleDTO GetSubtitleByEpisodeID(string episodeID)
+        public IEnumerable<SubtitleDTO> GetSubtitlesByEpisodeID(string episodeID)
         {
-            SubtitleDTO subtitle = null;
+            var subtitles = new List<SubtitleDTO>();
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
@@ -23,22 +23,22 @@ namespace Nextflip.Models.subtitle
                 {
                     using (var reader = command.ExecuteReader())
                     {
-                        if (reader.Read())
+                        while (reader.Read())
                         {
-                            subtitle = new SubtitleDTO
+                            subtitles.Add( new SubtitleDTO
                             {
                                 SubtitleID = reader.GetString(0),
                                 EpisodeID = episodeID,
                                 Language = reader.GetString(1),
                                 Status = reader.GetString(2),
                                 SubtitleURL = reader.GetString(3)
-                            };
+                            });
                         }
                     }
                 }
                 connection.Close();
             }
-            return subtitle;
+            return subtitles;
         }
     }
 }

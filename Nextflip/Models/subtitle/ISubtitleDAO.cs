@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Nextflip.Models.subtitle
 {
     public interface ISubtitleDAO
     {
-        SubtitleDTO GetSubtitleByEpisodeID(string episodeID);
+        IEnumerable<SubtitleDTO> GetSubtitlesByEpisodeID(string episodeID);
     }
 }

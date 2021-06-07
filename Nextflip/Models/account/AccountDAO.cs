@@ -23,7 +23,7 @@ namespace Nextflip.Models.account
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select userID, userEmail, roleID, fullname " +
+                    string Sql = "Select userID, userEmail, roleID, fullname, status " +
                             "From account " +
                             "Where userEmail = @userEmail";
                     Debug.WriteLine(Sql);
@@ -37,8 +37,9 @@ namespace Nextflip.Models.account
                             {
                                 userID = reader.GetString(0),
                                 userEmail = reader.GetString(1),
-                                roleID = reader.GetInt32(2),
-                                fullname = reader.GetString(3)
+                                roleName = reader.GetString(2),
+                                fullname = reader.GetString(3),
+                                status = reader.GetString(4)
                             });
                             }
                         }

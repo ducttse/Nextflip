@@ -16,7 +16,7 @@ namespace Nextflip.Models.account
         public string userEmail { get; set; }
         public string googleID { get; set; }
         public string googleEmail { get; set; }
-        public int roleID { get; set; }
+        public string roleName { get; set; }
         public string fullname { get; set; }
         [DataType(DataType.Date)]
         public DateTime dateOfBirth { get; set; }

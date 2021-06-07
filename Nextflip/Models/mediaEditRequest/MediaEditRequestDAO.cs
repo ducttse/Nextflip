@@ -85,5 +85,58 @@ namespace Nextflip.Models.mediaEditRequest
             }
             return requests;
         }
+
+        public bool ApproveRequest(int requestID)
+        {
+            bool result = false;
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    //Editor_Request() = true;
+                    string Sql = "Update mediaEditRequest " +
+                            "Set status = 'Approved' " +
+                            "Where requestID = @requestID";
+                    Debug.WriteLine(Sql);
+                    MySqlCommand command = new MySqlCommand(Sql, connection);
+                        command.Parameters.AddWithValue("@requestID", requestID);
+                        int rows = command.ExecuteNonQuery();
+                        if (rows > 0) result = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return result;
+        }
+
+        public bool DisapproveRequest(int requestID)
+        {
+            bool result = false;
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    //Editor_Request() = false;
+                    string Sql = "Update mediaEditRequest " +
+                            "Set status = 'Disapproved' " +
+                            "Where requestID = @requestID";
+                    Debug.WriteLine(Sql);
+                    MySqlCommand command = new MySqlCommand(Sql, connection);
+                    command.Parameters.AddWithValue("@requestID", requestID);
+                    int rows = command.ExecuteNonQuery();
+                    if (rows > 0) result = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return result;
+        }
+
     }
 }

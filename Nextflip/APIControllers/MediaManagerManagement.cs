@@ -26,6 +26,18 @@ namespace Nextflip.APIControllers
             return new JsonResult(requests);
         }
 
-        
+        public JsonResult ApproveRequest([FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromBody] int requestID)
+        {
+            bool result = mediaManagerManagementService.ApproveRequest(requestID);
+            Debug.WriteLine("FLAG");
+            return new JsonResult(result);
+        }
+        public JsonResult DisapproveRequest([FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromBody] int requestID)
+        {
+            bool result = mediaManagerManagementService.DisappoveRequest(requestID);
+            Debug.WriteLine("FLAG");
+            return new JsonResult(result);
+        }
+
     }
 }

@@ -9,5 +9,7 @@ namespace Nextflip.Models.mediaEditRequest
     {
         IEnumerable<MediaEditRequest> GetAllPendingMedias();
         IEnumerable<MediaEditRequest> GetPendingMediaByUserEmail(string searchValue);
+        bool ApproveRequest(int requestID);
+        bool DisapproveRequest(int requestID);
     }
 }

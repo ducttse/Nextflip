@@ -12,7 +12,6 @@ namespace Nextflip.Models.account
 {
     public class AccountDAO : IAccountDAO
     {
-
         public AccountDAO() { }
         public IEnumerable<Account> GetAllAccounts()
         {

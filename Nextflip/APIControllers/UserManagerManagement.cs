@@ -20,6 +20,7 @@ namespace Nextflip.APIControllers
             return new JsonResult(accounts);
         }
 
+
         public JsonResult GetAllAccounts([FromServices] IUserManagerManagementService userManagerManagementService)
         {
             IEnumerable<Account> accounts = userManagerManagementService.GetAllAccounts();

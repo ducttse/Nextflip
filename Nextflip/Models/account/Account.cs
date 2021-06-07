@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace Nextflip.Models.account
 {
-    [Table("account")]
     public class Account
     {
         [Key]

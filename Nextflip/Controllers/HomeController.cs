@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nextflip.Models;
+using Nextflip.Models.category;
+using Nextflip.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,9 +19,10 @@ namespace Nextflip.Controllers
         {
             _logger = logger;
         }
-
+        
         public IActionResult Index()
         {
+
             return View();
         }
 

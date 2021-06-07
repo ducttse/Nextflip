@@ -8,7 +8,6 @@ namespace Nextflip.APIControllers
 {
     public class ViewSubscribedUserDashboard : ControllerBase
     {
-
         
         public JsonResult GetCategories([FromServices] ICategoryService categoryService)
         {

@@ -5,20 +5,20 @@ using System.Threading.Tasks;
 using System.Data;
 using Nextflip.Models;
 using MySql.Data.MySqlClient;
+using Nextflip.utils;
 
 namespace Nextflip.Models.subtitle
 {
     public class SubtitleDAO : ISubtitleDAO
     {
-        public string ConnectionString { get; set; }
-
+        
         public SubtitleDTO GetSubtitleByEpisodeID(string episodeID)
         {
             SubtitleDTO subtitle = null;
-            using (var connection = new MySqlConnection(ConnectionString))
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = $"Select subtitleID, language, status, subtitleURL From Subtitle Where episodeID = {episodeID}";
+                string Sql = $"Select subtitleID, language, status, subtitleURL From subtitle Where episodeID = '{episodeID}'";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     using (var reader = command.ExecuteReader())

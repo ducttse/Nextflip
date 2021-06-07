@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using Nextflip.utils;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -9,18 +10,16 @@ namespace Nextflip.Models.mediaFavorite
 {
     public class MediaFavoriteDAO : IMediaFavoriteDAO
     {
-        public string ConnectionString { get; set; }
-
+        
         public IList<string> GetMediaIDs(string favoriteListID)
         {
             var mediaIDs = new List<string>();
-            using (var connection = new MySqlConnection(ConnectionString))
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = $"Select mediaID From MediaCategory Where favoriteListID = {favoriteListID}";
+                string Sql = $"Select mediaID From mediaCategory Where favoriteListID = '{favoriteListID}'";
                 using (var command = new MySqlCommand(Sql, connection))
-                {
-
+                { 
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())

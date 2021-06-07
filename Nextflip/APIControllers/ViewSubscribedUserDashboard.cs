@@ -9,25 +9,29 @@ namespace Nextflip.APIControllers
     public class ViewSubscribedUserDashboard : ControllerBase
     {
 
-        public JsonResult GetCategories(ICategoryService categoryService)
+        
+        public JsonResult GetCategories([FromServices] ICategoryService categoryService)
         {
             IEnumerable<CategoryDTO> categories = categoryService.GetCategories();
             return new JsonResult(categories) ;
         }
 
-        public JsonResult GetMediasByTitle(IMediaService mediaService,[FromForm] string searchValue)
+        [Route("api/ViewSubscribedUserDashboard/{searchValue}")]
+        public JsonResult GetMediasByTitle([FromServices] IMediaService mediaService, string searchValue)
         {
             IEnumerable<MediaDTO> medias = mediaService.GetMediasByTitle(searchValue);
             return new JsonResult(medias);
         }
 
-        public JsonResult GetFavoriteMedias(IMediaService mediaService,[FromForm] string userID)
+        [Route("api/ViewSubscribedUserDashboard/{userID}")]
+        public JsonResult GetFavoriteMedias([FromServices] IMediaService mediaService, string userID)
         {
             IEnumerable<MediaDTO> medias = mediaService.GetFavoriteMediasByUserID(userID);
             return new JsonResult(medias);
         }
 
-        public JsonResult GetMediasByCategoryID(IMediaService mediaService, [FromForm] int categoryID)
+        [Route("api/ViewSubscribedUserDashboard/{categoryID}")]
+        public JsonResult GetMediasByCategoryID([FromServices] IMediaService mediaService, int categoryID)
         {
             IEnumerable<MediaDTO> medias = mediaService.GetMediasByCategoryID(categoryID);
             return new JsonResult(medias);

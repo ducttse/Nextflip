@@ -55,7 +55,7 @@ namespace Nextflip
 
             ///get connection string
             DbUtil.ConnectionString = Configuration.GetConnectionString("MySql");
-            DbUtil.TestConnection();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

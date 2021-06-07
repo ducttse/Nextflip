@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using Nextflip.utils;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,16 +9,15 @@ namespace Nextflip.Models.media
 {
     public class MediaDAO: IMediaDAO
     {
-        public string ConnectionString { get; set; }
 
         public IEnumerable<MediaDTO> GetMediasByTitle(string searchValue)
         {
             var medias = new List<MediaDTO>();
-            using (var connection = new MySqlConnection(ConnectionString))
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
                 string Sql = $"Select mediaID, title, bannerURL, language, description " +
-                                $"From Media Where title LIKE %{searchValue}%";
+                                $"From media Where title LIKE '%{searchValue}%'";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
 
@@ -41,14 +41,14 @@ namespace Nextflip.Models.media
             return medias;
         }
 
-        public MediaDTO GetMediasByID(string mediaID)
+        public MediaDTO GetMediaByID(string mediaID)
         {
             var media = new MediaDTO();
-            using (var connection = new MySqlConnection(ConnectionString))
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
                 string Sql = $"Select mediaID, status, title, bannerURL, language, description " +
-                        $"From Media Where mediaID = {mediaID}";
+                        $"From media Where mediaID = '{mediaID}'";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
 

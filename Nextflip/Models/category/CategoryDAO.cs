@@ -4,17 +4,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Data;
 using MySql.Data.MySqlClient;
+using Nextflip.utils;
 
 namespace Nextflip.Models.category
 {
     public class CategoryDAO: ICategoryDAO
-    {
-        public string ConnectionString { get; set; }
+    { 
 
         public IEnumerable<CategoryDTO> GetCategories()
         {
             var categories = new List<CategoryDTO>();
-            using (var connection = new MySqlConnection(ConnectionString))
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
                 string Sql = "Select categoryID, name From category";
@@ -41,10 +41,10 @@ namespace Nextflip.Models.category
         public CategoryDTO GetCategoryByID(int categoryID)
         {
             CategoryDTO category = null;
-            using (var connection = new MySqlConnection(ConnectionString))
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = $"Select categoryID, name From category Where categoryID = {categoryID}";
+                string Sql = $"Select categoryID, name From category Where categoryID = '{categoryID}'";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
 

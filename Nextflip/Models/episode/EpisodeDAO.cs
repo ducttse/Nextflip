@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using Nextflip.utils;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -8,14 +9,14 @@ namespace Nextflip.Models.episode
 {
     public class EpisodeDAO : IEpisodeDAO
     {
-        public string ConnectionString { get; set; }
+
         public IEnumerable<EpisodeDTO> GetEpisodesBySeasonID(string seasonID)
         {
             var episodes = new List<EpisodeDTO>();
-            using (var connection = new MySqlConnection(ConnectionString))
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = $"Select episodeID, status, number From season Where seasonID = {seasonID}";
+                string Sql = $"Select episodeID, status, number From season Where seasonID = '{seasonID}'";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
 

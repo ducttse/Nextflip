@@ -29,7 +29,7 @@ namespace Nextflip.Services.Implementations
             IList<string> favoriteMediaIDs = _mediaFavoriteDAO.GetMediaIDs(favoriteList.FavoriteListID);
             foreach (string mediaID in favoriteMediaIDs)
             {
-                favoriteMedias.Add(_mediaDAO.GetMediasByID(mediaID));
+                favoriteMedias.Add(_mediaDAO.GetMediaByID(mediaID));
             }
 
             return favoriteMedias;
@@ -43,7 +43,7 @@ namespace Nextflip.Services.Implementations
             IList<string> mediaIDs = _mediaCategoryDAO.GetMediaIDs(categoryID);
             foreach (var mediaID in mediaIDs)
             {
-                MediaDTO media = _mediaDAO.GetMediasByID(mediaID);
+                MediaDTO media = _mediaDAO.GetMediaByID(mediaID);
                 medias.Add(media);
             }
             return medias;

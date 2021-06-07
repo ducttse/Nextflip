@@ -7,6 +7,7 @@ namespace Nextflip.Models.account
 {
     public interface IAccountDAO
     {
+        IEnumerable<Account> GetAllAccounts();
         IEnumerable<Account> GetAccountListByEmail(string searchValue);
         Boolean ChangeAccountStatus(string userID);
         Boolean AddNewStaff(string fullname, string userEmail, string password, int intRole);

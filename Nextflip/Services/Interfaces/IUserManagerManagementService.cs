@@ -8,6 +8,7 @@ namespace Nextflip.Services.Interfaces
 {
     public interface IUserManagerManagementService
     {
+        public IEnumerable<Account> GetAllAccounts();
         IEnumerable<Account> GetAccountListByEmail(string searchValue);
        // IEnumerable<Media> getListMedia(string searchValue);
     }

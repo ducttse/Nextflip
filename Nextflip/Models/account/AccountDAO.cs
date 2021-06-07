@@ -14,6 +14,42 @@ namespace Nextflip.Models.account
     {
 
         public AccountDAO() { }
+        public IEnumerable<Account> GetAllAccounts()
+        {
+            var accounts = new List<Account>();
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select userID, userEmail, roleName, fullname, status " +
+                            "From account";
+                    Debug.WriteLine(Sql);
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                accounts.Add(new Account
+                                {
+                                    userID = reader.GetString(0),
+                                    userEmail = reader.GetString(1),
+                                    roleName = reader.GetString(2),
+                                    fullname = reader.GetString(3),
+                                    status = reader.GetString(4)
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return accounts;
+        }
 
         public IEnumerable<Account> GetAccountListByEmail(string searchValue)
         {
@@ -23,7 +59,7 @@ namespace Nextflip.Models.account
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select userID, userEmail, roleID, fullname, status " +
+                    string Sql = "Select userID, userEmail, roleName, fullname, status " +
                             "From account " +
                             "Where userEmail = @userEmail";
                     Debug.WriteLine(Sql);
@@ -73,6 +109,6 @@ namespace Nextflip.Models.account
             throw new NotImplementedException();
         }
 
-
+        
     }
 }

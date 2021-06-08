@@ -16,15 +16,13 @@ namespace Nextflip.APIControllers
         public JsonResult GetAccountListByEmail([FromServices] IUserManagerManagementService userManagerManagementService, [FromBody] string searchValue)
         {
             IEnumerable<Account> accounts = userManagerManagementService.GetAccountListByEmail(searchValue);
-            Debug.WriteLine("FLAG");
             return new JsonResult(accounts);
         }
 
-
+        [Route("api/UserManagerManagement/GetAllAccounts")]
         public JsonResult GetAllAccounts([FromServices] IUserManagerManagementService userManagerManagementService)
         {
             IEnumerable<Account> accounts = userManagerManagementService.GetAllAccounts();
-            Debug.WriteLine("FLAG");
             return new JsonResult(accounts);
         }
     }

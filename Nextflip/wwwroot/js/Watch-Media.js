@@ -1,4 +1,4 @@
-﻿function renderMedia() {
+﻿function renderMedia(media) {
   return `
   <video
     id="video"
@@ -8,12 +8,12 @@
     preload="none"
     data-setup='{ "aspectRatio":"16:9", "playbackRates": [1, 1.5, 2] }'
   >
-    <source src="https://storage.googleapis.com/next-flip/Media/koe8imWOkoi1dAsd03ds/amg3LkxWuWdPQvgYYlsY/2qn8JEjbqoDNJAjtkEdp/2qn8JEjbqoDNJAjtkEdp" type="video/mp4" />
+    <source src="${media.episodeURL}" type="video/mp4" />
   </video>
   `;
 }
 
-function renderName() {
+function renderName(media) {
   return `
   <div id="name" class="fixed-top mt-2 ml-5" style="color: white">
     <div class="row">
@@ -28,16 +28,33 @@ function renderName() {
   </div>`;
 }
 
-function appendMedia() {
+function appendMedia(media) {
   document
-    .getElementById("wapper")
-    .insertAdjacentHTML("afterbegin", appendMedia);
+    .getElementById("wrapper")
+    .insertAdjacentHTML("afterbegin", renderMedia(media));
 }
-function appendName() {
-  document.getElementById("name").insertAdjacentHTML("afterbegin", appendName);
+
+function appendName(media) {
+  document
+    .getElementById("name")
+    .insertAdjacentHTML("afterbegin", renderName());
 }
-appendName();
-appendMedia();
+
+function hideName() {
+  var name = document.getElementById("name");
+  if (name.classList.contains("show")) {
+    name.classList.remove("show");
+  }
+  name.classList.add("hide");
+}
+function showName() {
+  var name = document.getElementById("name");
+  if (name.classList.contains("hide")) {
+    name.classList.remove("hide");
+  }
+  name.classList.add("show");
+}
+
 // let searchValue = {
 //   searchValue: "dSRFgJ2L3CqrZJrmOkWD@gmail.com"
 // };
@@ -53,8 +70,16 @@ appendMedia();
 // };
 // ////
 
-// fetch("/api/ViewMediaDetails/GetEpisodes/7BEoR5EnOjIjPqHghUxI", initObject)
-//   .then((response) => response.json())
-//   .then((json) => {
-//     Data.data = json;
-//   });
+fetch("/api/ViewMediaDetails/GetEpisode/1DIt6YqpmgDTOPDzsaqz")
+  .then((response) => response.json())
+  .then((json) => {
+    appendName();
+    appendMedia(json);
+    var video = document.querySelector("video");
+    video.addEventListener("play", () => {
+      setTimeout(hideName, 5000);
+    });
+    video.addEventListener("pause", () => {
+      setTimeout(showName, 500);
+    });
+  });

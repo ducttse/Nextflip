@@ -8,5 +8,6 @@ namespace Nextflip.Models.episode
     public interface IEpisodeDAO
     {
         IEnumerable<Episode> GetEpisodesBySeasonID(string seasonID);
+        Episode GetEpisodeByID(string episodeID);
     }
 }

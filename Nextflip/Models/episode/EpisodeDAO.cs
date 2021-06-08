@@ -39,5 +39,37 @@ namespace Nextflip.Models.episode
             }
             return episodes;
         }
+
+        public Episode GetEpisodeByID(string episodeID)
+        {
+            Episode episode = null;
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            {
+                connection.Open();
+                string Sql = "Select seasonID, status, number, episodeURL From episode Where episodeID = @episodeID";
+                using (var command = new MySqlCommand(Sql, connection))
+                {
+                    command.Parameters.AddWithValue("@episodeID", episodeID);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            episode = new Episode
+                            {
+                                EpisodeID = episodeID,
+                                SeasonID = reader.GetString(0),
+                                Status = reader.GetString(1),
+                                Number = reader.GetInt32(2),
+                                EpisodeURL = reader.GetString(3)
+                            };
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return episode;
+        }
+
+        
     }
 }

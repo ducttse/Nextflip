@@ -8,6 +8,8 @@ namespace Nextflip.Services.Implementations
     {
         private readonly ISubtitleDAO _subtitleDAO; 
         public SubtitleService(ISubtitleDAO subtitleDAO) => _subtitleDAO = subtitleDAO;
+
+        public Subtitle GetSubtitleByID(string subtitleID) => _subtitleDAO.GetSubtitleByID(subtitleID);
         public IEnumerable<Subtitle> GetSubtitlesByEpisodeID(string episodeID) => _subtitleDAO.GetSubtitlesByEpisodeID(episodeID);
     }
 }

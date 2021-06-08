@@ -19,10 +19,9 @@ namespace Nextflip.Models.season
 
                 using (var command = new MySqlCommand(Sql, connection))
                 {
-
+                    command.Parameters.AddWithValue("@mediaID", mediaID);
                     using (var reader = command.ExecuteReader())
-                    {
-                        command.Parameters.AddWithValue("@mediaID", mediaID);
+                    { 
                         while (reader.Read())
                         {
                             seasons.Add(new Season

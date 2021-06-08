@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nextflip.Models;
+using Nextflip.Models.season;
+using Nextflip.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,7 +23,7 @@ namespace Nextflip.Controllers
         }
         
         public IActionResult Index()
-        {
+        { 
             return View();
         }
 

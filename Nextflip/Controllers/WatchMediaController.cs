@@ -10,9 +10,8 @@ namespace Nextflip.Controllers
         }
 
         [HttpPost]
-        public IActionResult Watch([FromForm] string episodeUrl)
+        public IActionResult Watch()
         {
-            ViewBag.episodeUrl = episodeUrl;
             return View();
         }
     }

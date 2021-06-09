@@ -1,0 +1,28 @@
+@{
+    Layout = "_CustomLayout";
+}
+
+<div class="ui_wrapper">
+    <form method="POST" action="">
+        <table class="table table-bordered w-75">
+            <thead class="table-dark">
+                <tr>
+                    <td class="col-3">Email</td>
+                    <td class="col-1">Role</td>
+                    <td class="col-2">Full name</td>
+                    <td class="col-1">Active</td>
+                    <td class="col-1"></td>
+                </tr>
+            </thead>
+            <tbody id="dataWapper"></tbody>
+        </table>
+        <div id="pagination"></div>
+        <div id="submitButton">
+            <!-- Submit button -->
+            <button class="btn btn-primary" type="submit" name="btn" value="save">
+                Save
+            </button>
+        </div>
+    </form>
+</div>
+<script src="./User-Manager-Dashboard.js"></script>

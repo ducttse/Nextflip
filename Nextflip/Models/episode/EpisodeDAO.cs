@@ -16,7 +16,7 @@ namespace Nextflip.Models.episode
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = "Select episodeID, name, thumbnail, status, number, episodeURL From episode Where seasonID = @seasonID";
+                string Sql = "Select episodeID, title, thumbnailURL, status, number, episodeURL From episode Where seasonID = @seasonID";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     command.Parameters.AddWithValue("@seasonID", seasonID);
@@ -27,8 +27,8 @@ namespace Nextflip.Models.episode
                             episodes.Add(new Episode
                             {
                                 EpisodeID = reader.GetString(0),
-                                Name = reader.GetString(1),
-                                Thumbnail = reader.GetString(2),
+                                Title = reader.GetString(1),
+                                ThumbnailURL = reader.GetString(2),
                                 SeasonID = seasonID,
                                 Status = reader.GetString(3),
                                 Number = reader.GetInt32(4),
@@ -48,7 +48,7 @@ namespace Nextflip.Models.episode
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = "Select name, thumbnail, seasonID, status, number, episodeURL From episode Where episodeID = @episodeID";
+                string Sql = "Select title, thumbnailURL, seasonID, status, number, episodeURL From episode Where episodeID = @episodeID";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     command.Parameters.AddWithValue("@episodeID", episodeID);
@@ -59,8 +59,8 @@ namespace Nextflip.Models.episode
                             episode = new Episode
                             {
                                 EpisodeID = episodeID,
-                                Name = reader.GetString(0),
-                                Thumbnail = reader.GetString(1),
+                                Title = reader.GetString(0),
+                                ThumbnailURL = reader.GetString(1),
                                 SeasonID = reader.GetString(2),
                                 Status = reader.GetString(3),
                                 Number = reader.GetInt32(4),

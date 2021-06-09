@@ -8,8 +8,8 @@ namespace Nextflip.Models.season
     public class Season
     {
         public string SeasonID { get; set; }
-        public string Name { get; set; }
-        public string Thumbnail { get; set; }
+        public string Title { get; set; }
+        public string ThumbnailURL { get; set; }
         public string MediaID { get; set; }
         public string Status { get; set; }
         public int Number { get; set; }

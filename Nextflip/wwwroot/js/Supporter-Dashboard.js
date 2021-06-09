@@ -1,4 +1,4 @@
-let Data = {
+﻿let Data = {
   data: []
 };
 
@@ -6,18 +6,22 @@ let RequestObject;
 
 function renderTicket(ticket) {
   return `
-    <tr>
-        <td>${1}</td>
-        <td>${ticket.role}</td>
-        <td>${ticket.userEmail}</td>
-        <td>${ticket.topicName}</td>
-        <td>
-            <a class="text-decoration-none" 
-            href="/Edit/${ticket.supportTicketID}">
-                Details
-            </a>
-        </td>
-    </tr>`;
+      <tr>
+          <td>${1}</td>
+          <td>${ticket.userEmail}</td>
+          <td>${ticket.topicName}</td>
+          <td>${ticket.status}</td>
+          <td>
+              <a class="text-decoration-none" 
+              href="/Edit/${ticket.supportTicketID}">
+                  Details
+              </a>
+          </td>
+          <td>
+            <button name="btnAction" value="technical" class="btn btn-warning">Send to Technical</button>
+            <button name="btnAction" value="customerRelation" class="btn btn-warning">Send to Customer Relation</button>
+          </td>
+      </tr>`;
 }
 let rowsPerPage = 10;
 let currentPage = 0;
@@ -29,20 +33,20 @@ function renderPagination(length, rowsPerPage) {
     Pages += `<li class="page-item" page="${i}" onClick="setCurrentPage(${i})"><a class="page-link" href="#">${i}</a></li>`;
   }
   return `
-  <nav>
-    <ul class="pagination">
-      <li class="page-item disabled">
-        <a class="page-link" href="#">Previous</a>
-      </li>
-      ${Pages}
-      <li class="page-item"><a class="page-link" href="#">Next</a></li>
-    </ul>
-    </nav>`;
+    <nav>
+      <ul class="pagination">
+        <li class="page-item disabled">
+          <a class="page-link" href="#">Previous</a>
+        </li>
+        ${Pages}
+        <li class="page-item"><a class="page-link" href="#">Next</a></li>
+      </ul>
+      </nav>`;
 }
 // jump to another pagination
 function setCurrentPage(number) {
   currentPage = number - 1;
-  appendUserToWrapper(
+  appendTicketToWrapper(
     currentPage * rowsPerPage,
     rowsPerPage + Data.data.length - currentPage * rowsPerPage > rowsPerPage
       ? ++currentPage * rowsPerPage
@@ -52,9 +56,28 @@ function setCurrentPage(number) {
   setCurrentColor(number);
 }
 
+function removeCurrentColor() {
+  let pageArray = Array.from(document.getElementsByClassName("page-item"));
+  let curPage = pageArray.filter((page) => {
+    return page.classList.contains("active");
+  });
+  if (curPage.length > 0) {
+    curPage[0].classList.remove("active");
+  }
+}
+
+function setCurrentColor(number) {
+  removeCurrentColor();
+  let pageArray = Array.from(document.getElementsByClassName("page-item"));
+  let curPage = pageArray.filter((page) => {
+    return parseInt(page.getAttribute("page")) === number;
+  });
+  curPage[0].classList.add("active");
+}
+
 function appendTicketToWrapper(start, end) {
   let ticketArray = Data.data.slice(start, end).map((ticket) => {
-    return renderTicket(user);
+    return renderTicket(ticket);
   });
   ticketArray = ticketArray.join("");
   let dataWapper = document.getElementById("dataWapper");
@@ -72,7 +95,7 @@ function appendPagination(length, rowsPerPage) {
 
 function onLoad() {
   appendPagination(Data.data.length, rowsPerPage);
-  appendUserToWrapper(0, rowsPerPage);
+  appendTicketToWrapper(0, rowsPerPage);
 }
 
 onLoad();
@@ -101,3 +124,4 @@ function Run() {
       onLoad();
     });
 }
+Run();

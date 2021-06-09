@@ -1,0 +1,25 @@
+﻿
+@{
+    Layout = "_CustomLayout";
+}
+@section Styles {
+    <link href="@Url.Content("~/css/Supporter-Dashboard.css")" rel="stylesheet" type="text/css" />
+}
+<div class="ui_wrapper">
+    <form method="POST" action="">
+        <table class="table table-bordered w-100">
+            <thead class="table-dark">
+                <tr>
+                    <td class="col-1">No</td>
+                    <td class="col-2">User Email</td>
+                    <td class="col-1">Topic</td>
+                    <td class="col-1">Status</td>
+                    <td class="col-2"><td>
+                </tr>
+            </thead>
+            <tbody id="dataWapper"></tbody>
+        </table>
+        <div id="pagination"></div>
+    </form>
+</div>
+<script src="~/js/Supporter-Dashboard.js"></script>

@@ -3,7 +3,6 @@ using Nextflip.utils;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Nextflip.Models.episode
@@ -49,10 +48,6 @@ namespace Nextflip.Models.episode
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-<<<<<<< HEAD
-                Debug.WriteLine(episodeID);
-=======
->>>>>>> ccfb735305cd1200cda1e70f59d62e93512b7a90
                 string Sql = "Select title, thumbnailURL, seasonID, status, number, episodeURL From episode Where episodeID = @episodeID";
                 using (var command = new MySqlCommand(Sql, connection))
                 {

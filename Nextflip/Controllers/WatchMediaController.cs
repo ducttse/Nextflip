@@ -9,5 +9,11 @@ namespace Nextflip.Controllers
             ViewBag.EpisodeID = episodeID;
             return View();
         } 
+
+        public IActionResult MediaDetails(string mediaID)
+        {
+            ViewBag.MediaID = mediaID;
+            return View();
+        }
     }
 }

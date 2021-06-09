@@ -88,13 +88,12 @@ namespace Nextflip.Models.supportTicket
         {
             try
             {
-                SupportTicket supportTicket = new SupportTicket();
                 using (var connection = new MySqlConnection(utils.DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string sql = "SELECT supportTicketID, userEmail, topicID, status, content " +
+                    string sql = "SELECT supportTicketID, userEmail, topicName, status, content " +
                                                             "FROM supportTicket " +
-                                                            "WHERE supportTicketID = @supportTicketID';";
+                                                            "WHERE supportTicketID = @supportTicketID;";
                     using (var command = new MySqlCommand(sql, connection))
 
                     {
@@ -107,9 +106,8 @@ namespace Nextflip.Models.supportTicket
                                 string topicName = reader.GetString("topicName");
                                 string status = reader.GetString("status");
                                 string content = reader.GetString("content");
-                                supportTicket = new SupportTicket(supportTicketID, userEmail, topicName, status, content);
                                 connection.Close();
-                                return supportTicket;
+                                return new SupportTicket(supportTicketID, userEmail, topicName, status, content);
                             }
                             connection.Close();
                         }

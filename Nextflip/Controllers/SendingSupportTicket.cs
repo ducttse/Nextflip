@@ -14,7 +14,14 @@ namespace Nextflip.Controllers
         }
         public IActionResult Index()
         {
-            return View();
+            try {
+                return View();
+            }
+            catch(Exception e)
+            {
+                _logger.LogInformation("SendingSupportTicket/Index: " + e.Message);
+                return View("Error");
+            }
         }
         [HttpPost]
         public IActionResult Send([FromServices] ISupportTicketService supportTicketService, [FromForm] string userEmail, [FromForm]string topicName, [FromForm]string content)
@@ -25,7 +32,7 @@ namespace Nextflip.Controllers
             }
             catch(Exception e)
             {
-                _logger.LogInformation("SendingSupportTicket: " + e.Message);
+                _logger.LogInformation("SendingSupportTicket/Send: " + e.Message);
                 return View("Error");
             }
         }

@@ -20,6 +20,7 @@ namespace Nextflip.APIControllers
         {
             _logger = logger;
         }
+
         [Route("GetPendingSupportTickets")]
         public IActionResult GetPendingSupportTickets([FromServices] ISupportTicketDAO supportTicketDAO)
         {
@@ -27,14 +28,14 @@ namespace Nextflip.APIControllers
                 IList<SupportTicket> pendingSupportTickets = supportTicketDAO.ViewAllPendingSupportTickets();
                 return new JsonResult(pendingSupportTickets);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogInformation("ViewSupporterDashboard/GetPendingSupportTickets: " + e.Message);
                 return new JsonResult("An error occurred");
             }
         }
         [Route("Respond")]
-        public async Task<IActionResult> Respond([FromServices] ISendMailService sendMailService, [FromServices] ISupportTicketDAO supportTicketDAO , [FromBody] string btnAction, [FromBody] string supportTicketID,[FromBody] string userEmail,[FromBody] string topicName, [FromBody] string content)
+        public async Task<IActionResult> Respond([FromServices] ISendMailService sendMailService, [FromServices] ISupportTicketDAO supportTicketDAO, [FromBody] string btnAction, [FromBody] string supportTicketID, [FromBody] string userEmail, [FromBody] string topicName, [FromBody] string content)
         {
             try {
                 bool result = false;
@@ -42,17 +43,31 @@ namespace Nextflip.APIControllers
                 string toEmail = "nextflipcompany.com";
                 content = "From userEmail: " + userEmail + "\n" + content;
 
-                if (btnAction.Equals("Technical")) toEmail = TECHNICAL_EMAIL;
-                else if (btnAction.Equals("Customer Relation")) toEmail = CUSTOMER_RELATION_EMAIL;
+                if (btnAction.Equals("technical")) toEmail = TECHNICAL_EMAIL;
+                else if (btnAction.Equals("customerRelation")) toEmail = CUSTOMER_RELATION_EMAIL;
                 await sendMailService.SendEmailAsync(toEmail, topicName, content);
 
                 result = supportTicketDAO.ForwardSupportTicket(supportTicketID, toEmail).Result;
                 return new JsonResult("Forward successful");
             }
+            catch (Exception e)
+            {
+                _logger.LogInformation("ViewSupporterDashboard/Respond: " + e.Message);
+                return new JsonResult("An error occurred");
+            }
+        }
+        [Route("GetSupportTicketDetails/{supportTicketID}")]
+        public IActionResult GetSupportTicketDetails([FromServices] ISupportTicketService supportTicketService, string supportTicketID)
+        {
+            try
+            {
+                SupportTicket supportTicket = supportTicketService.ViewSupportTicketByID(supportTicketID);
+                return new JsonResult(supportTicket);
+            }
             catch(Exception e)
             {
-                _logger.LogInformation("ViewSupporterDashboard: " + e.Message);
-                return new JsonResult("An error occurred");
+                _logger.LogInformation("ViewSupporterDashboard/GetSupportTicketDetails: " + e.Message);
+                return new JsonResult(e.Message);
             }
         }
 

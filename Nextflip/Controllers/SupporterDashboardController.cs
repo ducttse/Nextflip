@@ -23,7 +23,7 @@ namespace Nextflip.Controllers
             }
             catch(Exception e)
             {
-                _logger.LogInformation("SupporterDashboardController: " + e.Message);
+                _logger.LogInformation("SupporterDashboardController/Index: " + e.Message);
                 return View("Error");
             }
         }

@@ -4,6 +4,7 @@ namespace Nextflip.Controllers
 {
     public class WatchMediaController : Controller
     {
+        [Route("{episodeID}")]
         public IActionResult Watch(string episodeID)
         {
             ViewBag.EpisodeID = episodeID;

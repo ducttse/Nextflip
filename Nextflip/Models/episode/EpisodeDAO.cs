@@ -12,66 +12,80 @@ namespace Nextflip.Models.episode
 
         public IEnumerable<Episode> GetEpisodesBySeasonID(string seasonID)
         {
-            var episodes = new List<Episode>();
-            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            try
             {
-                connection.Open();
-                string Sql = "Select episodeID, title, thumbnailURL, status, number, episodeURL From episode Where seasonID = @seasonID";
-                using (var command = new MySqlCommand(Sql, connection))
+                var episodes = new List<Episode>();
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
-                    command.Parameters.AddWithValue("@seasonID", seasonID);
-                    using (var reader = command.ExecuteReader())
+                    connection.Open();
+                    string Sql = "Select episodeID, title, thumbnailURL, status, number, episodeURL From episode Where seasonID = @seasonID";
+                    using (var command = new MySqlCommand(Sql, connection))
                     {
-                        while (reader.Read())
+                        command.Parameters.AddWithValue("@seasonID", seasonID);
+                        using (var reader = command.ExecuteReader())
                         {
-                            episodes.Add(new Episode
+                            while (reader.Read())
                             {
-                                EpisodeID = reader.GetString(0),
-                                Title = reader.GetString(1),
-                                ThumbnailURL = reader.GetString(2),
-                                SeasonID = seasonID,
-                                Status = reader.GetString(3),
-                                Number = reader.GetInt32(4),
-                                EpisodeURL = reader.GetString(5)
-                            });
+                                episodes.Add(new Episode
+                                {
+                                    EpisodeID = reader.GetString(0),
+                                    Title = reader.GetString(1),
+                                    ThumbnailURL = reader.GetString(2),
+                                    SeasonID = seasonID,
+                                    Status = reader.GetString(3),
+                                    Number = reader.GetInt32(4),
+                                    EpisodeURL = reader.GetString(5)
+                                });
+                            }
                         }
                     }
+                    connection.Close();
                 }
-                connection.Close();
+                return episodes;
             }
-            return episodes;
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public Episode GetEpisodeByID(string episodeID)
         {
-            Episode episode = null;
-            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            try
             {
-                connection.Open();
-                string Sql = "Select title, thumbnailURL, seasonID, status, number, episodeURL From episode Where episodeID = @episodeID";
-                using (var command = new MySqlCommand(Sql, connection))
+                Episode episode = null;
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
-                    command.Parameters.AddWithValue("@episodeID", episodeID);
-                    using (var reader = command.ExecuteReader())
+                    connection.Open();
+                    string Sql = "Select title, thumbnailURL, seasonID, status, number, episodeURL From episode Where episodeID = @episodeID";
+                    using (var command = new MySqlCommand(Sql, connection))
                     {
-                        if (reader.Read())
+                        command.Parameters.AddWithValue("@episodeID", episodeID);
+                        using (var reader = command.ExecuteReader())
                         {
-                            episode = new Episode
+                            if (reader.Read())
                             {
-                                EpisodeID = episodeID,
-                                Title = reader.GetString(0),
-                                ThumbnailURL = reader.GetString(1),
-                                SeasonID = reader.GetString(2),
-                                Status = reader.GetString(3),
-                                Number = reader.GetInt32(4),
-                                EpisodeURL = reader.GetString(5)
-                            };
+                                episode = new Episode
+                                {
+                                    EpisodeID = episodeID,
+                                    Title = reader.GetString(0),
+                                    ThumbnailURL = reader.GetString(1),
+                                    SeasonID = reader.GetString(2),
+                                    Status = reader.GetString(3),
+                                    Number = reader.GetInt32(4),
+                                    EpisodeURL = reader.GetString(5)
+                                };
+                            }
                         }
                     }
+                    connection.Close();
                 }
-                connection.Close();
+                return episode;
             }
-            return episode;
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
 

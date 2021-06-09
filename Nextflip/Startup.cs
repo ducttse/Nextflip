@@ -56,9 +56,11 @@ namespace Nextflip
             services.AddTransient<ISeasonService, SeasonService>();
             services.AddTransient<ISubtitleService, SubtitleService>();
 
+          
             //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
+            
 
             ///get connection string
             DbUtil.ConnectionString = Configuration.GetConnectionString("MySql");
@@ -92,9 +94,6 @@ namespace Nextflip
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
-                endpoints.MapControllerRoute(name: "blog",
-                    pattern: "{action}/{id?}",
-                    defaults: new { controller = "WatchMedia" });
             });
         }
     }

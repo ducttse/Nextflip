@@ -1,83 +1,33 @@
 let Data = {
-  data: [
-    {
-      mediaID: "M001",
-      title: "Spirder-Man",
-      status: "Enabled",
-      language: "English",
-      bannerURL: "https://storage.googleapis.com/next-flip/Image/Banner"
-    },
-    {
-      mediaID: "M001",
-      title: "Spirder-Man",
-      status: "Enabled",
-      language: "English",
-      bannerURL: "https://storage.googleapis.com/next-flip/Image/Banner"
-    },
-    {
-      mediaID: "M001",
-      title: "Spirder-Man",
-      status: "Enabled",
-      language: "English",
-      bannerURL: "https://storage.googleapis.com/next-flip/Image/Banner"
-    },
-    {
-      mediaID: "M001",
-      title: "Spirder-Man",
-      status: "Enabled",
-      language: "English",
-      bannerURL: "https://storage.googleapis.com/next-flip/Image/Banner"
+  data: []
+};
+let noImage = "https://storage.googleapis.com/next-flip/Image/no%20image.png";
+
+function validateUrl(value) {
+  return /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(
+    value
+  );
+}
+
+function ChangeURL(mediaArray) {
+  let arr = document.getElementById("holder_1").querySelectorAll("img");
+  console.log(arr);
+  for (let i = 0; i < arr.length; i++) {
+    var url = mediaArray[i].bannerURL;
+    if (!validateUrl(url)) {
+      url = noImage;
     }
-  ]
-};
-
-function renderMedia(media) {
-  return `
-  <div class="col-3 w-25" id="mediaWapper">
-    <img
-      src="${media.bannerURL}"
-      alt="img"
-      class="w-100 h-100"
-    />
-    <p class="bg-dark text-white title">${media.title}</p>
-  </div>`;
-}
-
-function appendMedia(start, end) {
-  let mediaArray = Data.data.slice(start, end).map((media) => {
-    return renderMedia(media);
-  });
-    mediaArray = mediaArray.join("");
-    document.getElementById("wrapper1").insertAdjacentHTML("afterbegin", mediaArray);
-    document.getElementById("wrapper2").insertAdjacentHTML("afterbegin", mediaArray);
-}
-
-fetch("/api/ViewSubscribedUserDashboard/GetMediasByCategoryID/1")
-  .then((res) => res.json())
-  .then((json) => {
-    Data.data = json;
-    appendMedia(0, 4);
-  });
-=======
-function appendMedia() {
-  let mediaArray = Data.data.map((media) => {
-    return renderMedia(media);
-  });
-  mediaArray = mediaArray.join("");
-  console.log(mediaArray);
-  document
-    .getElementById("wapper")
-    .insertAdjacentHTML("afterbegin", mediaArray);
-}
-
-xhr.onreadystatechange();
-
-let xhr = new XMLHttpRequest();
-//url
-xhr.open("POST", "/ViewSubscribedUserDashboard/GetFavoriteMedias", true);
-xhr.send("userID=05fRBPEgvmSBYSEhG0i7");
-xhr.onreadystatechange = function () {
-  if (this.readyState == 4 && this.status == 200) {
-    appendMedia();
+    arr[i].setAttribute("src", url);
   }
-};
+}
+
+function Run() {
+  fetch("/api/ViewSubscribedUserDashboard/GetMediasByCategoryID/1")
+    .then((res) => res.json())
+    .then((json) => {
+      console.log(json);
+      Data.data = json;
+      ChangeURL(Data.data);
+    });
+}
+Run();

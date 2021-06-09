@@ -1,18 +1,14 @@
+body {
+  background-color: #000;
+  color: white;
+}
 .title {
   font-size: 20px;
 }
-#big_banner {
-  width: 55%;
+.imageHolder {
+  height: 30vh;
 }
-#watch_now_big_banner {
-  position: absolute;
-  margin-top: 370px;
-  left: 370px;
-  z-index: 999;
-}
-#watch_now_big_banner img {
-  z-index: 0;
-}
-#media_holder {
-  height: 25vh;
+.imageHolder > img {
+  max-width: 100%;
+  height: 100%;
 }

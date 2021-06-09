@@ -15,7 +15,7 @@ namespace Nextflip.Models.season
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = "Select seasonID, status, number From season Where mediaID = @mediaID";
+                string Sql = "Select seasonID, title, thumbnailURL, status, number From season Where mediaID = @mediaID";
 
                 using (var command = new MySqlCommand(Sql, connection))
                 {
@@ -27,9 +27,11 @@ namespace Nextflip.Models.season
                             seasons.Add(new Season
                             {
                                 SeasonID = reader.GetString(0),
+                                Title = reader.GetString(1),
+                                ThumbnailURL = reader.GetString(2) ,
                                 MediaID = mediaID,
-                                Status = reader.GetString(1),
-                                Number = reader.GetInt32(2)
+                                Status = reader.GetString(3),
+                                Number = reader.GetInt32(4)
                             });
                         }
                     }

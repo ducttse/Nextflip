@@ -43,6 +43,22 @@ function renderMedia(media) {
   </div>`;
 }
 
+function appendMedia(start, end) {
+  let mediaArray = Data.data.slice(start, end).map((media) => {
+    return renderMedia(media);
+  });
+    mediaArray = mediaArray.join("");
+    document.getElementById("wrapper1").insertAdjacentHTML("afterbegin", mediaArray);
+    document.getElementById("wrapper2").insertAdjacentHTML("afterbegin", mediaArray);
+}
+
+fetch("/api/ViewSubscribedUserDashboard/GetMediasByCategoryID/1")
+  .then((res) => res.json())
+  .then((json) => {
+    Data.data = json;
+    appendMedia(0, 4);
+  });
+=======
 function appendMedia() {
   let mediaArray = Data.data.map((media) => {
     return renderMedia(media);

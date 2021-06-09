@@ -11,7 +11,7 @@ namespace Nextflip.Controllers
             return View();
         }
 
-        [Route("MediaDetails/{episodeID}")]
+        
         public IActionResult MediaDetails(string mediaID)
         {
             ViewBag.MediaID = mediaID;

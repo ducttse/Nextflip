@@ -8,7 +8,7 @@ namespace Nextflip.Controllers
     public class SendingSupportTicket : Controller
     {
         private readonly ILogger _logger;
-        public SendingSupportTicket(ILogger logger)
+        public SendingSupportTicket(ILogger<SendingSupportTicket> logger)
         {
             _logger = logger;
         }

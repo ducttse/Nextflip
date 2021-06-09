@@ -19,8 +19,9 @@ namespace Nextflip.Models.supportTicket
                 {
 
                     connection.Open();
-                    using (var command = new MySqlCommand("INSERT INTO supportTicket(supportTicketID, userEmail, topicID, status, content) " +
-                                                            "Value(@supportTicketID, @userEmail, @topicID, @status, @content"))
+                    string sql = "INSERT INTO supportTicket(supportTicketID, userEmail, topicID, status, content) " +
+                                                            "Value(@supportTicketID, @userEmail, @topicID, @status, @content);";
+                    using (var command = new MySqlCommand(sql, connection))
                     {
                         command.Parameters.AddWithValue("@supportTicketID", "randomString");  //use proc ???
                         command.Parameters.AddWithValue("@userEmail", userEmail);
@@ -118,6 +119,35 @@ namespace Nextflip.Models.supportTicket
             }
             catch(Exception e)
             {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public async Task<bool> ForwardSupportTicket(string supportTicketID, string forwardDepartment)
+        {
+            MySqlTransaction transaction = null;
+            try
+            {
+                using (var connection = new MySqlConnection(utils.DbUtil.ConnectionString))
+                {
+                    await connection.OpenAsync();
+                    string sql = "UPDATE supportTicket " +
+                                    "SET status = 'forwarded', forwardDepartment = @forwardDepartment" +
+                                    "WHERE supportTicketID = @supportTicketID; ";
+                    using (var command = new MySqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@forwardDepartment", forwardDepartment);
+                        command.Parameters.AddWithValue("@supportTicketID", supportTicketID);
+                        await command.ExecuteNonQueryAsync();
+                        await transaction.CommitAsync();
+                        await connection.CloseAsync();
+                        return true;
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                await transaction.RollbackAsync();
                 throw new Exception(e.Message);
             }
         }

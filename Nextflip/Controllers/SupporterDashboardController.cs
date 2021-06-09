@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +9,24 @@ namespace Nextflip.Controllers
 {
     public class SupporterDashboardController : Controller
     {
+        private readonly ILogger _logger;
+
+        public SupporterDashboardController(ILogger<SupporterDashboardController> logger)
+        {
+            _logger = logger;
+        }
         public IActionResult Index()
         {
-            return View();
+            try
+            {
+                return View();
+            }
+            catch(Exception e)
+            {
+                _logger.LogInformation("SupporterDashboardController: " + e.Message);
+                return View("Error");
+            }
         }
-
 
     }
 }

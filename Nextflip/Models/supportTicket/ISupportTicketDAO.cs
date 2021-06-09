@@ -11,5 +11,6 @@ namespace Nextflip.Models.supportTicket
         public bool SendSupportTicket(string userEmail, string topicID, string content);
         public IList<SupportTicket> ViewAllPendingSupportTickets();
         public SupportTicket ViewSupportTicketByID(string supportTicketID);
+        public Task<bool> ForwardSupportTicket(string supportTicketID, string forwardDepartment);
     }
 }

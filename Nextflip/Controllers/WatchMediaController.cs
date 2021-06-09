@@ -7,6 +7,6 @@ namespace Nextflip.Controllers
         public IActionResult Watch()
         {
             return View("Watch");
-        }
+        } 
     }
 }

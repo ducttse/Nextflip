@@ -14,6 +14,10 @@ namespace Nextflip.APIControllers
         public IActionResult GetPendingSupportTickets([FromServices] ISupportTicketDAO supportTicketDAO)
         {
             IList<SupportTicket> pendingSupportTickets = supportTicketDAO.ViewAllPendingSupportTickets();
+            for(int i = 0; i < pendingSupportTickets.Count; i++)
+            {
+                Console.WriteLine(pendingSupportTickets.ElementAt(i).supportTicketID);
+            }
             return new JsonResult(pendingSupportTickets);
         }
 

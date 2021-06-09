@@ -15,8 +15,9 @@ namespace Nextflip.Models.supportTopic
             using (var connection = new MySqlConnection(utils.DbUtil.ConnectionString))
             {
                 connection.Open();
-                using (var command = new MySqlCommand("SELECT supportTopicID, type " +
-                                                        "FROM supportTopic ;"))
+                string sql = "SELECT supportTopicID, type " +
+                                "FROM supportTopic ;";
+                using (var command = new MySqlCommand(sql, connection))
 
                 {
                     using (var reader = command.ExecuteReader())

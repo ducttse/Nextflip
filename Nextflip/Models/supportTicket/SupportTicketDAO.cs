@@ -52,11 +52,12 @@ namespace Nextflip.Models.supportTicket
         {
             IList<SupportTicket> supportTickets = new List<SupportTicket>();
             try {
-                using (var connection = new MySqlConnection(utils.DbUtil.ConnectionString)) {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString)) {
                     connection.Open();
-                    using (var command = new MySqlCommand("SELECT supportTicketID, userEmail, topicID, status, content " +
+                    string sql = "SELECT supportTicketID, userEmail, topicName, status, content " +
                                                             "FROM supportTicket " +
-                                                            "WHERE status = 'pending';"))
+                                                            "WHERE status = 'pending';";
+                    using (var command = new MySqlCommand(sql, connection))
 
                     {
                         using (var reader = command.ExecuteReader())
@@ -65,10 +66,10 @@ namespace Nextflip.Models.supportTicket
                             {
                                 string supportTicketID = reader.GetString("supportTicketID");
                                 string userEmail = reader.GetString("userEmail");
-                                int topicID = reader.GetInt16("topicID");
+                                string topicName = reader.GetString("topicName");
                                 string status = reader.GetString("status");
                                 string content = reader.GetString("content");
-                                supportTickets.Add(new SupportTicket(supportTicketID, userEmail, topicID, status, content));
+                                supportTickets.Add(new SupportTicket(supportTicketID, userEmail, topicName, status, content));
                             }
                             connection.Close();
                         }
@@ -90,9 +91,10 @@ namespace Nextflip.Models.supportTicket
                 using (var connection = new MySqlConnection(utils.DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    using (var command = new MySqlCommand("SELECT supportTicketID, userEmail, topicID, status, content " +
+                    string sql = "SELECT supportTicketID, userEmail, topicID, status, content " +
                                                             "FROM supportTicket " +
-                                                            "WHERE supportTicketID = @supportTicketID';"))
+                                                            "WHERE supportTicketID = @supportTicketID';";
+                    using (var command = new MySqlCommand(sql, connection))
 
                     {
                         command.Parameters.AddWithValue("@supportTicketID", supportTicketID);

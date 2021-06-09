@@ -1,20 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Nextflip.Controllers
 {
     public class WatchMediaController : Controller
     {
         
-        public IActionResult Watch(string episodeID)
+        public IActionResult Watch(string id)
         {
-            ViewBag.EpisodeID = episodeID;
+            ViewBag.EpisodeID = id;
             return View();
         }
 
         
-        public IActionResult MediaDetails(string mediaID)
+        public IActionResult MediaDetails(string id)
         {
-            ViewBag.MediaID = mediaID;
+            ViewBag.MediaID = id;
             return View();
         }
     }

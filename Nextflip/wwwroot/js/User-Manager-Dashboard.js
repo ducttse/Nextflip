@@ -1,160 +1,5 @@
 let Data = {
-  data: [
-    {
-      userID: "U001",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "Admin",
-      status: "Active"
-    },
-    {
-      userID: "U002",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "User",
-      status: "Inactive"
-    },
-    {
-      userID: "U001",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "Admin",
-      status: "Active"
-    },
-    {
-      userID: "U002",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "User",
-      status: "Inactive"
-    },
-    {
-      userID: "U001",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "Admin",
-      status: "Active"
-    },
-    {
-      userID: "U002",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "User",
-      status: "Inactive"
-    },
-    {
-      userID: "U001",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "Admin",
-      status: "Active"
-    },
-    {
-      userID: "U002",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "User",
-      status: "Inactive"
-    },
-    {
-      userID: "U001",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "Admin",
-      status: "Active"
-    },
-    {
-      userID: "U002",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Từ Trọng Đức",
-      role: "User",
-      status: "Inactive"
-    },
-    {
-      userID: "U001",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Từ Trọng Đức",
-      role: "Admin",
-      status: "Active"
-    },
-    {
-      userID: "U002",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "User",
-      status: "Inactive"
-    },
-    {
-      userID: "U001",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "Admin",
-      status: "Active"
-    },
-    {
-      userID: "U002",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "User",
-      status: "Inactive"
-    },
-    {
-      userID: "U001",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "Admin",
-      status: "Active"
-    },
-    {
-      userID: "U002",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "User",
-      status: "Inactive"
-    },
-    {
-      userID: "U001",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "Admin",
-      status: "Active"
-    },
-    {
-      userID: "U002",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "User",
-      status: "Inactive"
-    },
-    {
-      userID: "U001",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "Admin",
-      status: "Active"
-    },
-    {
-      userID: "U002",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "User",
-      status: "Inactive"
-    },
-    {
-      userID: "U001",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "Admin",
-      status: "Active"
-    },
-    {
-      userID: "U002",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "User",
-      status: "Inactive"
-    }
-  ]
+  data: []
 };
 
 let RequestObject;
@@ -163,7 +8,7 @@ function renderUser(user) {
   return `
     <tr>
         <td>${user.userEmail}</td>
-        <td>${user.role}</td>
+        <td>${user.roleName}</td>
         <td>${user.fullname}</td>
         <td class="checkBox">
             <input type="checkbox" 
@@ -228,7 +73,6 @@ function setCurrentColor(number) {
   removeCurrentColor();
   let pageArray = Array.from(document.getElementsByClassName("page-item"));
   let curPage = pageArray.filter((page) => {
-    console.log(parseInt(page.getAttribute("page")) === number);
     return parseInt(page.getAttribute("page")) === number;
   });
   curPage[0].classList.add("active");
@@ -297,19 +141,19 @@ function Load() {
 
 function Run() {
   ///
-  let searchValue = {
-    searchValue: "dSRFgJ2L3CqrZJrmOkWD@gmail.com"
-  };
-  ////
-  let reqHeader = new Headers();
-  reqHeader.append("Content-Type", "text/json");
-  reqHeader.append("Accept", "application/json, text/plain, */*");
+  // let searchValue = {
+  //   searchValue: "dSRFgJ2L3CqrZJrmOkWD@gmail.com"
+  // };
+  // ////
+  // let reqHeader = new Headers();
+  // reqHeader.append("Content-Type", "text/json");
+  // reqHeader.append("Accept", "application/json, text/plain, */*");
 
-  let initObject = {
-    method: "POST",
-    headers: reqHeader,
-    body: JSON.stringify(searchValue)
-  };
+  // let initObject = {
+  //   method: "POST",
+  //   headers: reqHeader,
+  //   body: JSON.stringify()
+  // };
   ////
   fetch("/api/UserManagerManagement/GetAllAccounts")
     .then((response) => response.json())

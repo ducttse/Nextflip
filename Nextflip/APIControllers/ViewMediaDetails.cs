@@ -4,6 +4,8 @@ using Nextflip.Services.Interfaces;
 using Nextflip.Models.season;
 using Nextflip.Models.episode;
 using Nextflip.Models.subtitle;
+using Nextflip.Models.media;
+using System.Collections;
 
 namespace Nextflip.APIControllers
 {
@@ -11,6 +13,27 @@ namespace Nextflip.APIControllers
     [ApiController]
     public class ViewMediaDetails : ControllerBase
     {
+        [Route ("GetMediaDetails/{mediaID}")]
+        public IActionResult GetMediaDetails([FromServices] IMediaService mediaService,
+                                                [FromServices] ISeasonService seasonService,
+                                                [FromServices] IEpisodeService episodeService,
+                                                string mediaID)
+        {
+            Media media = mediaService.GetMediaByID(mediaID);
+            IEnumerable<Season> seasons = seasonService.GetSeasonsByMediaID(mediaID);
+            var episodesMap = new Dictionary<string, IEnumerable>();
+            foreach(var season in seasons)
+            {
+                IEnumerable<Episode> episodes = episodeService.GetEpisodesBySeasonID(season.SeasonID);
+                episodesMap.Add(season.SeasonID, episodes);
+            }
+            var mediaDetails = new {
+                    Media = media,
+                    Seasons = seasons,
+                    EpisodesMapSeason = episodesMap
+            };
+            return new JsonResult(mediaDetails);
+        }
         [Route("GetSeasons/{mediaID}")]
         public IActionResult GetSeasons([FromServices] ISeasonService seasonService,string mediaID)
         {
@@ -38,6 +61,8 @@ namespace Nextflip.APIControllers
             Subtitle subtitle = subtitleService.GetSubtitleByID(subtitleID);
             return new JsonResult(subtitle);
         }
+
+
 
     }
 }

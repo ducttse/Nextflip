@@ -48,11 +48,11 @@ namespace Nextflip.Models.media
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = $"Select mediaID, status, title, bannerURL, language, description " +
-                        $"From media Where mediaID = '{mediaID}'";
+                string Sql =    "Select mediaID, status, title, bannerURL, language, description " +
+                                "From media Where mediaID = @mediaID";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
-
+                    command.Parameters.AddWithValue("@mediaID", mediaID);
                     using (var reader = command.ExecuteReader())
                     {
                         if (reader.Read())

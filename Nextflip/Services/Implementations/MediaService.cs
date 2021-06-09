@@ -22,6 +22,8 @@ namespace Nextflip.Services.Implementations
             _mediaCategoryDAO = mediaCategoryDAO;
         }
 
+        public Media GetMediaByID(string mediaID) => _mediaDAO.GetMediaByID(mediaID);
+
         public IEnumerable<Media> GetFavoriteMediasByUserID(string userID)
         {
             var favoriteMedias = new List<Media>();

@@ -4,7 +4,8 @@ using System.Collections.Generic;
 namespace Nextflip.Services.Interfaces
 {
     public interface IMediaService
-    { 
+    {
+        Media GetMediaByID(string mediaID);
         IEnumerable<Media> GetFavoriteMediasByUserID(string userID);
         IEnumerable<Media> GetMediasByTitle(string title);
 

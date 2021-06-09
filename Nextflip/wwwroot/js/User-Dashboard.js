@@ -58,7 +58,7 @@ fetch("/api/ViewSubscribedUserDashboard/GetMediasByCategoryID/1")
     Data.data = json;
     appendMedia(0, 4);
   });
-=======
+
 function appendMedia() {
   let mediaArray = Data.data.map((media) => {
     return renderMedia(media);

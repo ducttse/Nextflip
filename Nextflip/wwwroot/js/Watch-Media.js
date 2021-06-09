@@ -70,16 +70,22 @@ function showName() {
 // };
 // ////
 
-fetch("/api/ViewMediaDetails/GetEpisode/1DIt6YqpmgDTOPDzsaqz")
-  .then((response) => response.json())
-  .then((json) => {
-    appendName();
-    appendMedia(json);
-    var video = document.querySelector("video");
-    video.addEventListener("play", () => {
-      setTimeout(hideName, 5000);
-    });
-    video.addEventListener("pause", () => {
-      setTimeout(showName, 500);
-    });
-  });
+function Run(id) {
+    fetch(`/api/ViewMediaDetails/GetEpisode/${id}`)
+        .then((response) => response.json())
+        .then((json) => {
+            console.log(json);
+            appendName();
+            appendMedia(json);
+            var video = document.querySelector("video");
+            video.addEventListener("play", () => {
+                setTimeout(hideName, 5000);
+            });
+            video.addEventListener("pause", () => {
+                setTimeout(showName, 500);
+            });
+        })
+        .catch(err => console.log(err));
+}
+
+

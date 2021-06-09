@@ -94,6 +94,13 @@ namespace Nextflip
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller}/{action=Index}/{id?}");
+<<<<<<< HEAD
+=======
+                endpoints.MapControllerRoute(
+                    name: "watch",
+                    pattern: "{action}/{id?}",
+                    defaults: new { controller = "WatchMedia" });
+>>>>>>> 33b79c751c2921452fc6f82838a01cfd23c93834
             });
         }
     }

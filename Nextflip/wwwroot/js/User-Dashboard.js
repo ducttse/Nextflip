@@ -58,3 +58,26 @@ fetch("/api/ViewSubscribedUserDashboard/GetMediasByCategoryID/1")
     Data.data = json;
     appendMedia(0, 4);
   });
+=======
+function appendMedia() {
+  let mediaArray = Data.data.map((media) => {
+    return renderMedia(media);
+  });
+  mediaArray = mediaArray.join("");
+  console.log(mediaArray);
+  document
+    .getElementById("wapper")
+    .insertAdjacentHTML("afterbegin", mediaArray);
+}
+
+xhr.onreadystatechange();
+
+let xhr = new XMLHttpRequest();
+//url
+xhr.open("POST", "/ViewSubscribedUserDashboard/GetFavoriteMedias", true);
+xhr.send("userID=05fRBPEgvmSBYSEhG0i7");
+xhr.onreadystatechange = function () {
+  if (this.readyState == 4 && this.status == 200) {
+    appendMedia();
+  }
+};

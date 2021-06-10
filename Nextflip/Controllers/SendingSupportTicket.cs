@@ -28,7 +28,8 @@ namespace Nextflip.Controllers
         {
             try {
                 bool result = supportTicketService.SendSupportTicket(userEmail, topicName, content);
-                return View();
+                if(result) return View();
+                return View("Error");
             }
             catch(Exception e)
             {

@@ -48,7 +48,8 @@ namespace Nextflip.APIControllers
                 await sendMailService.SendEmailAsync(toEmail, topicName, content);
 
                 result = supportTicketDAO.ForwardSupportTicket(supportTicketID, toEmail).Result;
-                return new JsonResult("Forward successful");
+                if(result) return new JsonResult("Forward successful");
+                return new JsonResult("An error occurred");
             }
             catch (Exception e)
             {

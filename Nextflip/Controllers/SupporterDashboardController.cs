@@ -27,6 +27,18 @@ namespace Nextflip.Controllers
                 return View("Error");
             }
         }
+        public IActionResult Detail()
+        {
+            try
+            {
+                return View();
+            }
+            catch(Exception e)
+            {
+                _logger.LogInformation("SupporterDashboardController/Detail: " + e.Message);
+                return View("Error");
+            }
+        }
 
     }
 }

@@ -11,5 +11,6 @@ namespace Nextflip.Services.Interfaces
         IEnumerable<Notification> GetAllNotifications();
         Notification GetDetailOfNotification(int notificationID);
         IEnumerable<Notification> GetAllAvailableNotifications();
+        bool AddNotification(string title, string content);
     }
 }

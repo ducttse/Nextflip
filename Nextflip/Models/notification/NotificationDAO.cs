@@ -15,7 +15,7 @@ namespace Nextflip.Models.notification
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = "Select notificationID, title, status, content " +
+                string Sql = "Select notificationID, title, status, publishedDate, content " +
                                 "From notification";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
@@ -28,7 +28,8 @@ namespace Nextflip.Models.notification
                                 notificationID = reader.GetInt32(0),
                                 title = reader.GetString(1),
                                 status = reader.GetString(2),
-                                content = reader.GetString(3),
+                                publishedDate = reader.GetDateTime(3),
+                                content = reader.GetString(4)
                             });
                         }
                     }
@@ -60,7 +61,7 @@ namespace Nextflip.Models.notification
                                 title = reader.GetString(1),
                                 status = reader.GetString(2),
                                 publishedDate = reader.GetDateTime(3),
-                                content = reader.GetString(4),
+                                content = reader.GetString(4)
                             };
                         }
                     }
@@ -76,7 +77,7 @@ namespace Nextflip.Models.notification
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = "Select notificationID, title, status, content " +
+                string Sql = "Select notificationID, title, status, publishedDate, content " +
                                 "From notification " +
                                 "Where status = 'Available'";
                 using (var command = new MySqlCommand(Sql, connection))
@@ -90,7 +91,8 @@ namespace Nextflip.Models.notification
                                 notificationID = reader.GetInt32(0),
                                 title = reader.GetString(1),
                                 status = reader.GetString(2),
-                                content = reader.GetString(3),
+                                publishedDate = reader.GetDateTime(3),
+                                content = reader.GetString(4)
                             });
                         }
                     }
@@ -100,9 +102,28 @@ namespace Nextflip.Models.notification
             return notifications;
         }
 
-        public Notification AddNotification()
+        public bool AddNotification(string title, string content)
         {
-            throw new NotImplementedException();
+            var result = false;
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            {
+                connection.Open();
+                string Sql = "Insert Into notification (title,status,publishedDate,content) " +
+                    "Values (@title,'Available',@publishedDate,@content)";
+                using (var command = new MySqlCommand(Sql, connection))
+                {
+                    command.Parameters.AddWithValue("@title", title);
+                    command.Parameters.AddWithValue("@publishedDate", DateTime.Now);
+                    command.Parameters.AddWithValue("@content", content);
+                    int rowEffects = command.ExecuteNonQuery();
+                    if (rowEffects > 0)
+                    {
+                        result = true;
+                    }
+                }
+                connection.Close();
+            }
+            return result;
         }
 
     }

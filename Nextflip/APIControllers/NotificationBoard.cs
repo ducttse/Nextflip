@@ -33,5 +33,12 @@ namespace Nextflip.APIControllers
             IEnumerable<Notification> notifications = notificationService.GetAllAvailableNotifications();
             return new JsonResult(notifications);
         }
+
+        /*[Route("AddNotification")]
+        public IActionResult AddNotification([FromServices] INotificationService notificationService, string title, string content)
+        {
+            bool result = notificationService.AddNotification(title, content);
+            return new JsonResult(result);
+        } */
     }
 }

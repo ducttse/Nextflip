@@ -10,16 +10,18 @@ using Nextflip.Services.Interfaces;
 
 namespace Nextflip.APIControllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class UserManagerManagement : ControllerBase
     {
-        [Route("api/UserManagerManagement/")]
+        [Route("GetAccountListByEmail/{searchValue}")]
         public JsonResult GetAccountListByEmail([FromServices] IUserManagerManagementService userManagerManagementService, [FromBody] string searchValue)
         {
             IEnumerable<Account> accounts = userManagerManagementService.GetAccountListByEmail(searchValue);
             return new JsonResult(accounts);
         }
 
-        [Route("api/UserManagerManagement/GetAllAccounts")]
+        [Route("GetAllAccounts")]
         public JsonResult GetAllAccounts([FromServices] IUserManagerManagementService userManagerManagementService)
         {
             IEnumerable<Account> accounts = userManagerManagementService.GetAllAccounts();

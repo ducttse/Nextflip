@@ -33,7 +33,7 @@ function renderUpSection(media) {
     title.charAt(0).toUpperCase() + title.slice(1, title.length + 1);
   return `
     <div class="col-12">
-      <p id="title">${media.title}</p>
+      <p id="title">${displayName}</p>
       <p id="description">${media.description}</p>
     </div>
     <form method="POST" class="row">
@@ -46,11 +46,11 @@ function renderUpSection(media) {
     </form>`;
 }
 
-function renderEpisodes(episodes) {
+function renderEpisodes(episodes, mediaID) {
   let renderedArray = episodes.map((episode) => {
     return `
       <p>
-        <a class="badge bg-secondary rounded-pill text-decoration-none" href="watch/${episode.episodeID}">
+        <a class="badge bg-secondary rounded-pill text-decoration-none" href="/WatchMedia/Watch/${mediaID}/${episode.episodeID}">
           <i class="fas fa-play"></i>
         </a> ${episode.number}:${episode.title}
       </p>`;
@@ -58,8 +58,8 @@ function renderEpisodes(episodes) {
   return renderedArray.join("");
 }
 
-function renderSeasons(episodeArray, title) {
-  let episodes = renderEpisodes(episodeArray);
+function renderSeasons(episodeArray, title, mediaID) {
+  let episodes = renderEpisodes(episodeArray, mediaID);
   return `
     <div>
         <p>${title}
@@ -72,10 +72,9 @@ function renderSeasons(episodeArray, title) {
     </div>`;
 }
 
-function renderAboveSection(seasons, episodeMap) {
-  // x.episodesMapSeason[x.seasons[0].seasonID]
+function renderAboveSection(seasons, episodeMap, mediaID) {
   let renderedArray = seasons.map((season) => {
-    return renderSeasons(episodeMap[season.seasonID], season.title);
+    return renderSeasons(episodeMap[season.seasonID], season.title, mediaID);
   });
   renderedArray = renderedArray.join("");
   return `
@@ -95,19 +94,22 @@ function appendToWrapper(data) {
     .getElementById("details_holder")
     .insertAdjacentHTML(
       "afterbegin",
-      renderAboveSection(data.seasons, data.episodesMapSeason)
+      renderAboveSection(
+        data.seasons,
+        data.episodesMapSeason,
+        data.media.mediaID
+      )
     );
 }
 
 function onload(json) {
   appendToWrapper(json);
 }
-// x.episodesMapSeason[x.seasons[0].seasonID]
-function Run() {
-  fetch("/api/ViewMediaDetails/GetMediaDetails/knoZvTFPyBjmZpzekmOI")
+
+function Run(id) {
+  fetch(`/api/ViewMediaDetails/GetMediaDetails/${id}`)
     .then((response) => response.json())
     .then((json) => {
       onload(json);
     });
 }
-Run();

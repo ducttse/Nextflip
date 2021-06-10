@@ -12,7 +12,6 @@ namespace Nextflip.Controllers
             return View();
         }
 
-        
         public IActionResult MediaDetails(string id)
         {
             ViewBag.MediaID = id;

@@ -53,9 +53,9 @@ namespace Nextflip.APIControllers
 
         }
 
-        [Route("GetEpisode/{episodeID}/{mediaID}")]
+        [Route("GetEpisode/{mediaID}/{episodeID}")]
         public IActionResult GetEpisodeByID([FromServices] IEpisodeService episodeService,
-                                                [FromServices] ISeasonService seasonService, string episodeID, string mediaID)
+                                                [FromServices] ISeasonService seasonService, string mediaID, string episodeID)
         {
             try
             {

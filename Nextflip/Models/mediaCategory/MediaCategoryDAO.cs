@@ -19,7 +19,9 @@ namespace Nextflip.Models.mediaCategory
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select categoryID From mediaCategory Where mediaID =@mediaID";
+                    string Sql = "Select categoryID " +
+                                "From mediaCategory " +
+                                "Where mediaID =@mediaID";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@mediaID", mediaID);
@@ -49,10 +51,12 @@ namespace Nextflip.Models.mediaCategory
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = $"Select mediaID From mediaCategory Where categoryID = '{categoryID}'";
+                    string Sql = "Select mediaID " +
+                                "From mediaCategory " +
+                                "Where categoryID = @categoryID";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-
+                        command.Parameters.AddWithValue("@categoryID", categoryID);
                         using (var reader = command.ExecuteReader())
                         {
                             while (reader.Read())

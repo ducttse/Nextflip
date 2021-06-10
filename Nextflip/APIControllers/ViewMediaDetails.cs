@@ -48,53 +48,29 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetMediaDetails: " + ex.Message);
-                return null;
-            }
-
-        }
-        [Route("GetSeasons/{mediaID}")]
-        public IActionResult GetSeasons([FromServices] ISeasonService seasonService,string mediaID)
-        {
-            try
-            {
-                IEnumerable<Season> seasons = seasonService.GetSeasonsByMediaID(mediaID);
-                return new JsonResult(seasons);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogInformation("GetSeasons: " + ex.Message);
-                return null;
+                return new JsonResult("error occur");
             }
 
         }
 
-        [Route("GetEpisodes/{seasonID}")]
-        public IActionResult GetEpisodes([FromServices] IEpisodeService episodeService,string seasonID)
-        {
-            try
-            {
-                IEnumerable<Episode> episodes = episodeService.GetEpisodesBySeasonID(seasonID);
-                return new JsonResult(episodes);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogInformation("GetEpisodes: " + ex.Message);
-                return null;
-            }
-        }
-
-        [Route("GetEpisode/{episodeID}")]
-        public IActionResult GetEpisodeByID([FromServices] IEpisodeService episodeService, string episodeID)
+        [Route("GetEpisode/{episodeID}/{mediaID}")]
+        public IActionResult GetEpisodeByID([FromServices] IEpisodeService episodeService,
+                                                [FromServices] ISeasonService seasonService, string episodeID, string mediaID)
         {
             try
             {
                 Episode episode = episodeService.GetEpisodeByID(episodeID);
-                return new JsonResult(episode);
+                var episodeHasMediaID = new
+                    {
+                        Episode = episode,
+                        MediaID = mediaID                    
+                    };
+                return new JsonResult(episodeHasMediaID);
             }
             catch (Exception ex)
             {
                 _logger.LogInformation("GetEpisodeByID: " + ex.Message);
-                return null;
+                return new JsonResult("error occur");
             }
         }
 
@@ -109,7 +85,7 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetSubtitleByID: " + ex.Message);
-                return null;
+                return new JsonResult("error occur");
             }
         }
 

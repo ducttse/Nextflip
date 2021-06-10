@@ -19,7 +19,9 @@ namespace Nextflip.Models.category
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select categoryID, name From category";
+                    string Sql = "Select categoryID, name " +
+                                "From category " +
+                                "Order By name";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
 
@@ -53,7 +55,9 @@ namespace Nextflip.Models.category
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select categoryID, name From category Where categoryID = @categoryID";
+                    string Sql = "Select categoryID, name " +
+                                "From category " +
+                                "Where categoryID = @categoryID ";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@categoryID", categoryID);

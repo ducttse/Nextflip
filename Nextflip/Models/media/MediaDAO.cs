@@ -19,7 +19,9 @@ namespace Nextflip.Models.media
                 {
                     connection.Open();
                     string Sql = "Select mediaID,status, title, bannerURL, language, description " +
-                                    "From media Where title LIKE @searchValue";
+                                "From media " +
+                                "Where title LIKE @searchValue " +
+                                "Order By title";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@searchValue", $"%{searchValue}%");
@@ -58,7 +60,8 @@ namespace Nextflip.Models.media
                 {
                     connection.Open();
                     string Sql = "Select mediaID, status, title, bannerURL, language, description " +
-                                    "From media Where mediaID = @mediaID";
+                                "From media " +
+                                "Where mediaID = @mediaID";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@mediaID", mediaID);

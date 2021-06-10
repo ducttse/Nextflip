@@ -29,7 +29,7 @@ namespace Nextflip.APIControllers
             }catch(Exception ex)
             {
                 _logger.LogInformation("GetCategories: " + ex.Message);
-                return null;
+                return new JsonResult("error occur");
             }
         }
 
@@ -44,7 +44,7 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetMediasByTitle: " + ex.Message);
-                return null;
+                return new JsonResult("error occur");
             }
         }
 
@@ -59,7 +59,7 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetFavoriteMedias: " + ex.Message);
-                return null;
+                return new JsonResult("error occur");
             }
         }
 
@@ -74,7 +74,7 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetMediasByCategoryID: " + ex.Message);
-                return null;
+                return new JsonResult("error occur");
             }
         }
     }

@@ -19,7 +19,9 @@ namespace Nextflip.Models.mediaFavorite
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select mediaID From mediaFavoriteList Where favoriteListID = @favoriteListID";
+                    string Sql = "Select mediaID " +
+                                "From mediaFavoriteList " +
+                                "Where favoriteListID = @favoriteListID";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@favoriteListID", favoriteListID);

@@ -18,7 +18,10 @@ namespace Nextflip.Models.episode
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select episodeID, title, thumbnailURL, status, number, episodeURL From episode Where seasonID = @seasonID";
+                    string Sql = "Select episodeID, title, thumbnailURL, status, number, episodeURL " +
+                                "From episode " +
+                                "Where seasonID = @seasonID " +
+                                "Order By number";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@seasonID", seasonID);
@@ -57,7 +60,9 @@ namespace Nextflip.Models.episode
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select title, thumbnailURL, seasonID, status, number, episodeURL From episode Where episodeID = @episodeID";
+                    string Sql = "Select title, thumbnailURL, seasonID, status, number, episodeURL " +
+                                "From episode " +
+                                "Where episodeID = @episodeID";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@episodeID", episodeID);

@@ -35,13 +35,13 @@ namespace Nextflip.APIControllers
             }
         }
         [Route("Respond")]
-        public async Task<IActionResult> Respond([FromServices] ISendMailService sendMailService, [FromServices] ISupportTicketDAO supportTicketDAO, [FromBody] string btnAction, [FromBody] string supportTicketID, [FromBody] string userEmail, [FromBody] string topicName, [FromBody] string content)
+        public async Task<IActionResult> Respond([FromServices] ISendMailService sendMailService, [FromServices] ISupportTicketDAO supportTicketDAO, [FromForm] string btnAction, [FromForm] string supportTicketID, [FromForm] string userEmail, [FromForm] string topicName, [FromForm] string content)
         {
             try {
                 bool result = false;
                 var mailContent = new MailContent();
                 string toEmail = "nextflipcompany.com";
-                content = "From userEmail: " + userEmail + "\n" + content;
+                content = "from user email: " + userEmail + "\n" + content;
 
                 if (btnAction.Equals("technical")) toEmail = TECHNICAL_EMAIL;
                 else if (btnAction.Equals("customerRelation")) toEmail = CUSTOMER_RELATION_EMAIL;

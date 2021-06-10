@@ -13,5 +13,10 @@ namespace Nextflip.Controllers
             return View();
         }
 
+        public IActionResult Search(string id)
+        {
+            ViewBag.SearchValue = id;
+            return View();
+        }
     }
 }

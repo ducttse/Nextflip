@@ -9,5 +9,7 @@ namespace Nextflip.Models.media
     {
         IEnumerable<Media> GetMediasByTitle(string searchValue);
         Media GetMediaByID(string mediaID);
+
+        IEnumerable<Media> GetMedias();
     }
 }

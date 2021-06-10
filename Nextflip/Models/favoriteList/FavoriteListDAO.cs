@@ -20,7 +20,9 @@ namespace Nextflip.Models.favoriteList
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select favoriteListID From favoriteList Where userID = @userID";
+                    string Sql = "Select favoriteListID " +
+                                "From favoriteList " +
+                                "Where userID = @userID ";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@userID", userID);

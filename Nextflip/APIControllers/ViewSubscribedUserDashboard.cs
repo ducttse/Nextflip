@@ -33,6 +33,21 @@ namespace Nextflip.APIControllers
             }
         }
 
+        [Route("GetMedias")]
+        public IActionResult GetMedias([FromServices] IMediaService mediaService)
+        {
+            try
+            {
+                IEnumerable<Media> medias = mediaService.GetMedias();
+                return new JsonResult(medias);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetMedias: " + ex.Message);
+                return new JsonResult("error occur");
+            }
+        }
+
         [Route("GetMediasByTitle/{searchValue}")]
         public IActionResult GetMediasByTitle([FromServices] IMediaService mediaService, string searchValue)
         {

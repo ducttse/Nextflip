@@ -33,12 +33,12 @@ namespace Nextflip.Services.Implementations
             {
                 favoriteMedias.Add(_mediaDAO.GetMediaByID(mediaID));
             }
-
+            favoriteMedias.Reverse();
             return favoriteMedias;
         }
 
         public IEnumerable<Media> GetMediasByTitle(string title) => _mediaDAO.GetMediasByTitle(title);
-
+        public IEnumerable<Media> GetMedias() => _mediaDAO.GetMedias();
         public IEnumerable<Media> GetMediasByCategoryID(int categoryID)
         {
             var medias = new List<Media>();

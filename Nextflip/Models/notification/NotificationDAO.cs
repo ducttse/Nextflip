@@ -9,6 +9,7 @@ namespace Nextflip.Models.notification
 {
     public class NotificationDAO : INotificationDAO
     {
+        public NotificationDAO() { }
         public IEnumerable<Notification> GetAllNotifications()
         {
             var notifications = new List<Notification>();

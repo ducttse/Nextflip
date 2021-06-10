@@ -20,6 +20,13 @@ namespace Nextflip.APIControllers
             return new JsonResult(notifications);
         }
 
+        [Route("GetNotificationsWithPaging/{pageNum}")]
+        public IActionResult GetNotificationsWithPaging([FromServices] INotificationService notificationService, int pageNum)
+        {
+            IEnumerable<Notification> notifications = notificationService.GetNotificationsWithPaging(pageNum);
+            return new JsonResult(notifications);
+        }
+
         [Route("GetDetailOfNotification/{notificationID}")]
         public IActionResult GetDetailOfNotification([FromServices] INotificationService notificationService, int notificationID)
         {
@@ -40,5 +47,12 @@ namespace Nextflip.APIControllers
             bool result = notificationService.AddNotification(title, content);
             return new JsonResult(result);
         } */
+
+        [Route("CountNotification")]
+        public IActionResult CountNotification([FromServices] INotificationService notificationService)
+        {
+            int count = notificationService.CountNotification();
+            return new JsonResult(count);
+        }
     }
 }

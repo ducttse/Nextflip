@@ -40,6 +40,41 @@ namespace Nextflip.Models.notification
             return notifications;
         }
 
+        public IEnumerable<Notification> GetNotificationsWithPaging(int pageNum)
+        {
+            int limit = 10; // thay đổi tuỳ chọn
+            int offset = (pageNum-1) * limit;
+            var notifications = new List<Notification>();
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            {
+                connection.Open();
+                string Sql = "Select notificationID, title, status, publishedDate, content " +
+                                "From notification " +
+                                "Limit @offset, @limit";
+                using (var command = new MySqlCommand(Sql, connection))
+                {
+                    command.Parameters.AddWithValue("@offset", offset);
+                    command.Parameters.AddWithValue("@limit", limit);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            notifications.Add(new Notification
+                            {
+                                notificationID = reader.GetInt32(0),
+                                title = reader.GetString(1),
+                                status = reader.GetString(2),
+                                publishedDate = reader.GetDateTime(3),
+                                content = reader.GetString(4)
+                            });
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return notifications;
+        }
+
         public Notification GetDetailOfNotification(int notificationID)
         {
             Notification notification = null;
@@ -127,5 +162,27 @@ namespace Nextflip.Models.notification
             return result;
         }
 
+        public int CountNotification()
+        {
+            int count = 0;
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            {
+                connection.Open();
+                string Sql = "Select COUNT(notificationID) " +
+                                "From notification";
+                using (var command = new MySqlCommand(Sql, connection))
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            count = reader.GetInt32(0);
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return count;
+        }
     }
 }

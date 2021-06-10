@@ -1,15 +1,17 @@
-function ShowEpisode() {
-  let iconRight = document.getElementsByClassName("fa-caret-right")[0];
-  let iconDown = document.getElementsByClassName("fa-caret-down")[0];
-  let episode = document.getElementsByClassName("episode_holder")[0];
+function ShowEpisode(el) {
+  let iconRight = el;
+  let iconDown = el.parentElement.getElementsByClassName("fa-caret-down")[0];
+  let episode =
+    el.parentElement.parentElement.getElementsByClassName("episode_holder")[0];
   iconRight.classList.add("hide");
   episode.classList.remove("hide");
   iconDown.classList.remove("hide");
 }
-function HideEpisode() {
-  let iconRight = document.getElementsByClassName("fa-caret-right")[0];
-  let iconDown = document.getElementsByClassName("fa-caret-down")[0];
-  let episode = document.getElementsByClassName("episode_holder")[0];
+function HideEpisode(el) {
+  let iconRight = el.parentElement.getElementsByClassName("fa-caret-right")[0];
+  let iconDown = el;
+  let episode =
+    el.parentElement.parentElement.getElementsByClassName("episode_holder")[0];
   episode.classList.add("hide");
   iconRight.classList.remove("hide");
   iconDown.classList.add("hide");
@@ -48,7 +50,7 @@ function renderEpisodes(episodes) {
   let renderedArray = episodes.map((episode) => {
     return `
       <p>
-        <a class="badge bg-secondary rounded-pill text-decoration-none" href="/watch/${episode.episodeID}">
+        <a class="badge bg-secondary rounded-pill text-decoration-none" href="watch/${episode.episodeID}">
           <i class="fas fa-play"></i>
         </a> ${episode.number}:${episode.title}
       </p>`;
@@ -59,12 +61,14 @@ function renderEpisodes(episodes) {
 function renderSeasons(episodeArray, title) {
   let episodes = renderEpisodes(episodeArray);
   return `
-    <p>${title}
-      <i class="fas fa-caret-down" onclick="HideEpisode()"></i>
-      <i class="fas fa-caret-right hide" onclick="ShowEpisode()"></i>
-    </p>
-    <div class="episode_holder">
-      ${episodes}
+    <div>
+        <p>${title}
+            <i class="fas fa-caret-down" onclick="HideEpisode(this)"></i>
+            <i class="fas fa-caret-right hide" onclick="ShowEpisode(this)"></i>
+        </p>
+        <div class="episode_holder">
+            ${episodes}
+        </div>
     </div>`;
 }
 

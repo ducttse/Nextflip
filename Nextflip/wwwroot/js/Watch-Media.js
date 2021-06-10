@@ -71,8 +71,8 @@ function showName() {
 // };
 // ////
 
-function Run(id) {
-  fetch(`/api/ViewMediaDetails/GetEpisode/${id}`)
+function Run(mediaID, episodeID) {
+    fetch(`/api/ViewMediaDetails/GetEpisode/${mediaID}/${episodeID}`)
     .then((response) => response.json())
     .then((json) => {
       console.log(json);

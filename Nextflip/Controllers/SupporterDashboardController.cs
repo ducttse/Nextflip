@@ -27,10 +27,11 @@ namespace Nextflip.Controllers
                 return View("Error");
             }
         }
-        public IActionResult Detail()
+        public IActionResult Detail(string id)
         {
             try
             {
+                ViewBag.ticketId = id;
                 return View();
             }
             catch(Exception e)

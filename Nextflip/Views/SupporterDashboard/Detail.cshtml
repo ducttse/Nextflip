@@ -3,23 +3,20 @@
     Layout = "_CustomLayout";
 }
 @section Styles {
-    <link href="@Url.Content("~/css/Supporter-Dashboard.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/css/View-Ticket-Details.css")" rel="stylesheet" type="text/css" />
 }
-<div class="ui_wrapper">
-    <form method="POST" action="">
-        <table class="table table-bordered w-100">
-            <thead class="table-dark">
-                <tr>
-                    <td class="col-1">No</td>
-                    <td class="col-2">User Email</td>
-                    <td class="col-1">Topic</td>
-                    <td class="col-1">Status</td>
-                    <td class="col-2"><td>
-                </tr>
-            </thead>
-            <tbody id="dataWapper"></tbody>
-        </table>
-        <div id="pagination"></div>
-    </form>
-</div>
-<script src="~/js/Supporter-Dashboard.js"></script>
+<section class="w-75 h-100 mt-5 mx-auto">
+    <div class="offset-1 col-2">
+        <a
+          href="/SupporterDashboard/Index"
+          class="btn btn-warning text-decoration-none link-light mx-auto w-50"
+          ><i class="fas fa-arrow-left"></i> Back</a
+        >
+    </div>
+    <div class="col-8 offset-1 mt-5 shadow-lg p-3 mb-5 bg-body rounded" id="contentWrapper">
+    </div>
+</section>
+<script src="~/js/View-Ticket-Details.js"></script>
+<script>
+    Run('@ViewBag.ticketId');
+</script>

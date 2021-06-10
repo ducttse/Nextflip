@@ -13,8 +13,8 @@ function renderTicket(ticket) {
           <td>${ticket.status}</td>
           <td>
               <a class="text-decoration-none" 
-              href="/Edit/${ticket.supportTicketID}">
-                  Details
+              href="/SupporterDashboard/Detail/${ticket.supportTicketID}">
+                  Detail
               </a>
           </td>
           <td>
@@ -119,7 +119,6 @@ function Run() {
   fetch("/api/ViewSupporterDashboard/GetPendingSupportTickets")
     .then((response) => response.json())
     .then((json) => {
-      console.log(json);
       Data.data = json;
       onLoad();
     });

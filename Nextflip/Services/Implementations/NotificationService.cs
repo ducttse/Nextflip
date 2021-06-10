@@ -13,5 +13,6 @@ namespace Nextflip.Services.Implementations
         public NotificationService(INotificationDAO notificationDao) => _notificationDao = notificationDao;
         public IEnumerable<Notification> GetAllNotifications() => _notificationDao.GetAllNotifications();
         public Notification GetDetailOfNotification(int notificationID) => _notificationDao.GetDetailOfNotification(notificationID);
+        public IEnumerable<Notification> GetAllAvailableNotifications() => _notificationDao.GetAllAvailableNotifications();
     }
 }

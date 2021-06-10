@@ -26,5 +26,12 @@ namespace Nextflip.APIControllers
             Notification notification = notificationService.GetDetailOfNotification(notificationID);
             return new JsonResult(notification);
         }
+
+        [Route("GetAllAvailableNotifications")]
+        public IActionResult GetAllAvailableNotifications([FromServices] INotificationService notificationService)
+        {
+            IEnumerable<Notification> notifications = notificationService.GetAllAvailableNotifications();
+            return new JsonResult(notifications);
+        }
     }
 }

@@ -70,6 +70,36 @@ namespace Nextflip.Models.notification
             return notification;
         }
 
+        public IEnumerable<Notification> GetAllAvailableNotifications()
+        {
+            var notifications = new List<Notification>();
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            {
+                connection.Open();
+                string Sql = "Select notificationID, title, status, content " +
+                                "From notification " +
+                                "Where status = 'Available'";
+                using (var command = new MySqlCommand(Sql, connection))
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            notifications.Add(new Notification
+                            {
+                                notificationID = reader.GetInt32(0),
+                                title = reader.GetString(1),
+                                status = reader.GetString(2),
+                                content = reader.GetString(3),
+                            });
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return notifications;
+        }
+
         public Notification AddNotification()
         {
             throw new NotImplementedException();

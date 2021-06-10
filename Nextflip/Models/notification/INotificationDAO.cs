@@ -9,6 +9,7 @@ namespace Nextflip.Models.notification
     {
         IEnumerable<Notification> GetAllNotifications();
         Notification GetDetailOfNotification(int notificationID);
+        IEnumerable<Notification> GetAllAvailableNotifications();
         Notification AddNotification();
     }
 }

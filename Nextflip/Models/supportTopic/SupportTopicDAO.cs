@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using Nextflip.utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,29 +12,35 @@ namespace Nextflip.Models.supportTopic
     {
         public IList<SupportTopic> GetAllTopics()
         {
-            IList<SupportTopic> supportTopics = new List<SupportTopic>();
-            using (var connection = new MySqlConnection(utils.DbUtil.ConnectionString))
+            IList<SupportTopic> supportTickets = new List<SupportTopic>();
+            try
             {
-                connection.Open();
-                string sql = "SELECT supportTopicID, type " +
-                                "FROM supportTopic ;";
-                using (var command = new MySqlCommand(sql, connection))
-
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
-                    using (var reader = command.ExecuteReader())
+                    connection.Open();
+                    string sql = "SELECT topicName " +
+                                "FROM supportTopic ;";
+                    using (var command = new MySqlCommand(sql, connection))
+
                     {
-                        while (reader.Read())
+                        using (var reader = command.ExecuteReader())
                         {
-                            string topicName = reader.GetString("type");
-                            supportTopics.Add(new SupportTopic { topicName = topicName });
+                            while (reader.Read())
+                            {
+                                string topicName = reader.GetString("topicName");
+                                Console.WriteLine(topicName);
+                                supportTickets.Add(new SupportTopic(topicName));
+                            }
+                            connection.Close();
                         }
-                        connection.Close();
                     }
                 }
-
+                return supportTickets;
             }
-            return supportTopics;
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
-
     }
 }

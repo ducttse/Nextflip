@@ -5,10 +5,10 @@ using System;
 
 namespace Nextflip.Controllers
 {
-    public class SendingSupportTicket : Controller
+    public class SendSupportTicket : Controller
     {
         private readonly ILogger _logger;
-        public SendingSupportTicket(ILogger<SendingSupportTicket> logger)
+        public SendSupportTicket(ILogger<SendSupportTicket> logger)
         {
             _logger = logger;
         }
@@ -23,12 +23,12 @@ namespace Nextflip.Controllers
                 return View("Error");
             }
         }
-        [HttpPost]
-        public IActionResult Send([FromServices] ISupportTicketService supportTicketService, [FromForm] string userEmail, [FromForm]string topicName, [FromForm]string content)
+
+        public IActionResult Send([FromServices] ISupportTicketService supportTicketService,  string userEmail, string topicName, string content)
         {
             try {
                 bool result = supportTicketService.SendSupportTicket(userEmail, topicName, content);
-                if(result) return View();
+                if(result) return RedirectToAction("Index");
                 return View("Error");
             }
             catch(Exception e)

@@ -15,7 +15,6 @@ namespace Nextflip.Services.Implementations
         {
             _supportTopicDAO = supportTopicDAO;
         }
-
         public IList<SupportTopic> GetAllTopics() => _supportTopicDAO.GetAllTopics();
     }
 }

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 namespace Nextflip.APIControllers
 {
     [Route("api/[controller]")]
+    [ApiController]
     public class ViewSupporterDashboard : ControllerBase
     {
         private readonly ILogger _logger;
@@ -35,6 +36,7 @@ namespace Nextflip.APIControllers
             }
         }
         [Route("Respond")]
+        [HttpPost]
         public async Task<IActionResult> Respond([FromServices] ISendMailService sendMailService, [FromServices] ISupportTicketDAO supportTicketDAO, [FromForm] string btnAction, [FromForm] string supportTicketID, [FromForm] string userEmail, [FromForm] string topicName, [FromForm] string content)
         {
             try {

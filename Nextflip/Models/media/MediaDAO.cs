@@ -12,66 +12,122 @@ namespace Nextflip.Models.media
 
         public IEnumerable<Media> GetMediasByTitle(string searchValue)
         {
-            var medias = new List<Media>();
-            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            try
             {
-                connection.Open();
-                string Sql = "Select mediaID,status, title, bannerURL, language, description " +
-                                "From media Where title LIKE @searchValue";
-                using (var command = new MySqlCommand(Sql, connection))
+                var medias = new List<Media>();
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
-                    command.Parameters.AddWithValue("@searchValue", $"%{searchValue}%");
-                    using (var reader = command.ExecuteReader())
+                    connection.Open();
+                    string Sql = "Select mediaID,status, title, bannerURL, language, description " +
+                                "From media " +
+                                "Where Match(title) " +
+                                "Against ( @searchValue IN NATURAL LANGUAGE MODE)";
+                    using (var command = new MySqlCommand(Sql, connection))
                     {
-                        while (reader.Read())
+                        command.Parameters.AddWithValue("@searchValue", searchValue);
+                        using (var reader = command.ExecuteReader())
                         {
-                            medias.Add(new Media
+                            while (reader.Read())
                             {
-                                MediaID = reader.GetString(0),
-                                Status = reader.GetString(1),
-                                Title = reader.GetString(2),
-                                BannerURL = reader.GetString(3),
-                                Language = reader.GetString(4),
-                                Description = reader.GetString(5),
-                            });
+                                medias.Add(new Media
+                                {
+                                    MediaID = reader.GetString(0),
+                                    Status = reader.GetString(1),
+                                    Title = reader.GetString(2),
+                                    BannerURL = reader.GetString(3),
+                                    Language = reader.GetString(4),
+                                    Description = reader.GetString(5),
+                                });
+                            }
                         }
                     }
+                    connection.Close();
                 }
-                connection.Close();
+                return medias;
             }
-            return medias;
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public IEnumerable<Media> GetMedias()
+        {
+            try
+            {
+                var medias = new List<Media>();
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select mediaID,status, title, bannerURL, language, description " +
+                                "From media " +
+                                "Limit 10";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                medias.Add(new Media
+                                {
+                                    MediaID = reader.GetString(0),
+                                    Status = reader.GetString(1),
+                                    Title = reader.GetString(2),
+                                    BannerURL = reader.GetString(3),
+                                    Language = reader.GetString(4),
+                                    Description = reader.GetString(5),
+                                });
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+                return medias;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public Media GetMediaByID(string mediaID)
         {
-            var media = new Media();
-            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            try
             {
-                connection.Open();
-                string Sql = $"Select mediaID, status, title, bannerURL, language, description " +
-                        $"From media Where mediaID = '{mediaID}'";
-                using (var command = new MySqlCommand(Sql, connection))
+                var media = new Media();
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
-
-                    using (var reader = command.ExecuteReader())
+                    connection.Open();
+                    string Sql = "Select mediaID, status, title, bannerURL, language, description " +
+                                "From media " +
+                                "Where mediaID = @mediaID";
+                    using (var command = new MySqlCommand(Sql, connection))
                     {
-                        if (reader.Read())
+                        command.Parameters.AddWithValue("@mediaID", mediaID);
+                        using (var reader = command.ExecuteReader())
                         {
-                            media = new Media
+                            if (reader.Read())
                             {
-                                MediaID = reader.GetString(0),
-                                Status = reader.GetString(1),
-                                Title = reader.GetString(2),
-                                BannerURL = reader.GetString(3),
-                                Language = reader.GetString(4),
-                                Description = reader.GetString(5),
-                            };
+                                media = new Media
+                                {
+                                    MediaID = reader.GetString(0),
+                                    Status = reader.GetString(1),
+                                    Title = reader.GetString(2),
+                                    BannerURL = reader.GetString(3),
+                                    Language = reader.GetString(4),
+                                    Description = reader.GetString(5),
+                                };
+                            }
                         }
                     }
+                    connection.Close();
                 }
-                connection.Close();
+                return media;
             }
-            return media;
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

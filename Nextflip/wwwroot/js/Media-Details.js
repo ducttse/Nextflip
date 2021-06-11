@@ -52,7 +52,7 @@ function renderEpisodes(episodes, mediaID) {
       <p>
         <a class="badge bg-secondary rounded-pill text-decoration-none" href="/WatchMedia/Watch/${mediaID}/${episode.episodeID}">
           <i class="fas fa-play"></i>
-        </a> ${episode.number}:${episode.title}
+        </a> Episode ${episode.number} : ${episode.title}
       </p>`;
   });
   return renderedArray.join("");

@@ -17,6 +17,7 @@ using Nextflip.utils;
 using Nextflip.Models.account;
 using Nextflip.Services.Implementations;
 using Nextflip.Services.Interfaces;
+using Nextflip.Models.mediaEditRequest;
 using Nextflip.Services.Interfaces;
 using Nextflip.Services.Implementations;
 using Nextflip.Models.category;
@@ -67,7 +68,9 @@ namespace Nextflip
             services.AddControllersWithViews();
             services.AddTransient<IAccountDAO, AccountDAO>();
             services.AddTransient<IUserManagerManagementService, UserManagerManagementService>();
-            
+            services.AddTransient<IMediaEditRequestDAO, MediaEditRequestDAO>();
+            services.AddTransient<IMediaManagerManagementService, MediaManagerManagementService>();
+
 
             ///get connection string
             DbUtil.ConnectionString = Configuration.GetConnectionString("MySql");

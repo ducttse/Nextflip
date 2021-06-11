@@ -1,115 +1,20 @@
 let Data = {
-  data: [
-    {
-      userID: "U001",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "Admin",
-      status: "Active"
-    },
-    {
-      userID: "U002",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "User",
-      status: "Inactive"
-    },
-    {
-      userID: "U001",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "Admin",
-      status: "Active"
-    },
-    {
-      userID: "U002",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "User",
-      status: "Inactive"
-    },
-    {
-      userID: "U001",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "Admin",
-      status: "Active"
-    },
-    {
-      userID: "U002",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "User",
-      status: "Inactive"
-    },
-    {
-      userID: "U001",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "Admin",
-      status: "Active"
-    },
-    {
-      userID: "U002",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "User",
-      status: "Inactive"
-    },
-    {
-      userID: "U001",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "Admin",
-      status: "Active"
-    },
-    {
-      userID: "U002",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "User",
-      status: "Inactive"
-    },
-    {
-      userID: "U001",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "Admin",
-      status: "Active"
-    },
-    {
-      userID: "U002",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "User",
-      status: "Inactive"
-    },
-    {
-      userID: "U001",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "Admin",
-      status: "Active"
-    },
-    {
-      userID: "U002",
-      userEmail: "tranbaolong14@gmail.com",
-      fullname: "Trần Bảo Long",
-      role: "User",
-      status: "Inactive"
-    }
-  ]
+  data: []
 };
+
+let RequestObject;
 
 function renderUser(user) {
   return `
     <tr>
         <td>${user.userEmail}</td>
-        <td>${user.role}</td>
+        <td>${user.roleName}</td>
         <td>${user.fullname}</td>
-        <td class="checkBox cur">
+        <td class="checkBox">
             <input type="checkbox" 
-            name="user1" 
+            name="userRole" 
+
+            initValue=${user.status}
             value="${user.status}" 
             ${user.status === "Active" ? "checked" : ""} /> ${user.status}
         </td>
@@ -121,17 +26,56 @@ function renderUser(user) {
         </td>
     </tr>`;
 }
+let rowsPerPage = 10;
+let currentPage = 0;
+
 function renderPagination(length, rowsPerPage) {
+  let numberOfPage = Math.ceil(length / rowsPerPage);
+  let Pages = "";
+  for (let i = 1; i <= numberOfPage; i++) {
+    Pages += `<li class="page-item" page="${i}" onClick="setCurrentPage(${i})"><a class="page-link" href="#">${i}</a></li>`;
+  }
   return `
   <nav>
     <ul class="pagination">
       <li class="page-item disabled">
         <a class="page-link" href="#">Previous</a>
       </li>
-      <li class="page-item"><a class="page-link" href="#">3</a></li>
+      ${Pages}
       <li class="page-item"><a class="page-link" href="#">Next</a></li>
     </ul>
-  </nav>`;
+    </nav>`;
+}
+// jump to another pagination
+function setCurrentPage(number) {
+  currentPage = number - 1;
+  appendUserToWrapper(
+    currentPage * rowsPerPage,
+    rowsPerPage + Data.data.length - currentPage * rowsPerPage > rowsPerPage
+      ? ++currentPage * rowsPerPage
+      : currentPage * rowsPerPage +
+          (Data.data.length - currentPage * rowsPerPage)
+  );
+  setCurrentColor(number);
+}
+
+function removeCurrentColor() {
+  let pageArray = Array.from(document.getElementsByClassName("page-item"));
+  let curPage = pageArray.filter((page) => {
+    return page.classList.contains("active");
+  });
+  if (curPage.length > 0) {
+    curPage[0].classList.remove("active");
+  }
+}
+
+function setCurrentColor(number) {
+  removeCurrentColor();
+  let pageArray = Array.from(document.getElementsByClassName("page-item"));
+  let curPage = pageArray.filter((page) => {
+    return parseInt(page.getAttribute("page")) === number;
+  });
+  curPage[0].classList.add("active");
 }
 
 function reRenderCheckbox() {
@@ -151,6 +95,20 @@ function reRenderCheckbox() {
         child.append(checkBoxEl);
         child.append(" Inactive");
       }
+      console.log(checkBoxEl);
+      console.log(checkBoxEl.getAttribute("initValue"));
+      if (
+        checkBoxEl.getAttribute("initValue") !==
+        checkBoxEl.getAttribute("value")
+      ) {
+        child.classList.add("text-warning");
+        // document.getElementById("message").innerHTML =
+        //   "Something changed. Click to save";
+      }
+      // remove if unchange
+      else if (child.classList.contains("text-warning")) {
+        child.classList.remove("text-warning");
+      }
     });
   }
 }
@@ -160,21 +118,48 @@ function appendUserToWrapper(start, end) {
     return renderUser(user);
   });
   userArray = userArray.join("");
-  document
-    .getElementById("dataWapper")
-    .insertAdjacentHTML("afterbegin", userArray);
+  let dataWapper = document.getElementById("dataWapper");
+  if (dataWapper.innerHTML !== "") {
+    dataWapper.innerHTML = "";
+  }
+  dataWapper.insertAdjacentHTML("afterbegin", userArray);
+  // add reRender function to each checkbox
+  reRenderCheckbox();
 }
 
-function appendPagination(length) {
+function appendPagination(length, rowsPerPage) {
   document
     .getElementById("pagination")
-    .insertAdjacentHTML("afterbegin", renderPagination(length));
+    .insertAdjacentHTML("afterbegin", renderPagination(length, rowsPerPage));
 }
-function displayList() {}
 
-let rowsPerPage = 10;
-let currentPage = 1;
+function Load() {
+  appendPagination(Data.data.length, rowsPerPage);
+  appendUserToWrapper(0, rowsPerPage);
+  setCurrentColor(1);
+}
 
-appendUserToWrapper(0, rowsPerPage);
-reRenderCheckbox();
-appendPagination();
+function Run() {
+  ///
+  // let searchValue = {
+  //   searchValue: "dSRFgJ2L3CqrZJrmOkWD@gmail.com"
+  // };
+  // ////
+  // let reqHeader = new Headers();
+  // reqHeader.append("Content-Type", "text/json");
+  // reqHeader.append("Accept", "application/json, text/plain, */*");
+
+  // let initObject = {
+  //   method: "POST",
+  //   headers: reqHeader,
+  //   body: JSON.stringify()
+  // };
+  ////
+  fetch("/api/UserManagerManagement/GetAllAccounts")
+    .then((response) => response.json())
+    .then((json) => {
+      Data.data = json;
+      Load();
+    });
+}
+Run();

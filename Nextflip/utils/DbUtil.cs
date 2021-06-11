@@ -10,6 +10,5 @@ namespace Nextflip.utils
     public static class DbUtil
     {
         public static string ConnectionString { get; set; }
-
-    }   
+    }
 }

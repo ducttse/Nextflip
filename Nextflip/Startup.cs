@@ -14,6 +14,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Nextflip.utils;
+using Nextflip.Models.account;
+using Nextflip.Services.Implementations;
+using Nextflip.Services.Interfaces;
 using Nextflip.Services.Interfaces;
 using Nextflip.Services.Implementations;
 using Nextflip.Models.category;
@@ -60,11 +63,12 @@ namespace Nextflip
             //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
+            services.AddTransient<IAccountDAO, AccountDAO>();
+            services.AddTransient<IUserManagerManagementService, UserManagerManagementService>();
             
 
             ///get connection string
             DbUtil.ConnectionString = Configuration.GetConnectionString("MySql");
-            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

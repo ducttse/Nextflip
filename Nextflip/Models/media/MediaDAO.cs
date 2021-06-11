@@ -18,10 +18,10 @@ namespace Nextflip.Models.media
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select mediaID,status, title, bannerURL, language, description " +
+                    string Sql = "Select mediaID,status, title, bannerURL, language, description, " +
+                                       "MATCH (title) AGAINST ('@searchValue' IN BOOLEAN MODE) as relevance " +
                                 "From media " +
-                                "Where Match(title) " +
-                                "Against ( @searchValue IN NATURAL LANGUAGE MODE)";
+                                "Order By relevance Desc ";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@searchValue", searchValue);

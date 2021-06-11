@@ -5,7 +5,7 @@ let Data = {
 let RequestObject;
 
 function renderUser(user) {
-  return `
+    return `
     <tr>
         <td>${user.userEmail}</td>
         <td>${user.roleName}</td>
@@ -30,12 +30,12 @@ let rowsPerPage = 10;
 let currentPage = 0;
 
 function renderPagination(length, rowsPerPage) {
-  let numberOfPage = Math.ceil(length / rowsPerPage);
-  let Pages = "";
-  for (let i = 1; i <= numberOfPage; i++) {
-    Pages += `<li class="page-item" page="${i}" onClick="setCurrentPage(${i})"><a class="page-link" href="#">${i}</a></li>`;
-  }
-  return `
+    let numberOfPage = Math.ceil(length / rowsPerPage);
+    let Pages = "";
+    for (let i = 1; i <= numberOfPage; i++) {
+        Pages += `<li class="page-item" page="${i}" onClick="setCurrentPage(${i})"><a class="page-link" href="#">${i}</a></li>`;
+    }
+    return `
   <nav>
     <ul class="pagination">
       <li class="page-item disabled">
@@ -48,69 +48,69 @@ function renderPagination(length, rowsPerPage) {
 }
 // jump to another pagination
 function setCurrentPage(number) {
-  currentPage = number - 1;
-  appendUserToWrapper(
-    currentPage * rowsPerPage,
-    rowsPerPage + Data.data.length - currentPage * rowsPerPage > rowsPerPage
-      ? ++currentPage * rowsPerPage
-      : currentPage * rowsPerPage +
-          (Data.data.length - currentPage * rowsPerPage)
-  );
-  setCurrentColor(number);
+    currentPage = number - 1;
+    appendUserToWrapper(
+        currentPage * rowsPerPage,
+        rowsPerPage + Data.data.length - currentPage * rowsPerPage > rowsPerPage
+            ? ++currentPage * rowsPerPage
+            : currentPage * rowsPerPage +
+            (Data.data.length - currentPage * rowsPerPage)
+    );
+    setCurrentColor(number);
 }
 
 function removeCurrentColor() {
-  let pageArray = Array.from(document.getElementsByClassName("page-item"));
-  let curPage = pageArray.filter((page) => {
-    return page.classList.contains("active");
-  });
-  if (curPage.length > 0) {
-    curPage[0].classList.remove("active");
-  }
+    let pageArray = Array.from(document.getElementsByClassName("page-item"));
+    let curPage = pageArray.filter((page) => {
+        return page.classList.contains("active");
+    });
+    if (curPage.length > 0) {
+        curPage[0].classList.remove("active");
+    }
 }
 
 function setCurrentColor(number) {
-  removeCurrentColor();
-  let pageArray = Array.from(document.getElementsByClassName("page-item"));
-  let curPage = pageArray.filter((page) => {
-    return parseInt(page.getAttribute("page")) === number;
-  });
-  curPage[0].classList.add("active");
+    removeCurrentColor();
+    let pageArray = Array.from(document.getElementsByClassName("page-item"));
+    let curPage = pageArray.filter((page) => {
+        return parseInt(page.getAttribute("page")) === number;
+    });
+    curPage[0].classList.add("active");
 }
 
 function reRenderCheckbox() {
-  var checkBoxList = document.getElementsByClassName("checkBox");
-  for (let index = 0; index < checkBoxList.length; index++) {
-    let child = checkBoxList[index];
-    let checkBoxEl = child.querySelector("input[type=checkbox]");
-    checkBoxEl.addEventListener("click", () => {
-      if (checkBoxEl.checked) {
-        child.innerHTML = "";
-        checkBoxEl.setAttribute("value", "Active");
-        child.append(checkBoxEl);
-        child.append(" Active");
-      } else {
-        child.innerHTML = "";
-        checkBoxEl.setAttribute("value", "Inactive");
-        child.append(checkBoxEl);
-        child.append(" Inactive");
-      }
-      console.log(checkBoxEl);
-      console.log(checkBoxEl.getAttribute("initValue"));
-      if (
-        checkBoxEl.getAttribute("initValue") !==
-        checkBoxEl.getAttribute("value")
-      ) {
-        child.classList.add("text-warning");
-        // document.getElementById("message").innerHTML =
-        //   "Something changed. Click to save";
-      }
-      // remove if unchange
-      else if (child.classList.contains("text-warning")) {
-        child.classList.remove("text-warning");
-      }
-    });
-  }
+    var checkBoxList = document.getElementsByClassName("checkBox");
+    for (let index = 0; index < checkBoxList.length; index++) {
+        let child = checkBoxList[index];
+        let checkBoxEl = child.querySelector("input[type=checkbox]");
+        checkBoxEl.addEventListener("click", () => {
+            if (checkBoxEl.checked) {
+                child.innerHTML = "";
+                checkBoxEl.setAttribute("value", "Active");
+                child.append(checkBoxEl);
+                child.append(" Active");
+            } else {
+                child.innerHTML = "";
+                checkBoxEl.setAttribute("value", "Inactive");
+                child.append(checkBoxEl);
+                child.append(" Inactive");
+            }
+            console.log(checkBoxEl);
+            console.log(checkBoxEl.getAttribute("initValue"));
+            if (
+                checkBoxEl.getAttribute("initValue") !==
+                checkBoxEl.getAttribute("value")
+            ) {
+                child.classList.add("text-warning");
+                // document.getElementById("message").innerHTML =
+                //   "Something changed. Click to save";
+            }
+            // remove if unchange
+            else if (child.classList.contains("text-warning")) {
+                child.classList.remove("text-warning");
+            }
+        });
+    }
 }
 
 function appendUserToWrapper(start, end) {

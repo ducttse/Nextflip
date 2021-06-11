@@ -27,6 +27,8 @@ using Nextflip.Models.mediaCategory;
 using Nextflip.Models.mediaFavorite;
 using Nextflip.Models.season;
 using Nextflip.Models.subtitle;
+using Nextflip.Models.supportTopic;
+using Nextflip.Models.supportTicket;
 
 namespace Nextflip
 {
@@ -69,6 +71,20 @@ namespace Nextflip
 
             ///get connection string
             DbUtil.ConnectionString = Configuration.GetConnectionString("MySql");
+            //get mail settings
+            services.AddOptions();
+            var mailsettings = Configuration.GetSection("MailSettings");
+            services.Configure<MailSettings>(mailsettings);
+
+            services.AddTransient<ISendMailService, SendMailService>();
+
+            //add SupportTiket, SupportTopic, SupportTicketResponse DAOs to service
+            services.AddTransient<ISupportTicketDAO, SupportTicketDAO>();
+            services.AddTransient<ISupportTopicDAO, SupportTopicDAO>();
+
+            //add supportTicket, SupportTopic services to service
+            services.AddTransient<ISupportTicketService, SupportTicketService>();
+            services.AddTransient<ISupportTopicService, SupportTopicService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

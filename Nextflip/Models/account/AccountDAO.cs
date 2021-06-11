@@ -12,7 +12,6 @@ namespace Nextflip.Models.account
 {
     public class AccountDAO : IAccountDAO
     {
-
         public AccountDAO() { }
         public IEnumerable<Account> GetAllAccounts()
         {
@@ -61,11 +60,11 @@ namespace Nextflip.Models.account
                     connection.Open();
                     string Sql = "Select userID, userEmail, roleName, fullname, status " +
                             "From account " +
-                            "Where userEmail = @userEmail";
+                            "Where userEmail LIKE @userEmail";
                     Debug.WriteLine(Sql);
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        command.Parameters.AddWithValue("@userEmail", searchValue);
+                        command.Parameters.AddWithValue("@userEmail", $"%{searchValue}%");
                         using (var reader = command.ExecuteReader())
                         {
                             while (reader.Read()) { 

@@ -1,0 +1,38 @@
+#imageHolder {
+  width: 30%;
+  height: 45vh;
+}
+#description {
+  font: 26px;
+}
+#wrapper {
+  position: relative;
+  color: white;
+}
+#title {
+  font-size: 81px;
+}
+.season_holder {
+}
+.season_holder > p {
+  font-size: 24px;
+}
+.episode_holder {
+  margin-left: 2%;
+}
+.episode_holder > p {
+  font-size: 20px;
+}
+.hide {
+  display: none;
+}
+.above {
+  margin-left: 3%;
+}
+#content_holder {
+  position: absolute;
+  top: 8px;
+  left: 16px;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 100;
+}

@@ -8,6 +8,7 @@ using Nextflip.Models.media;
 using System.Collections;
 using Microsoft.Extensions.Logging;
 using System;
+using Nextflip.Models.category;
 
 namespace Nextflip.APIControllers
 {
@@ -25,21 +26,27 @@ namespace Nextflip.APIControllers
         public IActionResult GetMediaDetails([FromServices] IMediaService mediaService,
                                                 [FromServices] ISeasonService seasonService,
                                                 [FromServices] IEpisodeService episodeService,
+                                                [FromServices] ICategoryService categoryService,
                                                 string mediaID)
         {
             try
             {
                 Media media = mediaService.GetMediaByID(mediaID);
                 IEnumerable<Season> seasons = seasonService.GetSeasonsByMediaID(mediaID);
+                IEnumerable<Category> categories = categoryService.GetCategoriesByMediaID(mediaID);
                 var episodesMap = new Dictionary<string, IEnumerable>();
-                foreach (var season in seasons)
+                if (seasons != null)
                 {
-                    IEnumerable<Episode> episodes = episodeService.GetEpisodesBySeasonID(season.SeasonID);
-                    episodesMap.Add(season.SeasonID, episodes);
+                    foreach (var season in seasons)
+                    {
+                        IEnumerable<Episode> episodes = episodeService.GetEpisodesBySeasonID(season.SeasonID);
+                        episodesMap.Add(season.SeasonID, episodes);
+                    }
                 }
                 var mediaDetails = new
                 {
                     Media = media,
+                    Categories = categories,
                     Seasons = seasons,
                     EpisodesMapSeason = episodesMap
                 };

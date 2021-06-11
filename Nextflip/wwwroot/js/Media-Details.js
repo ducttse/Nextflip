@@ -27,13 +27,23 @@ function renderImg(media) {
   `;
 }
 
-function renderUpSection(media) {
+function renderCategory(arr) {
+  let renderedArr = arr.map((category) => {
+    return `<p class="badge rounded-pill bg-secondary">${category.name}</p>`;
+  });
+  renderedArr = renderedArr.join("");
+  return renderedArr;
+}
+
+function renderUpSection(media, categories) {
+  let renderedCategories = renderCategory(categories);
   let title = media.title;
   let displayName =
     title.charAt(0).toUpperCase() + title.slice(1, title.length + 1);
   return `
     <div class="col-12">
       <p id="title">${displayName}</p>
+      ${renderedCategories}
       <p id="description">${media.description}</p>
     </div>
     <form method="POST" class="row">
@@ -89,7 +99,10 @@ function appendToWrapper(data) {
     .insertAdjacentHTML("afterbegin", renderImg(data.media));
   document
     .getElementById("infor_hodler")
-    .insertAdjacentHTML("afterbegin", renderUpSection(data.media));
+    .insertAdjacentHTML(
+      "afterbegin",
+      renderUpSection(data.media, data.categories)
+    );
   document
     .getElementById("details_holder")
     .insertAdjacentHTML(

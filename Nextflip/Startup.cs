@@ -14,6 +14,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Nextflip.utils;
+using Nextflip.Models.account;
+using Nextflip.Services.Implementations;
+using Nextflip.Services.Interfaces;
 using Nextflip.Services.Interfaces;
 using Nextflip.Services.Implementations;
 using Nextflip.Models.category;
@@ -58,13 +61,16 @@ namespace Nextflip
             services.AddTransient<ISeasonService, SeasonService>();
             services.AddTransient<ISubtitleService, SubtitleService>();
 
+          
             //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
+            services.AddTransient<IAccountDAO, AccountDAO>();
+            services.AddTransient<IUserManagerManagementService, UserManagerManagementService>();
+            
 
             ///get connection string
             DbUtil.ConnectionString = Configuration.GetConnectionString("MySql");
-
             //get mail settings
             services.AddOptions();
             var mailsettings = Configuration.GetSection("MailSettings");
@@ -79,7 +85,6 @@ namespace Nextflip
             //add supportTicket, SupportTopic services to service
             services.AddTransient<ISupportTicketService, SupportTicketService>();
             services.AddTransient<ISupportTopicService, SupportTopicService>();
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -108,7 +113,8 @@ namespace Nextflip
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
+                    pattern: "{controller}/{action}/{id?}");
+
             });
         }
     }

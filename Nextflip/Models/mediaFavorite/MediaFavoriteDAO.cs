@@ -13,25 +13,34 @@ namespace Nextflip.Models.mediaFavorite
         
         public IList<string> GetMediaIDs(string favoriteListID)
         {
-            var mediaIDs = new List<string>();
-            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            try
             {
-                connection.Open();
-                string Sql = "Select mediaID From mediaFavoriteList Where favoriteListID = @favoriteListID";
-                using (var command = new MySqlCommand(Sql, connection))
+                var mediaIDs = new List<string>();
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
-                    command.Parameters.AddWithValue("@favoriteListID", favoriteListID);
-                    using (var reader = command.ExecuteReader())
+                    connection.Open();
+                    string Sql = "Select mediaID " +
+                                "From mediaFavoriteList " +
+                                "Where favoriteListID = @favoriteListID";
+                    using (var command = new MySqlCommand(Sql, connection))
                     {
-                        while (reader.Read())
+                        command.Parameters.AddWithValue("@favoriteListID", favoriteListID);
+                        using (var reader = command.ExecuteReader())
                         {
-                            mediaIDs.Add(reader.GetString(0));
+                            while (reader.Read())
+                            {
+                                mediaIDs.Add(reader.GetString(0));
+                            }
                         }
                     }
+                    connection.Close();
                 }
-                connection.Close();
+                return mediaIDs;
             }
-            return mediaIDs;
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         

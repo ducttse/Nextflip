@@ -1,5 +1,5 @@
 let Data = {
-    data: []
+  data: []
 };
 
 let RequestObject;
@@ -114,52 +114,52 @@ function reRenderCheckbox() {
 }
 
 function appendUserToWrapper(start, end) {
-    let userArray = Data.data.slice(start, end).map((user) => {
-        return renderUser(user);
-    });
-    userArray = userArray.join("");
-    let dataWapper = document.getElementById("dataWapper");
-    if (dataWapper.innerHTML !== "") {
-        dataWapper.innerHTML = "";
-    }
-    dataWapper.insertAdjacentHTML("afterbegin", userArray);
-    // add reRender function to each checkbox
-    reRenderCheckbox();
+  let userArray = Data.data.slice(start, end).map((user) => {
+    return renderUser(user);
+  });
+  userArray = userArray.join("");
+  let dataWapper = document.getElementById("dataWapper");
+  if (dataWapper.innerHTML !== "") {
+    dataWapper.innerHTML = "";
+  }
+  dataWapper.insertAdjacentHTML("afterbegin", userArray);
+  // add reRender function to each checkbox
+  reRenderCheckbox();
 }
 
 function appendPagination(length, rowsPerPage) {
-    document
-        .getElementById("pagination")
-        .insertAdjacentHTML("afterbegin", renderPagination(length, rowsPerPage));
+  document
+    .getElementById("pagination")
+    .insertAdjacentHTML("afterbegin", renderPagination(length, rowsPerPage));
 }
 
 function Load() {
-    appendPagination(Data.data.length, rowsPerPage);
-    appendUserToWrapper(0, rowsPerPage);
-    setCurrentColor(1);
+  appendPagination(Data.data.length, rowsPerPage);
+  appendUserToWrapper(0, rowsPerPage);
+  setCurrentColor(1);
 }
 
 function Run() {
-    ///
-    // let searchValue = {
-    //   searchValue: "dSRFgJ2L3CqrZJrmOkWD@gmail.com"
-    // };
-    // ////
-    // let reqHeader = new Headers();
-    // reqHeader.append("Content-Type", "text/json");
-    // reqHeader.append("Accept", "application/json, text/plain, */*");
+  ///
+  // let searchValue = {
+  //   searchValue: "dSRFgJ2L3CqrZJrmOkWD@gmail.com"
+  // };
+  // ////
+  // let reqHeader = new Headers();
+  // reqHeader.append("Content-Type", "text/json");
+  // reqHeader.append("Accept", "application/json, text/plain, */*");
 
-    // let initObject = {
-    //   method: "POST",
-    //   headers: reqHeader,
-    //   body: JSON.stringify()
-    // };
-    ////
-    fetch("/api/UserManagerManagement/GetAllAccounts")
-        .then((response) => response.json())
-        .then((json) => {
-            Data.data = json;
-            Load();
-        });
+  // let initObject = {
+  //   method: "POST",
+  //   headers: reqHeader,
+  //   body: JSON.stringify()
+  // };
+  ////
+  fetch("/api/UserManagerManagement/GetAllAccounts")
+    .then((response) => response.json())
+    .then((json) => {
+      Data.data = json;
+      Load();
+    });
 }
 Run();

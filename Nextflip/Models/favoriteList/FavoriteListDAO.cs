@@ -14,29 +14,38 @@ namespace Nextflip.Models.favoriteList
         
         public FavoriteList GetFavoriteList(string userID)
         {
-            FavoriteList favoriteList = null;
-            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            try
             {
-                connection.Open();
-                string Sql = "Select favoriteListID From favoriteList Where userID = @userID";
-                using (var command = new MySqlCommand(Sql, connection))
+                FavoriteList favoriteList = null;
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
-                    command.Parameters.AddWithValue("@userID", userID);
-                    using (var reader = command.ExecuteReader())
+                    connection.Open();
+                    string Sql = "Select favoriteListID " +
+                                "From favoriteList " +
+                                "Where userID = @userID ";
+                    using (var command = new MySqlCommand(Sql, connection))
                     {
-                        if (reader.Read())
+                        command.Parameters.AddWithValue("@userID", userID);
+                        using (var reader = command.ExecuteReader())
                         {
-                            favoriteList = new FavoriteList
+                            if (reader.Read())
                             {
-                                FavoriteListID = reader.GetString(0),
-                                UserID = userID
-                            };
+                                favoriteList = new FavoriteList
+                                {
+                                    FavoriteListID = reader.GetString(0),
+                                    UserID = userID
+                                };
+                            }
                         }
                     }
+                    connection.Close();
                 }
-                connection.Close();
+                return favoriteList;
             }
-            return favoriteList;
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

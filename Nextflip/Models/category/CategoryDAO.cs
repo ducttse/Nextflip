@@ -13,56 +13,74 @@ namespace Nextflip.Models.category
 
         public IEnumerable<Category> GetCategories()
         {
-            var categories = new List<Category>();
-            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            try
             {
-                connection.Open();
-                string Sql = "Select categoryID, name From category";
-                using (var command = new MySqlCommand(Sql, connection))
+                var categories = new List<Category>();
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
-
-                    using (var reader = command.ExecuteReader())
+                    connection.Open();
+                    string Sql = "Select categoryID, name " +
+                                "From category " +
+                                "Order By name";
+                    using (var command = new MySqlCommand(Sql, connection))
                     {
-                        while (reader.Read())
+
+                        using (var reader = command.ExecuteReader())
                         {
-                            categories.Add(new Category
+                            while (reader.Read())
                             {
-                                CategoryID = reader.GetInt32(0),
-                                Name = reader.GetString(1),
-                            });
+                                categories.Add(new Category
+                                {
+                                    CategoryID = reader.GetInt32(0),
+                                    Name = reader.GetString(1),
+                                });
+                            }
                         }
                     }
+                    connection.Close();
                 }
-                connection.Close();
+                return categories;
             }
-            return categories;
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public Category GetCategoryByID(int categoryID)
         {
-            Category category = null;
-            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            try
             {
-                connection.Open();
-                string Sql = "Select categoryID, name From category Where categoryID = @categoryID";
-                using (var command = new MySqlCommand(Sql, connection))
+                Category category = null;
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
-                    command.Parameters.AddWithValue("@categoryID", categoryID);
-                    using (var reader = command.ExecuteReader())
+                    connection.Open();
+                    string Sql = "Select categoryID, name " +
+                                "From category " +
+                                "Where categoryID = @categoryID ";
+                    using (var command = new MySqlCommand(Sql, connection))
                     {
-                        if (reader.Read())
+                        command.Parameters.AddWithValue("@categoryID", categoryID);
+                        using (var reader = command.ExecuteReader())
                         {
-                            category = new Category
+                            if (reader.Read())
                             {
-                                CategoryID = reader.GetInt32(0),
-                                Name = reader.GetString(1),
-                            };
+                                category = new Category
+                                {
+                                    CategoryID = reader.GetInt32(0),
+                                    Name = reader.GetString(1),
+                                };
+                            }
                         }
                     }
+                    connection.Close();
                 }
-                connection.Close();
+                return category;
             }
-            return category;            
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

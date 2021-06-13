@@ -6,21 +6,25 @@ function validateUrl(value) {
   );
 }
 
-function renderImageHolder(url) {
+function renderImageHolder(media) {
   let CheckedURL = noImage;
-  if (validateUrl(url)) {
-    CheckedURL = url;
+  if (validateUrl(media.bannerURL)) {
+    CheckedURL = media.bannerURL;
   }
   return `
   <div class="col-3 imageHolder px-1">
-    <img src="${CheckedURL}" class="w-100 h-90" alt="..."/>
+  <a href="/WatchMedia/MediaDetails/${media.mediaID}">
+    <img
+      src="${CheckedURL}"
+      class="w-100 h-90"
+      alt="..."/>
+  </a>
   </div>`;
 }
 
 function renderCarousel(mediaArr, index) {
-  console.log(mediaArr);
   let renderedImgHolder = mediaArr.map((media) => {
-    return renderImageHolder(media.bannerURL);
+    return renderImageHolder(media);
   });
   renderedImgHolder = renderedImgHolder.join("");
   return `
@@ -76,7 +80,8 @@ function fetchCategoryID(category) {
   )
     .then((res) => res.json())
     .then((json) => {
-      if (json.length === 0) {
+      console.log(json);
+      if (json.length < 8) {
         return;
       }
       category.mediaArr = json;
@@ -182,6 +187,7 @@ function Run() {
   fetch("/api/ViewSubscribedUserDashboard/GetCategories")
     .then((res) => res.json())
     .then((categories) => {
+      console.log(categories);
       categories.forEach((category) => {
         fetchCategoryID(category);
       });

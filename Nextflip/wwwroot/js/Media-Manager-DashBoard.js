@@ -4,7 +4,7 @@
 function renderRequest(request) {
   return `
       <tr>
-          <td>${request.name}</td>
+          <td>${request.requestID}</td>
           <td>${request.userEmail}</td>
           <td>${request.note}</td>
           <td><a class="text-decoration-none" href="#${request.mediaID}">Preview</a></td>
@@ -36,7 +36,6 @@ function appendRequest(start, end) {
 function renderPagination(length, rowsPerPage) {
   let numberOfPage = Math.ceil(length / rowsPerPage);
   let Pages = "";
-  console.log(numberOfPage);
   for (let i = 1; i <= numberOfPage; i++) {
     Pages += `<li class="page-item" page="${i}" onClick="setCurrentPage(${i})"><a class="page-link" href="#">${i}</a></li>`;
   }
@@ -89,7 +88,7 @@ function setCurrentColor(number) {
   curPage[0].classList.add("active");
 }
 
-fetch("/api/MediaManagerManagement")
+fetch("/api/MediaManagerManagement/GetAllPendingMedias")
   .then((res) => res.json())
   .then((json) => {
     Data.data = json;

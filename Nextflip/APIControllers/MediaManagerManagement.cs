@@ -45,5 +45,13 @@ namespace Nextflip.APIControllers
             return new JsonResult(result);
         }
 
+        [Route("NumberOfPendingMedias")]
+        public JsonResult NumberOfPendingMedias([FromServices] IMediaManagerManagementService mediaManagerManagementService)
+        {
+            int count = mediaManagerManagementService.NumberOfPendingMedias();
+            return new JsonResult(count);
+        }
+
+
     }
 }

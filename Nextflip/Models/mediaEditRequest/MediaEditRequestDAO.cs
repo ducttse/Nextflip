@@ -100,9 +100,9 @@ namespace Nextflip.Models.mediaEditRequest
                             "Where requestID = @requestID";
                     Debug.WriteLine(Sql);
                     MySqlCommand command = new MySqlCommand(Sql, connection);
-                        command.Parameters.AddWithValue("@requestID", requestID);
-                        int rows = command.ExecuteNonQuery();
-                        if (rows > 0) result = true;
+                    command.Parameters.AddWithValue("@requestID", requestID);
+                    int rows = command.ExecuteNonQuery();
+                    if (rows > 0) result = true;
                 }
             }
             catch (Exception ex)
@@ -138,5 +138,28 @@ namespace Nextflip.Models.mediaEditRequest
             return result;
         }
 
+        public int NumberOfPendingMedias()
+        {
+            int count = 0;
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            {
+                connection.Open();
+                string Sql = "Select COUNT(userID) " +
+                                "From mediaEditRequest";
+                using (var command = new MySqlCommand(Sql, connection))
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            count = reader.GetInt32(0);
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return count;
+        }
     }
 }
+

@@ -10,5 +10,6 @@ namespace Nextflip.Services.Interfaces
     {
         IEnumerable<Account> GetAllAccounts();
         IEnumerable<Account> GetAccountListByEmail(string searchValue);
+        int NumberOfAccounts();
     }
 }

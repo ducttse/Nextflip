@@ -27,5 +27,12 @@ namespace Nextflip.APIControllers
             IEnumerable<Account> accounts = userManagerManagementService.GetAllAccounts();
             return new JsonResult(accounts);
         }
+
+        [Route("NumberOfAccounts")]
+        public JsonResult NumberOfAccounts([FromServices] IUserManagerManagementService userManagerManagementService)
+        {
+            int count = userManagerManagementService.NumberOfAccounts();
+            return new JsonResult(count);
+        }
     }
 }

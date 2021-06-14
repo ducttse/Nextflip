@@ -52,6 +52,13 @@ namespace Nextflip.APIControllers
             return new JsonResult(count);
         }
 
-
+        [HttpPost]
+        [Route("GetPendingMediasListAccordingRequest")]
+        public JsonResult GetPendingMediasListAccordingRequest([FromServices] IMediaManagerManagementService mediaManagerManagementService,
+                                [FromForm] int NumberOfPage, [FromForm] int RowOfPage, [FromForm] int RequestPage)
+        {
+            IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.GetPendingMediasListAccordingRequest(NumberOfPage, RowOfPage, RequestPage);
+            return new JsonResult(requests);
+        }
     }
 }

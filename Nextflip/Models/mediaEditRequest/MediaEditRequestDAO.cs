@@ -144,7 +144,7 @@ namespace Nextflip.Models.mediaEditRequest
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = "Select COUNT(userID) " +
+                string Sql = "Select COUNT(requestID) " +
                                 "From mediaEditRequest";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
@@ -159,6 +159,48 @@ namespace Nextflip.Models.mediaEditRequest
                 connection.Close();
             }
             return count;
+        }
+
+        public IEnumerable<MediaEditRequest> GetPendingMediasListAccordingRequest(int NumberOfPage, int RowOfPage, int RequestPage)
+        {
+            var requests = new List<MediaEditRequest>();
+            int limit = NumberOfPage * RowOfPage;
+            int offset = ((int)(RequestPage / NumberOfPage)) * limit;
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select requestID, userEmail, mediaID, status, note " +
+                            "From mediaEditRequest " +
+                            "LIMIT @offset, @limit";
+                    Debug.WriteLine(Sql);
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@offset", offset);
+                        command.Parameters.AddWithValue("@limit", limit);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                requests.Add(new MediaEditRequest
+                                {
+                                    requestID = reader.GetInt32(0),
+                                    userEmail = reader.GetString(1),
+                                    mediaID = reader.GetString(2),
+                                    status = reader.GetString(3),
+                                    note = reader.GetString(4)
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return requests;
         }
     }
 }

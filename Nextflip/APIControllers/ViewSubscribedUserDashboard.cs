@@ -49,12 +49,25 @@ namespace Nextflip.APIControllers
         }
 
         [Route("GetMediasByTitle/{searchValue}")]
-        public IActionResult GetMediasByTitle([FromServices] IMediaService mediaService, string searchValue)
+        public IActionResult GetMediasByTitle([FromServices] IMediaService mediaService, 
+                                                [FromServices] ICategoryService categoryService, string searchValue)
         {
             try
             {
                 IEnumerable<Media> medias = mediaService.GetMediasByTitle(searchValue);
-                return new JsonResult(medias);
+                var mediaListWithCategory = new List<dynamic>();
+                if (medias != null)
+                {
+                    foreach(var media in medias)
+                    {
+                        IEnumerable<Category> categories = categoryService.GetCategoriesByMediaID(media.MediaID);
+                        mediaListWithCategory.Add(new { 
+                                                       Media = media,
+                                                       Categories = categories                                                    
+                                                    });
+                    }
+                }
+                return new JsonResult(mediaListWithCategory);
             }
             catch (Exception ex)
             {

@@ -18,8 +18,6 @@ using Nextflip.Models.account;
 using Nextflip.Services.Implementations;
 using Nextflip.Services.Interfaces;
 using Nextflip.Models.mediaEditRequest;
-using Nextflip.Services.Interfaces;
-using Nextflip.Services.Implementations;
 using Nextflip.Models.category;
 using Nextflip.Models.episode;
 using Nextflip.Models.favoriteList;

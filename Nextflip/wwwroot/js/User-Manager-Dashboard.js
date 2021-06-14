@@ -2,7 +2,9 @@ let Data = {
   data: []
 };
 
-let RequestObject;
+function getData() {
+  return Data.data;
+}
 
 function renderUser(user) {
   return `
@@ -78,6 +80,12 @@ function setCurrentColor(number) {
   curPage[0].classList.add("active");
 }
 
+function appendPagination(length, rowsPerPage) {
+  document
+    .getElementById("pagination")
+    .insertAdjacentHTML("afterbegin", renderPagination(length, rowsPerPage));
+}
+
 function reRenderCheckbox() {
   var checkBoxList = document.getElementsByClassName("checkBox");
   for (let index = 0; index < checkBoxList.length; index++) {
@@ -127,12 +135,6 @@ function appendUserToWrapper(start, end) {
   reRenderCheckbox();
 }
 
-function appendPagination(length, rowsPerPage) {
-  document
-    .getElementById("pagination")
-    .insertAdjacentHTML("afterbegin", renderPagination(length, rowsPerPage));
-}
-
 function Load() {
   appendPagination(Data.data.length, rowsPerPage);
   appendUserToWrapper(0, rowsPerPage);
@@ -162,4 +164,21 @@ function Run() {
       Load();
     });
 }
-Run();
+
+function search(searchValue) {
+  if (!searchValue) {
+    return;
+  }
+  ReRun();
+  fetch(`/api/UserManagerManagement/GetAccountListByEmail/${searchValue}`)
+    .then((response) => response.json())
+    .then((json) => {
+      Data.data = json;
+      Load();
+    });
+}
+
+function ReRun() {
+  document.getElementById("dataWapper").innerHTML = "";
+  document.getElementById("pagination").innerHTML = "";
+}

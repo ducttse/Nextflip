@@ -1,25 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Nextflip.Models;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Nextflip.Controllers
 {
     public class WatchMediaController : Controller
     {
-
-        public WatchMediaController()
+        [HttpGet("WatchMedia/Watch/{id}/{episodeID}")]
+        public IActionResult Watch(string id, string episodeID)
         {
+            ViewBag.MediaID = id;
+            ViewBag.EpisodeID = episodeID;
+            return View();
         }
 
-        [HttpPost]
-        public IActionResult Watch([FromForm] string episodeUrl)
+        public IActionResult MediaDetails(string id)
         {
-            ViewBag.episodeUrl = episodeUrl;
+            ViewBag.MediaID = id;
             return View();
         }
     }

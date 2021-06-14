@@ -17,6 +17,19 @@ using Nextflip.utils;
 using Nextflip.Models.account;
 using Nextflip.Services.Implementations;
 using Nextflip.Services.Interfaces;
+using Nextflip.Models.mediaEditRequest;
+using Nextflip.Services.Interfaces;
+using Nextflip.Services.Implementations;
+using Nextflip.Models.category;
+using Nextflip.Models.episode;
+using Nextflip.Models.favoriteList;
+using Nextflip.Models.media;
+using Nextflip.Models.mediaCategory;
+using Nextflip.Models.mediaFavorite;
+using Nextflip.Models.season;
+using Nextflip.Models.subtitle;
+using Nextflip.Models.supportTopic;
+using Nextflip.Models.supportTicket;
 
 namespace Nextflip
 {
@@ -34,15 +47,47 @@ namespace Nextflip
         {
             services.AddDatabaseDeveloperPageExceptionFilter();
 
+            services.AddTransient<ICategoryDAO, CategoryDAO>();
+            services.AddTransient<IEpisodeDAO, EpisodeDAO>();
+            services.AddTransient<IMediaDAO, MediaDAO>();
+            services.AddTransient<IFavoriteListDAO, FavoriteListDAO>();
+            services.AddTransient<IMediaCategoryDAO, MediaCategoryDAO>();
+            services.AddTransient<IMediaFavoriteDAO, MediaFavoriteDAO>();
+            services.AddTransient<ISeasonDAO, SeasonDAO>();
+            services.AddTransient<ISubtitleDAO, SubtitleDAO>();
+
+            services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IEpisodeService, EpisodeService>();
+            services.AddTransient<IMediaService, MediaService>();
+            services.AddTransient<ISeasonService, SeasonService>();
+            services.AddTransient<ISubtitleService, SubtitleService>();
+
+          
             //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddTransient<IAccountDAO, AccountDAO>();
             services.AddTransient<IUserManagerManagementService, UserManagerManagementService>();
-            
+            services.AddTransient<IMediaEditRequestDAO, MediaEditRequestDAO>();
+            services.AddTransient<IMediaManagerManagementService, MediaManagerManagementService>();
+
 
             ///get connection string
             DbUtil.ConnectionString = Configuration.GetConnectionString("MySql");
+            //get mail settings
+            services.AddOptions();
+            var mailsettings = Configuration.GetSection("MailSettings");
+            services.Configure<MailSettings>(mailsettings);
+
+            services.AddTransient<ISendMailService, SendMailService>();
+
+            //add SupportTiket, SupportTopic, SupportTicketResponse DAOs to service
+            services.AddTransient<ISupportTicketDAO, SupportTicketDAO>();
+            services.AddTransient<ISupportTopicDAO, SupportTopicDAO>();
+
+            //add supportTicket, SupportTopic services to service
+            services.AddTransient<ISupportTicketService, SupportTicketService>();
+            services.AddTransient<ISupportTopicService, SupportTopicService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -71,7 +116,8 @@ namespace Nextflip
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller}/{action}/{id?}");
+
             });
         }
     }

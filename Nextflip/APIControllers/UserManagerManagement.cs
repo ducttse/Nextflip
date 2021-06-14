@@ -38,7 +38,7 @@ namespace Nextflip.APIControllers
         public class Request
         {
             public int NumberOfPage { get; set; }
-            public int RowOfPage { get; set; }
+            public int RowsOnPage { get; set; }
             public int RequestPage { get; set; }
         }
         [HttpPost]
@@ -46,7 +46,7 @@ namespace Nextflip.APIControllers
         public JsonResult GetAccountsListAccordingRequest([FromServices] IUserManagerManagementService userManagerManagementService,
                                 [FromBody] Request request)
         {
-            IEnumerable<Account> accounts = userManagerManagementService.GetAccountsListAccordingRequest(request.NumberOfPage, request.RowOfPage, request.RequestPage);
+            IEnumerable<Account> accounts = userManagerManagementService.GetAccountsListAccordingRequest(request.NumberOfPage, request.RowsOnPage, request.RequestPage);
             return new JsonResult(accounts);
         }
     }

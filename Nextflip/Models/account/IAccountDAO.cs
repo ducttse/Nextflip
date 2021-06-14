@@ -14,7 +14,7 @@ namespace Nextflip.Models.account
         Boolean EditStaffProfile(String userID, String fullname, DateTime dateOfBirth, int intRole);
         Boolean ChangeStaffPassword(String userID, String password);
         int NumberOfAccounts();
-        IEnumerable<Account> GetAccountsListAccordingRequest(int NumberOfPage, int RowOfPage, int RequestPage);
+        IEnumerable<Account> GetAccountsListAccordingRequest(int NumberOfPage, int RowsOnPage, int RequestPage);
 
     }
 

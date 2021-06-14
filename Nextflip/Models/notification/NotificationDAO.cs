@@ -40,10 +40,10 @@ namespace Nextflip.Models.notification
             return notifications;
         }
 
-        public IEnumerable<Notification> GetNotificationsWithPaging(int pageNum)
+        public IEnumerable<Notification> GetNotificationsListAccordingRequest(int NumberOfPage, int RowOfPage, int RequestPage)
         {
-            int limit = 10; // thay đổi tuỳ chọn
-            int offset = (pageNum-1) * limit;
+            int limit = NumberOfPage * RowOfPage;
+            int offset = ((int)(RequestPage / NumberOfPage)) * limit;
             var notifications = new List<Notification>();
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {

@@ -19,11 +19,19 @@ namespace Nextflip.APIControllers
             IEnumerable<Notification> notifications = notificationService.GetAllNotifications();
             return new JsonResult(notifications);
         }
-
-        [Route("GetNotificationsWithPaging/{pageNum}")]
-        public IActionResult GetNotificationsWithPaging([FromServices] INotificationService notificationService, int pageNum)
+        public class Request
         {
-            IEnumerable<Notification> notifications = notificationService.GetNotificationsWithPaging(pageNum);
+            public int NumberOfPage { get; set; }
+            public int RowsOnPage { get; set; }
+            public int RequestPage { get; set; }
+        } 
+
+        [HttpPost]
+        [Route("GetNotificationsListAccordingRequest")]
+        public IActionResult GetNotificationsListAccordingRequest([FromServices] INotificationService notificationService,
+            [FromBody] Request request)
+        {
+            IEnumerable<Notification> notifications = notificationService.GetNotificationsListAccordingRequest(request.NumberOfPage, request.RowsOnPage, request.RequestPage);
             return new JsonResult(notifications);
         }
 

@@ -8,7 +8,7 @@ namespace Nextflip.Models.notification
     public interface INotificationDAO
     {
         IEnumerable<Notification> GetAllNotifications();
-        IEnumerable<Notification> GetNotificationsWithPaging(int pageNum);
+        IEnumerable<Notification> GetNotificationsListAccordingRequest(int NumberOfPage, int RowOfPage, int RequestPage);
         Notification GetDetailOfNotification(int notificationID);
         IEnumerable<Notification> GetAllAvailableNotifications();
         bool AddNotification(string title, string content);

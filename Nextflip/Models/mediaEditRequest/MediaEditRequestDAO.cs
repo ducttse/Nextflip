@@ -161,10 +161,10 @@ namespace Nextflip.Models.mediaEditRequest
             return count;
         }
 
-        public IEnumerable<MediaEditRequest> GetPendingMediasListAccordingRequest(int NumberOfPage, int RowOfPage, int RequestPage)
+        public IEnumerable<MediaEditRequest> GetPendingMediasListAccordingRequest(int NumberOfPage, int RowsOnPage, int RequestPage)
         {
             var requests = new List<MediaEditRequest>();
-            int limit = NumberOfPage * RowOfPage;
+            int limit = NumberOfPage * RowsOnPage;
             int offset = ((int)(RequestPage / NumberOfPage)) * limit;
             try
             {

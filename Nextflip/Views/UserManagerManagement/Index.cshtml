@@ -31,10 +31,13 @@
         </div>
     </form>
 </div>
+<script src="~/js/Pagination.js"></script>
 <script src="~/js/Search-Component.js"></script>
 <script src="~/js/User-Manager-Dashboard.js"></script>
 <script>
-Run();
+let rowsPerPage = 15;
+let maxPage = 14;
+Run(rowsPerPage);
 appendSearch(
   "/api/UserManagerManagement/GetAccountListByEmail",
   "Search Email"

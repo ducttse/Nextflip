@@ -1,4 +1,4 @@
-﻿function renderSearch(requetsURL, placeHolderText) {
+﻿function renderSearch(placeHolderText, searchValue) {
   return `
     <div class="row col-4 offset-1 p-3 mb-2 bg-white rounded">
         <span id="searchBtn" class="col-1 btn btn-danger"><i class="fas fa-search"></i></span>
@@ -8,20 +8,22 @@
             style="width: 90% !important"
             class="form-control col-2 d-inline"
             placeholder="${placeHolderText}"
-            requestURL="${requetsURL}"
-            value=""
+            value="${searchValue}"
         />
     </div>
     `;
 }
 
-function appendSearch(requetsURL, placeHolderText) {
+function appendSearch(placeHolderText, searchValue) {
+  let value;
+  if (searchValue === null) {
+    value = "";
+  } else {
+    value = searchValue;
+  }
   document
     .getElementById("search_wrapper")
-    .insertAdjacentHTML(
-      "afterbegin",
-      renderSearch(requetsURL, placeHolderText)
-    );
+    .insertAdjacentHTML("afterbegin", renderSearch(placeHolderText, value));
 }
 
 function setClick(func) {

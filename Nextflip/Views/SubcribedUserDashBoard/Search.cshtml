@@ -1,5 +1,23 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    Layout = "_CustomLayout";
 }
+@section Styles {
+    <link href="@Url.Content("~/css/Search-Media.css")" rel="stylesheet" type="text/css" />
+}
+<div class="row">
+    <div class="col-1">
+        <a class="btn btn-light" href="/SubcribedUserDashBoard/Index"><i class="fas fa-arrow-left"></i></a>
+    </div>
+    <div id="search_wrapper" class="col-10 mx-auto">
+    </div>
+</div>
+<div id="result_holder" class="col-10 mx-auto mt-3">
+    <div id="backround"></div>
+</div>
+<script src="~/js/Search-Media.js"></script>
+<script src="~/js/Search-Component.js"></script>
+<script>
+    search('@ViewBag.SearchValue');
+    appendSearch("Search Media", '@ViewBag.SearchValue');
+    setClick(search);
+</script>

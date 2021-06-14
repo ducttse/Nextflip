@@ -4,7 +4,18 @@
 @section styles{
     <link rel="Stylesheet" href="@Href("~/css/User-Dashboard.css")" />
 }
+<div class="row col-4 offset-4 mt-3 p-3 mb-2 bg-white rounded">
+    <a id="searchBtn" class="col-1 btn btn-danger" onclick="goToSearch(this)">
+        <i class="fas fa-search"></i>
+    </a>
+    <input id="search" type="text" style="width: 90% !important" class="form-control col-2 d-inline" placeholder="Search Media" value="" />
+</div>
 <div id="wrapper">
-    
 </div>
 <script src="~/js/User-Dashboard.js"></script>
+<script>
+    function goToSearch(obj) {
+        let value = obj.parentNode.querySelector("#search").value;
+        window.location.href = `/SubcribedUserDashBoard/Search/${value}`;
+    }
+</script>

@@ -24,7 +24,7 @@ function renderName(data) {
       </p>
     </div>
     <div class="ml-3">
-      <p>Episode: ${data.episode.number}</p>
+      <p>Episode ${data.episode.number}</p>
     </div>
   </div>`;
 }

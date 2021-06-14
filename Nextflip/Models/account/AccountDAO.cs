@@ -132,7 +132,7 @@ namespace Nextflip.Models.account
         }
 
         public IEnumerable<Account> GetAccountsListAccordingRequest(int NumberOfPage, int RowOfPage, int RequestPage)
-        {
+        {                                                                           
             var accounts = new List<Account>();
             int limit = NumberOfPage * RowOfPage;
             int offset = ((int)(RequestPage / NumberOfPage)) * limit;

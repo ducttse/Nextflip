@@ -130,5 +130,47 @@ namespace Nextflip.Models.account
             }
             return count;
         }
+
+        public IEnumerable<Account> GetAccountsListAccordingRequest(int NumberOfPage, int RowOfPage, int RequestPage)
+        {
+            var accounts = new List<Account>();
+            int limit = NumberOfPage * RowOfPage;
+            int offset = ((int)(RequestPage / NumberOfPage)) * limit;
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select userID, userEmail, roleName, fullname, status " +
+                            "From account " +
+                            "LIMIT @offset, @limit";
+                    Debug.WriteLine(Sql);
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@offset", offset);
+                        command.Parameters.AddWithValue("@limit", limit);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                accounts.Add(new Account
+                                {
+                                    userID = reader.GetString(0),
+                                    userEmail = reader.GetString(1),
+                                    roleName = reader.GetString(2),
+                                    fullname = reader.GetString(3),
+                                    status = reader.GetString(4)
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return accounts;
+        }
     }
 }

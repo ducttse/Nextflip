@@ -159,7 +159,7 @@ namespace Nextflip.Models.supportTicket
                 using (var connection = new MySqlConnection(utils.DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string sql = "Select Count(*) From SupportTicket;";
+                    string sql = "Select Count(*) From supportTicket;";
                     using (var command = new MySqlCommand(sql, connection))
 
                     {

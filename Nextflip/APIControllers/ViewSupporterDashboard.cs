@@ -21,7 +21,7 @@ namespace Nextflip.APIControllers
         {
             _logger = logger;
         }
-
+        [HttpPost]
         [Route("GetPendingSupportTickets")]
         public IActionResult GetPendingSupportTickets([FromServices] ISupportTicketDAO supportTicketDAO, [FromBody] Request request)
         {

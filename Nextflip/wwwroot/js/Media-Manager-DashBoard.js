@@ -1,7 +1,11 @@
 ﻿let Data = {
   data: []
 };
-
+let requestParam = {
+  NumberOfPage: 3,
+  RowsOnPage: 4,
+  RequestPage: 1
+};
 function renderRequest(request) {
   return `
       <tr>
@@ -32,8 +36,64 @@ function appendRequest(start, end) {
   requestWrapper.insertAdjacentHTML("afterbegin", requestArray);
 }
 
+
+function CountCurrentLoadedPage() {
+  return parseInt(Data.data.length / requestParam.RowsOnPage)
+}
+
+
+function setMaxPage(resolve) {
+  fetch("/api/MediaManagerManagement/NumberOfPendingMedias")
+    .then((res) => res.json())
+    .then((json) => {
+      rowsPerPage = requestParam.RowsOnPage;
+      maxPage = parseInt(parseInt(json) / rowsPerPage);
+      resolve("resolved");
+    });
+}
+
+function preLoad() {
+  return new Promise((resolve, reject) => {
+    setMaxPage(resolve);
+  });
+}
+
+function PostRequest(page) {
+  let reqHeader = new Headers();
+  reqHeader.append("Content-Type", "text/json");
+  reqHeader.append("Accept", "application/json, text/plain, */*");
+  if (page !== 1) {
+    requestParam.RequestPage = page;
+  }
+  let initObject = {
+    method: "POST",
+    headers: reqHeader,
+    body: JSON.stringify(requestParam)
+  };
+  //
+  return fetch(
+    "/api/MediaManagerManagement/GetPendingMediasListAccordingRequest",
+    initObject
+  )
+}
+
+function RequestMoreData(RequestPage) {
+  requestParam.RequestPage = RequestPage;
+  console.log(Data.data.length);
+
+  PostRequest(RequestPage).then(res => res.json()).then(json => {
+    json.forEach(user => {
+      Data.data.push(user);
+    })
+    let num = RequestPage - 1;
+    appendRequest(num * rowsPerPage, (num + 1) * rowsPerPage);
+    setCurrentColor(RequestPage);
+  })
+}
+
+
 function Run(rowsPerPage) {
-  fetch("/api/MediaManagerManagement/GetAllPendingMedias")
+  PostRequest(1)
     .then((res) => res.json())
     .then((json) => {
       Data.data = json;

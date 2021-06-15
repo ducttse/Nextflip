@@ -45,11 +45,11 @@ function renderLisrHolder(listMedia) {
     renderedCarousels += renderCarousel(subArr, i);
   }
   let button = `
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+    <button class="carousel-control-prev" type="button" data-bs-target="#carousel_${listMedia.categoryID}" data-bs-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Previous</span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+    <button class="carousel-control-next" type="button" data-bs-target="#carousel_${listMedia.categoryID}" data-bs-slide="next">
       <span class="carousel-control-next-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Next</span>
     </button>
@@ -58,7 +58,7 @@ function renderLisrHolder(listMedia) {
   <div class="mt-5 listHolder">
     <p class="h3 listTitle">${listMedia.name}</p>
     <div>
-      <div class="carousel slide h-25" data-bs-ride="carousel">
+      <div id="carousel_${listMedia.categoryID}" class="carousel slide h-25" data-bs-ride="carousel">
         <div class="carousel-inner">
           ${renderedCarousels}
         </div>
@@ -89,101 +89,8 @@ function fetchCategoryID(category) {
     });
 }
 
-function El() {
-  return `
-  <div class="mt-5 listHolder" id="holder_1">
-      <p class="h3 listTitle">Favourite media</p>
-      <div>
-        <div class="carousel slide h-25" data-bs-ride="carousel">
-          <div class="carousel-inner">
-            <div class="carousel-item active"> 
-              <div class="row">
-                <div class="col-3 imageHolder px-1">
-                  <a href="/WatchMedia/MediaDetails/knoZvTFPyBjmZpzekmOI">
-                    <img
-                      src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                      class="w-100 h-90"
-                      alt="..."/>
-                  </a>
-                    </div>
-                <div class="col-3 imageHolder px-1">
-                  <a href="/WatchMedia/MediaDetails/knoZvTFPyBjmZpzekmOI">
-                    <img
-                      src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                      class="w-100 h-90"
-                      alt="..."/>
-                  </a>
-                    </div>
-                <div class="col-3 imageHolder px-1">
-                  <a href="/WatchMedia/MediaDetails/knoZvTFPyBjmZpzekmOI">
-                    <img
-                      src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                      class="w-100 h-90"
-                      alt="..."/>
-                  </a>
-                    </div>
-                <div class="col-3 imageHolder px-1">
-                  <a href="/WatchMedia/MediaDetails/knoZvTFPyBjmZpzekmOI">
-                    <img
-                      src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                      class="w-100 h-90"
-                      alt="..."/>
-                  </a>
-                    </div>
-              </div>
-            </div>
-            <div class="carousel-item"> 
-              <div class="row">
-                <div class="col-3 imageHolder px-1">
-                  <a href="/WatchMedia/MediaDetails/knoZvTFPyBjmZpzekmOI">
-                    <img
-                      src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                      class="w-100 h-90"
-                      alt="..."/>
-                  </a>
-                    </div>
-                <div class="col-3 imageHolder px-1">
-                  <a href="/WatchMedia/MediaDetails/knoZvTFPyBjmZpzekmOI">
-                    <img
-                      src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                      class="w-100 h-90"
-                      alt="..."/>
-                  </a>
-                    </div>
-                <div class="col-3 imageHolder px-1">
-                  <a href="/WatchMedia/MediaDetails/knoZvTFPyBjmZpzekmOI">
-                    <img
-                      src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                      class="w-100 h-90"
-                      alt="..."/>
-                  </a>
-                    </div>
-                <div class="col-3 imageHolder px-1">
-                  <a href="/WatchMedia/MediaDetails/knoZvTFPyBjmZpzekmOI">
-                    <img
-                      src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                      class="w-100 h-90"
-                      alt="..."/>
-                  </a>
-                    </div>
-              </div>
-            </div>
-          </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
-        </div>
-      </div>
-    </div>`;
-}
 
 function Run() {
-  document.getElementById("wrapper").insertAdjacentHTML("beforeend", El());
   fetch("/api/ViewSubscribedUserDashboard/GetCategories")
     .then((res) => res.json())
     .then((categories) => {

@@ -19,7 +19,10 @@
 <script src="~/js/Pagination.js"></script>
 <script src="~/js/Media-Manager-DashBoard.js"></script>
 <script> 
-    let rowsPerPage = 3;
-    let maxPage = 14;
-    Run(rowsPerPage);
+    let rowsPerPage;
+    let maxPage;
+    preLoad().then(()=>{
+        Run(rowsPerPage);
+    })
+    
 </script>

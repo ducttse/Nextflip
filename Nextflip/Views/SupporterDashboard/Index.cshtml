@@ -25,7 +25,11 @@
 <script src="~/js/Pagination.js"></script>
 <script src="~/js/Supporter-Dashboard.js"></script>
 <script> 
-    let rowsPerPage = 15;
-    let maxPage = 12;
-    Run(rowsPerPage);
+let rowsPerPage;
+let maxPage;
+preLoad().then(msg =>{
+    if(msg === "resolved"){
+        Run(rowsPerPage);
+    }
+})
 </script>

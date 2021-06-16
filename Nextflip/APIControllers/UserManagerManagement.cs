@@ -91,7 +91,7 @@ namespace Nextflip.APIControllers
             }
         }
 
-        [Route("GetAllActiveAccounts")]
+/*        [Route("GetAllActiveAccounts")]
         public JsonResult GetAllActiveAccounts([FromServices] IUserManagerManagementService userManagerManagementService)
         {
             try
@@ -120,5 +120,6 @@ namespace Nextflip.APIControllers
                 return new JsonResult("Error occur");
             }
         }
+*/
     }
 }

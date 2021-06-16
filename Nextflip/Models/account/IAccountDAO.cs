@@ -15,8 +15,8 @@ namespace Nextflip.Models.account
         bool ChangeStaffPassword(String userID, String password);
         int NumberOfAccounts();
         IEnumerable<Account> GetAccountsListAccordingRequest(int NumberOfPage, int RowsOnPage, int RequestPage);
-        IEnumerable<Account> GetAllActiveAccounts();
-        IEnumerable<Account> GetAllInactiveAccounts();
+//        IEnumerable<Account> GetAllActiveAccounts();
+//       IEnumerable<Account> GetAllInactiveAccounts();
     }
 
 }

@@ -172,7 +172,7 @@ namespace Nextflip.Models.account
             }
             return accounts;
         }
-
+/*
         public IEnumerable<Account> GetAllActiveAccounts()
         {
             var accounts = new List<Account>();
@@ -248,5 +248,7 @@ namespace Nextflip.Models.account
             }
             return accounts;
         }
+*/
+    
     }
 }

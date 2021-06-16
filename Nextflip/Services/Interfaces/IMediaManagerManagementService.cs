@@ -13,5 +13,7 @@ namespace Nextflip.Services.Interfaces
         IEnumerable<MediaEditRequest> GetPendingMediaByUserEmail(string searchValue);
         bool ApproveRequest(int requestID);
         bool DisappoveRequest(int requestID);
+        int NumberOfPendingMedias();
+        IEnumerable<MediaEditRequest> GetPendingMediasListAccordingRequest(int NumberOfPage, int RowsOnPage, int RequestPage);
     }
 }

@@ -1,6 +1,11 @@
 ﻿let Data = {
   data: []
 };
+let requestParam = {
+  NumberOfPage: 3,
+  RowsOnPage: 4,
+  RequestPage: 1
+};
 function renderRequest(request) {
   return `
       <tr>
@@ -18,8 +23,6 @@ function renderRequest(request) {
           </td>
       </tr>`;
 }
-let rowsPerPage = 4;
-let currentPage = 0;
 
 function appendRequest(start, end) {
   let requestArray = Data.data.slice(start, end).map((request) => {
@@ -33,66 +36,70 @@ function appendRequest(start, end) {
   requestWrapper.insertAdjacentHTML("afterbegin", requestArray);
 }
 
-function renderPagination(length, rowsPerPage) {
-  let numberOfPage = Math.ceil(length / rowsPerPage);
-  let Pages = "";
-  for (let i = 1; i <= numberOfPage; i++) {
-    Pages += `<li class="page-item" page="${i}" onClick="setCurrentPage(${i})"><a class="page-link" href="#">${i}</a></li>`;
+
+function CountCurrentLoadedPage() {
+  return parseInt(Data.data.length / requestParam.RowsOnPage)
+}
+
+
+function setMaxPage(resolve) {
+  fetch("/api/MediaManagerManagement/NumberOfPendingMedias")
+    .then((res) => res.json())
+    .then((json) => {
+      rowsPerPage = requestParam.RowsOnPage;
+      maxPage = parseInt(parseInt(json) / rowsPerPage);
+      resolve("resolved");
+    });
+}
+
+function preLoad() {
+  return new Promise((resolve, reject) => {
+    setMaxPage(resolve);
+  });
+}
+
+function PostRequest(page) {
+  let reqHeader = new Headers();
+  reqHeader.append("Content-Type", "text/json");
+  reqHeader.append("Accept", "application/json, text/plain, */*");
+  if (page !== 1) {
+    requestParam.RequestPage = page;
   }
-  return `
-    <nav>
-      <ul class="pagination">
-        <li class="page-item disabled">
-          <a class="page-link" href="#">Previous</a>
-        </li>
-        ${Pages}
-        <li class="page-item"><a class="page-link" href="#">Next</a></li>
-      </ul>
-      </nav>`;
-}
-// jump to another pagination
-function setCurrentPage(number) {
-  currentPage = number - 1;
-  appendRequest(
-    currentPage * rowsPerPage,
-    rowsPerPage + Data.data.length - currentPage * rowsPerPage > rowsPerPage
-      ? ++currentPage * rowsPerPage
-      : currentPage * rowsPerPage +
-          (Data.data.length - currentPage * rowsPerPage)
-  );
-  setCurrentColor(number);
+  let initObject = {
+    method: "POST",
+    headers: reqHeader,
+    body: JSON.stringify(requestParam)
+  };
+  //
+  return fetch(
+    "/api/MediaManagerManagement/GetPendingMediasListAccordingRequest",
+    initObject
+  )
 }
 
-function removeCurrentColor() {
-  let pageArray = Array.from(document.getElementsByClassName("page-item"));
-  let curPage = pageArray.filter((page) => {
-    return page.classList.contains("active");
-  });
-  if (curPage.length > 0) {
-    curPage[0].classList.remove("active");
-  }
+function RequestMoreData(RequestPage) {
+  requestParam.RequestPage = RequestPage;
+  console.log(Data.data.length);
+
+  PostRequest(RequestPage).then(res => res.json()).then(json => {
+    json.forEach(user => {
+      Data.data.push(user);
+    })
+    let num = RequestPage - 1;
+    appendRequest(num * rowsPerPage, (num + 1) * rowsPerPage);
+    setCurrentColor(RequestPage);
+  })
 }
 
-function appendPagination(length, rowsPerPage) {
-  document
-    .getElementById("pagination")
-    .insertAdjacentHTML("afterbegin", renderPagination(length, rowsPerPage));
-}
 
-function setCurrentColor(number) {
-  removeCurrentColor();
-  let pageArray = Array.from(document.getElementsByClassName("page-item"));
-  let curPage = pageArray.filter((page) => {
-    return parseInt(page.getAttribute("page")) === number;
-  });
-  curPage[0].classList.add("active");
+function Run(rowsPerPage) {
+  PostRequest(1)
+    .then((res) => res.json())
+    .then((json) => {
+      Data.data = json;
+      appendRequest(0, rowsPerPage);
+      appendPagination(Data.data.length, rowsPerPage);
+      setCurrentColor(1);
+      setClickToIndex(appendRequest);
+    });
 }
-
-fetch("/api/MediaManagerManagement/GetAllPendingMedias")
-  .then((res) => res.json())
-  .then((json) => {
-    Data.data = json;
-    appendPagination(Data.data.length, rowsPerPage);
-    appendRequest(0, rowsPerPage);
-    setCurrentColor(1);
-  });

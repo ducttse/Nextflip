@@ -1,14 +1,19 @@
 let Data = {
   data: []
 };
-
+let requestParam = {
+  NumberOfPage: 3,
+  RowsOnPage: 10,
+  RequestPage: 1
+};
 function getData() {
   return Data.data;
 }
 
-function renderUser(user) {
+function renderUser(user, index) {
   return `
     <tr>
+        <td>${index + 1}</td>
         <td>${user.userEmail}</td>
         <td>${user.roleName}</td>
         <td>${user.fullname}</td>
@@ -28,68 +33,10 @@ function renderUser(user) {
         </td>
     </tr>`;
 }
-let rowsPerPage = 10;
-let currentPage = 0;
-
-function renderPagination(length, rowsPerPage) {
-  let numberOfPage = Math.ceil(length / rowsPerPage);
-  let Pages = "";
-  for (let i = 1; i <= numberOfPage; i++) {
-    Pages += `<li class="page-item" page="${i}" onClick="setCurrentPage(${i})"><a class="page-link" href="#">${i}</a></li>`;
-  }
-  return `
-  <nav>
-    <ul class="pagination">
-      <li class="page-item disabled">
-        <a class="page-link" href="#">Previous</a>
-      </li>
-      ${Pages}
-      <li class="page-item"><a class="page-link" href="#">Next</a></li>
-    </ul>
-    </nav>`;
-}
-// jump to another pagination
-function setCurrentPage(number) {
-  currentPage = number - 1;
-  appendUserToWrapper(
-    currentPage * rowsPerPage,
-    rowsPerPage + Data.data.length - currentPage * rowsPerPage > rowsPerPage
-      ? ++currentPage * rowsPerPage
-      : currentPage * rowsPerPage +
-          (Data.data.length - currentPage * rowsPerPage)
-  );
-  setCurrentColor(number);
-}
-
-function removeCurrentColor() {
-  let pageArray = Array.from(document.getElementsByClassName("page-item"));
-  let curPage = pageArray.filter((page) => {
-    return page.classList.contains("active");
-  });
-  if (curPage.length > 0) {
-    curPage[0].classList.remove("active");
-  }
-}
-
-function setCurrentColor(number) {
-  removeCurrentColor();
-  let pageArray = Array.from(document.getElementsByClassName("page-item"));
-  let curPage = pageArray.filter((page) => {
-    return parseInt(page.getAttribute("page")) === number;
-  });
-  curPage[0].classList.add("active");
-}
-
-function appendPagination(length, rowsPerPage) {
-  document
-    .getElementById("pagination")
-    .insertAdjacentHTML("afterbegin", renderPagination(length, rowsPerPage));
-}
-
 function reRenderCheckbox() {
   var checkBoxList = document.getElementsByClassName("checkBox");
   for (let index = 0; index < checkBoxList.length; index++) {
-    let child = checkBoxList[index];
+    let child = checkBoxList[ index ];
     let checkBoxEl = child.querySelector("input[type=checkbox]");
     checkBoxEl.addEventListener("click", () => {
       if (checkBoxEl.checked) {
@@ -122,8 +69,11 @@ function reRenderCheckbox() {
 }
 
 function appendUserToWrapper(start, end) {
-  let userArray = Data.data.slice(start, end).map((user) => {
-    return renderUser(user);
+  if (maxPage * requestParam.RowsOnPage - end <= 0) {
+    return;
+  }
+  let userArray = Data.data.slice(start, end).map((user, index) => {
+    return renderUser(user, start + index);
   });
   userArray = userArray.join("");
   let dataWapper = document.getElementById("dataWapper");
@@ -135,33 +85,55 @@ function appendUserToWrapper(start, end) {
   reRenderCheckbox();
 }
 
-function Load() {
-  appendPagination(Data.data.length, rowsPerPage);
-  appendUserToWrapper(0, rowsPerPage);
-  setCurrentColor(1);
+function CountCurrentLoadedPage() {
+  return parseInt(Data.data.length / requestParam.RowsOnPage)
 }
 
-function Run() {
-  ///
-  // let searchValue = {
-  //   searchValue: "dSRFgJ2L3CqrZJrmOkWD@gmail.com"
-  // };
-  // ////
-  // let reqHeader = new Headers();
-  // reqHeader.append("Content-Type", "text/json");
-  // reqHeader.append("Accept", "application/json, text/plain, */*");
+function Load(rowsPerPage) {
+  appendUserToWrapper(0, rowsPerPage);
+  appendPagination(Data.data.length, rowsPerPage);
+  setCurrentColor(1);
+  setClickToIndex(appendUserToWrapper);
+}
 
-  // let initObject = {
-  //   method: "POST",
-  //   headers: reqHeader,
-  //   body: JSON.stringify()
-  // };
-  ////
-  fetch("/api/UserManagerManagement/GetAllAccounts")
-    .then((response) => response.json())
+function PostRequest(page) {
+  let reqHeader = new Headers();
+  reqHeader.append("Content-Type", "text/json");
+  reqHeader.append("Accept", "application/json, text/plain, */*");
+  if (page !== 1) {
+    requestParam.RequestPage = page;
+  }
+  let initObject = {
+    method: "POST",
+    headers: reqHeader,
+    body: JSON.stringify(requestParam)
+  };
+  //
+  return fetch(
+    "/api/UserManagerManagement/GetAccountsListAccordingRequest",
+    initObject
+  )
+}
+
+function RequestMoreData(RequestPage) {
+  requestParam.RequestPage = RequestPage;
+  console.log(Data.data.length);
+
+  PostRequest(RequestPage).then(res => res.json()).then(json => {
+    json.forEach(user => {
+      Data.data.push(user);
+    })
+    let num = RequestPage - 1;
+    appendUserToWrapper(num * rowsPerPage, (num + 1) * rowsPerPage);
+    setCurrentColor(RequestPage);
+  })
+}
+
+function Run(rowsPerPage) {
+  PostRequest(1).then((response) => response.json())
     .then((json) => {
       Data.data = json;
-      Load();
+      Load(rowsPerPage);
     });
 }
 
@@ -174,7 +146,23 @@ function search(searchValue) {
     .then((response) => response.json())
     .then((json) => {
       Data.data = json;
-      Load();
+      Load(rowsPerPage);
+    });
+}
+
+function preLoad() {
+  return new Promise((resolve, reject) => {
+    setMaxPage(resolve);
+  });
+}
+
+function setMaxPage(resolve) {
+  fetch("/api/UserManagerManagement/NumberOfAccounts")
+    .then((res) => res.json())
+    .then((json) => {
+      rowsPerPage = requestParam.RowsOnPage;
+      maxPage = parseInt(parseInt(json) / rowsPerPage);
+      resolve("resolved");
     });
 }
 

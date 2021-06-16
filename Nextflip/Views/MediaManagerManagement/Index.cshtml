@@ -16,4 +16,13 @@
     <!-- end -->
 </table>
 <div id="pagination"></div>
+<script src="~/js/Pagination.js"></script>
 <script src="~/js/Media-Manager-DashBoard.js"></script>
+<script> 
+    let rowsPerPage;
+    let maxPage;
+    preLoad().then(()=>{
+        Run(rowsPerPage);
+    })
+    
+</script>

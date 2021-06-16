@@ -100,9 +100,9 @@ namespace Nextflip.Models.mediaEditRequest
                             "Where requestID = @requestID";
                     Debug.WriteLine(Sql);
                     MySqlCommand command = new MySqlCommand(Sql, connection);
-                        command.Parameters.AddWithValue("@requestID", requestID);
-                        int rows = command.ExecuteNonQuery();
-                        if (rows > 0) result = true;
+                    command.Parameters.AddWithValue("@requestID", requestID);
+                    int rows = command.ExecuteNonQuery();
+                    if (rows > 0) result = true;
                 }
             }
             catch (Exception ex)
@@ -138,5 +138,70 @@ namespace Nextflip.Models.mediaEditRequest
             return result;
         }
 
+        public int NumberOfPendingMedias()
+        {
+            int count = 0;
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            {
+                connection.Open();
+                string Sql = "Select COUNT(requestID) " +
+                                "From mediaEditRequest";
+                using (var command = new MySqlCommand(Sql, connection))
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            count = reader.GetInt32(0);
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return count;
+        }
+
+        public IEnumerable<MediaEditRequest> GetPendingMediasListAccordingRequest(int NumberOfPage, int RowsOnPage, int RequestPage)
+        {
+            var requests = new List<MediaEditRequest>();
+            int limit = NumberOfPage * RowsOnPage;
+            int offset = ((int)(RequestPage / NumberOfPage)) * limit;
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select requestID, userEmail, mediaID, status, note " +
+                            "From mediaEditRequest " +
+                            "LIMIT @offset, @limit";
+                    Debug.WriteLine(Sql);
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@offset", offset);
+                        command.Parameters.AddWithValue("@limit", limit);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                requests.Add(new MediaEditRequest
+                                {
+                                    requestID = reader.GetInt32(0),
+                                    userEmail = reader.GetString(1),
+                                    mediaID = reader.GetString(2),
+                                    status = reader.GetString(3),
+                                    note = reader.GetString(4)
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return requests;
+        }
     }
 }
+

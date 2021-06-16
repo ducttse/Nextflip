@@ -21,12 +21,16 @@ namespace Nextflip.APIControllers
         {
             _logger = logger;
         }
-
+        [HttpPost]
         [Route("GetPendingSupportTickets")]
-        public IActionResult GetPendingSupportTickets([FromServices] ISupportTicketDAO supportTicketDAO)
+        public IActionResult GetPendingSupportTickets([FromServices] ISupportTicketDAO supportTicketDAO, [FromBody] Request request)
         {
-            try {
-                IList<SupportTicket> pendingSupportTickets = supportTicketDAO.ViewAllPendingSupportTickets();
+            try
+            {
+                int limit = request.RowsOnPage * request.NumberOfPage;
+                int offset = (int) (request.RequestPage / request.NumberOfPage) * limit;
+
+                IList<SupportTicket> pendingSupportTickets = supportTicketDAO.ViewPendingSupportTickets(limit, offset);
                 return new JsonResult(pendingSupportTickets);
             }
             catch (Exception e)
@@ -39,8 +43,8 @@ namespace Nextflip.APIControllers
         [HttpPost]
         public async Task<IActionResult> Respond([FromServices] ISendMailService sendMailService, [FromServices] ISupportTicketDAO supportTicketDAO, [FromForm] string btnAction, [FromForm] string supportTicketID, [FromForm] string userEmail, [FromForm] string topicName, [FromForm] string content)
         {
-            try {
-                bool result = false;
+            try
+            {
                 var mailContent = new MailContent();
                 string toEmail = "nextflipcompany.com";
                 content = "from user email: " + userEmail + "\n" + content;
@@ -49,8 +53,8 @@ namespace Nextflip.APIControllers
                 else if (btnAction.Equals("customerRelation")) toEmail = CUSTOMER_RELATION_EMAIL;
                 await sendMailService.SendEmailAsync(toEmail, topicName, content);
 
-                result = supportTicketDAO.ForwardSupportTicket(supportTicketID, toEmail).Result;
-                if(result) return new JsonResult("Forward successful");
+                bool result = supportTicketDAO.ForwardSupportTicket(supportTicketID, toEmail).Result;
+                if (result) return new JsonResult("Forward successful");
                 return new JsonResult("An error occurred");
             }
             catch (Exception e)
@@ -67,12 +71,33 @@ namespace Nextflip.APIControllers
                 SupportTicket supportTicket = supportTicketService.ViewSupportTicketByID(supportTicketID);
                 return new JsonResult(supportTicket);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogInformation("ViewSupporterDashboard/GetSupportTicketDetails: " + e.Message);
                 return new JsonResult(e.Message);
             }
         }
+        [Route("GetNumOfSupportTicket")]
+        public IActionResult GetNumOfSupportTicket([FromServices] ISupportTicketService supportTicketService)
+        {
+            try
+            {
+                int result = supportTicketService.GetNumOfSupportTickets();
+                return new JsonResult(result);
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("ViewSupporterDashboard/GetNumOfSupportTicket: " + e.Message);
+                return new JsonResult(e.Message);
+            }
+        }
 
+    }
+
+    public class Request
+    {
+        public int NumberOfPage { get; set; }
+        public int RowsOnPage { get; set; }
+        public int RequestPage { get; set; }
     }
 }

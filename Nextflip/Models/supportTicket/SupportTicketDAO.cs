@@ -49,18 +49,20 @@ namespace Nextflip.Models.supportTicket
 
         }
 
-        public IList<SupportTicket> ViewAllPendingSupportTickets()
+        public IList<SupportTicket> ViewPendingSupportTickets(int limit, int offset)
         {
             IList<SupportTicket> supportTickets = new List<SupportTicket>();
             try {
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString)) {
                     connection.Open();
                     string sql = "SELECT supportTicketID, userEmail, topicName, status, content " +
-                                                            "FROM supportTicket " +
-                                                            "WHERE status = 'pending';";
+                                    "FROM supportTicket " +
+                                    "LIMIT @limit OFFSET @offset; ";
                     using (var command = new MySqlCommand(sql, connection))
 
                     {
+                        command.Parameters.AddWithValue("@limit", limit);
+                        command.Parameters.AddWithValue("@offset", offset);
                         using (var reader = command.ExecuteReader())
                         {
                             while (reader.Read())
@@ -146,6 +148,37 @@ namespace Nextflip.Models.supportTicket
             catch(Exception e)
             {
                 await transaction.RollbackAsync();
+                throw new Exception(e.Message);
+            }
+        }
+
+        public int GetNumOfSupportTickets()
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(utils.DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string sql = "Select Count(*) From supportTicket;";
+                    using (var command = new MySqlCommand(sql, connection))
+
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                int numOfSupportTicket = reader.GetUInt16(0);
+                                connection.Close();
+                                return numOfSupportTicket;
+                            }
+                            connection.Close();
+                        }
+                    }
+                }
+                return -1;
+            }
+            catch (Exception e)
+            {
                 throw new Exception(e.Message);
             }
         }

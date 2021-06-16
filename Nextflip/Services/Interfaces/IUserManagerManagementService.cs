@@ -11,7 +11,7 @@ namespace Nextflip.Services.Interfaces
         IEnumerable<Account> GetAllAccounts();
         IEnumerable<Account> GetAccountListByEmail(string searchValue);
         int NumberOfAccounts();
-        IEnumerable<Account> GetAccountsListAccordingRequest(int NumberOfPage, int RowsOnPage, int RequestPage);
+        IEnumerable<Account> GetAccountsListByRoleAccordingRequest(string roleName, int NumberOfPage, int RowsOnPage, int RequestPage);
 //        IEnumerable<Account> GetAllActiveAccounts();
 //        IEnumerable<Account> GetAllInactiveAccounts();
 

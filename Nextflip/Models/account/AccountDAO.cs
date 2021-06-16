@@ -172,48 +172,88 @@ namespace Nextflip.Models.account
             }
             return accounts;
         }
-/*
-        public IEnumerable<Account> GetAllActiveAccounts()
-        {
-            var accounts = new List<Account>();
-            try
-            {
-                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+        /*
+                public IEnumerable<Account> GetAllActiveAccounts()
                 {
-                    connection.Open();
-                    string Sql = "Select userID, userEmail, roleName, fullname, status " +
-                            "From account " +
-                            "Where status = 'Active' ";
-                    Debug.WriteLine(Sql);
-                    using (var command = new MySqlCommand(Sql, connection))
+                    var accounts = new List<Account>();
+                    try
                     {
-                        using (var reader = command.ExecuteReader())
+                        using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                         {
-                            while (reader.Read())
+                            connection.Open();
+                            string Sql = "Select userID, userEmail, roleName, fullname, status " +
+                                    "From account " +
+                                    "Where status = 'Active' ";
+                            Debug.WriteLine(Sql);
+                            using (var command = new MySqlCommand(Sql, connection))
                             {
-                                accounts.Add(new Account
+                                using (var reader = command.ExecuteReader())
                                 {
-                                    userID = reader.GetString(0),
-                                    userEmail = reader.GetString(1),
-                                    roleName = reader.GetString(2),
-                                    fullname = reader.GetString(3),
-                                    status = reader.GetString(4)
-                                });
+                                    while (reader.Read())
+                                    {
+                                        accounts.Add(new Account
+                                        {
+                                            userID = reader.GetString(0),
+                                            userEmail = reader.GetString(1),
+                                            roleName = reader.GetString(2),
+                                            fullname = reader.GetString(3),
+                                            status = reader.GetString(4)
+                                        });
+                                    }
+                                }
                             }
                         }
                     }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(ex.Message);
+                    }
+                    return accounts;
                 }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            return accounts;
-        }
 
-        public IEnumerable<Account> GetAllInactiveAccounts()
+                public IEnumerable<Account> GetAllInactiveAccounts()
+                {
+                    var accounts = new List<Account>();
+                    try
+                    {
+                        using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                        {
+                            connection.Open();
+                            string Sql = "Select userID, userEmail, roleName, fullname, status " +
+                                    "From account " +
+                                    "Where status = 'InActive' ";
+                            Debug.WriteLine(Sql);
+                            using (var command = new MySqlCommand(Sql, connection))
+                            {
+                                using (var reader = command.ExecuteReader())
+                                {
+                                    while (reader.Read())
+                                    {
+                                        accounts.Add(new Account
+                                        {
+                                            userID = reader.GetString(0),
+                                            userEmail = reader.GetString(1),
+                                            roleName = reader.GetString(2),
+                                            fullname = reader.GetString(3),
+                                            status = reader.GetString(4)
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception(ex.Message);
+                    }
+                    return accounts;
+                }
+        */
+        public IEnumerable<Account> GetAccountsListByRoleAccordingRequest(string roleName, int NumberOfPage, int RowsOnPage, int RequestPage)
         {
             var accounts = new List<Account>();
+            int limit = NumberOfPage * RowsOnPage;
+            int offset = ((int)((RequestPage-1) / NumberOfPage)) * limit;
             try
             {
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
@@ -221,10 +261,14 @@ namespace Nextflip.Models.account
                     connection.Open();
                     string Sql = "Select userID, userEmail, roleName, fullname, status " +
                             "From account " +
-                            "Where status = 'InActive' ";
+                            "Where roleName = @roleName " +
+                            "LIMIT @offset, @limit";
                     Debug.WriteLine(Sql);
                     using (var command = new MySqlCommand(Sql, connection))
                     {
+                        command.Parameters.AddWithValue("@roleName", roleName);
+                        command.Parameters.AddWithValue("@offset", offset);
+                        command.Parameters.AddWithValue("@limit", limit);
                         using (var reader = command.ExecuteReader())
                         {
                             while (reader.Read())
@@ -248,7 +292,5 @@ namespace Nextflip.Models.account
             }
             return accounts;
         }
-*/
-    
     }
 }

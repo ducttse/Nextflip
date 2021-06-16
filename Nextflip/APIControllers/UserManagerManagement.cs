@@ -69,24 +69,25 @@ namespace Nextflip.APIControllers
 
         public class Request
         {
+            public string roleName { get; set; }
             public int NumberOfPage { get; set; }
             public int RowsOnPage { get; set; }
             public int RequestPage { get; set; }
         }
 
         [HttpPost]
-        [Route("GetAccountsListAccordingRequest")]
-        public JsonResult GetAccountsListAccordingRequest([FromServices] IUserManagerManagementService userManagerManagementService,
+        [Route("GetAccountsListByRoleAccordingRequest")]
+        public JsonResult GetAccountsListByRoleAccordingRequest([FromServices] IUserManagerManagementService userManagerManagementService,
                                 [FromBody] Request request)
         {
             try
             { 
-            IEnumerable<Account> accounts = userManagerManagementService.GetAccountsListAccordingRequest(request.NumberOfPage, request.RowsOnPage, request.RequestPage);
+            IEnumerable<Account> accounts = userManagerManagementService.GetAccountsListByRoleAccordingRequest(request.roleName, request.NumberOfPage, request.RowsOnPage, request.RequestPage);
             return new JsonResult(accounts);
             }
             catch (Exception ex)
             {
-                _logger.LogInformation("GetAccountsListAccordingRequest: " + ex.Message);
+                _logger.LogInformation("GetAccountsListByRoleAccordingRequest: " + ex.Message);
                 return new JsonResult("Error occur");
             }
         }

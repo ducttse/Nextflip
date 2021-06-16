@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nextflip.Models.supportTicket;
+using Nextflip.Models.supportTopic;
 using Nextflip.Services.Interfaces;
 using Nextflip.utils;
 using System;
@@ -29,14 +30,14 @@ namespace Nextflip.APIControllers
             {
                 int limit = request.RowsOnPage * request.NumberOfPage;
                 int offset = (int) (request.RequestPage / request.NumberOfPage) * limit;
-
-                IList<SupportTicket> pendingSupportTickets = supportTicketDAO.ViewPendingSupportTickets(limit, offset);
+                string topicName = request.TopicName;
+                IList<SupportTicket> pendingSupportTickets = supportTicketDAO.ViewPendingSupportTickets(limit, offset, topicName);
                 return new JsonResult(pendingSupportTickets);
             }
             catch (Exception e)
             {
                 _logger.LogInformation("ViewSupporterDashboard/GetPendingSupportTickets: " + e.Message);
-                return new JsonResult("An error occurred");
+                return new JsonResult(e.Message);
             }
         }
         [Route("Respond")]
@@ -92,6 +93,36 @@ namespace Nextflip.APIControllers
             }
         }
 
+        [Route("GetAllSupportTopics")]
+        public IActionResult GetAllSupportTopics([FromServices] ISupportTopicService supportTopicService)
+        {
+            try
+            {
+                IList<SupportTopic> supportTopics = supportTopicService.GetAllTopics();
+                return new JsonResult(supportTopics);
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("ViewSupporterDashboard/GetAllSupportTopics: " + e.Message);
+                return new JsonResult(e.Message);
+            }
+        }
+
+        [Route("SearchSupportTicket/{searchValue}")]
+        public IActionResult SearchSupportTicket([FromServices] ISupportTicketService supportTicketService, string searchValue)
+        {
+            try
+            {
+                IList<SupportTicket> supportTopics = supportTicketService.SearchSupportTicket(searchValue);
+                return new JsonResult(supportTopics);
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("ViewSupporterDashboard/GetAllSupportTopics: " + e.Message);
+                return new JsonResult(e.Message);
+            }
+        }
+
     }
 
     public class Request
@@ -99,5 +130,6 @@ namespace Nextflip.APIControllers
         public int NumberOfPage { get; set; }
         public int RowsOnPage { get; set; }
         public int RequestPage { get; set; }
+        public string TopicName { get; set; }
     }
 }

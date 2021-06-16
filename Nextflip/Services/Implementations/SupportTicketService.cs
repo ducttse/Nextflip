@@ -21,9 +21,11 @@ namespace Nextflip.Services.Implementations
 
         public bool SendSupportTicket(string userEmail, string topicName, string content) => _supportTicketDAO.SendSupportTicket(userEmail, topicName, content);
 
-        public IList<SupportTicket> ViewPendingSupportTickets(int limit, int offset) => _supportTicketDAO.ViewPendingSupportTickets(limit, offset);
+        public IList<SupportTicket> ViewPendingSupportTickets(int limit, int offset, string topicName) => _supportTicketDAO.ViewPendingSupportTickets(limit, offset, topicName);
 
         public SupportTicket ViewSupportTicketByID(string supportTicketID) => _supportTicketDAO.ViewSupportTicketByID(supportTicketID);
+
+        public IList<SupportTicket> SearchSupportTicket(string searchValue) => _supportTicketDAO.SearchSupportTicket(searchValue);
 
     }
 }

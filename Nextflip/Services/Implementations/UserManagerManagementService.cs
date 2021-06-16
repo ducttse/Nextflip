@@ -16,5 +16,7 @@ namespace Nextflip.Services.Implementations
         public int NumberOfAccounts() => _accountDao.NumberOfAccounts();
         public IEnumerable<Account> GetAccountsListAccordingRequest(int NumberOfPage, int RowsOnPage, int RequestPage)
                 => _accountDao.GetAccountsListAccordingRequest(NumberOfPage, RowsOnPage, RequestPage);
+        public IEnumerable<Account> GetAllActiveAccounts() => _accountDao.GetAllActiveAccounts();
+        public IEnumerable<Account> GetAllInactiveAccounts() => _accountDao.GetAllInactiveAccounts();
     }
 }

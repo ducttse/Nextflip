@@ -172,5 +172,81 @@ namespace Nextflip.Models.account
             }
             return accounts;
         }
+
+        public IEnumerable<Account> GetAllActiveAccounts()
+        {
+            var accounts = new List<Account>();
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select userID, userEmail, roleName, fullname, status " +
+                            "From account " +
+                            "Where status = 'Active' ";
+                    Debug.WriteLine(Sql);
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                accounts.Add(new Account
+                                {
+                                    userID = reader.GetString(0),
+                                    userEmail = reader.GetString(1),
+                                    roleName = reader.GetString(2),
+                                    fullname = reader.GetString(3),
+                                    status = reader.GetString(4)
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return accounts;
+        }
+
+        public IEnumerable<Account> GetAllInactiveAccounts()
+        {
+            var accounts = new List<Account>();
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select userID, userEmail, roleName, fullname, status " +
+                            "From account " +
+                            "Where status = 'InActive' ";
+                    Debug.WriteLine(Sql);
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                accounts.Add(new Account
+                                {
+                                    userID = reader.GetString(0),
+                                    userEmail = reader.GetString(1),
+                                    roleName = reader.GetString(2),
+                                    fullname = reader.GetString(3),
+                                    status = reader.GetString(4)
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return accounts;
+        }
     }
 }

@@ -37,12 +37,19 @@ namespace Nextflip.APIControllers
         }
 
         [Route("GetPendingMediaByUserEmail/{searchValue}")]
-        public JsonResult GetPendingMediaByUserEmail([FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromBody] string searchValue)
+        public JsonResult GetPendingMediaByUserEmail([FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromBody] Request request, string searchValue)
         {
             try
             {
-                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.GetPendingMediaByUserEmail(searchValue);
-                return new JsonResult(requests);
+                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.GetPendingMediaByUserEmail(searchValue, request.RowsOnPage, request.RequestPage);
+                int count = mediaManagerManagementService.NumberOfPendingMediasBySearching(searchValue);
+                double totalPage = (double)count / (double)request.RowsOnPage;
+                var result = new
+                {
+                    TotalPage = Math.Ceiling(totalPage),
+                    Data = requests
+                };
+                return (new JsonResult(result));
             }
             catch (Exception ex)
             {
@@ -110,7 +117,7 @@ namespace Nextflip.APIControllers
         {
             try
             {
-                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.GetPendingMediasListAccordingRequest( request.RowsOnPage, request.RequestPage);
+                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.GetPendingMediasListAccordingRequest(request.RowsOnPage, request.RequestPage);
                 int count = mediaManagerManagementService.NumberOfPendingMedias();
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new

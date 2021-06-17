@@ -86,7 +86,32 @@ namespace Nextflip.Models.account
             }
             return accounts;
         }
-        
+
+        public int NumberOfAccountsBySearching(string searchValue)
+        {
+            int count = 0;
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            {
+                connection.Open();
+                string Sql = "Select COUNT(userID) " +
+                            "From account " +
+                            "Where userEmail LIKE @userEmail";
+                using (var command = new MySqlCommand(Sql, connection))
+                {
+                    command.Parameters.AddWithValue("@userEmail", $"%{searchValue}%");
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            count = reader.GetInt32(0);
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return count;
+        }
+
         public bool ChangeAccountStatus(string userID)
         {
             throw new NotImplementedException();

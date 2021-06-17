@@ -25,12 +25,19 @@ namespace Nextflip.APIControllers
         }
 
         [Route("GetAccountListByEmail/{searchValue}")]
-        public JsonResult GetAccountListByEmail([FromServices] IUserManagerManagementService userManagerManagementService, string searchValue)
+        public JsonResult GetAccountListByEmail([FromServices] IUserManagerManagementService userManagerManagementService, [FromBody] Request request, string searchValue)
         {           
             try
             {
                 IEnumerable<Account> accounts = userManagerManagementService.GetAccountListByEmail(searchValue);
-                return new JsonResult(accounts);
+                int count = userManagerManagementService.NumberOfAccountsBySearching(searchValue);
+                double totalPage = (double)count / (double)request.RowsOnPage;
+                var result = new
+                {
+                    TotalPage = Math.Ceiling(totalPage),
+                    Data = accounts
+                };
+                return (new JsonResult(result));
             }
             catch (Exception ex)
             {

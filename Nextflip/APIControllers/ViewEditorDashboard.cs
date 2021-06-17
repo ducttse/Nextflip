@@ -49,5 +49,29 @@ namespace Nextflip.APIControllers
             }
         }
 
+
+        [HttpPost]
+        [Route("GetMedias")]
+        public IActionResult GetMedias([FromServices] IMediaService mediaService,
+            [FromBody] Request request)
+        {
+            try
+            {
+                IEnumerable<Media> medias = mediaService.GetMedias(request.RowsOnPage, request.RequestPage);
+                int count = mediaService.NumberOfMedias();
+                double totalPage = (double)count / (double)request.RowsOnPage;
+                var result = new
+                {
+                    TotalPage = Math.Ceiling(totalPage),
+                    Data = medias
+                };
+                return (new JsonResult(result));
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("GetMedias: " + e.Message);
+                return new JsonResult("An error occurred");
+            }
+        }
     }
 }

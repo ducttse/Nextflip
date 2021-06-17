@@ -22,6 +22,7 @@ namespace Nextflip.Models.media
                     string Sql = "Select mediaID,status, title, bannerURL, language, description " +
                                 "From media " +
                                 "Where MATCH (title)  AGAINST (@searchValue in natural language mode) " +
+                                "ORDER BY status DESC " +
                                 "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
@@ -90,6 +91,7 @@ namespace Nextflip.Models.media
                     connection.Open();
                     string Sql = "Select mediaID,status, title, bannerURL, language, description " +
                                 "From media " +
+                                "ORDER BY status DESC " +
                                 "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
                     {

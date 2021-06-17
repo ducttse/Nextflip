@@ -50,9 +50,10 @@ namespace Nextflip.Models.account
             return accounts;
         }
 
-        public IEnumerable<Account> GetAccountListByEmail(string searchValue)
+        public IEnumerable<Account> GetAccountListByEmail(string searchValue, int RowsOnPage, int RequestPage)
         {
             var accounts = new List<Account>();
+            int offset = ((int)(RequestPage - 1)) * RowsOnPage;
             try
             {
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
@@ -60,10 +61,13 @@ namespace Nextflip.Models.account
                     connection.Open();
                     string Sql = "Select userID, userEmail, roleName, fullname, status " +
                             "From account " +
-                            "Where userEmail LIKE @userEmail";
+                            "Where userEmail LIKE @userEmail " +
+                            "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@userEmail", $"%{searchValue}%");
+                        command.Parameters.AddWithValue("@offset", offset);
+                        command.Parameters.AddWithValue("@limit", RowsOnPage);
                         using (var reader = command.ExecuteReader())
                         {
                             while (reader.Read()) { 

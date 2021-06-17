@@ -29,7 +29,7 @@ namespace Nextflip.APIControllers
         {           
             try
             {
-                IEnumerable<Account> accounts = userManagerManagementService.GetAccountListByEmail(searchValue);
+                IEnumerable<Account> accounts = userManagerManagementService.GetAccountListByEmail(searchValue, request.RowsOnPage, request.RequestPage);
                 int count = userManagerManagementService.NumberOfAccountsBySearching(searchValue);
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new

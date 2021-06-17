@@ -9,7 +9,7 @@ namespace Nextflip.Services.Interfaces
     public interface IUserManagerManagementService
     {
         IEnumerable<Account> GetAllAccounts();
-        IEnumerable<Account> GetAccountListByEmail(string searchValue);
+        IEnumerable<Account> GetAccountListByEmail(string searchValue, int RowsOnPage, int RequestPage);
         int NumberOfAccountsBySearching(string searchValue);
         int NumberOfAccounts();
         int NumberOfAccountsByRole(string roleName);

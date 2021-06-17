@@ -9,6 +9,7 @@ namespace Nextflip.Models.account
     {
         IEnumerable<Account> GetAllAccounts();
         IEnumerable<Account> GetAccountListByEmail(string searchValue);
+        int NumberOfAccountsBySearching(string searchValue);
         bool ChangeAccountStatus(string userID);
         bool AddNewStaff(string fullname, string userEmail, string password, int intRole);
         bool EditStaffProfile(String userID, String fullname, DateTime dateOfBirth, int intRole);

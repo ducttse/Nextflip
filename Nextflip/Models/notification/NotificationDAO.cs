@@ -17,7 +17,8 @@ namespace Nextflip.Models.notification
             {
                 connection.Open();
                 string Sql = "Select notificationID, title, status, publishedDate, content " +
-                                "From notification";
+                                "From notification " +
+                                "Order By publishedDate DESC";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     using (var reader = command.ExecuteReader())
@@ -40,7 +41,7 @@ namespace Nextflip.Models.notification
             return notifications;
         }
 
-        public IEnumerable<Notification> GetNotificationsListAccordingRequest(int NumberOfPage, int RowOfPage, int RequestPage)
+ /*       public IEnumerable<Notification> GetNotificationsListAccordingRequest(int NumberOfPage, int RowOfPage, int RequestPage)
         {
             int limit = NumberOfPage * RowOfPage;
             int offset = ((int)(RequestPage / NumberOfPage)) * limit;
@@ -74,7 +75,7 @@ namespace Nextflip.Models.notification
             }
             return notifications;
         }
-
+ */
         public Notification GetDetailOfNotification(int notificationID)
         {
             Notification notification = null;
@@ -115,7 +116,8 @@ namespace Nextflip.Models.notification
                 connection.Open();
                 string Sql = "Select notificationID, title, status, publishedDate, content " +
                                 "From notification " +
-                                "Where status = 'Available'";
+                                "Where status = 'Available' " +
+                                "Order By publishedDate DESC";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     using (var reader = command.ExecuteReader())

@@ -12,7 +12,7 @@ namespace Nextflip.Services.Implementations
         private readonly INotificationDAO _notificationDao;
         public NotificationService(INotificationDAO notificationDao) => _notificationDao = notificationDao;
         public IEnumerable<Notification> GetAllNotifications() => _notificationDao.GetAllNotifications();
-        public IEnumerable<Notification> GetNotificationsListAccordingRequest(int NumberOfPage, int RowOfPage, int RequestPage) => _notificationDao.GetNotificationsListAccordingRequest(NumberOfPage, RowOfPage, RequestPage);
+        //public IEnumerable<Notification> GetNotificationsListAccordingRequest(int NumberOfPage, int RowOfPage, int RequestPage) => _notificationDao.GetNotificationsListAccordingRequest(NumberOfPage, RowOfPage, RequestPage);
         public Notification GetDetailOfNotification(int notificationID) => _notificationDao.GetDetailOfNotification(notificationID);
         public IEnumerable<Notification> GetAllAvailableNotifications() => _notificationDao.GetAllAvailableNotifications();
         public bool AddNotification(string title, string content) => _notificationDao.AddNotification(title, content);

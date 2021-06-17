@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Nextflip.Models.notification;
+using Microsoft.Extensions.Logging;
 
 namespace Nextflip.APIControllers
 {
@@ -13,13 +14,29 @@ namespace Nextflip.APIControllers
     [ApiController]
     public class NotificationBoard : ControllerBase
     {
+        private readonly ILogger _logger;
+
+        public NotificationBoard(ILogger<NotificationBoard> logger)
+        {
+            _logger = logger;
+        }
+
         [Route("GetAllNotifications")]
         public IActionResult GetAllNotifications([FromServices] INotificationService notificationService)
         {
-            IEnumerable<Notification> notifications = notificationService.GetAllNotifications();
-            return new JsonResult(notifications);
+            try
+            {
+                IEnumerable<Notification> notifications = notificationService.GetAllNotifications();
+                return new JsonResult(notifications);
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("GetAllNotifications: " + e.Message);
+                return new JsonResult("An error occurred");
+            }
         }
-        public class Request
+
+        /*public class Request
         {
             public int NumberOfPage { get; set; }
             public int RowsOnPage { get; set; }
@@ -34,26 +51,51 @@ namespace Nextflip.APIControllers
             IEnumerable<Notification> notifications = notificationService.GetNotificationsListAccordingRequest(request.NumberOfPage, request.RowsOnPage, request.RequestPage);
             return new JsonResult(notifications);
         }
+        */
 
         [Route("GetDetailOfNotification/{notificationID}")]
         public IActionResult GetDetailOfNotification([FromServices] INotificationService notificationService, int notificationID)
         {
-            Notification notification = notificationService.GetDetailOfNotification(notificationID);
-            return new JsonResult(notification);
+            try
+            {
+                Notification notification = notificationService.GetDetailOfNotification(notificationID);
+                return new JsonResult(notification);
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("GetDetailOfNotification: " + e.Message);
+                return new JsonResult("An error occurred");
+            }
         }
 
         [Route("GetAllAvailableNotifications")]
         public IActionResult GetAllAvailableNotifications([FromServices] INotificationService notificationService)
         {
-            IEnumerable<Notification> notifications = notificationService.GetAllAvailableNotifications();
-            return new JsonResult(notifications);
+            try
+            {
+                IEnumerable<Notification> notifications = notificationService.GetAllAvailableNotifications();
+                return new JsonResult(notifications);
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("GetAllAvailableNotifications: " + e.Message);
+                return new JsonResult("An error occurred");
+            }
         }
 
         /*[Route("AddNotification")]
         public IActionResult AddNotification([FromServices] INotificationService notificationService, string title, string content)
         {
-            bool result = notificationService.AddNotification(title, content);
-            return new JsonResult(result);
+            try 
+            {
+                bool result = notificationService.AddNotification(title, content);
+                return new JsonResult(result);
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("AddNotification: " + e.Message);
+                return new JsonResult("An error occurred");
+            }
         } */
 
         [Route("CountNotification")]

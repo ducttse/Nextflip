@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Nextflip.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using Nextflip.Models.role;
 
 namespace Nextflip.APIControllers
 {
@@ -50,6 +51,21 @@ namespace Nextflip.APIControllers
             {
                 _logger.LogInformation("GetAllAccounts: " + ex.Message);
                 return new JsonResult("Error occur");
+            }
+        }
+
+        [Route("GetRoleNameList")]
+        public JsonResult GetRoleNameList([FromServices] IRoleService roleService)
+        {
+            try
+            {
+                IEnumerable<Role> roles = roleService.GetRoleNameList();
+                return new JsonResult(roles);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetRoleNameList: " + ex.Message);
+                return new JsonResult("An error occur");
             }
         }
 

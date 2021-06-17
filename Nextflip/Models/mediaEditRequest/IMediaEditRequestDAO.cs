@@ -12,6 +12,6 @@ namespace Nextflip.Models.mediaEditRequest
         bool ApproveRequest(int requestID);
         bool DisapproveRequest(int requestID);
         int NumberOfPendingMedias();
-        IEnumerable<MediaEditRequest> GetPendingMediasListAccordingRequest(int NumberOfPage, int RowsOnPage, int RequestPage);
+        IEnumerable<MediaEditRequest> GetPendingMediasListAccordingRequest(int RowsOnPage, int RequestPage);
     }
 }

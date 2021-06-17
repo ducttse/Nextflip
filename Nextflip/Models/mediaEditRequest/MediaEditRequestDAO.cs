@@ -161,11 +161,10 @@ namespace Nextflip.Models.mediaEditRequest
             return count;
         }
 
-        public IEnumerable<MediaEditRequest> GetPendingMediasListAccordingRequest(int NumberOfPage, int RowsOnPage, int RequestPage)
+        public IEnumerable<MediaEditRequest> GetPendingMediasListAccordingRequest(int RowsOnPage, int RequestPage)
         {
             var requests = new List<MediaEditRequest>();
-            int limit = NumberOfPage * RowsOnPage;
-            int offset = ((int)(RequestPage / NumberOfPage)) * limit;
+            int offset = ((int)(RequestPage - 1)) * RowsOnPage;
             try
             {
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
@@ -178,7 +177,7 @@ namespace Nextflip.Models.mediaEditRequest
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@offset", offset);
-                        command.Parameters.AddWithValue("@limit", limit);
+                        command.Parameters.AddWithValue("@limit", RowsOnPage);
                         using (var reader = command.ExecuteReader())
                         {
                             while (reader.Read())

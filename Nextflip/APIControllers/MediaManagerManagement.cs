@@ -99,7 +99,6 @@ namespace Nextflip.APIControllers
 
         public class Request
         {
-            public int NumberOfPage { get; set; }
             public int RowsOnPage { get; set; }
             public int RequestPage { get; set; }
         }
@@ -111,8 +110,15 @@ namespace Nextflip.APIControllers
         {
             try
             {
-                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.GetPendingMediasListAccordingRequest(request.NumberOfPage, request.RowsOnPage, request.RequestPage);
-                return new JsonResult(requests);
+                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.GetPendingMediasListAccordingRequest( request.RowsOnPage, request.RequestPage);
+                int count = mediaManagerManagementService.NumberOfPendingMedias();
+                double totalPage = (double)count / (double)request.RowsOnPage;
+                var result = new
+                {
+                    TotalPage = Math.Ceiling(totalPage),
+                    Data = requests
+                };
+                return (new JsonResult(result));
             }
             catch (Exception ex)
             {

@@ -16,7 +16,7 @@ namespace Nextflip.Services.Implementations
         public bool ApproveRequest(int requestID) => _mediaEditRequestDao.ApproveRequest(requestID);
         public bool DisappoveRequest(int requestID) => _mediaEditRequestDao.DisapproveRequest(requestID);
         public int NumberOfPendingMedias() => _mediaEditRequestDao.NumberOfPendingMedias();
-        public IEnumerable<MediaEditRequest> GetPendingMediasListAccordingRequest(int NumberOfPage, int RowsOnPage, int RequestPage)
-                    => _mediaEditRequestDao.GetPendingMediasListAccordingRequest(NumberOfPage, RowsOnPage, RequestPage);
+        public IEnumerable<MediaEditRequest> GetPendingMediasListAccordingRequest(int RowsOnPage, int RequestPage)
+                    => _mediaEditRequestDao.GetPendingMediasListAccordingRequest(RowsOnPage, RequestPage);
     }
 }

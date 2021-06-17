@@ -36,9 +36,8 @@ namespace Nextflip.APIControllers
             }
         }
 
-        /*public class Request
+        public class Request
         {
-            public int NumberOfPage { get; set; }
             public int RowsOnPage { get; set; }
             public int RequestPage { get; set; }
         } 
@@ -48,10 +47,24 @@ namespace Nextflip.APIControllers
         public IActionResult GetNotificationsListAccordingRequest([FromServices] INotificationService notificationService,
             [FromBody] Request request)
         {
-            IEnumerable<Notification> notifications = notificationService.GetNotificationsListAccordingRequest(request.NumberOfPage, request.RowsOnPage, request.RequestPage);
-            return new JsonResult(notifications);
+            try
+            {
+                IEnumerable<Notification> notifications = notificationService.GetNotificationsListAccordingRequest(request.RowsOnPage, request.RequestPage);
+                int count = notificationService.CountNotification();
+                double totalPage = (double)count / (double)request.RowsOnPage;
+                var result = new
+                {
+                    TotalPage = Math.Ceiling(totalPage),
+                    Data = notifications
+                };
+                return (new JsonResult(result));
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("GetNotificationsListAccordingRequest: " + e.Message);
+                return new JsonResult("An error occurred");
+            }
         }
-        */
 
         [Route("GetDetailOfNotification/{notificationID}")]
         public IActionResult GetDetailOfNotification([FromServices] INotificationService notificationService, int notificationID)

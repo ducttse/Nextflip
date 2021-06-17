@@ -9,7 +9,7 @@ namespace Nextflip.Services.Interfaces
     public interface INotificationService
     {
         IEnumerable<Notification> GetAllNotifications();
-        //IEnumerable<Notification> GetNotificationsListAccordingRequest(int NumberOfPage, int RowOfPage, int RequestPage);
+        IEnumerable<Notification> GetNotificationsListAccordingRequest(int RowsOnPage, int RequestPage);
         Notification GetDetailOfNotification(int notificationID);
         IEnumerable<Notification> GetAllAvailableNotifications();
         bool AddNotification(string title, string content);

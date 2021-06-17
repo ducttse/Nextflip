@@ -80,7 +80,6 @@ function fetchCategoryID(category) {
   )
     .then((res) => res.json())
     .then((json) => {
-      console.log(json);
       if (json.length < 8) {
         return;
       }
@@ -94,7 +93,6 @@ function Run() {
   fetch("/api/ViewSubscribedUserDashboard/GetCategories")
     .then((res) => res.json())
     .then((categories) => {
-      console.log(categories);
       categories.forEach((category) => {
         fetchCategoryID(category);
       });

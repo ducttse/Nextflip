@@ -51,14 +51,14 @@ function appendToWrapper(data) {
     .insertAdjacentHTML("afterbegin", renderedResults);
 }
 
-function search(searchValue) {
-  fetch(`/api/ViewSubscribedUserDashboard/GetMediasByTitle/${searchValue}`)
-    .then((res) => res.json())
-    .then((json) => {
-      Refresh();
-      appendToWrapper(json);
-    });
-}
+// function search(searchValue) {
+//   fetch(`/api/ViewSubscribedUserDashboard/GetMediasByTitle/${searchValue}`)
+//     .then((res) => res.json())
+//     .then((json) => {
+//       Refresh();
+//       appendToWrapper(json);
+//     });
+// }
 
 function Refresh() {
   let holder = document.getElementById("result_holder");

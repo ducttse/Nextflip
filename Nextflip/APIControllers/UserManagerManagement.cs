@@ -71,7 +71,6 @@ namespace Nextflip.APIControllers
         public class Request
         {
             public string roleName { get; set; }
-            public int NumberOfPage { get; set; }
             public int RowsOnPage { get; set; }
             public int RequestPage { get; set; }
         }
@@ -85,8 +84,12 @@ namespace Nextflip.APIControllers
             {
                 IEnumerable<Account> accounts = userManagerManagementService.GetAccountsListByRoleAccordingRequest(request.roleName, request.RowsOnPage, request.RequestPage);
                 int count = userManagerManagementService.NumberOfAccountsByRole(request.roleName);
-                var result = new { TotalPage = count,
-                                    Data = accounts };
+                double totalPage = (double)count / (double)request.RowsOnPage;
+                var result = new
+                {
+                    TotalPage = Math.Ceiling(totalPage),
+                    Data = accounts
+                };
                 return (new JsonResult(result));
             }
             catch (Exception ex)

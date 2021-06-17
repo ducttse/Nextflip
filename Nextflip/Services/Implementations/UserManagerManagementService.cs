@@ -14,8 +14,9 @@ namespace Nextflip.Services.Implementations
         public IEnumerable<Account> GetAllAccounts() => _accountDao.GetAllAccounts();
         public IEnumerable<Account> GetAccountListByEmail(string searchValue) => _accountDao.GetAccountListByEmail(searchValue);
         public int NumberOfAccounts() => _accountDao.NumberOfAccounts();
-        public IEnumerable<Account> GetAccountsListByRoleAccordingRequest(string roleName, int NumberOfPage, int RowsOnPage, int RequestPage)
-                => _accountDao.GetAccountsListByRoleAccordingRequest(roleName, NumberOfPage, RowsOnPage, RequestPage);
+        public int NumberOfAccountsByRole(string roleName) => _accountDao.NumberOfAccountsByRole(roleName);
+        public IEnumerable<Account> GetAccountsListByRoleAccordingRequest(string roleName, int RowsOnPage, int RequestPage)
+                => _accountDao.GetAccountsListByRoleAccordingRequest(roleName, RowsOnPage, RequestPage);
 //        public IEnumerable<Account> GetAllActiveAccounts() => _accountDao.GetAllActiveAccounts();
 //        public IEnumerable<Account> GetAllInactiveAccounts() => _accountDao.GetAllInactiveAccounts();
     }

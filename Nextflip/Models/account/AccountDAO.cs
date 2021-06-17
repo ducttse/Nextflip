@@ -61,7 +61,6 @@ namespace Nextflip.Models.account
                     string Sql = "Select userID, userEmail, roleName, fullname, status " +
                             "From account " +
                             "Where userEmail LIKE @userEmail";
-                    Debug.WriteLine(Sql);
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@userEmail", $"%{searchValue}%");
@@ -249,11 +248,35 @@ namespace Nextflip.Models.account
                     return accounts;
                 }
         */
-        public IEnumerable<Account> GetAccountsListByRoleAccordingRequest(string roleName, int NumberOfPage, int RowsOnPage, int RequestPage)
+
+        public int NumberOfAccountsByRole(string roleName)
+        {
+            int count = 0;
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            {
+                connection.Open();
+                string Sql = "Select COUNT(userID) " +
+                                "From account " +
+                                "Where roleName = @roleName ";
+                using (var command = new MySqlCommand(Sql, connection))
+                {
+                    command.Parameters.AddWithValue("@roleName", roleName);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            count = reader.GetInt32(0);
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return count;
+        }
+        public IEnumerable<Account> GetAccountsListByRoleAccordingRequest(string roleName, int RowsOnPage, int RequestPage)
         {
             var accounts = new List<Account>();
-            int limit = NumberOfPage * RowsOnPage;
-            int offset = ((int)((RequestPage-1) / NumberOfPage)) * limit;
+            int offset = ((int)(RequestPage-1)) * RowsOnPage;
             try
             {
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
@@ -268,7 +291,7 @@ namespace Nextflip.Models.account
                     {
                         command.Parameters.AddWithValue("@roleName", roleName);
                         command.Parameters.AddWithValue("@offset", offset);
-                        command.Parameters.AddWithValue("@limit", limit);
+                        command.Parameters.AddWithValue("@limit", RowsOnPage);
                         using (var reader = command.ExecuteReader())
                         {
                             while (reader.Read())

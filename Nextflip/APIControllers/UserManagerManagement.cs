@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Nextflip.Services.Interfaces;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace Nextflip.APIControllers
 {
@@ -81,9 +82,12 @@ namespace Nextflip.APIControllers
                                 [FromBody] Request request)
         {
             try
-            { 
-            IEnumerable<Account> accounts = userManagerManagementService.GetAccountsListByRoleAccordingRequest(request.roleName, request.NumberOfPage, request.RowsOnPage, request.RequestPage);
-            return new JsonResult(accounts);
+            {
+                IEnumerable<Account> accounts = userManagerManagementService.GetAccountsListByRoleAccordingRequest(request.roleName, request.RowsOnPage, request.RequestPage);
+                int count = userManagerManagementService.NumberOfAccountsByRole(request.roleName);
+                var result = new { TotalPage = count,
+                                    Data = accounts };
+                return (new JsonResult(result));
             }
             catch (Exception ex)
             {

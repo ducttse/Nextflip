@@ -10,20 +10,24 @@ namespace Nextflip.Models.media
     public class MediaDAO: IMediaDAO
     {
 
-        public IEnumerable<Media> GetMediasByTitle(string searchValue)
+        public IEnumerable<Media> GetMediasByTitle(string searchValue, int RowsOnPage, int RequestPage)
         {
             try
             {
                 var medias = new List<Media>();
+                int offset = ((int)(RequestPage - 1)) * RowsOnPage;
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
                     string Sql = "Select mediaID,status, title, bannerURL, language, description " +
                                 "From media " +
-                                "Where MATCH (title)  AGAINST (@searchValue in natural language mode) ";
+                                "Where MATCH (title)  AGAINST (@searchValue in natural language mode) " +
+                                "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@searchValue", searchValue);
+                        command.Parameters.AddWithValue("@offset", offset);
+                        command.Parameters.AddWithValue("@limit", RowsOnPage);
                         using (var reader = command.ExecuteReader())
                         {
                             while (reader.Read())
@@ -50,19 +54,47 @@ namespace Nextflip.Models.media
             }
         }
 
-        public IEnumerable<Media> GetMedias()
+        public int NumberOfMediasBySearching(string searchValue)
+        {
+            int count = 0;
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            {
+                connection.Open();
+                string Sql = "Select COUNT(mediaID) " +
+                                "From media " +
+                                "Where MATCH (title)  AGAINST (@searchValue in natural language mode)";
+                using (var command = new MySqlCommand(Sql, connection))
+                {
+                    command.Parameters.AddWithValue("@searchValue", searchValue);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            count = reader.GetInt32(0);
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return count;
+        }
+
+        public IEnumerable<Media> GetMedias(int RowsOnPage, int RequestPage)
         {
             try
             {
                 var medias = new List<Media>();
+                int offset = ((int)(RequestPage - 1)) * RowsOnPage;
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
                     string Sql = "Select mediaID,status, title, bannerURL, language, description " +
                                 "From media " +
-                                "Limit 10";
+                                "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
+                        command.Parameters.AddWithValue("@offset", offset);
+                        command.Parameters.AddWithValue("@limit", RowsOnPage);
                         using (var reader = command.ExecuteReader())
                         {
                             while (reader.Read())
@@ -87,6 +119,29 @@ namespace Nextflip.Models.media
             {
                 throw new Exception(ex.Message);
             }
+        }
+
+        public int NumberOfMedias()
+        {
+            int count = 0;
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            {
+                connection.Open();
+                string Sql = "Select COUNT(mediaID) " +
+                                "From media";
+                using (var command = new MySqlCommand(Sql, connection))
+                {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            count = reader.GetInt32(0);
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return count;
         }
 
         public Media GetMediaByID(string mediaID)

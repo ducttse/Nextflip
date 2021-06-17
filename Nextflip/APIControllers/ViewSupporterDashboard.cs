@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nextflip.Models.supportTicket;
+using Nextflip.Models.supportTopic;
 using Nextflip.Services.Interfaces;
 using Nextflip.utils;
 using System;
@@ -21,26 +22,30 @@ namespace Nextflip.APIControllers
         {
             _logger = logger;
         }
-
+        [HttpPost]
         [Route("GetPendingSupportTickets")]
-        public IActionResult GetPendingSupportTickets([FromServices] ISupportTicketDAO supportTicketDAO)
+        public IActionResult GetPendingSupportTickets([FromServices] ISupportTicketDAO supportTicketDAO, [FromBody] Request request)
         {
-            try {
-                IList<SupportTicket> pendingSupportTickets = supportTicketDAO.ViewAllPendingSupportTickets();
+            try
+            {
+                int limit = request.RowsOnPage * request.NumberOfPage;
+                int offset = (int) (request.RequestPage / request.NumberOfPage) * limit;
+                string topicName = request.TopicName;
+                IList<SupportTicket> pendingSupportTickets = supportTicketDAO.ViewPendingSupportTickets(limit, offset, topicName);
                 return new JsonResult(pendingSupportTickets);
             }
             catch (Exception e)
             {
                 _logger.LogInformation("ViewSupporterDashboard/GetPendingSupportTickets: " + e.Message);
-                return new JsonResult("An error occurred");
+                return new JsonResult(e.Message);
             }
         }
         [Route("Respond")]
         [HttpPost]
         public async Task<IActionResult> Respond([FromServices] ISendMailService sendMailService, [FromServices] ISupportTicketDAO supportTicketDAO, [FromForm] string btnAction, [FromForm] string supportTicketID, [FromForm] string userEmail, [FromForm] string topicName, [FromForm] string content)
         {
-            try {
-                bool result = false;
+            try
+            {
                 var mailContent = new MailContent();
                 string toEmail = "nextflipcompany.com";
                 content = "from user email: " + userEmail + "\n" + content;
@@ -49,8 +54,8 @@ namespace Nextflip.APIControllers
                 else if (btnAction.Equals("customerRelation")) toEmail = CUSTOMER_RELATION_EMAIL;
                 await sendMailService.SendEmailAsync(toEmail, topicName, content);
 
-                result = supportTicketDAO.ForwardSupportTicket(supportTicketID, toEmail).Result;
-                if(result) return new JsonResult("Forward successful");
+                bool result = supportTicketDAO.ForwardSupportTicket(supportTicketID, toEmail).Result;
+                if (result) return new JsonResult("Forward successful");
                 return new JsonResult("An error occurred");
             }
             catch (Exception e)
@@ -67,12 +72,64 @@ namespace Nextflip.APIControllers
                 SupportTicket supportTicket = supportTicketService.ViewSupportTicketByID(supportTicketID);
                 return new JsonResult(supportTicket);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogInformation("ViewSupporterDashboard/GetSupportTicketDetails: " + e.Message);
                 return new JsonResult(e.Message);
             }
         }
+        [Route("GetNumOfSupportTicket")]
+        public IActionResult GetNumOfSupportTicket([FromServices] ISupportTicketService supportTicketService)
+        {
+            try
+            {
+                int result = supportTicketService.GetNumOfSupportTickets();
+                return new JsonResult(result);
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("ViewSupporterDashboard/GetNumOfSupportTicket: " + e.Message);
+                return new JsonResult(e.Message);
+            }
+        }
 
+        [Route("GetAllSupportTopics")]
+        public IActionResult GetAllSupportTopics([FromServices] ISupportTopicService supportTopicService)
+        {
+            try
+            {
+                IList<SupportTopic> supportTopics = supportTopicService.GetAllTopics();
+                return new JsonResult(supportTopics);
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("ViewSupporterDashboard/GetAllSupportTopics: " + e.Message);
+                return new JsonResult(e.Message);
+            }
+        }
+
+        [Route("SearchSupportTicket/{searchValue}")]
+        public IActionResult SearchSupportTicket([FromServices] ISupportTicketService supportTicketService, string searchValue)
+        {
+            try
+            {
+                IList<SupportTicket> supportTopics = supportTicketService.SearchSupportTicket(searchValue);
+                return new JsonResult(supportTopics);
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("ViewSupporterDashboard/GetAllSupportTopics: " + e.Message);
+                return new JsonResult(e.Message);
+            }
+        }
+
+    }
+
+    public class Request
+    {
+        public int NumberOfPage { get; set; }
+        public int RowsOnPage { get; set; }
+        public int RequestPage { get; set; }
+        public string TopicName { get; set; }
     }
 }

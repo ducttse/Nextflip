@@ -2,9 +2,10 @@
   data: []
 };
 let requestParam = {
-  NumberOfPage: 3,
+  NumberOfPage: 5,
   RowsOnPage: 10,
-  RequestPage: 1
+  RequestPage: 1,
+  TopicName: "Account"
 };
 
 function renderTicket(ticket, index) {
@@ -42,9 +43,9 @@ function appendTicketToWrapper(start, end) {
 
 function onLoad(rowsPerPage) {
   appendTicketToWrapper(0, rowsPerPage);
-  appendPagination(Data.data.length, rowsPerPage);
-  setCurrentColor(1);
-  setClickToIndex(appendTicketToWrapper);
+  // appendPagination(Data.data.length, rowsPerPage);
+  // setCurrentColor(1);
+  // setClickToIndex(appendTicketToWrapper);
 }
 
 function setMaxPage(resolve) {
@@ -100,12 +101,35 @@ function PostRequest(page) {
   )
 }
 
+function requestTopicData(topic) {
+  requestParam.TopicName = topic;
+  let reqHeader = new Headers();
+  reqHeader.append("Content-Type", "text/json");
+  reqHeader.append("Accept", "application/json, text/plain, */*");
+  let initObject = {
+    method: "POST",
+    headers: reqHeader,
+    body: JSON.stringify(requestParam)
+  };
+  return fetch("https://localhost:44341/api/ViewSupporterDashboard/GetPendingSupportTickets", initObject);
+}
 
-function Run(rowsPerPage) {
-  PostRequest(1)
+function getTopics() {
+  fetch("/api/ViewSupporterDashboard/GetAllSupportTopics")
+    .then(res => res.json())
+    .then(json => {
+      TopicArr = json;
+      appendCollase(requestTopicData, appendTicketToWrapper);
+    })
+}
+
+function Run() {
+  requestData()
     .then((response) => response.json())
     .then((json) => {
       Data.data = json;
-      onLoad(rowsPerPage);
+      appendTicketToWrapper(0, Data.data.length);
     });
 }
+
+

@@ -4,8 +4,9 @@
 }
 @section Styles {
     <link href="@Url.Content("~/css/Supporter-Dashboard.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
 }
-<div class="ui_wrapper">
+<div class="ui_wrapper col-10">
     <form method="POST" action="">
         <table class="table table-bordered w-100">
             <thead class="table-dark">
@@ -22,14 +23,8 @@
         <div id="pagination"></div>
     </form>
 </div>
-<script src="~/js/Pagination.js"></script>
 <script src="~/js/Supporter-Dashboard.js"></script>
+<script src="~/js/Slide-Bar.js"></script>
 <script> 
-let rowsPerPage;
-let maxPage;
-preLoad().then(msg =>{
-    if(msg === "resolved"){
-        Run(rowsPerPage);
-    }
-})
+getTopics();
 </script>

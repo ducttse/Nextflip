@@ -96,20 +96,34 @@ namespace Nextflip.APIControllers
             }
         }
 
-        /*[Route("AddNotification")]
-        public IActionResult AddNotification([FromServices] INotificationService notificationService, string title, string content)
+        public class NotificationAdding
+        {
+            public string title { get; set; }
+            public string content { get; set; }
+        }
+
+        [Route("AddNotification")]
+        public IActionResult AddNotification([FromServices] INotificationService notificationService, [FromForm] NotificationAdding notificationAdding)
         {
             try 
-            {
-                bool result = notificationService.AddNotification(title, content);
-                return new JsonResult(result);
+            { 
+                bool result = notificationService.AddNotification(notificationAdding.title, notificationAdding.content);
+                var message = new
+                    {
+                        message = "success"
+                    };
+                return new JsonResult(message);
             }
             catch (Exception e)
             {
                 _logger.LogInformation("AddNotification: " + e.Message);
-                return new JsonResult("An error occurred");
+                var message = new
+                {
+                    message = e.Message
+                };
+                return new JsonResult(message);
             }
-        } */
+        }
 
         [Route("CountNotification")]
         public IActionResult CountNotification([FromServices] INotificationService notificationService)

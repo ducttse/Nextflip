@@ -13,6 +13,6 @@ namespace Nextflip.Models.supportTicket
         public SupportTicket ViewSupportTicketByID(string supportTicketID);
         public Task<bool> ForwardSupportTicket(string supportTicketID, string forwardDepartment);
         public int GetNumOfSupportTickets();
-        public IList<SupportTicket> SearchSupportTicket(string searchValue);
+        public IList<SupportTicket> SearchSupportTicket(string searchValue, string topicName, int limit, int offset);
     }
 }

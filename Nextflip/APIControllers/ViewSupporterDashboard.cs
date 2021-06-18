@@ -28,8 +28,8 @@ namespace Nextflip.APIControllers
         {
             try
             {
-                int limit = request.RowsOnPage * request.NumberOfPage;
-                int offset = (int) (request.RequestPage / request.NumberOfPage) * limit;
+                int limit = request.RowsOnPage;
+                int offset = request.RowsOnPage * (request.RequestPage - 1);
                 string topicName = request.TopicName;
                 IList<SupportTicket> pendingSupportTickets = supportTicketDAO.ViewPendingSupportTickets(limit, offset, topicName);
                 return new JsonResult(pendingSupportTickets);
@@ -109,11 +109,13 @@ namespace Nextflip.APIControllers
         }
 
         [Route("SearchSupportTicket/{searchValue}")]
-        public IActionResult SearchSupportTicket([FromServices] ISupportTicketService supportTicketService, string searchValue)
+        public IActionResult SearchSupportTicket([FromServices] ISupportTicketService supportTicketService, string searchValue, [FromBody] Request request)
         {
             try
             {
-                IList<SupportTicket> supportTopics = supportTicketService.SearchSupportTicket(searchValue);
+                int limit = request.RowsOnPage;
+                int offset = request.RowsOnPage * (request.RequestPage - 1);
+                IList<SupportTicket> supportTopics = supportTicketService.SearchSupportTicket(searchValue, request.TopicName, limit, offset);
                 return new JsonResult(supportTopics);
             }
             catch (Exception e)
@@ -127,7 +129,6 @@ namespace Nextflip.APIControllers
 
     public class Request
     {
-        public int NumberOfPage { get; set; }
         public int RowsOnPage { get; set; }
         public int RequestPage { get; set; }
         public string TopicName { get; set; }

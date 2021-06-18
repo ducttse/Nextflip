@@ -13,6 +13,6 @@ namespace Nextflip.Services.Interfaces
         public IList<SupportTicket> ViewPendingSupportTickets(int limit, int offset, string topicName);
         public SupportTicket ViewSupportTicketByID(string supportTicketID);
         public int GetNumOfSupportTickets();
-        public IList<SupportTicket> SearchSupportTicket(string searchValue);
+        public IList<SupportTicket> SearchSupportTicket(string searchValue, string topicName, int limit, int offset);
     }
 }

@@ -189,34 +189,37 @@ namespace Nextflip.Models.supportTicket
             }
         }
 
-        public IList<SupportTicket> SearchSupportTicket(string searchValue)
+        public IList<SupportTicket> SearchSupportTicket(string searchValue, string topicName, int limit, int offset)
+
         {
+            IList<SupportTicket> supportTickets = new List<SupportTicket>();
             try
             {
-                 IList<SupportTicket> supportTickets = new List<SupportTicket>();
-                using (var connection = new MySqlConnection(utils.DbUtil.ConnectionString))
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
                     string sql = "SELECT supportTicketID, userEmail, topicName, createdDate, status, content " +
-                                                            "FROM supportTicket " +
-                                                            "WHERE userEmail like @searchValue OR MATCH (content)  AGAINST (@searchValue IN BOOLEAN MODE) " +
-                                                            "Order By createdDate DESC; ";
+                                    "FROM supportTicket " +
+                                    "WHERE topicName = @topicName AND (userEmail like '' OR MATCH (content)  AGAINST ('%race%' IN BOOLEAN MODE)) " +
+                                    "Order By createdDate DESC " +
+                                    "LIMIT @limit OFFSET @offset; ";
                     using (var command = new MySqlCommand(sql, connection))
 
                     {
-                        command.Parameters.AddWithValue("@searchValue", "%" + searchValue + "%");
+                        command.Parameters.AddWithValue("@limit", limit);
+                        command.Parameters.AddWithValue("@offset", offset);
+                        command.Parameters.AddWithValue("@topicName", topicName);
                         using (var reader = command.ExecuteReader())
                         {
                             while (reader.Read())
                             {
                                 string supportTicketID = reader.GetString("supportTicketID");
                                 string userEmail = reader.GetString("userEmail");
-                                string topicName = reader.GetString("topicName");
                                 string createdDate = reader.GetMySqlDateTime("createdDate").ToString();
+                                Console.WriteLine(createdDate);
                                 string status = reader.GetString("status");
                                 string content = reader.GetString("content");
-                                connection.Close();
-                                supportTickets.Add( new SupportTicket(supportTicketID, userEmail, createdDate, topicName, status, content));
+                                supportTickets.Add(new SupportTicket(supportTicketID, userEmail, createdDate, topicName, status, content));
                             }
                             connection.Close();
                         }

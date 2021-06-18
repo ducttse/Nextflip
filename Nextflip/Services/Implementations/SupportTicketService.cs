@@ -25,7 +25,7 @@ namespace Nextflip.Services.Implementations
 
         public SupportTicket ViewSupportTicketByID(string supportTicketID) => _supportTicketDAO.ViewSupportTicketByID(supportTicketID);
 
-        public IList<SupportTicket> SearchSupportTicket(string searchValue) => _supportTicketDAO.SearchSupportTicket(searchValue);
+        public IList<SupportTicket> SearchSupportTicket(string searchValue, string topicName, int limit, int offset) => _supportTicketDAO.SearchSupportTicket(searchValue, topicName, limit, offset);
 
     }
 }

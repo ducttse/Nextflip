@@ -28,6 +28,14 @@ function renderTicket(ticket, index) {
 }
 
 
+function setTotalPage() {
+  pageData.totalPage = Data.totalPage
+}
+
+function countStart() {
+  return (pageData.currentPage - 1) * requestParam.RowsOnPage
+}
+
 function appendTicketToWrapper(start, end) {
   let ticketArray = Data.data.slice(start, end).map((ticket, index) => {
     return renderTicket(ticket, index + start);
@@ -50,7 +58,7 @@ function requestTopicData(topic) {
     headers: reqHeader,
     body: JSON.stringify(requestParam)
   };
-  return fetch("https://localhost:44341/api/ViewSupporterDashboard/GetPendingSupportTickets", initObject);
+  return fetch("/api/ViewSupporterDashboard/GetPendingSupportTickets", initObject);
 }
 
 function getTopics() {

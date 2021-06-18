@@ -35,12 +35,14 @@ function showError(searchValue) {
 
 function renderResult(result) {
     return `
-    <div class="col-3">
-        <img
-            src="${result.media.bannerURL}"
-            alt="${result.media.mediaID}"
-            class="w-100 h-100"
-        />
+    <div class="col-3" >
+        <a href="/WatchMedia/MediaDetails/${result.media.mediaID}">
+            <img
+                src="${result.media.bannerURL}"
+                alt="${result.media.mediaID}"
+                class="w-100 h-100"
+            />
+        </a>
     </div>`;
 }
 

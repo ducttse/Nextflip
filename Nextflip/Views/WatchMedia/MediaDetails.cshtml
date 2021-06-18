@@ -3,8 +3,6 @@
     ViewBag.Title = "Detail";
     Layout = "_UserDashboardLayout";
 }
-
-
 @section styles{
     <link rel="Stylesheet" href="@Href("~/css/Media-Details.css")" />
     <link rel="Stylesheet" href="@Href("~/css/Header.css")" />
@@ -19,8 +17,10 @@
         <div class="above" id="details_holder">
         </div>
       </div>
-    </div>
+    </div> 
 <script src="~/js/Media-Details.js"></script>
+<script src="~/js/Search-In-Header.js"></script>
 <script>
+    setGoToSearchEvent();
     Run('@ViewBag.MediaID')
 </script>

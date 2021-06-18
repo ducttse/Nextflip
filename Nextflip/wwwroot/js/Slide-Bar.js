@@ -1,16 +1,16 @@
 ﻿let TopicArr;
-function renderItem(item) {
+function renderItem(item, itemName) {
     return `
-        <li class="topicItem" topic="${item.topicName}">
+        <li class="topicItem" topic="${item[ itemName ]}">
             <a href="#" class="text-decoration-none link-light rounded">
-            ${item.topicName}
+            ${item[ itemName ]}
             </a>
         </li>`;
 }
 
-function renderCollapse() {
+function renderCollapse(Name, itemName) {
     let Items = TopicArr.map((item) => {
-        return renderItem(item);
+        return renderItem(item, itemName);
     })
     Items = Items.join("");
     return `
@@ -21,7 +21,7 @@ function renderCollapse() {
             data-bs-target="#topic-collapse"
             aria-expanded="true"
         >
-            Topic
+            ${Name}
         </button>
         <div class="collapse show" id="topic-collapse">
             <ul class="btn-toggle-nav list-unstyled pb-1 small">
@@ -31,8 +31,8 @@ function renderCollapse() {
     </li>`;
 }
 
-function appendCollase(requestFunc, appendToWrapper) {
-    document.getElementById("topic_List").insertAdjacentHTML("afterbegin", renderCollapse());
+function appendCollase(name, itemName, requestFunc, appendToWrapper) {
+    document.getElementById("topic_List").insertAdjacentHTML("afterbegin", renderCollapse(name, itemName));
     setClickToItems(requestFunc, appendToWrapper);
 }
 
@@ -44,8 +44,11 @@ function setClickToItems(requestFunc, appendToWrapper) {
             requestFunc(topic)
                 .then(res => res.json())
                 .then(json => {
-                    Data.data = json;
-                    appendToWrapper(0, Data.data.length);
+                    Data = json;
+                    appendToWrapper();
+                    if (pageData !== null) {
+                        pageData.currentPage = 1;
+                    }
                 });
         })
     }

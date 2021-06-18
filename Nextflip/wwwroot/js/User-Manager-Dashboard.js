@@ -68,8 +68,6 @@ function reRenderCheckbox() {
   }
 }
 
-
-
 function setTotalPage() {
   pageData.totalPage = Data.totalPage
 }

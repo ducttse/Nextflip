@@ -1,7 +1,7 @@
 ﻿let TopicArr;
 function renderItem(item, itemName) {
     return `
-        <li class="topicItem" topic="${item[ itemName ]}">
+        <li class="topicItem mb-2" topic="${item[ itemName ]}">
             <a href="#" class="text-decoration-none link-light rounded">
             ${item[ itemName ]}
             </a>
@@ -45,10 +45,14 @@ function setClickToItems(requestFunc, appendToWrapper) {
                 .then(res => res.json())
                 .then(json => {
                     Data = json;
-                    appendToWrapper();
                     if (pageData !== null) {
-                        pageData.currentPage = 1;
+                        if (pageData.currentPage !== 1) {
+                            setCurrentColor();
+                            removeCurrentColor();
+                            pageData.currentPage = 1;
+                        }
                     }
+                    appendToWrapper();
                 });
         })
     }

@@ -4,7 +4,7 @@ let requestParam = {
   RowsOnPage: 10,
   roleName: "Subscribed User"
 };
-
+let currentChooseRole;
 function setRequestPage(num) {
   requestParam.RequestPage = num;
   return requestUserData(requestParam.roleName);
@@ -95,6 +95,25 @@ function appendUserToWrapper() {
 
 setAppendToDataWrapper(appendUserToWrapper);
 
+function search(searchValue) {
+  let reqHeader = new Headers();
+  reqHeader.append("Content-Type", "text/json");
+  reqHeader.append("Accept", "application/json, text/plain, */*");
+  let initObject = {
+    method: "POST",
+    headers: reqHeader,
+    body: JSON.stringify(requestParam)
+  };
+  fetch(`/api/UserManagerManagement/GetAccountListByEmail/${searchValue}`, initObject)
+    .then(res => res.json())
+    .then(json => {
+      Data = json;
+      console.log(json);
+      pageData.currentPage = 1;
+      appendUserToWrapper();
+    })
+}
+
 function requestUserData(role) {
   requestParam.roleName = role;
   let reqHeader = new Headers();
@@ -107,7 +126,6 @@ function requestUserData(role) {
   };
   return fetch("/api/UserManagerManagement/GetAccountsListByRoleAccordingRequest", initObject);
 }
-
 
 function getRoles() {
   fetch("/api/UserManagerManagement/GetRoleNameList")

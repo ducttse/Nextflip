@@ -50,7 +50,7 @@ namespace Nextflip.Models.account
             return accounts;
         }
 
-        public IEnumerable<Account> GetAccountListByEmail(string searchValue, int RowsOnPage, int RequestPage)
+        public IEnumerable<Account> GetAccountListByEmail(string searchValue, string roleName, int RowsOnPage, int RequestPage)
         {
             var accounts = new List<Account>();
             int offset = ((int)(RequestPage - 1)) * RowsOnPage;
@@ -61,10 +61,12 @@ namespace Nextflip.Models.account
                     connection.Open();
                     string Sql = "Select userID, userEmail, roleName, fullname, status " +
                             "From account " +
-                            "Where userEmail LIKE @userEmail " +
+                            "Where roleName = @roleName and userEmail LIKE @userEmail " +
+                            "Order By status ASC " +
                             "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
+                        command.Parameters.AddWithValue("@roleName", roleName);
                         command.Parameters.AddWithValue("@userEmail", $"%{searchValue}%");
                         command.Parameters.AddWithValue("@offset", offset);
                         command.Parameters.AddWithValue("@limit", RowsOnPage);
@@ -91,7 +93,7 @@ namespace Nextflip.Models.account
             return accounts;
         }
 
-        public int NumberOfAccountsBySearching(string searchValue)
+        public int NumberOfAccountsBySearching(string searchValue, string roleName)
         {
             int count = 0;
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
@@ -99,9 +101,10 @@ namespace Nextflip.Models.account
                 connection.Open();
                 string Sql = "Select COUNT(userID) " +
                             "From account " +
-                            "Where userEmail LIKE @userEmail";
+                            "Where roleName = @roleName and userEmail LIKE @userEmail ";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
+                    command.Parameters.AddWithValue("@roleName", roleName);
                     command.Parameters.AddWithValue("@userEmail", $"%{searchValue}%");
                     using (var reader = command.ExecuteReader())
                     {
@@ -314,6 +317,7 @@ namespace Nextflip.Models.account
                     string Sql = "Select userID, userEmail, roleName, fullname, status " +
                             "From account " +
                             "Where roleName = @roleName " +
+                            "Order By status ASC " +
                             "LIMIT @offset, @limit";
                     Debug.WriteLine(Sql);
                     using (var command = new MySqlCommand(Sql, connection))

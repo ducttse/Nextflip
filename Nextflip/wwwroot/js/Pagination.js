@@ -6,7 +6,7 @@
 
 function setCurrentArr() {
   pageData.currentArr = [];
-  for (let i = 1; i < pageData.totalPage; i++) {
+  for (let i = 1; i <= pageData.totalPage; i++) {
     pageData.currentArr.push(i);
   }
 }
@@ -16,7 +16,6 @@ function removeCurrentColor() {
 }
 
 function setCurrentColor() {
-  console.log(pageData.currentPage);
   document.getElementById(`page_${pageData.currentPage}`).classList.add("active");
 }
 
@@ -28,7 +27,7 @@ function renderCurrentArray() {
   });
   Pages = Pages.join("");
   return `
-    <nav  class="col-6 mx-auto">
+    <nav  class="col-12 mx-auto">
       <ul class="pagination">
         ${Pages}
       </ul>
@@ -37,8 +36,11 @@ function renderCurrentArray() {
 
 function appendCurrentArray() {
   let pagination = document.getElementById("pagination");
-  if (pagination !== null) {
-    pagination.innerHTML = "";
+  if (pagination === null) {
+    return;
+  }
+  if (pagination.innerHTML !== "") {
+    pagination.innerHTML = ""
   }
   pagination.insertAdjacentHTML("afterbegin", renderCurrentArray());
   setCurrentColor();
@@ -51,6 +53,9 @@ function setAppendToDataWrapper(func) {
 
 function setCurrentPage(obj) {
   let num = obj.getAttribute("page");
+  if (pageData.currentPage == num) {
+    return;
+  }
   setRequestPage(num)
     .then(res => res.json())
     .then(json => {

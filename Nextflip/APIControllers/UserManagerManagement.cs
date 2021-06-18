@@ -29,8 +29,8 @@ namespace Nextflip.APIControllers
         {           
             try
             {
-                IEnumerable<Account> accounts = userManagerManagementService.GetAccountListByEmail(searchValue, request.RowsOnPage, request.RequestPage);
-                int count = userManagerManagementService.NumberOfAccountsBySearching(searchValue);
+                IEnumerable<Account> accounts = userManagerManagementService.GetAccountListByEmail(searchValue, request.roleName, request.RowsOnPage, request.RequestPage);
+                int count = userManagerManagementService.NumberOfAccountsBySearching(searchValue, request.roleName);
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {

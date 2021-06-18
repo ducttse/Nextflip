@@ -20,10 +20,10 @@ namespace Nextflip.Models.media
                     connection.Open();
                     string Sql = "Select mediaID,status, title, bannerURL, language, description " +
                                 "From media " +
-                                "Where MATCH (title)  AGAINST (@searchValue in natural language mode) ";
+                                "Where MATCH (title)  AGAINST (@searchValue IN BOOLEAN MODE) ";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        command.Parameters.AddWithValue("@searchValue", searchValue);
+                        command.Parameters.AddWithValue("@searchValue", $"{searchValue}*" );
                         using (var reader = command.ExecuteReader())
                         {
                             while (reader.Read())
@@ -45,45 +45,6 @@ namespace Nextflip.Models.media
                 return medias;
             }
             catch(Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        public IEnumerable<Media> GetMedias()
-        {
-            try
-            {
-                var medias = new List<Media>();
-                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
-                {
-                    connection.Open();
-                    string Sql = "Select mediaID,status, title, bannerURL, language, description " +
-                                "From media " +
-                                "Limit 10";
-                    using (var command = new MySqlCommand(Sql, connection))
-                    {
-                        using (var reader = command.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                medias.Add(new Media
-                                {
-                                    MediaID = reader.GetString(0),
-                                    Status = reader.GetString(1),
-                                    Title = reader.GetString(2),
-                                    BannerURL = reader.GetString(3),
-                                    Language = reader.GetString(4),
-                                    Description = reader.GetString(5),
-                                });
-                            }
-                        }
-                    }
-                    connection.Close();
-                }
-                return medias;
-            }
-            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }

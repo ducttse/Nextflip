@@ -12,7 +12,8 @@ namespace Nextflip.Services.Implementations
         private IAccountDAO _accountDao;
         public UserManagerManagementService(IAccountDAO accountDao) => _accountDao = accountDao;
         public IEnumerable<Account> GetAllAccounts() => _accountDao.GetAllAccounts();
-        public IEnumerable<Account> GetAccountListByEmail(string searchValue) => _accountDao.GetAccountListByEmail(searchValue);
+        public IEnumerable<Account> GetAccountListByEmail(string searchValue, int RowsOnPage, int RequestPage) 
+                => _accountDao.GetAccountListByEmail(searchValue, RowsOnPage, RequestPage);
         public int NumberOfAccountsBySearching(string searchValue) => _accountDao.NumberOfAccountsBySearching(searchValue);
         public int NumberOfAccounts() => _accountDao.NumberOfAccounts();
         public int NumberOfAccountsByRole(string roleName) => _accountDao.NumberOfAccountsByRole(roleName);

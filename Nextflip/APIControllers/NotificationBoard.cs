@@ -21,7 +21,7 @@ namespace Nextflip.APIControllers
             _logger = logger;
         }
 
-        [Route("GetAllNotifications")]
+        /*[Route("GetAllNotifications")]
         public IActionResult GetAllNotifications([FromServices] INotificationService notificationService)
         {
             try
@@ -35,6 +35,7 @@ namespace Nextflip.APIControllers
                 return new JsonResult("An error occurred");
             }
         }
+        */
 
         public class Request
         {
@@ -43,8 +44,8 @@ namespace Nextflip.APIControllers
         } 
 
         [HttpPost]
-        [Route("GetNotificationsListAccordingRequest")]
-        public IActionResult GetNotificationsListAccordingRequest([FromServices] INotificationService notificationService,
+        [Route("GetNotificationsList")]
+        public IActionResult GetNotificationsList([FromServices] INotificationService notificationService,
             [FromBody] Request request)
         {
             try

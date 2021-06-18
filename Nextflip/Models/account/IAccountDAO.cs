@@ -8,8 +8,8 @@ namespace Nextflip.Models.account
     public interface IAccountDAO
     {
         IEnumerable<Account> GetAllAccounts();
-        IEnumerable<Account> GetAccountListByEmail(string searchValue, int RowsOnPage, int RequestPage);
-        int NumberOfAccountsBySearching(string searchValue);
+        IEnumerable<Account> GetAccountListByEmail(string searchValue, string roleName, int RowsOnPage, int RequestPage);
+        int NumberOfAccountsBySearching(string searchValue, string roleName);
         bool ChangeAccountStatus(string userID);
         bool AddNewStaff(string fullname, string userEmail, string password, int intRole);
         bool EditStaffProfile(String userID, String fullname, DateTime dateOfBirth, int intRole);

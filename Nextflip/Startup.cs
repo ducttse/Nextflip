@@ -28,6 +28,7 @@ using Nextflip.Models.season;
 using Nextflip.Models.subtitle;
 using Nextflip.Models.supportTopic;
 using Nextflip.Models.supportTicket;
+using Nextflip.Models.role;
 
 namespace Nextflip
 {
@@ -68,6 +69,8 @@ namespace Nextflip
             services.AddTransient<IUserManagerManagementService, UserManagerManagementService>();
             services.AddTransient<IMediaEditRequestDAO, MediaEditRequestDAO>();
             services.AddTransient<IMediaManagerManagementService, MediaManagerManagementService>();
+            services.AddTransient<IRoleDAO, RoleDAO>();
+            services.AddTransient<IRoleService, RoleService>();
 
 
             ///get connection string

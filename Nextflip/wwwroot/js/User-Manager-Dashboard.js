@@ -1,13 +1,13 @@
-let Data = {
-  data: []
-};
+let Data;
 let requestParam = {
-  NumberOfPage: 3,
+  RequestPage: 1,
   RowsOnPage: 10,
-  RequestPage: 1
+  roleName: "Subscribed User"
 };
-function getData() {
-  return Data.data;
+
+function setRequestPage(num) {
+  requestParam.RequestPage = num;
+  return requestUserData(requestParam.roleName);
 }
 
 function renderUser(user, index) {
@@ -28,7 +28,7 @@ function renderUser(user, index) {
         <td>
             <a class="text-decoration-none" 
             href="/Edit/${user.userID}">
-            <i class="fas fa-edit"></i>Edit
+            <i class="fas fa-edit"></i>
             </a>
         </td>
     </tr>`;
@@ -68,11 +68,18 @@ function reRenderCheckbox() {
   }
 }
 
-function appendUserToWrapper(start, end) {
-  if (maxPage * requestParam.RowsOnPage - end <= 0) {
-    return;
-  }
-  let userArray = Data.data.slice(start, end).map((user, index) => {
+function setTotalPage() {
+  pageData.totalPage = Data.totalPage
+}
+
+function countStart() {
+  return (pageData.currentPage - 1) * requestParam.RowsOnPage
+}
+
+function appendUserToWrapper() {
+  setTotalPage();
+  let start = countStart();
+  let userArray = Data.data.slice(0, 10).map((user, index) => {
     return renderUser(user, start + index);
   });
   userArray = userArray.join("");
@@ -83,90 +90,31 @@ function appendUserToWrapper(start, end) {
   dataWapper.insertAdjacentHTML("afterbegin", userArray);
   // add reRender function to each checkbox
   reRenderCheckbox();
+  appendCurrentArray();
 }
 
-function CountCurrentLoadedPage() {
-  return parseInt(Data.data.length / requestParam.RowsOnPage)
-}
+setAppendToDataWrapper(appendUserToWrapper);
 
-function Load(rowsPerPage) {
-  appendUserToWrapper(0, rowsPerPage);
-  appendPagination(Data.data.length, rowsPerPage);
-  setCurrentColor(1);
-  setClickToIndex(appendUserToWrapper);
-}
-
-function PostRequest(page) {
+function requestUserData(role) {
+  requestParam.roleName = role;
   let reqHeader = new Headers();
   reqHeader.append("Content-Type", "text/json");
   reqHeader.append("Accept", "application/json, text/plain, */*");
-  if (page !== 1) {
-    requestParam.RequestPage = page;
-  }
   let initObject = {
     method: "POST",
     headers: reqHeader,
     body: JSON.stringify(requestParam)
   };
-  //
-  return fetch(
-    "/api/UserManagerManagement/GetAccountsListAccordingRequest",
-    initObject
-  )
+  return fetch("/api/UserManagerManagement/GetAccountsListByRoleAccordingRequest", initObject);
 }
 
-function RequestMoreData(RequestPage) {
-  requestParam.RequestPage = RequestPage;
-  console.log(Data.data.length);
 
-  PostRequest(RequestPage).then(res => res.json()).then(json => {
-    json.forEach(user => {
-      Data.data.push(user);
+function getRoles() {
+  fetch("/api/UserManagerManagement/GetRoleNameList")
+    .then(res => res.json())
+    .then(json => {
+      TopicArr = json;
+      appendCollase("Role", "roleName", requestUserData, appendUserToWrapper)
     })
-    let num = RequestPage - 1;
-    appendUserToWrapper(num * rowsPerPage, (num + 1) * rowsPerPage);
-    setCurrentColor(RequestPage);
-  })
 }
 
-function Run(rowsPerPage) {
-  PostRequest(1).then((response) => response.json())
-    .then((json) => {
-      Data.data = json;
-      Load(rowsPerPage);
-    });
-}
-
-function search(searchValue) {
-  if (!searchValue) {
-    return;
-  }
-  ReRun();
-  fetch(`/api/UserManagerManagement/GetAccountListByEmail/${searchValue}`)
-    .then((response) => response.json())
-    .then((json) => {
-      Data.data = json;
-      Load(rowsPerPage);
-    });
-}
-
-function preLoad() {
-  return new Promise((resolve, reject) => {
-    setMaxPage(resolve);
-  });
-}
-
-function setMaxPage(resolve) {
-  fetch("/api/UserManagerManagement/NumberOfAccounts")
-    .then((res) => res.json())
-    .then((json) => {
-      rowsPerPage = requestParam.RowsOnPage;
-      maxPage = parseInt(parseInt(json) / rowsPerPage);
-      resolve("resolved");
-    });
-}
-
-function ReRun() {
-  document.getElementById("dataWapper").innerHTML = "";
-  document.getElementById("pagination").innerHTML = "";
-}

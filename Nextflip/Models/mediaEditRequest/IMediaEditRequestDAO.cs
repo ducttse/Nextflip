@@ -8,10 +8,11 @@ namespace Nextflip.Models.mediaEditRequest
     public interface IMediaEditRequestDAO
     {
         IEnumerable<MediaEditRequest> GetAllPendingMedias();
-        IEnumerable<MediaEditRequest> GetPendingMediaByUserEmail(string searchValue);
+        IEnumerable<MediaEditRequest> GetPendingMediaByUserEmail(string searchValue, int RowsOnPage, int RequestPage);
+        int NumberOfPendingMediasBySearching(string searchValue);
         bool ApproveRequest(int requestID);
         bool DisapproveRequest(int requestID);
         int NumberOfPendingMedias();
-        IEnumerable<MediaEditRequest> GetPendingMediasListAccordingRequest(int NumberOfPage, int RowsOnPage, int RequestPage);
+        IEnumerable<MediaEditRequest> GetPendingMediasListAccordingRequest(int RowsOnPage, int RequestPage);
     }
 }

@@ -7,6 +7,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Nextflip.Services.Interfaces;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Nextflip.Models.role;
 
 namespace Nextflip.APIControllers
 {
@@ -14,40 +17,140 @@ namespace Nextflip.APIControllers
     [ApiController]
     public class UserManagerManagement : ControllerBase
     {
-        [Route("GetAccountListByEmail/{searchValue}")]
-        public JsonResult GetAccountListByEmail([FromServices] IUserManagerManagementService userManagerManagementService, string searchValue)
+        private readonly ILogger _logger;
+
+        public UserManagerManagement(ILogger<UserManagerManagement> logger)
         {
-            IEnumerable<Account> accounts = userManagerManagementService.GetAccountListByEmail(searchValue);
-            return new JsonResult(accounts);
+            _logger = logger;
+        }
+
+        [Route("GetAccountListByEmail/{searchValue}")]
+        public JsonResult GetAccountListByEmail([FromServices] IUserManagerManagementService userManagerManagementService, [FromBody] Request request, string searchValue)
+        {           
+            try
+            {
+                IEnumerable<Account> accounts = userManagerManagementService.GetAccountListByEmail(searchValue, request.RowsOnPage, request.RequestPage);
+                int count = userManagerManagementService.NumberOfAccountsBySearching(searchValue);
+                double totalPage = (double)count / (double)request.RowsOnPage;
+                var result = new
+                {
+                    TotalPage = Math.Ceiling(totalPage),
+                    Data = accounts
+                };
+                return (new JsonResult(result));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetAccountListByEmail: " + ex.Message);
+                return new JsonResult("Error occur");
+            }
         }
 
         [Route("GetAllAccounts")]
         public JsonResult GetAllAccounts([FromServices] IUserManagerManagementService userManagerManagementService)
         {
+            try 
+            {
             IEnumerable<Account> accounts = userManagerManagementService.GetAllAccounts();
             return new JsonResult(accounts);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetAllAccounts: " + ex.Message);
+                return new JsonResult("Error occur");
+            }
+        }
+
+        [Route("GetRoleNameList")]
+        public JsonResult GetRoleNameList([FromServices] IRoleService roleService)
+        {
+            try
+            {
+                IEnumerable<Role> roles = roleService.GetRoleNameList();
+                return new JsonResult(roles);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetRoleNameList: " + ex.Message);
+                return new JsonResult("An error occur");
+            }
         }
 
         [Route("NumberOfAccounts")]
         public JsonResult NumberOfAccounts([FromServices] IUserManagerManagementService userManagerManagementService)
         {
+            try
+            {
             int count = userManagerManagementService.NumberOfAccounts();
             return new JsonResult(count);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("NumberOfAccounts: " + ex.Message);
+                return new JsonResult("Error occur");
+            }
         }
 
         public class Request
         {
-            public int NumberOfPage { get; set; }
+            public string roleName { get; set; }
             public int RowsOnPage { get; set; }
             public int RequestPage { get; set; }
         }
+
         [HttpPost]
-        [Route("GetAccountsListAccordingRequest")]
-        public JsonResult GetAccountsListAccordingRequest([FromServices] IUserManagerManagementService userManagerManagementService,
+        [Route("GetAccountsListByRoleAccordingRequest")]
+        public JsonResult GetAccountsListByRoleAccordingRequest([FromServices] IUserManagerManagementService userManagerManagementService,
                                 [FromBody] Request request)
         {
-            IEnumerable<Account> accounts = userManagerManagementService.GetAccountsListAccordingRequest(request.NumberOfPage, request.RowsOnPage, request.RequestPage);
-            return new JsonResult(accounts);
+            try
+            {
+                IEnumerable<Account> accounts = userManagerManagementService.GetAccountsListByRoleAccordingRequest(request.roleName, request.RowsOnPage, request.RequestPage);
+                int count = userManagerManagementService.NumberOfAccountsByRole(request.roleName);
+                double totalPage = (double)count / (double)request.RowsOnPage;
+                var result = new
+                {
+                    TotalPage = Math.Ceiling(totalPage),
+                    Data = accounts
+                };
+                return (new JsonResult(result));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetAccountsListByRoleAccordingRequest: " + ex.Message);
+                return new JsonResult("Error occur");
+            }
         }
+
+/*        [Route("GetAllActiveAccounts")]
+        public JsonResult GetAllActiveAccounts([FromServices] IUserManagerManagementService userManagerManagementService)
+        {
+            try
+            {
+                IEnumerable<Account> accounts = userManagerManagementService.GetAllActiveAccounts();
+                return new JsonResult(accounts);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetAllActiveAccounts: " + ex.Message);
+                return new JsonResult("Error occur");
+            }
+        }
+
+        [Route("GetAllInactiveAccounts")]
+        public JsonResult GetAllInactiveAccounts([FromServices] IUserManagerManagementService userManagerManagementService)
+        {
+            try
+            {
+                IEnumerable<Account> accounts = userManagerManagementService.GetAllInactiveAccounts();
+                return new JsonResult(accounts);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetAllInactiveAccounts: " + ex.Message);
+                return new JsonResult("Error occur");
+            }
+        }
+*/
     }
 }

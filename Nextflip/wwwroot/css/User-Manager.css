@@ -18,7 +18,7 @@ input[type="checkbox"] {
   transition: 0.5s;
 }
 input:checked[type="checkbox"] {
-  background-color: #198754;
+  background-color: #4bca81;
 }
 input[type="checkbox"]::before {
   content: "";
@@ -36,4 +36,7 @@ input[type="checkbox"]::before {
 input:checked[type="checkbox"]:before {
   content: "";
   left: 20px;
+}
+.hide {
+  display: none;
 }

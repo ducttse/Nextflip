@@ -52,23 +52,30 @@ function setClickToItems(requestFunc, appendToWrapper) {
     for (let item of collection) {
         let topic = item.getAttribute("topic");
         let index = item.getAttribute("index");
-        let prop = item.getAttribute("prop");
         item.addEventListener("click", () => {
             requestFunc(topic)
                 .then(res => res.json())
                 .then(json => {
                     Data = json;
-                    if (pageData !== null) {
-                        if (pageData.currentPage !== 1) {
-                            setCurrentColor();
-                            removeCurrentColor();
-                            pageData.currentPage = 1;
-                        }
+                    if (json.totalPage == 0) {
+                        ShowNotFound();
                     }
-                    setTopic(topic);
-                    isSearched = false;
-                    setChoosenColor(index);
-                    appendToWrapper();
+                    else {
+                        if (pageData !== null) {
+                            if (pageData.currentPage !== 1) {
+                                setCurrentColor();
+                                removeCurrentColor();
+                                pageData.currentPage = 1;
+                            }
+                        }
+                        resetSearch();
+                        resetFilter();
+                        HideNotFound();
+                        setTopic(topic);
+                        isSearched = false;
+                        setChoosenColor(index);
+                        appendToWrapper();
+                    }
                 });
         })
     }

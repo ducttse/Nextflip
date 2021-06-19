@@ -10,17 +10,23 @@ namespace Nextflip.Models.notification
     public class NotificationDAO : INotificationDAO
     {
         public NotificationDAO() { }
-        public IEnumerable<Notification> GetAllNotifications()
+        public IEnumerable<Notification> ViewAllNotifications(string status, int RowsOnPage, int RequestPage)
         {
+            int offset = ((int)(RequestPage - 1)) * RowsOnPage;
             var notifications = new List<Notification>();
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
                 string Sql = "Select notificationID, title, status, publishedDate, content " +
                                 "From notification " +
-                                "Order By publishedDate DESC";
+                                "Where status = @status " +
+                                "Order By publishedDate DESC " +
+                                "Limit @offset, @limit";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
+                    command.Parameters.AddWithValue("@status", status);
+                    command.Parameters.AddWithValue("@offset", offset);
+                    command.Parameters.AddWithValue("@limit", RowsOnPage);
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
@@ -41,7 +47,7 @@ namespace Nextflip.Models.notification
             return notifications;
         }
 
-       public IEnumerable<Notification> GetNotificationsListAccordingRequest(int RowsOnPage, int RequestPage)
+        public IEnumerable<Notification> ViewAvailableNotifications(int RowsOnPage, int RequestPage)
         {
             int offset = ((int)(RequestPage - 1)) * RowsOnPage;
             var notifications = new List<Notification>();
@@ -165,16 +171,67 @@ namespace Nextflip.Models.notification
             return result;
         }
 
-        public int CountNotification()
+        public bool EditNotification(int notificationID, string title, string content, string status)
+        {
+            var result = false;
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            {
+                connection.Open();
+                string Sql = "UPDATE notification " +
+                    "SET title=@title, content=@content, status=@status " +
+                    "WHERE notificationID = @notificationID";
+                using (var command = new MySqlCommand(Sql, connection))
+                {
+                    command.Parameters.AddWithValue("@title", title);
+                    command.Parameters.AddWithValue("@content", content);
+                    command.Parameters.AddWithValue("@status", status);
+                    command.Parameters.AddWithValue("@notificationID", notificationID);
+                    int rowEffects = command.ExecuteNonQuery();
+                    if (rowEffects > 0)
+                    {
+                        result = true;
+                    }
+                }
+                connection.Close();
+            }
+            return result;
+        }
+
+        public int CountAvailableNotification()
         {
             int count = 0;
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
                 string Sql = "Select COUNT(notificationID) " +
-                                "From notification";
+                                "From notification " +
+                                "Where status = 'Available'";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            count = reader.GetInt32(0);
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return count;
+        }
+        public int CountNotification(string status)
+        {
+            int count = 0;
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            {
+                connection.Open();
+                string Sql = "Select COUNT(notificationID) " +
+                                "From notification " +
+                                "Where status = @status";
+                using (var command = new MySqlCommand(Sql, connection))
+                {
+                    command.Parameters.AddWithValue("@status", status);
                     using (var reader = command.ExecuteReader())
                     {
                         if (reader.Read())

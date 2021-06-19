@@ -21,37 +21,15 @@ namespace Nextflip.APIControllers
             _logger = logger;
         }
 
-        /*[Route("GetAllNotifications")]
-        public IActionResult GetAllNotifications([FromServices] INotificationService notificationService)
-        {
-            try
-            {
-                IEnumerable<Notification> notifications = notificationService.GetAllNotifications();
-                return new JsonResult(notifications);
-            }
-            catch (Exception e)
-            {
-                _logger.LogInformation("GetAllNotifications: " + e.Message);
-                return new JsonResult("An error occurred");
-            }
-        }
-        */
-
-        public class Request
-        {
-            public int RowsOnPage { get; set; }
-            public int RequestPage { get; set; }
-        } 
-
         [HttpPost]
-        [Route("GetNotificationsList")]
-        public IActionResult GetNotificationsList([FromServices] INotificationService notificationService,
+        [Route("ViewAllNotifications")]
+        public IActionResult ViewAllNotifications([FromServices] INotificationService notificationService,
             [FromBody] Request request)
         {
             try
             {
-                IEnumerable<Notification> notifications = notificationService.GetNotificationsListAccordingRequest(request.RowsOnPage, request.RequestPage);
-                int count = notificationService.CountNotification();
+                IEnumerable<Notification> notifications = notificationService.ViewAllNotifications(request.status, request.RowsOnPage, request.RequestPage);
+                int count = notificationService.CountNotification(request.status);
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {
@@ -63,6 +41,37 @@ namespace Nextflip.APIControllers
             catch (Exception e)
             {
                 _logger.LogInformation("GetNotificationsListAccordingRequest: " + e.Message);
+                return new JsonResult("An error occurred");
+            }
+        }
+
+        public class Request
+        {
+            public string status { get; set; }
+            public int RowsOnPage { get; set; }
+            public int RequestPage { get; set; }
+        } 
+
+        [HttpPost]
+        [Route("ViewAvailableNotifications")]
+        public IActionResult ViewAvailableNotifications([FromServices] INotificationService notificationService,
+            [FromBody] Request request)
+        {
+            try
+            {
+                IEnumerable<Notification> notifications = notificationService.ViewAvailableNotifications(request.RowsOnPage, request.RequestPage);
+                int count = notificationService.CountAvailableNotification();
+                double totalPage = (double)count / (double)request.RowsOnPage;
+                var result = new
+                {
+                    TotalPage = Math.Ceiling(totalPage),
+                    Data = notifications
+                };
+                return (new JsonResult(result));
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("GetAvailableNotificationsList: " + e.Message);
                 return new JsonResult("An error occurred");
             }
         }
@@ -97,14 +106,9 @@ namespace Nextflip.APIControllers
             }
         }
 
-        public class NotificationAdding
-        {
-            public string title { get; set; }
-            public string content { get; set; }
-        }
 
         [Route("AddNotification")]
-        public IActionResult AddNotification([FromServices] INotificationService notificationService, [FromForm] NotificationAdding notificationAdding)
+        public IActionResult AddNotification([FromServices] INotificationService notificationService, [FromForm] Notification notificationAdding)
         {
             try 
             { 
@@ -126,11 +130,34 @@ namespace Nextflip.APIControllers
             }
         }
 
-        [Route("CountNotification")]
+        [Route("EditNotification")]
+        public IActionResult EditNotification([FromServices] INotificationService notificationService, [FromForm] Notification notification)
+        {
+            try
+            {
+                bool result = notificationService.EditNotification(notification.notificationID , notification.title, notification.content, notification.status);
+                var message = new
+                {
+                    message = "success"
+                };
+                return new JsonResult(message);
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("AddNotification: " + e.Message);
+                var message = new
+                {
+                    message = e.Message
+                };
+                return new JsonResult(message);
+            }
+        }
+
+        /*[Route("CountNotification")]
         public IActionResult CountNotification([FromServices] INotificationService notificationService)
         {
             int count = notificationService.CountNotification();
             return new JsonResult(count);
-        }
+        }*/
     }
 }

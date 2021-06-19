@@ -8,11 +8,13 @@ namespace Nextflip.Services.Interfaces
 {
     public interface INotificationService
     {
-        IEnumerable<Notification> GetAllNotifications();
-        IEnumerable<Notification> GetNotificationsListAccordingRequest(int RowsOnPage, int RequestPage);
+        IEnumerable<Notification> ViewAllNotifications(string status, int RowsOnPage, int RequestPage);
+        IEnumerable<Notification> ViewAvailableNotifications(int RowsOnPage, int RequestPage);
         Notification GetDetailOfNotification(int notificationID);
         IEnumerable<Notification> GetAllAvailableNotifications();
         bool AddNotification(string title, string content);
-        int CountNotification();
+        bool EditNotification(int notificationID, string title, string content, string status);
+        int CountNotification(string status);
+        int CountAvailableNotification();
     }
 }

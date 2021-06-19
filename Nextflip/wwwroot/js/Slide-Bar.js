@@ -1,7 +1,8 @@
 ﻿let TopicArr;
-function renderItem(item, itemName) {
+let currentIndex;
+function renderItem(item, itemName, index) {
     return `
-        <li class="topicItem mb-2" topic="${item[ itemName ]}">
+        <li class="topicItem d-inline-flex p-2 rounded-3 mt-1" id="item_${index}" index=${index} topic="${item[ itemName ]}" prop="${itemName}">
             <a href="#" class="text-decoration-none link-light rounded">
             ${item[ itemName ]}
             </a>
@@ -9,8 +10,8 @@ function renderItem(item, itemName) {
 }
 
 function renderCollapse(Name, itemName) {
-    let Items = TopicArr.map((item) => {
-        return renderItem(item, itemName);
+    let Items = TopicArr.map((item, index) => {
+        return renderItem(item, itemName, index);
     })
     Items = Items.join("");
     return `
@@ -36,10 +37,22 @@ function appendCollase(name, itemName, requestFunc, appendToWrapper) {
     setClickToItems(requestFunc, appendToWrapper);
 }
 
+function setChoosenColor(chooseIndex) {
+    let current = document.getElementById(`item_${currentIndex}`);
+    if (current !== null) {
+        current.classList.remove("choose");
+    }
+    currentIndex = chooseIndex;
+    let choosenItem = document.getElementById(`item_${chooseIndex}`);
+    choosenItem.classList.add("choose");
+}
+
 function setClickToItems(requestFunc, appendToWrapper) {
     let collection = document.getElementsByClassName("topicItem");
     for (let item of collection) {
         let topic = item.getAttribute("topic");
+        let index = item.getAttribute("index");
+        let prop = item.getAttribute("prop");
         item.addEventListener("click", () => {
             requestFunc(topic)
                 .then(res => res.json())
@@ -52,6 +65,8 @@ function setClickToItems(requestFunc, appendToWrapper) {
                             pageData.currentPage = 1;
                         }
                     }
+                    requestParam[ prop ] = topic;
+                    setChoosenColor(index);
                     appendToWrapper();
                 });
         })

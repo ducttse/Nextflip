@@ -65,7 +65,7 @@ namespace Nextflip.APIControllers
             public int RequestPage { get; set; }
         }
 
-        //Get all
+        //Get all + filter
         [HttpPost]
         [Route("GetAccountsListByRoleAccordingRequest")]
         public JsonResult GetAccountsListByRoleAccordingRequest([FromServices] IUserManagerManagementService userManagerManagementService,
@@ -89,6 +89,32 @@ namespace Nextflip.APIControllers
                 return new JsonResult("Error occur");
             }
         }
+
+        //Get all
+        [HttpPost]
+        [Route("GetAccountsListOnlyByRole")]
+        public JsonResult GetAccountsListOnlyByRole([FromServices] IUserManagerManagementService userManagerManagementService,
+                                [FromBody] Request request)
+        {
+            try
+            {
+                IEnumerable<Account> accounts = userManagerManagementService.GetAccountsListOnlyByRole(request.RoleName, request.RowsOnPage, request.RequestPage);
+                int count = userManagerManagementService.NumberOfAccountsByRole(request.RoleName);
+                double totalPage = (double)count / (double)request.RowsOnPage;
+                var result = new
+                {
+                    TotalPage = Math.Ceiling(totalPage),
+                    Data = accounts
+                };
+                return (new JsonResult(result));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetAccountsListByRoleAccordingRequest: " + ex.Message);
+                return new JsonResult("Error occur");
+            }
+        }
+
 
         //Search + Filter Role + Status
         [Route("GetAccountListByEmailFilterRoleStatus")]
@@ -173,6 +199,7 @@ namespace Nextflip.APIControllers
                 return new JsonResult("Error occur");
             }
         }
+
 
         /*        [Route("GetAllActiveAccounts")]
                 public JsonResult GetAllActiveAccounts([FromServices] IUserManagerManagementService userManagerManagementService)

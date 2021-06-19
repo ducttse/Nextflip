@@ -281,7 +281,7 @@ namespace Nextflip.Models.account
                 }
         */
 
-        public int NumberOfAccountsByRole(string roleName)
+        public int NumberOfAccountsByRoleAndStatus(string roleName, string status)
         {
             int count = 0;
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
@@ -289,10 +289,11 @@ namespace Nextflip.Models.account
                 connection.Open();
                 string Sql = "Select COUNT(userID) " +
                                 "From account " +
-                                "Where roleName = @roleName ";
+                                "Where roleName = @roleName and status = @status";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     command.Parameters.AddWithValue("@roleName", roleName);
+                    command.Parameters.AddWithValue("@status", status);
                     using (var reader = command.ExecuteReader())
                     {
                         if (reader.Read())
@@ -305,7 +306,7 @@ namespace Nextflip.Models.account
             }
             return count;
         }
-        public IEnumerable<Account> GetAccountsListByRoleAccordingRequest(string roleName, int RowsOnPage, int RequestPage)
+        public IEnumerable<Account> GetAccountsListByRoleAccordingRequest(string roleName, string status, int RowsOnPage, int RequestPage)
         {
             var accounts = new List<Account>();
             int offset = ((int)(RequestPage-1)) * RowsOnPage;
@@ -316,13 +317,13 @@ namespace Nextflip.Models.account
                     connection.Open();
                     string Sql = "Select userID, userEmail, roleName, fullname, status " +
                             "From account " +
-                            "Where roleName = @roleName " +
-                            "Order By status ASC " +
+                            "Where roleName = @roleName and status = @status " +
                             "LIMIT @offset, @limit";
                     Debug.WriteLine(Sql);
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@roleName", roleName);
+                        command.Parameters.AddWithValue("@status", status);
                         command.Parameters.AddWithValue("@offset", offset);
                         command.Parameters.AddWithValue("@limit", RowsOnPage);
                         using (var reader = command.ExecuteReader())

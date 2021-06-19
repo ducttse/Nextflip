@@ -24,13 +24,13 @@ namespace Nextflip.APIControllers
             _logger = logger;
         }
 
-        [Route("GetAccountListByEmail/{searchValue}")]
-        public JsonResult GetAccountListByEmail([FromServices] IUserManagerManagementService userManagerManagementService, [FromBody] Request request, string searchValue)
+        [Route("GetAccountListByEmail")]
+        public JsonResult GetAccountListByEmail([FromServices] IUserManagerManagementService userManagerManagementService, [FromBody] Request request)
         {           
             try
             {
-                IEnumerable<Account> accounts = userManagerManagementService.GetAccountListByEmail(searchValue, request.roleName, request.RowsOnPage, request.RequestPage);
-                int count = userManagerManagementService.NumberOfAccountsBySearching(searchValue, request.roleName);
+                IEnumerable<Account> accounts = userManagerManagementService.GetAccountListByEmail(request.searchValue, request.roleName, request.RowsOnPage, request.RequestPage);
+                int count = userManagerManagementService.NumberOfAccountsBySearching(request.searchValue, request.roleName);
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {
@@ -93,7 +93,9 @@ namespace Nextflip.APIControllers
 
         public class Request
         {
+            public string searchValue { get; set; }
             public string roleName { get; set; }
+            public string status { get; set; }
             public int RowsOnPage { get; set; }
             public int RequestPage { get; set; }
         }
@@ -105,8 +107,8 @@ namespace Nextflip.APIControllers
         {
             try
             {
-                IEnumerable<Account> accounts = userManagerManagementService.GetAccountsListByRoleAccordingRequest(request.roleName, request.RowsOnPage, request.RequestPage);
-                int count = userManagerManagementService.NumberOfAccountsByRole(request.roleName);
+                IEnumerable<Account> accounts = userManagerManagementService.GetAccountsListByRoleAccordingRequest(request.roleName, request.status, request.RowsOnPage, request.RequestPage);
+                int count = userManagerManagementService.NumberOfAccountsByRoleAndStatus(request.roleName, request.status);
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {

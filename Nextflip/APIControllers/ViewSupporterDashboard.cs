@@ -18,7 +18,7 @@ namespace Nextflip.APIControllers
     {
         private readonly ILogger _logger;
         private readonly string TECHNICAL_EMAIL = "technical.nextflipcompany@gmail.com";
-        private readonly string CUSTOMER_RELATION_EMAIL = "customer_relation.nextflipcompany@gmail.com";
+        private readonly string CUSTOMER_RELATION_EMAIL = "customer.nextflipcompany@gmail.com";
         public ViewSupporterDashboard(ILogger<ViewSupporterDashboard> logger)
         {
             _logger = logger;
@@ -96,7 +96,7 @@ namespace Nextflip.APIControllers
                 IList<SupportTicket> supportTickets = supportTicketService.ViewSupportTicketByTopic(limit, offset, topicName);
                 int totalPage = supportTicketService.GetNumOfSupportTicketsByTopic(topicName);
 
-                return new JsonResult(new Response { TotalPage = totalPage, Result = supportTickets });
+                return new JsonResult(new {TotalPage = totalPage, Data = supportTickets });
             }
             catch(Exception ex)
             {
@@ -120,7 +120,7 @@ namespace Nextflip.APIControllers
                 IList<SupportTicket> supportTickets = supportTicketService.SearchSupportTicketByTopic(searchValue, topicName, limit, offset);
                 int totalPage = supportTicketService.GetNumOfSupportTicketsByTopicAndSearch(searchValue, topicName);
 
-                return new JsonResult(new Response { TotalPage = totalPage, Result = supportTickets });
+                return new JsonResult(new { TotalPage = totalPage, Data = supportTickets });
             }
             catch(Exception ex)
             {
@@ -147,7 +147,7 @@ namespace Nextflip.APIControllers
                 IList<SupportTicket> supportTickets = supportTicketService.SearchSupportTicketByTopicAndByStatus(searchValue, topicName, status, limit, offset);
                 int totalPage = supportTicketService.GetNumOfSupportTicketsByTopicAndSearchAndStatus(searchValue, topicName, status);
 
-                return new JsonResult(new Response { TotalPage = totalPage, Result = supportTickets });
+                return new JsonResult(new { TotalPage = totalPage, Data = supportTickets });
             }
             catch (Exception ex)
             {
@@ -167,10 +167,10 @@ namespace Nextflip.APIControllers
                 int limit = request.RowsOnPage;
                 int offset = request.RowsOnPage * (request.RequestPage - 1);
 
-                IList<SupportTicket> supportTickets = supportTicketService.ViewSupportTicketByTopicAndStatus(topicName, status, limit, offset);
+                IEnumerable<SupportTicket> supportTickets = supportTicketService.ViewSupportTicketByTopicAndStatus(topicName, status, limit, offset);
                 int totalPage = supportTicketService.GetNumOfSupportTicketsByTopicAndStatus(topicName, status);
 
-                return new JsonResult(new Response { TotalPage = totalPage, Result = supportTickets });
+                return new JsonResult(new {TotalPage = totalPage, Data = supportTickets });
             }
             catch (Exception ex)
             {
@@ -189,9 +189,5 @@ namespace Nextflip.APIControllers
         public string Status { get; set; }
     }
 
-    public class Response
-    {
-        public int TotalPage { get; set; }
-        public IList<SupportTicket> Result { get; set; }
-    }
+
 }

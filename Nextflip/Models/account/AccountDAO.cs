@@ -472,5 +472,73 @@ namespace Nextflip.Models.account
             }
             return count;
         }
+
+        public IEnumerable<Account> GetAccountsListOnlyByRole(string roleName, int RowsOnPage, int RequestPage)
+        {
+            var accounts = new List<Account>();
+            int offset = ((int)(RequestPage - 1)) * RowsOnPage;
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select userID, userEmail, roleName, fullname, status " +
+                            "From account " +
+                            "Where roleName = @roleName " +
+                            "LIMIT @offset, @limit";
+                    Debug.WriteLine(Sql);
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@roleName", roleName);
+                        command.Parameters.AddWithValue("@offset", offset);
+                        command.Parameters.AddWithValue("@limit", RowsOnPage);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                accounts.Add(new Account
+                                {
+                                    userID = reader.GetString(0),
+                                    userEmail = reader.GetString(1),
+                                    roleName = reader.GetString(2),
+                                    fullname = reader.GetString(3),
+                                    status = reader.GetString(4)
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return accounts;
+        }
+
+        public int NumberOfAccountsByRole(string roleName)
+        {
+            int count = 0;
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            {
+                connection.Open();
+                string Sql = "Select COUNT(userID) " +
+                                "From account " +
+                                "Where roleName = @roleName";
+                using (var command = new MySqlCommand(Sql, connection))
+                {
+                    command.Parameters.AddWithValue("@roleName", roleName);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            count = reader.GetInt32(0);
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return count;
+        }
     }
 }

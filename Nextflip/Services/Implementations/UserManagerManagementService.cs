@@ -29,5 +29,10 @@ namespace Nextflip.Services.Implementations
                 => _accountDao.GetAccountListByEmailFilterRole(searchValue, roleName, RowsOnPage, RequestPage);
         public int NumberOfAccountsBySearchingFilterRole(string searchValue, string roleName)
             => _accountDao.NumberOfAccountsBySearchingFilterRole(searchValue, roleName);
+
+        public IEnumerable<Account> GetAccountsListOnlyByRole(string roleName, int RowsOnPage, int RequestPage)
+                => _accountDao.GetAccountsListOnlyByRole(roleName, RowsOnPage, RequestPage);
+
+        public int NumberOfAccountsByRole(string roleName) => _accountDao.NumberOfAccountsByRole(roleName);
     }
 }

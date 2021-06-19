@@ -50,11 +50,13 @@ namespace Nextflip.Models.supportTicket
 
         }
 
-        public IList<SupportTicket> ViewPendingSupportTickets(int limit, int offset, string topicName)
+        public IList<SupportTicket> ViewSupportTicketByTopic(int limit, int offset, string topicName)
         {
             IList<SupportTicket> supportTickets = new List<SupportTicket>();
-            try {
-                using (var connection = new MySqlConnection(DbUtil.ConnectionString)) {
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
                     connection.Open();
                     string sql = "SELECT supportTicketID, userEmail, topicName, createdDate, status, content " +
                                     "FROM supportTicket " +
@@ -74,18 +76,128 @@ namespace Nextflip.Models.supportTicket
                                 string supportTicketID = reader.GetString("supportTicketID");
                                 string userEmail = reader.GetString("userEmail");
                                 string createdDate = reader.GetMySqlDateTime("createdDate").ToString();
-                                Console.WriteLine(createdDate);
                                 string status = reader.GetString("status");
                                 string content = reader.GetString("content");
-                                supportTickets.Add(new SupportTicket(supportTicketID, userEmail, createdDate,topicName, status, content));
+                                supportTickets.Add(new SupportTicket(supportTicketID, userEmail, createdDate, topicName, status, content));
                             }
                             connection.Close();
                         }
                     }
                 }
-            return supportTickets;
+                return supportTickets;
             }
-            catch(Exception e)
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public int GetNumOfSupportTicketsByTopic(string topicName)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(utils.DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string sql = "Select Count(*) " +
+                                    "From supportTicket " +
+                                    "WHERE topicName = @topicName";
+                    using (var command = new MySqlCommand(sql, connection))
+
+                    {
+                        command.Parameters.AddWithValue("@topicName", topicName);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                int numOfSupportTicket = reader.GetUInt16(0);
+                                connection.Close();
+                                return numOfSupportTicket;
+                            }
+                            connection.Close();
+                        }
+                    }
+                }
+                return -1;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public IList<SupportTicket> ViewSupportTicketByTopicAndStatus(string topicName, string status, int limit, int offset)
+        {
+            IList<SupportTicket> supportTickets = new List<SupportTicket>();
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string sql = "SELECT supportTicketID, userEmail, topicName, createdDate, status, content " +
+                                    "FROM supportTicket " +
+                                    "WHERE topicName = @topicName AND status = @status " +
+                                    "Order By createdDate DESC " +
+                                    "LIMIT @limit OFFSET @offset; ";
+                    using (var command = new MySqlCommand(sql, connection))
+
+                    {
+                        command.Parameters.AddWithValue("@limit", limit);
+                        command.Parameters.AddWithValue("@offset", offset);
+                        command.Parameters.AddWithValue("@topicName", topicName);
+                        command.Parameters.AddWithValue("@status", status);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                string supportTicketID = reader.GetString("supportTicketID");
+                                string userEmail = reader.GetString("userEmail");
+                                string createdDate = reader.GetMySqlDateTime("createdDate").ToString();
+                                string content = reader.GetString("content");
+                                supportTickets.Add(new SupportTicket(supportTicketID, userEmail, createdDate, topicName, status, content));
+                            }
+                            connection.Close();
+                        }
+                    }
+                }
+                return supportTickets;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public int GetNumOfSupportTicketsByTopicAndStatus(string topicName, string status)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(utils.DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string sql = "Select Count(*) " +
+                                    "From supportTicket " +
+                                    "WHERE topicName = @topicName";
+                    using (var command = new MySqlCommand(sql, connection))
+
+                    {
+                        command.Parameters.AddWithValue("@topicName", topicName);
+                        command.Parameters.AddWithValue("@status", status);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                int numOfSupportTicket = reader.GetUInt16(0);
+                                connection.Close();
+                                return numOfSupportTicket;
+                            }
+                            connection.Close();
+                        }
+                    }
+                }
+                return -1;
+            }
+            catch (Exception e)
             {
                 throw new Exception(e.Message);
             }
@@ -158,17 +270,66 @@ namespace Nextflip.Models.supportTicket
             }
         }
 
-        public int GetNumOfSupportTickets()
+
+        public IList<SupportTicket> SearchSupportTicketByTopic(string searchValue, string topicName, int limit, int offset)
+
+        {
+            IList<SupportTicket> supportTickets = new List<SupportTicket>();
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string sql = "SELECT supportTicketID, userEmail, topicName, createdDate, status, content " +
+                                    "FROM supportTicket " +
+                                    "WHERE topicName = @topicName AND(userEmail like @searchValue OR content like @searchValue) " +
+                                    "Order By createdDate DESC " +
+                                    "LIMIT @limit OFFSET @offset ; ";
+                    using (var command = new MySqlCommand(sql, connection))
+
+                    {
+                        command.Parameters.AddWithValue("@limit", limit);
+                        command.Parameters.AddWithValue("@offset", offset);
+                        command.Parameters.AddWithValue("@searchValue", "%" + searchValue + "%");
+                        command.Parameters.AddWithValue("@topicName", topicName);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                string supportTicketID = reader.GetString("supportTicketID");
+                                string userEmail = reader.GetString("userEmail");
+                                string createdDate = reader.GetMySqlDateTime("createdDate").ToString();
+                                string status = reader.GetString("status");
+                                string content = reader.GetString("content");
+                                supportTickets.Add(new SupportTicket(supportTicketID, userEmail, createdDate, topicName, status, content));
+                            }
+                            connection.Close();
+                        }
+                    }
+                }
+                return supportTickets;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public int GetNumOfSupportTicketsByTopicAndSearch(string searchValue, string topicName)
         {
             try
             {
                 using (var connection = new MySqlConnection(utils.DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string sql = "Select Count(*) From supportTicket;";
+                    string sql = "Select Count(*) " +
+                                    "From supportTicket " +
+                                    "WHERE topicName = @topicName AND(userEmail like @searchValue OR content like @searchValue);";
                     using (var command = new MySqlCommand(sql, connection))
 
                     {
+                        command.Parameters.AddWithValue("@searchValue", "%" + searchValue + "%");
+                        command.Parameters.AddWithValue("@topicName", topicName);
                         using (var reader = command.ExecuteReader())
                         {
                             if (reader.Read())
@@ -189,7 +350,7 @@ namespace Nextflip.Models.supportTicket
             }
         }
 
-        public IList<SupportTicket> SearchSupportTicket(string searchValue, string topicName, int limit, int offset)
+        public IList<SupportTicket> SearchSupportTicketByTopicAndByStatus(string searchValue, string topicName, string status, int limit, int offset)
 
         {
             IList<SupportTicket> supportTickets = new List<SupportTicket>();
@@ -200,7 +361,7 @@ namespace Nextflip.Models.supportTicket
                     connection.Open();
                     string sql = "SELECT supportTicketID, userEmail, topicName, createdDate, status, content " +
                                     "FROM supportTicket " +
-                                    "WHERE topicName = @topicName AND (userEmail like '' OR MATCH (content)  AGAINST ('%race%' IN BOOLEAN MODE)) " +
+                                    "WHERE topicName = @topicName AND(userEmail like @searchValue OR content like @searchValue) " +
                                     "Order By createdDate DESC " +
                                     "LIMIT @limit OFFSET @offset; ";
                     using (var command = new MySqlCommand(sql, connection))
@@ -209,6 +370,8 @@ namespace Nextflip.Models.supportTicket
                         command.Parameters.AddWithValue("@limit", limit);
                         command.Parameters.AddWithValue("@offset", offset);
                         command.Parameters.AddWithValue("@topicName", topicName);
+                        command.Parameters.AddWithValue("@status", status);
+                        command.Parameters.AddWithValue("@searchValue", "%" + searchValue + "%");
                         using (var reader = command.ExecuteReader())
                         {
                             while (reader.Read())
@@ -216,8 +379,6 @@ namespace Nextflip.Models.supportTicket
                                 string supportTicketID = reader.GetString("supportTicketID");
                                 string userEmail = reader.GetString("userEmail");
                                 string createdDate = reader.GetMySqlDateTime("createdDate").ToString();
-                                Console.WriteLine(createdDate);
-                                string status = reader.GetString("status");
                                 string content = reader.GetString("content");
                                 supportTickets.Add(new SupportTicket(supportTicketID, userEmail, createdDate, topicName, status, content));
                             }
@@ -232,5 +393,41 @@ namespace Nextflip.Models.supportTicket
                 throw new Exception(e.Message);
             }
         }
+        public int GetNumOfSupportTicketsByTopicAndSearchAndStatus(string searchValue, string topicName, string status)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(utils.DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string sql = "Select Count(*) " +
+                                    "From supportTicket " +
+                                    "WHERE topicName = @topicName AND status = @status AND (userEmail like @searchValue OR content like @searchValue) ";
+                    using (var command = new MySqlCommand(sql, connection))
+
+                    {
+                        command.Parameters.AddWithValue("@topicName", topicName);
+                        command.Parameters.AddWithValue("@status", status);
+                        command.Parameters.AddWithValue("@searchValue", "%" + searchValue + "%");
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                int numOfSupportTicket = reader.GetUInt16(0);
+                                connection.Close();
+                                return numOfSupportTicket;
+                            }
+                            connection.Close();
+                        }
+                    }
+                }
+                return -1;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
     }
 }

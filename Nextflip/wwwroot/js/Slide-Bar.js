@@ -2,7 +2,7 @@
 let currentIndex;
 function renderItem(item, itemName, index) {
     return `
-        <li class="topicItem d-inline-flex p-2 rounded-3 mt-1" id="item_${index}" index=${index} topic="${item[ itemName ]}" prop="${itemName}">
+        <li class="topicItem p-2 rounded-3 mt-1" id="item_${index}" index=${index} topic="${item[ itemName ]}" prop="${itemName}">
             <a href="#" class="text-decoration-none link-light rounded">
             ${item[ itemName ]}
             </a>
@@ -65,7 +65,8 @@ function setClickToItems(requestFunc, appendToWrapper) {
                             pageData.currentPage = 1;
                         }
                     }
-                    requestParam[ prop ] = topic;
+                    setTopic(topic);
+                    isSearched = false;
                     setChoosenColor(index);
                     appendToWrapper();
                 });

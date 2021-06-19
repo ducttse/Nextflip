@@ -5,25 +5,40 @@
     <link href="@Url.Content("~/css/Supporter-Dashboard.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
 }
-<div class="ui_wrapper col-10">
-    <form method="POST" action="">
-        <table class="table table-bordered w-100">
-            <thead class="table-dark">
-                <tr>
-                    <th class="col-1">No</th>
-                    <th class="col-2">User Email</th>
-                    <th class="col-1">Topic</th>
-                    <th class="col-1">Status</th>
-                    <th class="col-2"><th>
-                </tr>
-            </thead>
-            <tbody id="dataWapper"></tbody>
-        </table>
-        <div id="pagination"></div>
-    </form>
+<div class="ui_wrapper col-10 pt-3">
+    <div class="w-90 ms-4"> 
+        <div class="btn-group w-100">
+            <div id="search_wrapper" class="col-10"></div>
+            <div id="filter" class="col-2 d-inline-flex mb-2">
+                <i class="mt-2 fas fa-filter"></i>
+                <select class="ms-2 form-select">
+                    <option selected>Filter</option>
+                    <option value="1">Pending</option>
+                    <option value="2">Assigned</option>
+                    <option value="2">Closed</option>
+                </select> 
+            </div>
+        </div>
+            <table class="table table-bordered table-responsive table-hover w-100">
+                <thead class="table-light">
+                    <tr>
+                        <th class="col">No</th>
+                        <th class="col">User email</th>        
+                        <th class="col">Topic</th>
+                        <th class="col">Status</th>
+                        <th class="col"></th>
+                    </tr>
+                </thead>
+                <tbody id="dataWapper"></tbody>
+            </table>
+            <div id="pagination"></div>
+        </div>
+    </div>
 </div>
-<script src="~/js/Supporter-Dashboard.js"></script>
+<script src="~/js/Pagination.js"></script>
 <script src="~/js/Slide-Bar.js"></script>
+<script src="~/js/Search-Component.js"></script>
+<script src="~/js/Supporter-Dashboard.js"></script>
 <script> 
 getTopics();
 </script>

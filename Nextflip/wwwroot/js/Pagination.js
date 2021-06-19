@@ -4,6 +4,10 @@
   currentPage: 1
 }
 
+function setPageDataCurrentPage(num) {
+  pageData.currentPage = num;
+}
+
 function setCurrentArr() {
   pageData.currentArr = [];
   for (let i = 1; i <= pageData.totalPage; i++) {

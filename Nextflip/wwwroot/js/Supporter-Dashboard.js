@@ -36,8 +36,10 @@ function countStart() {
   return (pageData.currentPage - 1) * requestParam.RowsOnPage
 }
 
-function appendTicketToWrapper(start, end) {
-  let ticketArray = Data.data.slice(start, end).map((ticket, index) => {
+function appendTicketToWrapper() {
+  setTotalPage();
+  let start = countStart();
+  let ticketArray = Data.data.slice(0, requestParam.RowsOnPage).map((ticket, index) => {
     return renderTicket(ticket, index + start);
   });
   ticketArray = ticketArray.join("");
@@ -46,7 +48,10 @@ function appendTicketToWrapper(start, end) {
     dataWapper.innerHTML = "";
   }
   dataWapper.insertAdjacentHTML("afterbegin", ticketArray);
+  appendCurrentArray();
 }
+
+setAppendToDataWrapper(appendTicketToWrapper);
 
 function requestTopicData(topic) {
   requestParam.TopicName = topic;
@@ -58,7 +63,7 @@ function requestTopicData(topic) {
     headers: reqHeader,
     body: JSON.stringify(requestParam)
   };
-  return fetch("/api/ViewSupporterDashboard/GetPendingSupportTickets", initObject);
+  return fetch("/api/ViewSupporterDashboard/ViewSupportTicketByTopic", initObject);
 }
 
 function getTopics() {
@@ -66,17 +71,14 @@ function getTopics() {
     .then(res => res.json())
     .then(json => {
       TopicArr = json;
-      appendCollase("Topic", requestTopicData, appendTicketToWrapper);
+      appendCollase("Topic", "topicName", requestTopicData, appendTicketToWrapper);
+      requestTopicData("Account")
+        .then(res => res.json())
+        .then(json => {
+          Data = json;
+          appendTicketToWrapper();
+          setChoosenColor(0);
+        })
     })
 }
-
-function Run() {
-  requestData()
-    .then((response) => response.json())
-    .then((json) => {
-      Data.data = json;
-      appendTicketToWrapper(0, Data.data.length);
-    });
-}
-
 

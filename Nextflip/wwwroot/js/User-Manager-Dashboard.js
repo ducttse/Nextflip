@@ -2,12 +2,26 @@ let Data;
 let requestParam = {
   RequestPage: 1,
   RowsOnPage: 10,
-  roleName: "Subscribed User"
+  RoleName: "Customer Supporter",
+  SearchValue: "",
+  Status: ""
 };
-let currentChooseRole;
+let isSearched = false;
+let isFiltered = false;
+function setTopic(topic) {
+  requestParam.RoleName = topic;
+}
+
 function setRequestPage(num) {
   requestParam.RequestPage = num;
-  return requestUserData(requestParam.roleName);
+  console.log();
+  if (isFiltered) {
+    return requestWithFilter();
+  }
+  if (isSearched) {
+    return searchOnly(requestParam.SearchValue);
+  }
+  return requestUserData(requestParam.RoleName);
 }
 
 function renderUser(user, index) {
@@ -18,12 +32,9 @@ function renderUser(user, index) {
         <td>${user.roleName}</td>
         <td>${user.fullname}</td>
         <td class="checkBox">
-            <input type="checkbox" 
-            name="userRole" 
-
-            initValue=${user.status}
-            value="${user.status}" 
-            ${user.status === "Active" ? "checked" : ""} /> ${user.status}
+          <div class="col-2 mx-auto">
+            <input type="checkbox" name="" id="" value="${user.status}" ${user.status === "Active" ? "checked" : ""}  />
+          </div>
         </td>
         <td>
             <a class="text-decoration-none" 
@@ -33,40 +44,7 @@ function renderUser(user, index) {
         </td>
     </tr>`;
 }
-function reRenderCheckbox() {
-  var checkBoxList = document.getElementsByClassName("checkBox");
-  for (let index = 0; index < checkBoxList.length; index++) {
-    let child = checkBoxList[ index ];
-    let checkBoxEl = child.querySelector("input[type=checkbox]");
-    checkBoxEl.addEventListener("click", () => {
-      if (checkBoxEl.checked) {
-        child.innerHTML = "";
-        checkBoxEl.setAttribute("value", "Active");
-        child.append(checkBoxEl);
-        child.append(" Active");
-      } else {
-        child.innerHTML = "";
-        checkBoxEl.setAttribute("value", "Inactive");
-        child.append(checkBoxEl);
-        child.append(" Inactive");
-      }
-      console.log(checkBoxEl);
-      console.log(checkBoxEl.getAttribute("initValue"));
-      if (
-        checkBoxEl.getAttribute("initValue") !==
-        checkBoxEl.getAttribute("value")
-      ) {
-        child.classList.add("text-warning");
-        // document.getElementById("message").innerHTML =
-        //   "Something changed. Click to save";
-      }
-      // remove if unchange
-      else if (child.classList.contains("text-warning")) {
-        child.classList.remove("text-warning");
-      }
-    });
-  }
-}
+
 
 function setTotalPage() {
   pageData.totalPage = Data.totalPage
@@ -88,14 +66,16 @@ function appendUserToWrapper() {
     dataWapper.innerHTML = "";
   }
   dataWapper.insertAdjacentHTML("afterbegin", userArray);
-  // add reRender function to each checkbox
-  reRenderCheckbox();
   appendCurrentArray();
 }
 
 setAppendToDataWrapper(appendUserToWrapper);
 
 function search(searchValue) {
+  requestParam.RequestPage = 1;
+  setPageDataCurrentPage(1);
+  requestParam.SearchValue = searchValue;
+  isSearched = true;
   let reqHeader = new Headers();
   reqHeader.append("Content-Type", "text/json");
   reqHeader.append("Accept", "application/json, text/plain, */*");
@@ -104,14 +84,29 @@ function search(searchValue) {
     headers: reqHeader,
     body: JSON.stringify(requestParam)
   };
-  fetch(`/api/UserManagerManagement/GetAccountListByEmail/${searchValue}`, initObject)
+  requestParam.SearchValue = searchValue;
+  fetch("/api/UserManagerManagement/GetAccountListByEmailFilterRole", initObject)
     .then(res => res.json())
     .then(json => {
       Data = json;
-      console.log(json);
+      console.log(Data);
       pageData.currentPage = 1;
       appendUserToWrapper();
     })
+}
+
+function searchOnly(searchValue) {
+  requestParam.SearchValue = searchValue;
+  isSearched = true;
+  let reqHeader = new Headers();
+  reqHeader.append("Content-Type", "text/json");
+  reqHeader.append("Accept", "application/json, text/plain, */*");
+  let initObject = {
+    method: "POST",
+    headers: reqHeader,
+    body: JSON.stringify(requestParam)
+  };
+  return fetch("/api/UserManagerManagement/GetAccountListByEmailFilterRole", initObject)
 }
 
 function requestUserData(role) {
@@ -124,8 +119,9 @@ function requestUserData(role) {
     headers: reqHeader,
     body: JSON.stringify(requestParam)
   };
-  return fetch("/api/UserManagerManagement/GetAccountsListByRoleAccordingRequest", initObject);
+  return fetch("/api/UserManagerManagement/GetAccountsListOnlyByRole", initObject);
 }
+
 
 function getRoles() {
   fetch("/api/UserManagerManagement/GetRoleNameList")
@@ -133,6 +129,50 @@ function getRoles() {
     .then(json => {
       TopicArr = json;
       appendCollase("Role", "roleName", requestUserData, appendUserToWrapper)
-    })
+      requestUserData("Customer Supporter")
+        .then(res => res.json())
+        .then(json => {
+          Data = json;
+          appendUserToWrapper();
+          setChoosenColor(0);
+        })
+    });
+
 }
 
+function requestWithFilter() {
+  requestParam.RequestPage = 1;
+  setPageDataCurrentPage(1);
+  let reqHeader = new Headers();
+  reqHeader.append("Content-Type", "text/json");
+  reqHeader.append("Accept", "application/json, text/plain, */*");
+  let initObject = {
+    method: "POST",
+    headers: reqHeader,
+    body: JSON.stringify(requestParam)
+  };
+  return fetch("/api/UserManagerManagement/GetAccountsListByRoleAccordingRequest", initObject);
+}
+
+function doFilter() {
+  let filter = document.getElementById("filter");
+  filter.addEventListener("change", () => {
+    let choosenValue = filter.options[ filter.selectedIndex ].value;
+    if (choosenValue === "All") {
+      isFiltered = false;
+      return;
+    }
+    requestParam.Status = choosenValue;
+    requestWithFilter()
+      .then(res => res.json())
+      .then(json => {
+        isFiltered = true;
+        Data = json;
+        appendUserToWrapper();
+        setChoosenColor(TopicArr.findIndex((role) => {
+          return role.roleName === requestParam.RoleName;
+        }))
+      })
+  })
+}
+doFilter();

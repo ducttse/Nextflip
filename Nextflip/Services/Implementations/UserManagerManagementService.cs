@@ -12,15 +12,22 @@ namespace Nextflip.Services.Implementations
         private IAccountDAO _accountDao;
         public UserManagerManagementService(IAccountDAO accountDao) => _accountDao = accountDao;
         public IEnumerable<Account> GetAllAccounts() => _accountDao.GetAllAccounts();
-        public IEnumerable<Account> GetAccountListByEmail(string searchValue, string roleName, int RowsOnPage, int RequestPage) 
-                => _accountDao.GetAccountListByEmail(searchValue, roleName, RowsOnPage, RequestPage);
-        public int NumberOfAccountsBySearching(string searchValue, string roleName) => _accountDao.NumberOfAccountsBySearching(searchValue, roleName);
-        public int NumberOfAccounts() => _accountDao.NumberOfAccounts();
+        public IEnumerable<Account> GetAccountListByEmailFilterRoleStatus(string searchValue, string roleName, string status, int RowsOnPage, int RequestPage) 
+                => _accountDao.GetAccountListByEmailFilterRoleStatus(searchValue, roleName, status, RowsOnPage, RequestPage);
+        public int NumberOfAccountsBySearchingFilterRoleStatus(string searchValue, string roleName, string status) => _accountDao.NumberOfAccountsBySearchingFilterRoleStatus(searchValue, roleName, status);
+        public int NumberOfAccountsBySearching(string searchValue) => _accountDao.NumberOfAccountsBySearching(searchValue);
         public int NumberOfAccountsByRoleAndStatus(string roleName, string status) => _accountDao.NumberOfAccountsByRoleAndStatus(roleName, status);
         public IEnumerable<Account> GetAccountsListByRoleAccordingRequest(string roleName, string status, int RowsOnPage, int RequestPage)
                 => _accountDao.GetAccountsListByRoleAccordingRequest(roleName, status, RowsOnPage, RequestPage);
 
         //        public IEnumerable<Account> GetAllActiveAccounts() => _accountDao.GetAllActiveAccounts();
         //        public IEnumerable<Account> GetAllInactiveAccounts() => _accountDao.GetAllInactiveAccounts();
+        public IEnumerable<Account> GetAccountListByEmail(string searchValue, int RowsOnPage, int RequestPage)
+            => _accountDao.GetAccountListByEmail(searchValue, RowsOnPage, RequestPage);
+
+        public IEnumerable<Account> GetAccountListByEmailFilterRole(string searchValue, string roleName, int RowsOnPage, int RequestPage)
+                => _accountDao.GetAccountListByEmailFilterRole(searchValue, roleName, RowsOnPage, RequestPage);
+        public int NumberOfAccountsBySearchingFilterRole(string searchValue, string roleName)
+            => _accountDao.NumberOfAccountsBySearchingFilterRole(searchValue, roleName);
     }
 }

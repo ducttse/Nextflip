@@ -50,7 +50,8 @@ namespace Nextflip.Models.account
             return accounts;
         }
 
-        public IEnumerable<Account> GetAccountListByEmail(string searchValue, string roleName, int RowsOnPage, int RequestPage)
+
+        public IEnumerable<Account> GetAccountListByEmailFilterRoleStatus(string searchValue, string roleName, string status, int RowsOnPage, int RequestPage)
         {
             var accounts = new List<Account>();
             int offset = ((int)(RequestPage - 1)) * RowsOnPage;
@@ -61,12 +62,12 @@ namespace Nextflip.Models.account
                     connection.Open();
                     string Sql = "Select userID, userEmail, roleName, fullname, status " +
                             "From account " +
-                            "Where roleName = @roleName and userEmail LIKE @userEmail " +
-                            "Order By status ASC " +
+                            "Where roleName = @roleName and status = @status and userEmail LIKE @userEmail " +
                             "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@roleName", roleName);
+                        command.Parameters.AddWithValue("@status", status);
                         command.Parameters.AddWithValue("@userEmail", $"%{searchValue}%");
                         command.Parameters.AddWithValue("@offset", offset);
                         command.Parameters.AddWithValue("@limit", RowsOnPage);
@@ -93,7 +94,7 @@ namespace Nextflip.Models.account
             return accounts;
         }
 
-        public int NumberOfAccountsBySearching(string searchValue, string roleName)
+        public int NumberOfAccountsBySearchingFilterRoleStatus(string searchValue, string roleName, string status)
         {
             int count = 0;
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
@@ -101,10 +102,11 @@ namespace Nextflip.Models.account
                 connection.Open();
                 string Sql = "Select COUNT(userID) " +
                             "From account " +
-                            "Where roleName = @roleName and userEmail LIKE @userEmail ";
+                            "Where roleName = @roleName and status = @status and userEmail LIKE @userEmail ";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     command.Parameters.AddWithValue("@roleName", roleName);
+                    command.Parameters.AddWithValue("@status", status);
                     command.Parameters.AddWithValue("@userEmail", $"%{searchValue}%");
                     using (var reader = command.ExecuteReader())
                     {
@@ -118,6 +120,8 @@ namespace Nextflip.Models.account
             }
             return count;
         }
+
+
 
         public bool ChangeAccountStatus(string userID)
         {
@@ -139,16 +143,61 @@ namespace Nextflip.Models.account
             throw new NotImplementedException();
         }
 
-        public int NumberOfAccounts()
+
+        public IEnumerable<Account> GetAccountListByEmail(string searchValue, int RowsOnPage, int RequestPage)
+        {
+            var accounts = new List<Account>();
+            int offset = ((int)(RequestPage - 1)) * RowsOnPage;
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select userID, userEmail, roleName, fullname, status " +
+                            "From account " +
+                            "Where userEmail LIKE @userEmail " +
+                            "Order by status ASC " +
+                            "LIMIT @offset, @limit";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userEmail", $"%{searchValue}%");
+                        command.Parameters.AddWithValue("@offset", offset);
+                        command.Parameters.AddWithValue("@limit", RowsOnPage);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                accounts.Add(new Account
+                                {
+                                    userID = reader.GetString(0),
+                                    userEmail = reader.GetString(1),
+                                    roleName = reader.GetString(2),
+                                    fullname = reader.GetString(3),
+                                    status = reader.GetString(4)
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return accounts;
+        }
+        public int NumberOfAccountsBySearching(string searchValue)
         {
             int count = 0;
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
                 string Sql = "Select COUNT(userID) " +
-                                "From account";
+                            "From account " +
+                            "Where userEmail LIKE @userEmail ";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
+                    command.Parameters.AddWithValue("@userEmail", $"%{searchValue}%");
                     using (var reader = command.ExecuteReader())
                     {
                         if (reader.Read())
@@ -161,6 +210,9 @@ namespace Nextflip.Models.account
             }
             return count;
         }
+
+
+
 
         public IEnumerable<Account> GetAccountsListAccordingRequest(int NumberOfPage, int RowsOnPage, int RequestPage)
         {                                                                           
@@ -281,31 +333,7 @@ namespace Nextflip.Models.account
                 }
         */
 
-        public int NumberOfAccountsByRoleAndStatus(string roleName, string status)
-        {
-            int count = 0;
-            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
-            {
-                connection.Open();
-                string Sql = "Select COUNT(userID) " +
-                                "From account " +
-                                "Where roleName = @roleName and status = @status";
-                using (var command = new MySqlCommand(Sql, connection))
-                {
-                    command.Parameters.AddWithValue("@roleName", roleName);
-                    command.Parameters.AddWithValue("@status", status);
-                    using (var reader = command.ExecuteReader())
-                    {
-                        if (reader.Read())
-                        {
-                            count = reader.GetInt32(0);
-                        }
-                    }
-                }
-                connection.Close();
-            }
-            return count;
-        }
+        
         public IEnumerable<Account> GetAccountsListByRoleAccordingRequest(string roleName, string status, int RowsOnPage, int RequestPage)
         {
             var accounts = new List<Account>();
@@ -348,6 +376,101 @@ namespace Nextflip.Models.account
                 throw new Exception(ex.Message);
             }
             return accounts;
+        }
+        public int NumberOfAccountsByRoleAndStatus(string roleName, string status)
+        {
+            int count = 0;
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            {
+                connection.Open();
+                string Sql = "Select COUNT(userID) " +
+                                "From account " +
+                                "Where roleName = @roleName and status = @status";
+                using (var command = new MySqlCommand(Sql, connection))
+                {
+                    command.Parameters.AddWithValue("@roleName", roleName);
+                    command.Parameters.AddWithValue("@status", status);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            count = reader.GetInt32(0);
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return count;
+        }
+
+        public IEnumerable<Account> GetAccountListByEmailFilterRole(string searchValue, string roleName, int RowsOnPage, int RequestPage)
+        {
+            var accounts = new List<Account>();
+            int offset = ((int)(RequestPage - 1)) * RowsOnPage;
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select userID, userEmail, roleName, fullname, status " +
+                            "From account " +
+                            "Where roleName = @roleName and userEmail LIKE @userEmail " +
+                            "LIMIT @offset, @limit";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@roleName", roleName);
+                        command.Parameters.AddWithValue("@userEmail", $"%{searchValue}%");
+                        command.Parameters.AddWithValue("@offset", offset);
+                        command.Parameters.AddWithValue("@limit", RowsOnPage);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                accounts.Add(new Account
+                                {
+                                    userID = reader.GetString(0),
+                                    userEmail = reader.GetString(1),
+                                    roleName = reader.GetString(2),
+                                    fullname = reader.GetString(3),
+                                    status = reader.GetString(4)
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return accounts;
+        }
+
+        public int NumberOfAccountsBySearchingFilterRole(string searchValue, string roleName)
+        {
+            int count = 0;
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            {
+                connection.Open();
+                string Sql = "Select COUNT(userID) " +
+                            "From account " +
+                            "Where roleName = @roleName and userEmail LIKE @userEmail " +
+                            "Order by status ASC";
+                using (var command = new MySqlCommand(Sql, connection))
+                {
+                    command.Parameters.AddWithValue("@roleName", roleName);
+                    command.Parameters.AddWithValue("@userEmail", $"%{searchValue}%");
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            count = reader.GetInt32(0);
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return count;
         }
     }
 }

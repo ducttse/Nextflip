@@ -9,13 +9,15 @@ namespace Nextflip.Services.Interfaces
     public interface IUserManagerManagementService
     {
         IEnumerable<Account> GetAllAccounts();
-        IEnumerable<Account> GetAccountListByEmail(string searchValue,  string roleName, int RowsOnPage, int RequestPage);
-        int NumberOfAccountsBySearching(string searchValue, string roleName);
-        int NumberOfAccounts();
+        IEnumerable<Account> GetAccountListByEmailFilterRoleStatus(string searchValue, string roleName, string status, int RowsOnPage, int RequestPage);
+        int NumberOfAccountsBySearchingFilterRoleStatus(string searchValue, string roleName, string status);
+        int NumberOfAccountsBySearching(string searchValue);
         int NumberOfAccountsByRoleAndStatus(string roleName, string status);
         IEnumerable<Account> GetAccountsListByRoleAccordingRequest(string roleName, string status, int RowsOnPage, int RequestPage);
-//        IEnumerable<Account> GetAllActiveAccounts();
-//        IEnumerable<Account> GetAllInactiveAccounts();
-
+        //        IEnumerable<Account> GetAllActiveAccounts();
+        //        IEnumerable<Account> GetAllInactiveAccounts();
+        IEnumerable<Account> GetAccountListByEmail(string searchValue, int RowsOnPage, int RequestPage);
+        IEnumerable<Account> GetAccountListByEmailFilterRole(string searchValue, string roleName, int RowsOnPage, int RequestPage);
+        int NumberOfAccountsBySearchingFilterRole(string searchValue, string roleName);
     }
 }

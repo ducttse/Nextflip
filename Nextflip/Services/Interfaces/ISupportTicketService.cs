@@ -9,7 +9,7 @@ namespace Nextflip.Services.Interfaces
 {
     public interface ISupportTicketService
     {
-        public bool SendSupportTicket(string userEmail, string topicID, string content);
+        public bool SendSupportTicket(string userEmail, string topicName, string content);
         public IList<SupportTicket> ViewSupportTicketByTopic(int limit, int offset, string topicName);
         public int GetNumOfSupportTicketsByTopic(string topicName);
         public SupportTicket ViewSupportTicketByID(string supportTicketID);

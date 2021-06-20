@@ -31,7 +31,7 @@ namespace Nextflip.Services.Implementations
 
         public IList<SupportTicket> SearchSupportTicketByTopicAndByStatus(string searchValue, string topicName, string status, int limit, int offset) => _supportTicketDAO.SearchSupportTicketByTopicAndByStatus(searchValue, topicName, status, limit, offset);
 
-        public bool SendSupportTicket(string userEmail, string topicID, string content) => _supportTicketDAO.SendSupportTicket(userEmail, topicID, content);
+        public bool SendSupportTicket(string userEmail, string topicName, string content) => _supportTicketDAO.SendSupportTicket(userEmail, topicName, content);
 
         public SupportTicket ViewSupportTicketByID(string supportTicketID) => _supportTicketDAO.ViewSupportTicketByID(supportTicketID);
 

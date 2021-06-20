@@ -26,11 +26,34 @@ namespace Nextflip.APIControllers
                 IList<SupportTopic> supportTopics = supportTopicService.GetAllTopics();
                 return new JsonResult(supportTopics);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                _logger.LogInformation("SendSupportTicket/GetAllTopic: " + e.Message);
+                _logger.LogInformation("SendSupportTicket/GetAllTopic: " + ex.Message);
                 return new JsonResult("An error occurred");
             }
         }
+        [Route("SendTicket")]
+        [HttpPost]
+        public IActionResult SendTicket([FromServices] ISupportTicketService supportTicketService, [FromBody] SupportTicketDetails request)
+        {
+            try
+            {
+                bool result = supportTicketService.SendSupportTicket(request.UserEmail, request.TopicName, request.Content);
+                if (result) return new JsonResult("Success");
+                return new JsonResult("An error occurred");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("SendSupportTicket/SendTicket: " + ex.Message);
+                return new JsonResult("An error occurred");
+            }
+        }
+    }
+
+    public class SupportTicketDetails
+    {
+        public string UserEmail { get; set; }
+        public string TopicName { get; set; }
+        public string Content { get; set; }
     }
 }

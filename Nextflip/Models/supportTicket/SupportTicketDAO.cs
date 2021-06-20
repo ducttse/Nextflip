@@ -14,22 +14,22 @@ namespace Nextflip.Models.supportTicket
     {
         public SupportTicketDAO() { }
 
-        public bool SendSupportTicket(string userEmail, string topicID, string content)
+        public bool SendSupportTicket(string userEmail, string topicName, string content)
         {
             try {
                 using (var connection = new MySqlConnection(utils.DbUtil.ConnectionString))
                 {
 
                     connection.Open();
-                    string sql = "INSERT INTO supportTicket(supportTicketID, userEmail, topicID, status, content) " +
-                                                            "Value(@supportTicketID, @userEmail, @topicID, @status, @content);";
+                    string sql = "INSERT INTO supportTicket(supportTicketID, userEmail, topicName, status, content) " +
+                                                            "Value(@supportTicketID, @userEmail, @topicName, 'Pending', @content);";
                     using (var command = new MySqlCommand(sql, connection))
                     {
                         command.Parameters.AddWithValue("@supportTicketID", "randomString");  //use proc ???
                         command.Parameters.AddWithValue("@userEmail", userEmail);
-                        command.Parameters.AddWithValue("@topicID", topicID);
+                        command.Parameters.AddWithValue("@topicName", topicName);
                         command.Parameters.AddWithValue("@content", content);
-                        using (var commit = command.ExecuteReaderAsync())
+                        using (var commit = command.ExecuteReader())
                         {
                             if (commit != null)
                             {

@@ -8,7 +8,7 @@ namespace Nextflip.Models.supportTicket
 {
     public interface ISupportTicketDAO
     {
-        public bool SendSupportTicket(string userEmail, string topicID, string content);
+        public bool SendSupportTicket(string userEmail, string topicName, string content);
         public IList<SupportTicket> ViewSupportTicketByTopic(int limit, int offset, string topicName);
         public int GetNumOfSupportTicketsByTopic(string topicName);
         public IList<SupportTicket> ViewSupportTicketByTopicAndStatus(string topicName, string status, int limit, int offset);

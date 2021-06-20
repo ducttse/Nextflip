@@ -27,7 +27,11 @@ function setRequestPage(num) {
 }
 
 function ShowNotFound() {
-  let error = `<p>There is no result for <b>${requestParam.SearchValue}</b></p>`;
+  let error;
+  if (isFiltered) {
+    error = `<p>There is no ${requestParam.Status} ticket for this topic</p>`
+  }
+  else { error = `<p>There is no result for <b>${requestParam.SearchValue}</b></p>` }
   let notFound = document.getElementById("notFound");
   if (notFound.innerHTML != "") {
     notFound.innerHTML = "";
@@ -35,7 +39,9 @@ function ShowNotFound() {
   notFound.insertAdjacentHTML("afterbegin", error);
   notFound.classList.remove("hide");
   document.getElementById("table_holder").classList.add("hide");
-  document.getElementById("filter").setAttribute("disabled", "disabled");
+  if (!isFiltered) {
+    document.getElementById("filter").setAttribute("disabled", "disabled");
+  }
 }
 
 function HideNotFound() {
@@ -43,7 +49,9 @@ function HideNotFound() {
   if (!notFound.classList.contains("hide")) {
     notFound.classList.add("hide");
     document.getElementById("table_holder").classList.remove("hide");
-    document.getElementById("filter").removeAttribute("disabled");
+    if (!isFiltered) {
+      document.getElementById("filter").removeAttribute("disabled");
+    }
   }
 }
 
@@ -242,24 +250,31 @@ function doFilter() {
       isFiltered = false;
       return;
     }
-    isFiltered = true;
-    requestParam.Status = choosenValue;
-    console.log(isFiltered + "  " + isSearched);
-    if (isFiltered && isSearched) {
-      searchWithFilter();
-    }
     else {
-      requestWithFilter()
-        .then(res => res.json())
-        .then(json => {
-          Data = json;
-          appendUserToWrapper();
-          setChoosenColor(TopicArr.findIndex((role) => {
-            return role.roleName === requestParam.RoleName;
-          }))
-        })
+      isFiltered = true;
+      requestParam.Status = choosenValue;
+      if (isFiltered && isSearched) {
+        searchWithFilter();
+      }
+      else {
+        requestWithFilter()
+          .then(res => res.json())
+          .then(json => {
+            if (json.totalPage == 0) {
+              ShowNotFound();
+              return;
+            }
+            Data = json;
+            HideNotFound();
+            appendUserToWrapper();
+            setChoosenColor(TopicArr.findIndex((role) => {
+              return role.roleName === requestParam.RoleName;
+            }))
+          })
+      }
     }
-  })
+  }
+  )
 }
 
 function resetSearch() {

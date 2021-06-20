@@ -2,7 +2,7 @@
   data: []
 };
 let requestParam = {
-  RowsOnPage: 10,
+  RowsOnPage: 8,
   RequestPage: 1,
   TopicName: "Account",
   SearchValue: "",
@@ -29,7 +29,11 @@ function setRequestPage(num) {
 }
 
 function ShowNotFound() {
-  let error = `<p>There is no result for <b>${requestParam.SearchValue}</b></p>`;
+  let error;
+  if (isFiltered) {
+    error = `<p>There is no ${requestParam.Status} ticket for this topic</p>`
+  }
+  else { error = `<p>There is no result for <b>${requestParam.SearchValue}</b></p>` }
   let notFound = document.getElementById("notFound");
   if (notFound.innerHTML != "") {
     notFound.innerHTML = "";
@@ -37,7 +41,9 @@ function ShowNotFound() {
   notFound.insertAdjacentHTML("afterbegin", error);
   notFound.classList.remove("hide");
   document.getElementById("table_holder").classList.add("hide");
-  document.getElementById("filter").setAttribute("disabled", "disabled");
+  if (!isFiltered) {
+    document.getElementById("filter").setAttribute("disabled", "disabled");
+  }
 }
 
 function HideNotFound() {
@@ -45,17 +51,27 @@ function HideNotFound() {
   if (!notFound.classList.contains("hide")) {
     notFound.classList.add("hide");
     document.getElementById("table_holder").classList.remove("hide");
-    document.getElementById("filter").removeAttribute("disabled");
+    if (!isFiltered) {
+      document.getElementById("filter").removeAttribute("disabled");
+    }
   }
 }
 
+function makeShortContent(content) {
+  if (content.length > 100) {
+    return content.slice(0, 100) + "..."
+  }
+  return content
+}
+
 function renderTicket(ticket, index) {
+  let shortContent = makeShortContent(ticket.content);
   return `
-      <tr>
+      <tr style="min-height: 70px;">
           <td>${index + 1}</td>
           <td>${ticket.userEmail}</td>
-          <td>${ticket.topicName}</td>
           <td>${ticket.status}</td>
+          <td>${shortContent}</td>
           <td>
               <a class="text-decoration-none" 
               href="/SupporterDashboard/Detail/${ticket.supportTicketID}">
@@ -161,12 +177,33 @@ function searchOnly(searchValue) {
 }
 
 function searchWithFilterOnly() {
-  if (searchValue == "") {
-    isSearched = false;
-    return;
-  }
   isSearched = true;
-  requestParam.SearchValue = searchValue;
+  let reqHeader = new Headers();
+  reqHeader.append("Content-Type", "text/json");
+  reqHeader.append("Accept", "application/json, text/plain, */*");
+  let initObject = {
+    method: "POST",
+    headers: reqHeader,
+    body: JSON.stringify(requestParam)
+  };
+  fetch("/api/ViewSupporterDashboard/SearchSupportTicketByTopicAndStatus", initObject)
+    .then(res => res.json())
+    .then(json => {
+      if (json.totalPage == 0) {
+        ShowNotFound();
+      }
+      else {
+        HideNotFound();
+        Data = json;
+        pageData.currentPage = 1;
+        appendTicketToWrapper();
+      }
+    });
+}
+
+function searchWithFilter() {
+  requestParam.RequestPage = 1;
+  setPageDataCurrentPage(1);
   let reqHeader = new Headers();
   reqHeader.append("Content-Type", "text/json");
   reqHeader.append("Accept", "application/json, text/plain, */*");
@@ -191,12 +228,7 @@ function searchWithFilterOnly() {
 }
 
 function searchWithFilterOnly() {
-  if (searchValue == "") {
-    isSearched = false;
-    return;
-  }
   isSearched = true;
-  requestParam.SearchValue = searchValue;
   let reqHeader = new Headers();
   reqHeader.append("Content-Type", "text/json");
   reqHeader.append("Accept", "application/json, text/plain, */*");
@@ -249,14 +281,25 @@ function doFilter() {
   filter.addEventListener("change", () => {
     let choosenValue = filter.options[ filter.selectedIndex ].value;
     if (choosenValue === "All") {
-      requestTopicData(requestParam.TopicName)
-        .then(res => res.json())
-        .then(json => {
-          Data = json;
-          appendTicketToWrapper();
-        })
-      isFiltered = false;
-      return;
+      if (isSearched) {
+        searchOnly(requestParam.SearchValue)
+          .then(res => res.json())
+          .then(json => {
+            Data = json;
+            appendTicketToWrapper();
+          })
+        return;
+      }
+      else {
+        requestTopicData(requestParam.TopicName)
+          .then(res => res.json())
+          .then(json => {
+            Data = json;
+            appendTicketToWrapper();
+          })
+        isFiltered = false;
+        return;
+      }
     }
     isFiltered = true;
     requestParam.Status = choosenValue;
@@ -267,16 +310,21 @@ function doFilter() {
       requestWithFilter()
         .then(res => res.json())
         .then(json => {
+          if (json.totalPage == 0) {
+            ShowNotFound();
+            return;
+          }
           Data = json;
+          HideNotFound();
           appendTicketToWrapper();
           setChoosenColor(TopicArr.findIndex((role) => {
-            console.log(role);
             return role.topicName === requestParam.TopicName;
           }))
         })
     }
   })
 }
+
 
 function resetFilter() {
   document.getElementById('filter').getElementsByTagName('option')[ 0 ].selected = 'selected';

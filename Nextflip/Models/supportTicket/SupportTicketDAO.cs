@@ -102,7 +102,7 @@ namespace Nextflip.Models.supportTicket
                     connection.Open();
                     string sql = "Select Count(*) " +
                                     "From supportTicket " +
-                                    "WHERE topicName = @topicName";
+                                    "WHERE topicName = @topicName ;";
                     using (var command = new MySqlCommand(sql, connection))
 
                     {
@@ -178,7 +178,7 @@ namespace Nextflip.Models.supportTicket
                     connection.Open();
                     string sql = "Select Count(*) " +
                                     "From supportTicket " +
-                                    "WHERE topicName = @topicName";
+                                    "WHERE topicName = @topicName AND status = @status; ";
                     using (var command = new MySqlCommand(sql, connection))
 
                     {
@@ -320,7 +320,7 @@ namespace Nextflip.Models.supportTicket
                     connection.Open();
                     string sql = "Select Count(*) " +
                                     "From supportTicket " +
-                                    "WHERE topicName = @topicName AND(userEmail like @searchValue OR content like @searchValue);";
+                                    "WHERE topicName = @topicName AND(userEmail like @searchValue OR content like @searchValue); ";
                     using (var command = new MySqlCommand(sql, connection))
 
                     {
@@ -357,7 +357,7 @@ namespace Nextflip.Models.supportTicket
                     connection.Open();
                     string sql = "SELECT supportTicketID, userEmail, topicName, createdDate, status, content " +
                                     "FROM supportTicket " +
-                                    "WHERE topicName = @topicName AND(userEmail like @searchValue OR content like @searchValue) " +
+                                    "WHERE topicName = @topicName AND status = @status AND (userEmail like @searchValue OR content like @searchValue) " +
                                     "Order By createdDate DESC " +
                                     "LIMIT @limit OFFSET @offset; ";
                     using (var command = new MySqlCommand(sql, connection))

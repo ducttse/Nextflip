@@ -9,15 +9,18 @@
     <div class="w-90 ms-4"> 
         <div class="btn-group w-100">
             <div id="search_wrapper" class="col-10"></div>
-            <div id="filter" class="col-2 d-inline-flex mb-2">
-                <i class="mt-2 fas fa-filter"></i>
-                <select class="ms-2 form-select">
-                    <option selected>Filter</option>
-                    <option value="1">Active</option>
-                    <option value="2">Inactive</option>
+            <div class="col-2 d-inline-flex mb-2">
+                <label class="form-label mt-2">Filter</label>
+                <select id="filter" class="ms-2 form-select">
+                    <option selected>All</option>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
                 </select> 
             </div>
         </div>
+        <div id="notFound" class="hide"> 
+        </div>
+        <div id="table_holder">
             <table class="table table-bordered table-responsive table-hover w-100">
                 <thead class="table-light">
                     <tr>

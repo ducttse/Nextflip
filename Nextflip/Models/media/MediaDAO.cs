@@ -410,6 +410,28 @@ namespace Nextflip.Models.media
             return count;
         }
 
-        
+        public bool ChangeMediaStatus(string mediaID, string status)
+        {
+            var result = false;
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            {
+                connection.Open();
+                string Sql = "UPDATE media " +
+                    "SET status = @status " +
+                    "WHERE mediaID = @mediaID";
+                using (var command = new MySqlCommand(Sql, connection))
+                {
+                    command.Parameters.AddWithValue("@status", status);
+                    command.Parameters.AddWithValue("@mediaID", mediaID);
+                    int rowEffects = command.ExecuteNonQuery();
+                    if (rowEffects > 0)
+                    {
+                        result = true;
+                    }
+                }
+                connection.Close();
+            }
+            return result;
+        }
     }
 }

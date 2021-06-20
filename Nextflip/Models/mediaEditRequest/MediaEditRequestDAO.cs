@@ -113,6 +113,31 @@ namespace Nextflip.Models.mediaEditRequest
             return count;
         }
 
+        public bool ChangeRequestStatus(int requestID, string status)
+        {
+            bool result = false;
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    //Editor_Request() = true;
+                    string Sql = "Update mediaEditRequest " +
+                            "Set status = @status " +
+                            "Where requestID = @requestID";
+                    MySqlCommand command = new MySqlCommand(Sql, connection);
+                    command.Parameters.AddWithValue("@status", status);
+                    command.Parameters.AddWithValue("@requestID", requestID);
+                    int rows = command.ExecuteNonQuery();
+                    if (rows > 0) result = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return result;
+        }
         public bool ApproveRequest(int requestID)
         {
             bool result = false;

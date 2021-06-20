@@ -23,6 +23,6 @@ namespace Nextflip.Services.Interfaces
         IEnumerable<Media> GetFavoriteMediasByUserID(string userID);
         IEnumerable<Media> GetMediasByCategoryID(int categoryID);
 
-       // bool ChangeMediaStatus(string mediaID);
+        bool ChangeMediaStatus(string mediaID, string status);
     }
 }

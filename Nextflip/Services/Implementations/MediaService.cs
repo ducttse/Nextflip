@@ -70,6 +70,6 @@ namespace Nextflip.Services.Implementations
         public int NumberOfMediasBySearchingFilterCategory_Status(string SearchValue, int CategoryID, string Status)
             => _mediaDAO.NumberOfMediasBySearchingFilterCategory_Status(SearchValue, CategoryID, Status);
 
-        //public bool ChangeMediaStatus(string mediaID) => _mediaDAO.ChangeMediaStatus(mediaID);
+        public bool ChangeMediaStatus(string mediaID, string status) => _mediaDAO.ChangeMediaStatus(mediaID,status);
     }
 }

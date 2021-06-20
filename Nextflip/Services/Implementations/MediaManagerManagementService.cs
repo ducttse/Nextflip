@@ -15,6 +15,7 @@ namespace Nextflip.Services.Implementations
         public IEnumerable<MediaEditRequest> GetPendingMediaByUserEmail(string searchValue, int RowsOnPage, int RequestPage) 
                         => _mediaEditRequestDao.GetPendingMediaByUserEmail(searchValue, RowsOnPage, RequestPage);
         public int NumberOfPendingMediasBySearching(string searchValue) => _mediaEditRequestDao.NumberOfPendingMediasBySearching(searchValue);
+        public bool ChangeRequestStatus(int requestID, string status) => _mediaEditRequestDao.ChangeRequestStatus(requestID, status);
         public bool ApproveRequest(int requestID) => _mediaEditRequestDao.ApproveRequest(requestID);
         public bool DisappoveRequest(int requestID) => _mediaEditRequestDao.DisapproveRequest(requestID);
         public int NumberOfPendingMedias() => _mediaEditRequestDao.NumberOfPendingMedias();

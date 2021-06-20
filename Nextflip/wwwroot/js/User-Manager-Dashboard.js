@@ -12,22 +12,15 @@ function setTopic(topic) {
   requestParam.RoleName = topic;
 }
 
-
 function setRequestPage(num) {
   requestParam.RequestPage = num;
-  console.log();
   if (isFiltered && isSearched) {
-    console.log("1");
-    return searchWithFilter();
+    return searchWithFilterOnly();
   }
   else if (isFiltered) {
-    console.log("2");
-
     return requestWithFilter();
   }
   else if (isSearched) {
-    console.log("3");
-
     return searchOnly(requestParam.SearchValue);
   }
   return requestUserData(requestParam.RoleName);
@@ -111,7 +104,6 @@ function search(searchValue) {
   }
   isSearched = true;
   requestParam.SearchValue = searchValue;
-  console.log(isFiltered + "  " + isSearched);
   if (isFiltered && isSearched) {
     searchWithFilter()
   }
@@ -225,8 +217,6 @@ function searchWithFilter() {
 }
 
 function searchWithFilterOnly() {
-  requestParam.RequestPage = 1;
-  setPageDataCurrentPage(1);
   let reqHeader = new Headers();
   reqHeader.append("Content-Type", "text/json");
   reqHeader.append("Accept", "application/json, text/plain, */*");
@@ -243,6 +233,12 @@ function doFilter() {
   filter.addEventListener("change", () => {
     let choosenValue = filter.options[ filter.selectedIndex ].value;
     if (choosenValue === "All") {
+      requestUserData(requestParam.RoleName)
+        .then(res => res.json())
+        .then(json => {
+          Data = json;
+          appendUserToWrapper();
+        })
       isFiltered = false;
       return;
     }

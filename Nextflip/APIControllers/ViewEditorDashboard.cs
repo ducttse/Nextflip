@@ -47,9 +47,9 @@ namespace Nextflip.APIControllers
                 {
                     message = "Empty searchValue"
                 };
-                if (request.SearchValue == "") return new JsonResult(message);
-                IEnumerable<Media> medias = mediaService.GetMediasByTitle(request.SearchValue, request.RowsOnPage, request.RequestPage);
-                int count = mediaService.NumberOfMediasBySearching(request.SearchValue);
+                if (request.SearchValue.Trim() == "") return new JsonResult(message);
+                IEnumerable<Media> medias = mediaService.GetMediasByTitle(request.SearchValue.Trim(), request.RowsOnPage, request.RequestPage);
+                int count = mediaService.NumberOfMediasBySearching(request.SearchValue.Trim());
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {
@@ -76,9 +76,9 @@ namespace Nextflip.APIControllers
                 {
                     message = "Empty searchValue"
                 };
-                if (request.SearchValue == "") return new JsonResult(message);
-                IEnumerable<Media> medias = mediaService.GetMediasByTitleFilterCategory(request.SearchValue, request.CategoryID, request.RowsOnPage, request.RequestPage);
-                int count = mediaService.NumberOfMediasBySearchingFilterCategory(request.SearchValue, request.CategoryID);
+                if (request.SearchValue.Trim() == "") return new JsonResult(message);
+                IEnumerable<Media> medias = mediaService.GetMediasByTitleFilterCategory(request.SearchValue.Trim(), request.CategoryID, request.RowsOnPage, request.RequestPage);
+                int count = mediaService.NumberOfMediasBySearchingFilterCategory(request.SearchValue.Trim(), request.CategoryID);
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {
@@ -105,9 +105,9 @@ namespace Nextflip.APIControllers
                 {
                     message = "Empty searchValue"
                 };
-                if (request.SearchValue == "") return new JsonResult(message);
-                IEnumerable<Media> medias = mediaService.GetMediasByTitleFilterCategory_Status(request.SearchValue, request.CategoryID, request.Status, request.RowsOnPage, request.RequestPage);
-                int count = mediaService.NumberOfMediasBySearchingFilterCategory_Status(request.SearchValue, request.CategoryID, request.Status);
+                if (request.SearchValue.Trim() == "") return new JsonResult(message);
+                IEnumerable<Media> medias = mediaService.GetMediasByTitleFilterCategory_Status(request.SearchValue.Trim(), request.CategoryID, request.Status, request.RowsOnPage, request.RequestPage);
+                int count = mediaService.NumberOfMediasBySearchingFilterCategory_Status(request.SearchValue.Trim(), request.CategoryID, request.Status);
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {

@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace Nextflip.APIControllers
 {
+
     [Route("api/[controller]")]
     [ApiController]
     public class ViewSupporterDashboard : ControllerBase
@@ -27,19 +28,19 @@ namespace Nextflip.APIControllers
         //Forward Support Ticket Action
         [Route("ForwardSupportTicket")]
         [HttpPost]
-        public async Task<IActionResult> ForwardSupportTicket([FromServices] ISendMailService sendMailService, [FromServices] ISupportTicketDAO supportTicketDAO, [FromForm] string btnAction, [FromForm] string supportTicketID, [FromForm] string userEmail, [FromForm] string topicName, [FromForm] string content)
+        public async Task<IActionResult> ForwardSupportTicket([FromServices] ISendMailService sendMailService, [FromServices] ISupportTicketDAO supportTicketDAO, [FromBody]ForwardDetails forwardDetails)
         {
             try
             {
-                var mailContent = new MailContent();
-                string toEmail = "nextflipcompany.com";
-                content = "from user email: " + userEmail + "\n" + content;
+                string body = "From " + forwardDetails.UserEmail + "------" + "SupportTicketID: " + forwardDetails.SupportTicketID + "\n" + forwardDetails.Content;
+                string toEmail = null;
 
-                if (btnAction.Equals("technical")) toEmail = TECHNICAL_EMAIL;
-                else if (btnAction.Equals("customerRelation")) toEmail = CUSTOMER_RELATION_EMAIL;
-                await sendMailService.SendEmailAsync(toEmail, topicName, content);
+                if (forwardDetails.BtnAction.Equals("technical")) toEmail = TECHNICAL_EMAIL;
+                else if (forwardDetails.BtnAction.Equals("customerRelation")) toEmail = CUSTOMER_RELATION_EMAIL;
+                else throw new Exception("Email error occurred");
+                await sendMailService.SendEmailAsync(toEmail, forwardDetails.TopicName, body);
 
-                bool result = supportTicketDAO.ForwardSupportTicket(supportTicketID, toEmail).Result;
+                bool result = supportTicketDAO.ForwardSupportTicket(forwardDetails.SupportTicketID, toEmail).Result;
                 if (result) return new JsonResult("Forward successful");
                 return new JsonResult("An error occurred");
             }
@@ -189,5 +190,14 @@ namespace Nextflip.APIControllers
         public string Status { get; set; }
     }
 
+    public class ForwardDetails
+    {
+        public string BtnAction { get; set; }
+        public string SupportTicketID { get; set; }
+        public string UserEmail { get; set; }
+        public string TopicName { get; set; }
+        public string Content { get; set; }
+
+    }
 
 }

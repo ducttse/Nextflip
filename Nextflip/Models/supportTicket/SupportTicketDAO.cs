@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Transactions;
 using MySql.Data.MySqlClient;
 using Nextflip.utils;
 
@@ -243,31 +244,26 @@ namespace Nextflip.Models.supportTicket
 
         public async Task<bool> ForwardSupportTicket(string supportTicketID, string forwardDepartment)
         {
-            MySqlTransaction transaction = null;
             try
             {
-                using (var connection = new MySqlConnection(utils.DbUtil.ConnectionString))
-                {
-                    await connection.OpenAsync();
-                    string sql = "UPDATE supportTicket " +
-                                    "SET status = 'Assigned', forwardDepartment = @forwardDepartment" +
-                                    "WHERE supportTicketID = @supportTicketID; ";
-                    using (var command = new MySqlCommand(sql, connection))
-                    {
-                        command.Parameters.AddWithValue("@forwardDepartment", forwardDepartment);
-                        command.Parameters.AddWithValue("@supportTicketID", supportTicketID);
-                        await command.ExecuteNonQueryAsync();
-                        await transaction.CommitAsync();
-                        await connection.CloseAsync();
-                        return true;
-                    }
-                }
+                var connection = new MySqlConnection(DbUtil.ConnectionString);
+                await connection.OpenAsync();
+                string sql = "Update supportTicket " +
+                                "SET forwardDepartment = @forwardDepartment, status = 'Assigned' " +
+                                "WHERE supportTicketID = @supportTicket;";
+                var command = new MySqlCommand(sql, connection);
+                command.Parameters.AddWithValue("@forwardDepartment", forwardDepartment);
+                command.Parameters.AddWithValue("@supportTicket", supportTicketID);
+                int result = await command.ExecuteNonQueryAsync();
+                if (result != 1) throw new Exception("SQL Error occurred");
+                await connection.CloseAsync();
+                return true;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                await transaction.RollbackAsync();
                 throw new Exception(e.Message);
             }
+
         }
 
 

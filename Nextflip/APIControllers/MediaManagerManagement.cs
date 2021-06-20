@@ -36,13 +36,19 @@ namespace Nextflip.APIControllers
             }
         }
 
+        //Search all
         [Route("GetPendingMediaByUserEmail")]
         public JsonResult GetPendingMediaByUserEmail([FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromBody] Request request)
         {
             try
             {
-                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.GetPendingMediaByUserEmail(request.SearchValue, request.RowsOnPage, request.RequestPage);
-                int count = mediaManagerManagementService.NumberOfPendingMediasBySearching(request.SearchValue);
+                var message = new
+                {
+                    message = "Empty searchValue"
+                };
+                if (request.SearchValue.Trim() == "") return new JsonResult(message);
+                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.GetPendingMediaByUserEmail(request.SearchValue.Trim(), request.RowsOnPage, request.RequestPage);
+                int count = mediaManagerManagementService.NumberOfPendingMediasBySearching(request.SearchValue.Trim());
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {
@@ -54,6 +60,34 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetPendingMediaByUserEmail: " + ex.Message);
+                return new JsonResult("Error occur");
+            }
+        }
+
+        //Search all + filter status
+        [Route("GetPendingMediaByUserEmailFilterStatus")]
+        public JsonResult GetPendingMediaByUserEmailFilterStatus([FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromBody] Request request)
+        {
+            try
+            {
+                var message = new
+                {
+                    message = "Empty searchValue"
+                };
+                if (request.SearchValue.Trim() == "") return new JsonResult(message);
+                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.GetPendingMediaByUserEmailFilterStatus(request.SearchValue.Trim(), request.Status, request.RowsOnPage, request.RequestPage);
+                int count = mediaManagerManagementService.NumberOfPendingMediasBySearchingFilterStatus(request.SearchValue.Trim(), request.Status);
+                double totalPage = (double)count / (double)request.RowsOnPage;
+                var result = new
+                {
+                    TotalPage = Math.Ceiling(totalPage),
+                    Data = requests
+                };
+                return (new JsonResult(result));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetPendingMediaByUserEmailFilterStatus: " + ex.Message);
                 return new JsonResult("Error occur");
             }
         }
@@ -107,10 +141,12 @@ namespace Nextflip.APIControllers
         public class Request
         {
             public string SearchValue { get; set; }
+            public string Status { get; set; }
             public int RowsOnPage { get; set; }
             public int RequestPage { get; set; }
         }
 
+        //Get All
         [HttpPost]
         [Route("GetPendingMediasListAccordingRequest")]
         public JsonResult GetPendingMediasListAccordingRequest([FromServices] IMediaManagerManagementService mediaManagerManagementService,
@@ -134,5 +170,31 @@ namespace Nextflip.APIControllers
                 return new JsonResult("Error occur");
             }
         }
+        
+        //Get All + Filter Status
+        [HttpPost]
+        [Route("GetPendingMediasFilterStatus")]
+        public JsonResult GetPendingMediasFilterStatus([FromServices] IMediaManagerManagementService mediaManagerManagementService,
+                                [FromBody] Request request)
+        {
+            try
+            {
+                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.GetPendingMediasFilterStatus(request.Status, request.RowsOnPage, request.RequestPage);
+                int count = mediaManagerManagementService.NumberOfPendingMediasFilterStatus(request.Status);
+                double totalPage = (double)count / (double)request.RowsOnPage;
+                var result = new
+                {
+                    TotalPage = Math.Ceiling(totalPage),
+                    Data = requests
+                };
+                return (new JsonResult(result));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetPendingMediasFilterStatus: " + ex.Message);
+                return new JsonResult("Error occur");
+            }
+        }
+
     }
 }

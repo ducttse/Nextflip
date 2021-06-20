@@ -95,7 +95,7 @@ namespace Nextflip.APIControllers
                 int offset = request.RowsOnPage * (request.RequestPage-1);
 
                 IList<SupportTicket> supportTickets = supportTicketService.ViewSupportTicketByTopic(limit, offset, topicName);
-                int totalPage = supportTicketService.GetNumOfSupportTicketsByTopic(topicName);
+                int totalPage = supportTicketService.GetNumOfSupportTicketsByTopic(topicName) / limit;
 
                 return new JsonResult(new {TotalPage = totalPage, Data = supportTickets });
             }
@@ -119,7 +119,7 @@ namespace Nextflip.APIControllers
                 int limit = request.RowsOnPage;
                 int offset = request.RowsOnPage * (request.RequestPage - 1);
                 IList<SupportTicket> supportTickets = supportTicketService.SearchSupportTicketByTopic(searchValue, topicName, limit, offset);
-                int totalPage = supportTicketService.GetNumOfSupportTicketsByTopicAndSearch(searchValue, topicName);
+                int totalPage = supportTicketService.GetNumOfSupportTicketsByTopicAndSearch(searchValue, topicName) / limit;
 
                 return new JsonResult(new { TotalPage = totalPage, Data = supportTickets });
             }
@@ -146,7 +146,7 @@ namespace Nextflip.APIControllers
                 int offset = request.RowsOnPage * (request.RequestPage-1);
 
                 IList<SupportTicket> supportTickets = supportTicketService.SearchSupportTicketByTopicAndByStatus(searchValue, topicName, status, limit, offset);
-                int totalPage = supportTicketService.GetNumOfSupportTicketsByTopicAndSearchAndStatus(searchValue, topicName, status);
+                int totalPage = supportTicketService.GetNumOfSupportTicketsByTopicAndSearchAndStatus(searchValue, topicName, status) / limit;
 
                 return new JsonResult(new { TotalPage = totalPage, Data = supportTickets });
             }
@@ -169,7 +169,7 @@ namespace Nextflip.APIControllers
                 int offset = request.RowsOnPage * (request.RequestPage - 1);
 
                 IEnumerable<SupportTicket> supportTickets = supportTicketService.ViewSupportTicketByTopicAndStatus(topicName, status, limit, offset);
-                int totalPage = supportTicketService.GetNumOfSupportTicketsByTopicAndStatus(topicName, status);
+                int totalPage = supportTicketService.GetNumOfSupportTicketsByTopicAndStatus(topicName, status) / limit;
 
                 return new JsonResult(new {TotalPage = totalPage, Data = supportTickets });
             }

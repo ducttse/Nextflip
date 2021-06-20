@@ -12,8 +12,13 @@ namespace Nextflip.Services.Implementations
         private IMediaEditRequestDAO _mediaEditRequestDao;
         public MediaManagerManagementService(IMediaEditRequestDAO mediaEditRequestDao) => _mediaEditRequestDao = mediaEditRequestDao;
         public IEnumerable<MediaEditRequest> GetAllPendingMedias() => _mediaEditRequestDao.GetAllPendingMedias();
-        public IEnumerable<MediaEditRequest> GetPendingMediaByUserEmail(string searchValue) => _mediaEditRequestDao.GetPendingMediaByUserEmail(searchValue);
+        public IEnumerable<MediaEditRequest> GetPendingMediaByUserEmail(string searchValue, int RowsOnPage, int RequestPage) 
+                        => _mediaEditRequestDao.GetPendingMediaByUserEmail(searchValue, RowsOnPage, RequestPage);
+        public int NumberOfPendingMediasBySearching(string searchValue) => _mediaEditRequestDao.NumberOfPendingMediasBySearching(searchValue);
         public bool ApproveRequest(int requestID) => _mediaEditRequestDao.ApproveRequest(requestID);
         public bool DisappoveRequest(int requestID) => _mediaEditRequestDao.DisapproveRequest(requestID);
+        public int NumberOfPendingMedias() => _mediaEditRequestDao.NumberOfPendingMedias();
+        public IEnumerable<MediaEditRequest> GetPendingMediasListAccordingRequest(int RowsOnPage, int RequestPage)
+                    => _mediaEditRequestDao.GetPendingMediasListAccordingRequest(RowsOnPage, RequestPage);
     }
 }

@@ -1,31 +1,47 @@
-﻿
-@{
+﻿@{
     Layout = "_CustomLayout";
 }
 @section Styles {
     <link href="@Url.Content("~/css/Supporter-Dashboard.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
 }
-<div class="ui_wrapper">
-    <form method="POST" action="">
-        <table class="table table-bordered w-100">
-            <thead class="table-dark">
-                <tr>
-                    <td class="col-1">No</td>
-                    <td class="col-2">User Email</td>
-                    <td class="col-1">Topic</td>
-                    <td class="col-1">Status</td>
-                    <td class="col-2"><td>
-                </tr>
-            </thead>
-            <tbody id="dataWapper"></tbody>
-        </table>
-        <div id="pagination"></div>
-    </form>
+<div class="ui_wrapper col-10 pt-3">
+    <div class="w-90 ms-4"> 
+        <div class="btn-group w-100">
+            <div id="search_wrapper" class="col-10"></div>
+            <div class="col-2 d-inline-flex mb-2">
+                <label class="form-label mt-2">Filter</label>
+                <select id="filter" class="ms-2 form-select">
+                    <option selected>All</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Assigned">Assigned</option>
+                    <option value="Closed">Closed</option>
+                </select> 
+            </div>
+        </div>
+        <div id="notFound" class="hide"> 
+        </div>
+        <div id="table_holder">
+            <table class="table table-bordered table-responsive table-hover w-100">
+                <thead class="table-light">
+                    <tr>
+                        <th class="col">#</th>
+                        <th class="col">User email</th>        
+                        <th class="col">Topic</th>
+                        <th class="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody id="dataWapper"></tbody>
+            </table>
+            <div class="d-flex justify-content-center" id="pagination"></div>
+        </div>
+    </div>
 </div>
 <script src="~/js/Pagination.js"></script>
+<script src="~/js/Slide-Bar.js"></script>
+<script src="~/js/Search-Component.js"></script>
 <script src="~/js/Supporter-Dashboard.js"></script>
 <script> 
-    let rowsPerPage = 15;
-    let maxPage = 12;
-    Run(rowsPerPage);
+getTopics();
+appendSearch("Search user's email", "");
 </script>

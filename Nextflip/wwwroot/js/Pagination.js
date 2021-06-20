@@ -1,105 +1,105 @@
-﻿function renderPagination(length, rowsPerPage) {
-  let numberOfPage = Math.ceil(length / rowsPerPage);
-  let Pages = "";
-  for (let i = 1; i <= numberOfPage; i++) {
-    Pages += `<li class="page-item indexPage" page="${i}"><a class="page-link" href="#">${i}</a></li>`;
-  }
-  return `
-    <nav  class="col-6 mx-auto">
-      <ul class="pagination">
-        <li class="page-item disabled" id="previous">
-          <a class="page-link" href="#">Previous</a>
-        </li>
-        ${Pages}
-        <li class="page-item" id="next" id="next">
-          <a class="page-link" href="#">Next</a>
-        </li>
-      </ul>
-      </nav>`;
+﻿let pageData = {
+  totalPage: 0,
+  currentArr: [],
+  currentPage: 1
 }
 
-// jump to another pagination
-function setCurrentPage(number, appendToWrapper) {
-  curPage = number;
-  let currentPage = number - 1;
-  appendToWrapper(currentPage * rowsPerPage, (currentPage + 1) * rowsPerPage);
-  setCurrentColor(number);
-  let next = document.getElementById("next");
-  let prev = document.getElementById("previous");
-  if (number == 1 && !prev.classList.contains("disabled")) {
-    prev.classList.add("disabled");
-  } else if (prev.classList.contains("disabled")) {
-    prev.classList.remove("disabled");
+function setPageDataCurrentPage(num) {
+  pageData.currentPage = num;
+}
+
+function setCurrentArr() {
+  pageData.currentArr = [];
+  let delta = 2;
+  let current = parseInt(pageData.currentPage);
+  let total = parseInt(pageData.totalPage);
+  let left = current - delta;
+  let right = current + delta + 1;
+  let range = [];
+  let rangeWithDots = [];
+  let j;
+  range.push(1);
+  if (total > 1) {
+    for (let i = current - delta; i <= current + delta; i++) {
+      if (i >= left && i < right && i < total && i > 1) {
+        range.push(i);
+      }
+    }
+    range.push(total);
+    for (let i of range) {
+      if (j) {
+        if (i - j === 2) {
+          rangeWithDots.push(j + 1);
+        }
+        else if (i - j !== 1) {
+          rangeWithDots.push("...");
+        }
+      }
+      rangeWithDots.push(i);
+      j = i;
+    }
+    pageData.currentArr = rangeWithDots;
   }
-  if (number == maxPage && !next.classList.contains("disabled")) {
-    next.classList.add("disabled");
-  } else if (next.classList.contains("disabled")) {
-    next.classList.remove("disabled");
+  else {
+    pageData.currentArr = range;
   }
 }
 
-function getCurrentPage() {
-  let pageArray = Array.from(document.getElementsByClassName("page-item"));
-  let curPage = pageArray.filter((page) => {
-    return page.classList.contains("active");
-  });
-  return curPage[0].getAttribute("page");
-}
-
-function goToNextPage(appendToWrapper) {
-  let currentPage = parseInt(getCurrentPage());
-  if (currentPage == maxPage) {
-    return;
-  }
-  setCurrentPage(currentPage + 1, appendToWrapper);
-}
-
-function goToPrevPage(appendToWrapper) {
-  let currentPage = parseInt(getCurrentPage());
-  if (currentPage == 1) {
-    return;
-  }
-  setCurrentPage(currentPage - 1, appendToWrapper);
-}
 
 function removeCurrentColor() {
-  let pageArray = Array.from(document.getElementsByClassName("page-item"));
-  let curPage = pageArray.filter((page) => {
-    return page.classList.contains("active");
+  document.getElementById(`page_${pageData.currentPage}`).classList.remove("active");
+}
+
+function setCurrentColor() {
+  document.getElementById(`page_${pageData.currentPage}`).classList.add("active");
+}
+
+
+function renderCurrentArray() {
+  setCurrentArr();
+  let Pages = pageData.currentArr.map((page) => {
+    if (page == "...") {
+      return `<li class="page-item disabled" page="${page}"><a class="page-link" href="#">${page}</a></li>`
+    }
+    return `<li class="page-item pageNumber" id="page_${page}" page="${page}" onclick="setCurrentPage(this)"><a class="page-link" href="#">${page}</a></li>`
   });
-  if (curPage.length > 0) {
-    curPage[0].classList.remove("active");
+  Pages = Pages.join("");
+  return `
+    <nav>
+      <ul class="pagination">
+        ${Pages}
+      </ul>
+    </nav>`;
+}
+
+function appendCurrentArray() {
+  let pagination = document.getElementById("pagination");
+  if (pagination === null) {
+    return;
   }
+  if (pagination.innerHTML !== "") {
+    pagination.innerHTML = ""
+  }
+  pagination.insertAdjacentHTML("afterbegin", renderCurrentArray());
+  setCurrentColor();
 }
 
-function setCurrentColor(number) {
-  removeCurrentColor();
-  let pageArray = Array.from(document.getElementsByClassName("page-item"));
-  let curPage = pageArray.filter((page) => {
-    return page.getAttribute("page") == number;
-  });
-  curPage[0].classList.add("active");
+let AppendToDataWrapper;
+function setAppendToDataWrapper(func) {
+  AppendToDataWrapper = func;
 }
 
-function appendPagination(length, rowsPerPage) {
-  document
-    .getElementById("pagination")
-    .insertAdjacentHTML("afterbegin", renderPagination(length, rowsPerPage));
-}
-
-function setClickToIndex(func) {
-  let collection = document.getElementsByClassName("indexPage");
-  for (let i = 0; i < collection.length; i++) {
-    let el = collection[i];
-    let num = el.getAttribute("page");
-    el.addEventListener("click", () => {
-      setCurrentPage(num, func);
+function setCurrentPage(obj) {
+  let num = obj.getAttribute("page");
+  if (pageData.currentPage == num) {
+    return;
+  }
+  setRequestPage(num)
+    .then(res => res.json())
+    .then(json => {
+      Data = json;
+      removeCurrentColor()
+      pageData.currentPage = num;
+      AppendToDataWrapper();
     });
-  }
-  document
-    .getElementById("next")
-    .addEventListener("click", () => goToNextPage(func));
-  document
-    .getElementById("previous")
-    .addEventListener("click", () => goToPrevPage(func));
 }

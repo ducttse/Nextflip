@@ -1,15 +1,18 @@
 ﻿function renderSearch(placeHolderText, searchValue) {
   return `
-    <div class="row col-4 offset-1 p-3 mb-2 bg-white rounded">
-        <span id="searchBtn" class="col-1 btn btn-danger"><i class="fas fa-search"></i></span>
-        <input
-            id="search"
-            type="text"
-            style="width: 90% !important"
-            class="form-control col-2 d-inline"
-            placeholder="${placeHolderText}"
-            value="${searchValue}"
-        />
+    <div class="row mb-2">
+      <div class="col-6">
+        <div class="input-group">
+          <input
+              id="search"
+              type="text"
+              class="form-control d-inline"
+              placeholder="${placeHolderText}"
+              value="${searchValue}"
+            />
+          <div id="searchBtn" class="btn btn-danger d-inline">Search</div>
+        </div>
+      </div>
     </div>
     `;
 }
@@ -24,11 +27,12 @@ function appendSearch(placeHolderText, searchValue) {
   document
     .getElementById("search_wrapper")
     .insertAdjacentHTML("afterbegin", renderSearch(placeHolderText, value));
+  setClick();
 }
 
-function setClick(func) {
+function setClick() {
   let searhObj = document.getElementById("search");
   document.getElementById("searchBtn").addEventListener("click", () => {
-    func(searhObj.value);
+    search(searhObj.value);
   });
 }

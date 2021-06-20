@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
@@ -28,6 +28,8 @@ using Nextflip.Models.season;
 using Nextflip.Models.subtitle;
 using Nextflip.Models.supportTopic;
 using Nextflip.Models.supportTicket;
+using Nextflip.Models.role;
+using Microsoft.AspNetCore.Http;
 
 namespace Nextflip
 {
@@ -60,7 +62,7 @@ namespace Nextflip
             services.AddTransient<ISeasonService, SeasonService>();
             services.AddTransient<ISubtitleService, SubtitleService>();
 
-          
+
             //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
@@ -68,6 +70,8 @@ namespace Nextflip
             services.AddTransient<IUserManagerManagementService, UserManagerManagementService>();
             services.AddTransient<IMediaEditRequestDAO, MediaEditRequestDAO>();
             services.AddTransient<IMediaManagerManagementService, MediaManagerManagementService>();
+            services.AddTransient<IRoleDAO, RoleDAO>();
+            services.AddTransient<IRoleService, RoleService>();
 
 
             ///get connection string
@@ -116,7 +120,25 @@ namespace Nextflip
                     name: "default",
                     pattern: "{controller}/{action}/{id?}");
 
+                endpoints.MapGet("/testmail", async context =>
+                {
+
+                    // Lấy dịch vụ sendmailservice
+                    var sendmailservice = context.RequestServices.GetService<ISendMailService>();
+
+                    MailContent content = new MailContent
+                    {
+                        To = "technical.nextflipcompany@gmail.com",
+                        Subject = "Kiểm tra thử",
+                        Body = "Test"
+                    };
+
+                    await sendmailservice.SendMail(content);
+                    await context.Response.WriteAsync("Send mail");
+                });
+
             });
+
         }
     }
 }

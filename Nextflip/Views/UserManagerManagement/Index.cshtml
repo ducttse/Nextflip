@@ -1,46 +1,48 @@
 @{
     Layout = "_CustomLayout";
 }
-
 @section Styles {
     <link href="@Url.Content("~/css/User-Manager.css")" rel="stylesheet" type="text/css" />
+     <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
 }
-<div id="search_wrapper">
-</div>
-<div class="ui_wrapper">
-    <form method="POST" action="">
-        <table class="table table-bordered w-100">
-            <thead class="table-dark">
-                <tr>
-                    <td class="col-3">Email</td>
-                    <td class="col-1">Role</td>
-                    <td class="col-2">Full name</td>
-                    <td class="col-1">Active</td>
-                    <td class="col-1"></td>
-                </tr>
-            </thead>
-            <tbody id="dataWapper"></tbody>
-        </table>
-        <div id="pagination"></div>
-        <div id="submitButton">
-            <!-- Submit button -->
-            <p class="text-warning" id="message"></p>
-            <button class="btn btn-primary" type="submit" name="btn" value="save">
-                Save
-            </button>
+<div class="ui_wrapper col-10 pt-3">
+    <div class="w-90 ms-4"> 
+        <div class="btn-group w-100">
+            <div id="search_wrapper" class="col-10"></div>
+            <div class="col-2 d-inline-flex mb-2">
+                <label class="form-label mt-2">Filter</label>
+                <select id="filter" class="ms-2 form-select">
+                    <option selected>All</option>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select> 
+            </div>
         </div>
-    </form>
+        <div id="notFound" class="hide"> 
+        </div>
+        <div id="table_holder">
+            <table class="table table-bordered table-responsive table-hover w-100">
+                <thead class="table-light">
+                    <tr>
+                        <th class="col">#</th>
+                        <th class="col">Email</th>        
+                        <th class="col">Role</th>
+                        <th class="col">Full name</th>
+                        <th class="col">Active</th>
+                        <th class="col"></th>
+                    </tr>
+                </thead>
+                <tbody id="dataWapper"></tbody>
+            </table>
+            <div id="pagination"></div>
+        </div>
+    </div>
 </div>
 <script src="~/js/Pagination.js"></script>
+<script src="~/js/Slide-Bar.js"></script>
 <script src="~/js/Search-Component.js"></script>
 <script src="~/js/User-Manager-Dashboard.js"></script>
 <script>
-let rowsPerPage = 15;
-let maxPage = 14;
-Run(rowsPerPage);
-appendSearch(
-  "/api/UserManagerManagement/GetAccountListByEmail",
-  "Search Email"
-);
-setClick(search);
+    getRoles();
+    appendSearch("Search account's email", "");
 </script>

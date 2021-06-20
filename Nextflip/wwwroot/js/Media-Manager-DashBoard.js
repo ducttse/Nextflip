@@ -1,28 +1,46 @@
-﻿let Data = {
-  data: []
+﻿let Data;
+let requestParam = {
+  RequestPage: 1,
+  RowsOnPage: 4,
 };
 
-function renderRequest(request) {
+function setRequestPage(num) {
+  console.log(num)
+  requestParam.RequestPage = num;
+  return requestPendingData();
+}
+
+function makeShortNote(text) {
+  if (text.length < 200) {
+    return text
+  }
+  return text.slice(0, 200) + "...";
+}
+
+function renderRequest(request, index) {
+  let shortText = makeShortNote(request.note);
   return `
       <tr>
-          <td>${request.requestID}</td>
+          <td>${index}</td> 
           <td>${request.userEmail}</td>
-          <td>${request.note}</td>
+          <td>${shortText}</td>
           <td><a class="text-decoration-none" href="#${request.mediaID}">Preview</a></td>
-          <td>
-              <button class="btn btn-primary col-5">
-                  <i class="fas fa-check text-white"></i>
-              </button>
-              <button class="btn btn-danger col-5">
-                  <i class="fas fa-times"></i>
-              </button>
-          </td>
       </tr>`;
 }
 
-function appendRequest(start, end) {
-  let requestArray = Data.data.slice(start, end).map((request) => {
-    return renderRequest(request);
+function setTotalPage() {
+  pageData.totalPage = Data.totalPage
+}
+
+function countStart() {
+  return (pageData.currentPage - 1) * requestParam.RowsOnPage
+}
+
+function appendRequest() {
+  setTotalPage();
+  let start = countStart();
+  let requestArray = Data.data.slice(0, requestParam.RowsOnPage).map((request, index) => {
+    return renderRequest(request, start + index);
   });
   requestArray = requestArray.join("");
   let requestWrapper = document.getElementById("requestWrapper");
@@ -30,16 +48,29 @@ function appendRequest(start, end) {
     requestWrapper.innerHTML = "";
   }
   requestWrapper.insertAdjacentHTML("afterbegin", requestArray);
+  appendCurrentArray();
 }
 
-function Run(rowsPerPage) {
-  fetch("/api/MediaManagerManagement/GetAllPendingMedias")
-    .then((res) => res.json())
-    .then((json) => {
-      Data.data = json;
-      appendRequest(0, rowsPerPage);
-      appendPagination(Data.data.length, rowsPerPage);
-      setCurrentColor(1);
-      setClickToIndex(appendRequest);
-    });
+setAppendToDataWrapper(appendRequest);
+
+function requestPendingData() {
+  let reqHeader = new Headers();
+  reqHeader.append("Content-Type", "text/json");
+  reqHeader.append("Accept", "application/json, text/plain, */*");
+  let initObject = {
+    method: "POST",
+    headers: reqHeader,
+    body: JSON.stringify(requestParam)
+  };
+  return fetch("/api/MediaManagerManagement/GetPendingMediasListAccordingRequest", initObject)
+}
+
+function Start() {
+  requestPendingData()
+    .then(res => res.json())
+    .then(json => {
+      Data = json;
+      console.log(Data);
+      appendRequest();
+    })
 }

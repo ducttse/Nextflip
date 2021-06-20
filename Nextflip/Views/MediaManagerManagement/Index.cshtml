@@ -1,25 +1,26 @@
 ﻿@{
     Layout = "_CustomLayout";
 }
-<table class="table table-hover">
-    <thead class="table-dark">
-        <tr>
-            <th class="col-1">Name</th>
-            <th class="col-3">Request from</th>
-            <th class="col-4">Note</th>
-            <th class="col-1">Preview</th>
-            <th class="col-1">Approve</th>
-        </tr>
-    </thead>
-    <!-- cshtml here -->
-    <tbody id="requestWrapper"></tbody>
-    <!-- end -->
-</table>
-<div id="pagination"></div>
+@section Styles {
+  <link href="@Url.Content("~/css/Supporter-Dashboard.css")" rel="stylesheet" type="text/css" />
+  <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
+}
+<div class="ui_wrapper col-10">
+    <table class="table table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th class="col-1 w-25">#</th>
+                <th class="col-3">Request from</th>
+                <th class="col-4">Note</th>
+                <th class="col-1">Preview</th>
+            </tr>
+        </thead>
+        <tbody id="requestWrapper"></tbody>
+    </table>
+    <div id="pagination"></div>
+</div>
 <script src="~/js/Pagination.js"></script>
 <script src="~/js/Media-Manager-DashBoard.js"></script>
-<script> 
-    let rowsPerPage = 3;
-    let maxPage = 14;
-    Run(rowsPerPage);
+<script>
+    Start();
 </script>

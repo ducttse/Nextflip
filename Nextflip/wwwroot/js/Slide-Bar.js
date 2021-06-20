@@ -2,7 +2,7 @@
 let currentIndex;
 function renderItem(item, itemName, index) {
     return `
-        <li class="topicItem d-inline-flex p-2 rounded-3 mt-1" id="item_${index}" index=${index} topic="${item[ itemName ]}" prop="${itemName}">
+        <li class="topicItem p-2 rounded-3 mt-1" id="item_${index}" index=${index} topic="${item[ itemName ]}" prop="${itemName}">
             <a href="#" class="text-decoration-none link-light rounded">
             ${item[ itemName ]}
             </a>
@@ -52,22 +52,30 @@ function setClickToItems(requestFunc, appendToWrapper) {
     for (let item of collection) {
         let topic = item.getAttribute("topic");
         let index = item.getAttribute("index");
-        let prop = item.getAttribute("prop");
         item.addEventListener("click", () => {
             requestFunc(topic)
                 .then(res => res.json())
                 .then(json => {
                     Data = json;
-                    if (pageData !== null) {
-                        if (pageData.currentPage !== 1) {
-                            setCurrentColor();
-                            removeCurrentColor();
-                            pageData.currentPage = 1;
-                        }
+                    if (json.totalPage == 0) {
+                        ShowNotFound();
                     }
-                    requestParam[ prop ] = topic;
-                    setChoosenColor(index);
-                    appendToWrapper();
+                    else {
+                        if (pageData !== null) {
+                            if (pageData.currentPage !== 1) {
+                                setCurrentColor();
+                                removeCurrentColor();
+                                pageData.currentPage = 1;
+                            }
+                        }
+                        resetSearch();
+                        resetFilter();
+                        HideNotFound();
+                        setTopic(topic);
+                        isSearched = false;
+                        setChoosenColor(index);
+                        appendToWrapper();
+                    }
                 });
         })
     }

@@ -9,7 +9,6 @@ namespace Nextflip.Models.media
 {
     public class MediaDAO: IMediaDAO
     {
-
         public IEnumerable<Media> GetMediasByTitle(string searchValue, int RowsOnPage, int RequestPage)
         {
             try
@@ -78,7 +77,6 @@ namespace Nextflip.Models.media
             }
             return count;
         }
-
 
         public IEnumerable<Media> GetMediaFilterCategory(int CategoryID, int RowsOnPage, int RequestPage)
         {
@@ -189,7 +187,6 @@ namespace Nextflip.Models.media
             }
         }
 
-
         public IEnumerable<Media> ViewMediasFilterCategory_Status(int CategoryID, string Status, int RowsOnPage, int RequestPage)
         {
             try
@@ -234,7 +231,6 @@ namespace Nextflip.Models.media
                 throw new Exception(ex.Message);
             }
         }
-
         public int NumberOfMediasFilterCategory_Status(int CategoryID, string Status)
         {
             int count = 0;
@@ -307,7 +303,6 @@ namespace Nextflip.Models.media
                 throw new Exception(ex.Message);
             }
         }
-
         public int NumberOfMediasBySearchingFilterCategory(string SearchValue, int CategoryID)
         {
             int count = 0;
@@ -381,7 +376,6 @@ namespace Nextflip.Models.media
                 throw new Exception(ex.Message);
             }
         }
-
         public int NumberOfMediasBySearchingFilterCategory_Status(string SearchValue, int CategoryID, string Status)
         {
             int count = 0;

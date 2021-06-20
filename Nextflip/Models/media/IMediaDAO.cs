@@ -20,8 +20,10 @@ namespace Nextflip.Models.media
 
         IEnumerable<Media> GetMediaFilterCategory(int CategoryID, int RowsOnPage, int RequestPage);
         int NumberOfMediasFilterCategory(int CategoryID);
+
         IEnumerable<Media> ViewMediasFilterCategory_Status(int CategoryID, string Status, int RowsOnPage, int RequestPage);
         int NumberOfMediasFilterCategory_Status(int CategoryID, string Status);
+
         bool ChangeMediaStatus(string mediaID, string status);
     }
 }

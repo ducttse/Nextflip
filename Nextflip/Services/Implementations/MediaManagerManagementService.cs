@@ -21,5 +21,6 @@ namespace Nextflip.Services.Implementations
         public int NumberOfPendingMedias() => _mediaEditRequestDao.NumberOfPendingMedias();
         public IEnumerable<MediaEditRequest> GetPendingMediasListAccordingRequest(int RowsOnPage, int RequestPage)
                     => _mediaEditRequestDao.GetPendingMediasListAccordingRequest(RowsOnPage, RequestPage);
+        public bool AddMediaRequest(string userEmail, string mediaID, string note) => _mediaEditRequestDao.AddMediaRequest(userEmail, mediaID, note);
     }
 }

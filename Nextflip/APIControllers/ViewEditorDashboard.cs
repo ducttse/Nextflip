@@ -25,10 +25,14 @@ namespace Nextflip.APIControllers
         public class Request
         {
             public string SearchValue { get; set; }
+            public string MediaID { get; set; }
+            public string UserEmail { get; set; }
+            public string note { get; set; }
             public int CategoryID { get; set; }
             public string Status { get; set; }
             public int RowsOnPage { get; set; }
             public int RequestPage { get; set; }
+
         }
 
 
@@ -182,6 +186,28 @@ namespace Nextflip.APIControllers
             {
                 _logger.LogInformation("GetCategories: " + ex.Message);
                 return new JsonResult("error occur");
+            }
+        }
+
+        [HttpPost]
+        [Route("RequestDisabledMedia")]
+        public IActionResult RequestDisabledMedia([FromServices] IMediaService mediaService,
+            [FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromBody] Request request)
+        {
+            try
+            {
+                bool changeMediaStatus = mediaService.ChangeMediaStatus(request.MediaID, "Pending");
+                bool addMediaRequest = mediaManagerManagementService.AddMediaRequest(request.UserEmail, request.MediaID, request.note);
+                var result = new
+                {
+
+                };
+                return (new JsonResult(result));
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("RequestDisabledMedia: " + e.Message);
+                return new JsonResult("An error occurred");
             }
         }
 

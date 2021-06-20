@@ -253,6 +253,31 @@ namespace Nextflip.Models.mediaEditRequest
             }
             return requests;
         }
+
+        public bool AddMediaRequest(string userEmail, string mediaID, string note)
+        {
+            bool result = false;
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Insert mediaEditRequest (userEmail, mediaID, status, note) " +
+                            "Into (@userEmail, @mediaID, 'Pending', @note)";
+                    MySqlCommand command = new MySqlCommand(Sql, connection);
+                    command.Parameters.AddWithValue("@userEmail", userEmail);
+                    command.Parameters.AddWithValue("@mediaID", mediaID);
+                    command.Parameters.AddWithValue("@note", note);
+                    int rows = command.ExecuteNonQuery();
+                    if (rows > 0) result = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return result;
+        }
     }
 }
 

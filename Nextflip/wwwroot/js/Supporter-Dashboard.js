@@ -2,35 +2,97 @@
   data: []
 };
 let requestParam = {
-  NumberOfPage: 5,
-  RowsOnPage: 10,
+  RowsOnPage: 8,
   RequestPage: 1,
-  TopicName: "Account"
+  TopicName: "Account",
+  SearchValue: "",
+  Status: ""
 };
+let isSearched = false;
+let isFiltered = false;
+function setTopic(topic) {
+  requestParam.TopicName = topic;
+}
+
+function setRequestPage(num) {
+  requestParam.RequestPage = num;
+  if (isFiltered && isSearched) {
+    return searchWithFilterOnly();
+  }
+  else if (isSearched) {
+    return searchOnly(requestParam.SearchValue);
+  }
+  else if (isFiltered) {
+    return requestWithFilter();
+  }
+  return requestTopicData(requestParam.TopicName);
+}
+
+function ShowNotFound() {
+  let error;
+  if (isFiltered) {
+    error = `<p>There is no ${requestParam.Status} ticket for this topic</p>`
+  }
+  else { error = `<p>There is no result for <b>${requestParam.SearchValue}</b></p>` }
+  let notFound = document.getElementById("notFound");
+  if (notFound.innerHTML != "") {
+    notFound.innerHTML = "";
+  }
+  notFound.insertAdjacentHTML("afterbegin", error);
+  notFound.classList.remove("hide");
+  document.getElementById("table_holder").classList.add("hide");
+  if (!isFiltered) {
+    document.getElementById("filter").setAttribute("disabled", "disabled");
+  }
+}
+
+function HideNotFound() {
+  let notFound = document.getElementById("notFound");
+  if (!notFound.classList.contains("hide")) {
+    notFound.classList.add("hide");
+    document.getElementById("table_holder").classList.remove("hide");
+    if (!isFiltered) {
+      document.getElementById("filter").removeAttribute("disabled");
+    }
+  }
+}
+
+function makeShortContent(content) {
+  if (content.length > 100) {
+    return content.slice(0, 100) + "..."
+  }
+  return content
+}
 
 function renderTicket(ticket, index) {
+  let shortContent = makeShortContent(ticket.content);
   return `
-      <tr>
+      <tr style="min-height: 70px;">
           <td>${index + 1}</td>
           <td>${ticket.userEmail}</td>
-          <td>${ticket.topicName}</td>
           <td>${ticket.status}</td>
+          <td>${shortContent}</td>
           <td>
               <a class="text-decoration-none" 
               href="/SupporterDashboard/Detail/${ticket.supportTicketID}">
                   Detail
               </a>
           </td>
-          <td>
-            <button name="btnAction" value="technical" class="btn btn-warning">Send to Technical</button>
-            <button name="btnAction" value="customerRelation" class="btn btn-warning">Send to Customer Relation</button>
-          </td>
       </tr>`;
 }
 
+function setTotalPage() {
+  pageData.totalPage = Data.totalPage
+}
 
-function appendTicketToWrapper(start, end) {
-  let ticketArray = Data.data.slice(start, end).map((ticket, index) => {
+function countStart() {
+  return (pageData.currentPage - 1) * requestParam.RowsOnPage
+}
+
+function appendTicketToWrapper() {
+  setTotalPage();
+  let start = countStart();
+  let ticketArray = Data.data.slice(0, requestParam.RowsOnPage).map((ticket, index) => {
     return renderTicket(ticket, index + start);
   });
   ticketArray = ticketArray.join("");
@@ -39,67 +101,10 @@ function appendTicketToWrapper(start, end) {
     dataWapper.innerHTML = "";
   }
   dataWapper.insertAdjacentHTML("afterbegin", ticketArray);
+  appendCurrentArray();
 }
 
-function onLoad(rowsPerPage) {
-  appendTicketToWrapper(0, rowsPerPage);
-  // appendPagination(Data.data.length, rowsPerPage);
-  // setCurrentColor(1);
-  // setClickToIndex(appendTicketToWrapper);
-}
-
-function setMaxPage(resolve) {
-  fetch("/api/ViewSupporterDashboard/GetNumOfSupportTicket")
-    .then((res) => res.json())
-    .then((json) => {
-      rowsPerPage = requestParam.RowsOnPage;
-      maxPage = parseInt(parseInt(json) / rowsPerPage);
-      resolve("resolved");
-    });
-}
-
-function CountCurrentLoadedPage() {
-  return parseInt(Data.data.length / requestParam.RowsOnPage)
-}
-
-function RequestMoreData(RequestPage) {
-  requestParam.RequestPage = RequestPage;
-  console.log(Data.data.length);
-
-  PostRequest(RequestPage).then(res => res.json()).then(json => {
-    json.forEach(user => {
-      Data.data.push(user);
-    })
-    let num = RequestPage - 1;
-    appendTicketToWrapper(num * rowsPerPage, (num + 1) * rowsPerPage);
-    setCurrentColor(RequestPage);
-  })
-}
-
-function preLoad() {
-  return new Promise((resolve, reject) => {
-    setMaxPage(resolve);
-  });
-}
-
-function PostRequest(page) {
-  let reqHeader = new Headers();
-  reqHeader.append("Content-Type", "text/json");
-  reqHeader.append("Accept", "application/json, text/plain, */*");
-  if (page !== 1) {
-    requestParam.RequestPage = page;
-  }
-  let initObject = {
-    method: "POST",
-    headers: reqHeader,
-    body: JSON.stringify(requestParam)
-  };
-  //
-  return fetch(
-    "/api/ViewSupporterDashboard/GetPendingSupportTickets",
-    initObject
-  )
-}
+setAppendToDataWrapper(appendTicketToWrapper);
 
 function requestTopicData(topic) {
   requestParam.TopicName = topic;
@@ -111,7 +116,128 @@ function requestTopicData(topic) {
     headers: reqHeader,
     body: JSON.stringify(requestParam)
   };
-  return fetch("https://localhost:44341/api/ViewSupporterDashboard/GetPendingSupportTickets", initObject);
+  return fetch("/api/ViewSupporterDashboard/ViewSupportTicketByTopic", initObject);
+}
+
+function search(searchValue) {
+  requestParam.RequestPage = 1;
+  setPageDataCurrentPage(1);
+  requestParam.SearchValue = searchValue;
+  if (searchValue == "") {
+    isSearched = false;
+    return;
+  }
+  isSearched = true;
+  requestParam.SearchValue = searchValue;
+  if (isFiltered && isSearched) {
+    searchWithFilter()
+  }
+  else {
+    let reqHeader = new Headers();
+    reqHeader.append("Content-Type", "text/json");
+    reqHeader.append("Accept", "application/json, text/plain, */*");
+    let initObject = {
+      method: "POST",
+      headers: reqHeader,
+      body: JSON.stringify(requestParam)
+    };
+    fetch("/api/ViewSupporterDashboard/SearchSupportTicketByTopic", initObject)
+      .then(res => res.json())
+      .then(json => {
+        if (json.totalPage == 0) {
+          ShowNotFound();
+        }
+        else {
+          HideNotFound();
+          Data = json;
+          pageData.currentPage = 1;
+          appendTicketToWrapper();
+        }
+      })
+  }
+}
+
+function searchOnly(searchValue) {
+  requestParam.SearchValue = searchValue;
+  if (searchValue == "") {
+    isSearched = false;
+    return;
+  }
+  isSearched = true;
+  requestParam.SearchValue = searchValue;
+  let reqHeader = new Headers();
+  reqHeader.append("Content-Type", "text/json");
+  reqHeader.append("Accept", "application/json, text/plain, */*");
+  let initObject = {
+    method: "POST",
+    headers: reqHeader,
+    body: JSON.stringify(requestParam)
+  };
+  return fetch("/api/ViewSupporterDashboard/SearchSupportTicketByTopic", initObject)
+}
+
+function searchWithFilterOnly() {
+  isSearched = true;
+  let reqHeader = new Headers();
+  reqHeader.append("Content-Type", "text/json");
+  reqHeader.append("Accept", "application/json, text/plain, */*");
+  let initObject = {
+    method: "POST",
+    headers: reqHeader,
+    body: JSON.stringify(requestParam)
+  };
+  fetch("/api/ViewSupporterDashboard/SearchSupportTicketByTopicAndStatus", initObject)
+    .then(res => res.json())
+    .then(json => {
+      if (json.totalPage == 0) {
+        ShowNotFound();
+      }
+      else {
+        HideNotFound();
+        Data = json;
+        pageData.currentPage = 1;
+        appendTicketToWrapper();
+      }
+    });
+}
+
+function searchWithFilter() {
+  requestParam.RequestPage = 1;
+  setPageDataCurrentPage(1);
+  let reqHeader = new Headers();
+  reqHeader.append("Content-Type", "text/json");
+  reqHeader.append("Accept", "application/json, text/plain, */*");
+  let initObject = {
+    method: "POST",
+    headers: reqHeader,
+    body: JSON.stringify(requestParam)
+  };
+  fetch("/api/ViewSupporterDashboard/SearchSupportTicketByTopicAndStatus", initObject)
+    .then(res => res.json())
+    .then(json => {
+      if (json.totalPage == 0) {
+        ShowNotFound();
+      }
+      else {
+        HideNotFound();
+        Data = json;
+        pageData.currentPage = 1;
+        appendTicketToWrapper();
+      }
+    });
+}
+
+function searchWithFilterOnly() {
+  isSearched = true;
+  let reqHeader = new Headers();
+  reqHeader.append("Content-Type", "text/json");
+  reqHeader.append("Accept", "application/json, text/plain, */*");
+  let initObject = {
+    method: "POST",
+    headers: reqHeader,
+    body: JSON.stringify(requestParam)
+  };
+  return fetch("/api/ViewSupporterDashboard/SearchSupportTicketByTopicAndStatus", initObject)
 }
 
 function getTopics() {
@@ -119,17 +245,90 @@ function getTopics() {
     .then(res => res.json())
     .then(json => {
       TopicArr = json;
-      appendCollase(requestTopicData, appendTicketToWrapper);
+      appendCollase("Topic", "topicName", requestTopicData, appendTicketToWrapper);
+      requestTopicData("Account")
+        .then(res => res.json())
+        .then(json => {
+          Data = json;
+          appendTicketToWrapper();
+          setChoosenColor(0);
+        })
     })
 }
 
-function Run() {
-  requestData()
-    .then((response) => response.json())
-    .then((json) => {
-      Data.data = json;
-      appendTicketToWrapper(0, Data.data.length);
-    });
+function resetSearch() {
+  document.getElementById("search").value = "";
+  requestParam.SearchValue = "";
+  isSearched = false;
+}
+
+function requestWithFilter() {
+  requestParam.RequestPage = 1;
+  setPageDataCurrentPage(1);
+  let reqHeader = new Headers();
+  reqHeader.append("Content-Type", "text/json");
+  reqHeader.append("Accept", "application/json, text/plain, */*");
+  let initObject = {
+    method: "POST",
+    headers: reqHeader,
+    body: JSON.stringify(requestParam)
+  };
+  return fetch("/api/ViewSupporterDashboard/ViewSupportTicketByTopicAndStatus", initObject);
+}
+
+function doFilter() {
+  let filter = document.getElementById("filter");
+  filter.addEventListener("change", () => {
+    let choosenValue = filter.options[ filter.selectedIndex ].value;
+    if (choosenValue === "All") {
+      if (isSearched) {
+        searchOnly(requestParam.SearchValue)
+          .then(res => res.json())
+          .then(json => {
+            Data = json;
+            appendTicketToWrapper();
+          })
+        return;
+      }
+      else {
+        requestTopicData(requestParam.TopicName)
+          .then(res => res.json())
+          .then(json => {
+            Data = json;
+            appendTicketToWrapper();
+          })
+        isFiltered = false;
+        return;
+      }
+    }
+    isFiltered = true;
+    requestParam.Status = choosenValue;
+    if (isFiltered && isSearched) {
+      searchWithFilter();
+    }
+    else {
+      requestWithFilter()
+        .then(res => res.json())
+        .then(json => {
+          if (json.totalPage == 0) {
+            ShowNotFound();
+            return;
+          }
+          Data = json;
+          HideNotFound();
+          appendTicketToWrapper();
+          setChoosenColor(TopicArr.findIndex((role) => {
+            return role.topicName === requestParam.TopicName;
+          }))
+        })
+    }
+  })
 }
 
 
+function resetFilter() {
+  document.getElementById('filter').getElementsByTagName('option')[ 0 ].selected = 'selected';
+  isFiltered = false;
+  requestParam.Status = "";
+}
+doFilter();

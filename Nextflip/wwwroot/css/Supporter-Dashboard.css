@@ -1,5 +1,10 @@
 ﻿.ui_wrapper {
-  font-size: 16px;
   padding-left: 0px !important;
   padding-right: 0px !important;
+}
+.w-90 {
+  width: 90% !important;
+}
+.hide {
+  display: none;
 }

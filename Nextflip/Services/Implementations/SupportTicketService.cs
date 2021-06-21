@@ -17,15 +17,26 @@ namespace Nextflip.Services.Implementations
             _supportTicketDAO = supportTicketDAO;
         }
 
-        public int GetNumOfSupportTickets() => _supportTicketDAO.GetNumOfSupportTickets();
+        public Task<bool> ForwardSupportTicket(string supportTicketID, string forwardDepartment) => _supportTicketDAO.ForwardSupportTicket(supportTicketID, forwardDepartment);
+
+        public int GetNumOfSupportTicketsByTopic(string topicName) => _supportTicketDAO.GetNumOfSupportTicketsByTopic(topicName);
+
+        public int GetNumOfSupportTicketsByTopicAndSearch(string searchValue, string topicName) => _supportTicketDAO.GetNumOfSupportTicketsByTopicAndSearch(searchValue, topicName);
+
+        public int GetNumOfSupportTicketsByTopicAndSearchAndStatus(string searchValue, string topicName, string status) => _supportTicketDAO.GetNumOfSupportTicketsByTopicAndSearchAndStatus(searchValue, topicName, status);
+
+        public int GetNumOfSupportTicketsByTopicAndStatus(string topicName, string status) => _supportTicketDAO.GetNumOfSupportTicketsByTopicAndStatus(topicName, status);
+
+        public IList<SupportTicket> SearchSupportTicketByTopic(string searchValue, string topicName, int limit, int offset) => _supportTicketDAO.SearchSupportTicketByTopic(searchValue, topicName, limit, offset);
+
+        public IList<SupportTicket> SearchSupportTicketByTopicAndByStatus(string searchValue, string topicName, string status, int limit, int offset) => _supportTicketDAO.SearchSupportTicketByTopicAndByStatus(searchValue, topicName, status, limit, offset);
 
         public bool SendSupportTicket(string userEmail, string topicName, string content) => _supportTicketDAO.SendSupportTicket(userEmail, topicName, content);
 
-        public IList<SupportTicket> ViewPendingSupportTickets(int limit, int offset, string topicName) => _supportTicketDAO.ViewPendingSupportTickets(limit, offset, topicName);
-
         public SupportTicket ViewSupportTicketByID(string supportTicketID) => _supportTicketDAO.ViewSupportTicketByID(supportTicketID);
 
-        public IList<SupportTicket> SearchSupportTicket(string searchValue) => _supportTicketDAO.SearchSupportTicket(searchValue);
+        public IList<SupportTicket> ViewSupportTicketByTopic(int limit, int offset, string topicName) => _supportTicketDAO.ViewSupportTicketByTopic(limit, offset, topicName);
 
+        public IList<SupportTicket> ViewSupportTicketByTopicAndStatus(string topicName, string status, int limit, int offset) => _supportTicketDAO.ViewSupportTicketByTopicAndStatus(topicName, status, limit, offset);
     }
 }

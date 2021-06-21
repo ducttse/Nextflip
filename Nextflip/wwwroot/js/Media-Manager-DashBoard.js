@@ -1,32 +1,46 @@
-﻿let Data = {
-  data: []
-};
+﻿let Data;
 let requestParam = {
-  NumberOfPage: 3,
+  RequestPage: 1,
   RowsOnPage: 4,
-  RequestPage: 1
 };
-function renderRequest(request) {
+
+function setRequestPage(num) {
+  console.log(num)
+  requestParam.RequestPage = num;
+  return requestPendingData();
+}
+
+function makeShortNote(text) {
+  if (text.length < 200) {
+    return text
+  }
+  return text.slice(0, 200) + "...";
+}
+
+function renderRequest(request, index) {
+  let shortText = makeShortNote(request.note);
   return `
       <tr>
-          <td>${request.requestID}</td>
+          <td>${index}</td> 
           <td>${request.userEmail}</td>
-          <td>${request.note}</td>
+          <td>${shortText}</td>
           <td><a class="text-decoration-none" href="#${request.mediaID}">Preview</a></td>
-          <td>
-              <button class="btn btn-primary col-5">
-                  <i class="fas fa-check text-white"></i>
-              </button>
-              <button class="btn btn-danger col-5">
-                  <i class="fas fa-times"></i>
-              </button>
-          </td>
       </tr>`;
 }
 
-function appendRequest(start, end) {
-  let requestArray = Data.data.slice(start, end).map((request) => {
-    return renderRequest(request);
+function setTotalPage() {
+  pageData.totalPage = Data.totalPage
+}
+
+function countStart() {
+  return (pageData.currentPage - 1) * requestParam.RowsOnPage
+}
+
+function appendRequest() {
+  setTotalPage();
+  let start = countStart();
+  let requestArray = Data.data.slice(0, requestParam.RowsOnPage).map((request, index) => {
+    return renderRequest(request, start + index);
   });
   requestArray = requestArray.join("");
   let requestWrapper = document.getElementById("requestWrapper");
@@ -34,72 +48,29 @@ function appendRequest(start, end) {
     requestWrapper.innerHTML = "";
   }
   requestWrapper.insertAdjacentHTML("afterbegin", requestArray);
+  appendCurrentArray();
 }
 
+setAppendToDataWrapper(appendRequest);
 
-function CountCurrentLoadedPage() {
-  return parseInt(Data.data.length / requestParam.RowsOnPage)
-}
-
-
-function setMaxPage(resolve) {
-  fetch("/api/MediaManagerManagement/NumberOfPendingMedias")
-    .then((res) => res.json())
-    .then((json) => {
-      rowsPerPage = requestParam.RowsOnPage;
-      maxPage = parseInt(parseInt(json) / rowsPerPage);
-      resolve("resolved");
-    });
-}
-
-function preLoad() {
-  return new Promise((resolve, reject) => {
-    setMaxPage(resolve);
-  });
-}
-
-function PostRequest(page) {
+function requestPendingData() {
   let reqHeader = new Headers();
   reqHeader.append("Content-Type", "text/json");
   reqHeader.append("Accept", "application/json, text/plain, */*");
-  if (page !== 1) {
-    requestParam.RequestPage = page;
-  }
   let initObject = {
     method: "POST",
     headers: reqHeader,
     body: JSON.stringify(requestParam)
   };
-  //
-  return fetch(
-    "/api/MediaManagerManagement/GetPendingMediasListAccordingRequest",
-    initObject
-  )
+  return fetch("/api/MediaManagerManagement/GetPendingMediasListAccordingRequest", initObject)
 }
 
-function RequestMoreData(RequestPage) {
-  requestParam.RequestPage = RequestPage;
-  console.log(Data.data.length);
-
-  PostRequest(RequestPage).then(res => res.json()).then(json => {
-    json.forEach(user => {
-      Data.data.push(user);
+function Start() {
+  requestPendingData()
+    .then(res => res.json())
+    .then(json => {
+      Data = json;
+      console.log(Data);
+      appendRequest();
     })
-    let num = RequestPage - 1;
-    appendRequest(num * rowsPerPage, (num + 1) * rowsPerPage);
-    setCurrentColor(RequestPage);
-  })
-}
-
-
-function Run(rowsPerPage) {
-  PostRequest(1)
-    .then((res) => res.json())
-    .then((json) => {
-      Data.data = json;
-      appendRequest(0, rowsPerPage);
-      appendPagination(Data.data.length, rowsPerPage);
-      setCurrentColor(1);
-      setClickToIndex(appendRequest);
-    });
 }

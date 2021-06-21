@@ -15,28 +15,28 @@ namespace Nextflip.Controllers
         {
             _logger = logger;
         }
-        public IActionResult Index([FromBody] Request request)
+        [HttpGet]
+        public IActionResult Index()
         {
             try
             {
-                ViewBag.body = request;
                 return View();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogInformation("SupporterDashboardController/Index: " + e.Message);
                 return View("Error");
             }
         }
-        public IActionResult Detail(string id, [FromBody]Request request)
+        [HttpGet]
+        public IActionResult Detail(string id)
         {
             try
             {
                 ViewBag.ticketId = id;
-                ViewBag.body = request;
                 return View();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogInformation("SupporterDashboardController/Detail: " + e.Message);
                 return View("Error");

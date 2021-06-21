@@ -188,7 +188,7 @@ namespace Nextflip.APIControllers
         }
     }
 
-    public class Request
+    public partial class Request
     {
         public int RowsOnPage { get; set; }
         public int RequestPage { get; set; }
@@ -197,7 +197,7 @@ namespace Nextflip.APIControllers
         public string Status { get; set; }
     }
 
-    public class ForwardDetails
+    public partial class ForwardDetails
     {
         public string BtnAction { get; set; }
         public string SupportTicketID { get; set; }

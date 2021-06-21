@@ -15,10 +15,11 @@ namespace Nextflip.Controllers
         {
             _logger = logger;
         }
-        public IActionResult Index()
+        public IActionResult Index([FromBody] Request request)
         {
             try
             {
+                ViewBag.body = request;
                 return View();
             }
             catch(Exception e)
@@ -27,11 +28,12 @@ namespace Nextflip.Controllers
                 return View("Error");
             }
         }
-        public IActionResult Detail(string id)
+        public IActionResult Detail(string id, [FromBody]Request request)
         {
             try
             {
                 ViewBag.ticketId = id;
+                ViewBag.body = request;
                 return View();
             }
             catch(Exception e)
@@ -41,5 +43,14 @@ namespace Nextflip.Controllers
             }
         }
 
+    }
+
+    public partial class Request
+    {
+        public int RowsOnPage { get; set; }
+        public int RequestPage { get; set; }
+        public string TopicName { get; set; }
+        public string SearchValue { get; set; }
+        public string Status { get; set; }
     }
 }

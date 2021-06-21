@@ -16,6 +16,7 @@ namespace Nextflip.Services.Interfaces
         IEnumerable<MediaEditRequest> GetPendingMediaByUserEmailFilterStatus(string searchValue, string Status, int RowsOnPage, int RequestPage);
         int NumberOfPendingMediasBySearchingFilterStatus(string searchValue, string Status);
 
+        bool ChangeRequestStatus(int requestID, string status);
         bool ApproveRequest(int requestID);
         bool DisappoveRequest(int requestID);
 
@@ -24,5 +25,8 @@ namespace Nextflip.Services.Interfaces
 
         int NumberOfPendingMediasFilterStatus(string status);
         IEnumerable<MediaEditRequest> GetPendingMediasFilterStatus(string status, int RowsOnPage, int RequestPage);
+
+        bool AddMediaRequest(string userEmail, string mediaID, string note);
+
     }
 }

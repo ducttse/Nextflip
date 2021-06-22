@@ -37,6 +37,7 @@ function setTopic(topic) {
 }
 
 function setRequestPage(num) {
+  setPageDataCurrentPage(num);
   requestParam.RequestPage = num;
   if (isFiltered && isSearched) {
     return searchWithFilterOnly();

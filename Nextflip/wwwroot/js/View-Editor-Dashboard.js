@@ -303,7 +303,6 @@ function doFilter() {
                 requestMediaDataAndResetPage(requestParam.CategoryName)
                     .then(res => res.json())
                     .then(json => {
-
                         Data = json;
                         HideNotFound();
                         appendMediaToWrapper();

@@ -41,18 +41,14 @@ function setTopic(topic) {
 function setRequestPage(num) {
   requestParam.RequestPage = num;
   if (isFiltered && isSearched) {
-    console.log("1");
     return searchWithFilterOnly();
   }
   else if (isSearched) {
-    console.log("2");
     return searchOnly(requestParam.SearchValue);
   }
   else if (isFiltered) {
-    console.log("3");
     return requestWithFilter();
   }
-  console.log("4");
   return requestTopicData(requestParam.TopicName);
 }
 
@@ -150,6 +146,7 @@ function requestTopicData(topic) {
 
 function requestTopicDataAndResetPahe(topic) {
   requestParam.RequestPage = 1;
+  setPageDataCurrentPage(1);
   return requestTopicData(topic);
 }
 
@@ -305,10 +302,12 @@ function doFilter() {
     let choosenValue = filter.options[ filter.selectedIndex ].value;
     if (choosenValue === "All") {
       requestParam.Status = "";
+      isFiltered = false;
       if (isSearched) {
         searchOnly(requestParam.SearchValue)
           .then(res => res.json())
           .then(json => {
+            HideNotFound();
             Data = json;
             appendTicketToWrapper();
           })
@@ -318,10 +317,10 @@ function doFilter() {
         requestTopicData(requestParam.TopicName)
           .then(res => res.json())
           .then(json => {
+            HideNotFound();
             Data = json;
             appendTicketToWrapper();
           })
-        isFiltered = false;
         return;
       }
     }
@@ -348,7 +347,6 @@ function doFilter() {
     }
   })
 }
-
 
 function resetFilter() {
   document.getElementById('filter').getElementsByTagName('option')[ 0 ].selected = 'selected';

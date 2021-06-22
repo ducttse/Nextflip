@@ -15,14 +15,13 @@
         searchHolder.classList.add("hide");
         searchBtn.classList.remove("ps-4");
         searchBtn.classList.add("ps-3");
-
     }
 }
 
 function showError(searchValue) {
     let resultHolder = document.getElementById("result_holder");
     let oldError = resultHolder.querySelector("#error");
-    let oldResult = resultHolder.querySelector("#row");
+    let oldResult = resultHolder.querySelector(".row");
     if (oldError !== null || oldResult !== null) {
         resultHolder.innerHTML = ""
     }
@@ -34,14 +33,16 @@ function showError(searchValue) {
 }
 
 function renderResult(result) {
+    console.log(result);
     return `
-    <div class="col-3" >
-        <a href="/WatchMedia/MediaDetails/${result.media.mediaID}">
+    <div class="col-4">
+        <a class="text-decoration-none" href="/WatchMedia/MediaDetails/${result.media.mediaID}">
             <img
                 src="${result.media.bannerURL}"
                 alt="${result.media.mediaID}"
-                class="w-100 h-100"
+                style="width: 85%; height: 85%;"
             />
+            <div><p class="link-light p-2 fs-5">${result.media.title}</p></div>
         </a>
     </div>`;
 }
@@ -61,7 +62,7 @@ function renderResults(resultArray) {
 function appendResult(resultArray) {
     let resultHolder = document.getElementById("result_holder");
     let oldError = resultHolder.querySelector("#error");
-    let oldResult = resultHolder.querySelector("#row");
+    let oldResult = resultHolder.querySelector(".row");
     if (oldError !== null || oldResult !== null) {
         resultHolder.innerHTML = ""
     }

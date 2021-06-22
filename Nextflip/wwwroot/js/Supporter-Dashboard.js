@@ -17,7 +17,6 @@ function loadStorageData() {
     };
   }
   else {
-    console.log("false")
     requestParam = JSON.parse(sessionStorage.getItem("requestParam"));
   }
   if (sessionStorage.getItem("isSearched") === null) {
@@ -60,7 +59,7 @@ function setRequestPage(num) {
 function ShowNotFound() {
   let error;
   if (isFiltered) {
-    error = `<p>There is no ${requestParam.Status} ticket for this topic</p>`
+    error = `<p>There is no <b>${requestParam.Status}</b> ticket for this topic</p>`
   }
   else { error = `<p>There is no result for <b>${requestParam.SearchValue}</b></p>` }
   let notFound = document.getElementById("notFound");
@@ -149,10 +148,14 @@ function requestTopicData(topic) {
   return fetch("/api/ViewSupporterDashboard/ViewSupportTicketByTopic", initObject);
 }
 
+function requestTopicDataAndResetPahe(topic) {
+  requestParam.RequestPage = 1;
+  return requestTopicData(topic);
+}
+
 function search(searchValue) {
   requestParam.RequestPage = 1;
   setPageDataCurrentPage(1);
-  requestParam.SearchValue = searchValue;
   if (searchValue == "") {
     isSearched = false;
     return;
@@ -188,7 +191,6 @@ function search(searchValue) {
 }
 
 function searchOnly(searchValue) {
-  requestParam.SearchValue = searchValue;
   if (searchValue == "") {
     isSearched = false;
     return;
@@ -250,7 +252,7 @@ function getTopics() {
     .then(res => res.json())
     .then(json => {
       TopicArr = json;
-      appendCollase("Topic", "topicName", requestTopicData, appendTicketToWrapper);
+      appendCollase("Topic", "topicName", requestTopicDataAndResetPahe, appendTicketToWrapper);
       setRequestPage(requestParam.RequestPage)
         .then(res => res.json())
         .then(json => {
@@ -265,7 +267,6 @@ function getTopics() {
             let options = document.getElementById('filter').getElementsByTagName('option');
             for (let i = 0; i < options.length; i++) {
               if (options[ i ].value == requestParam.Status) {
-                console.log("...");
                 options[ i ].selected = 'selected';
               }
             }

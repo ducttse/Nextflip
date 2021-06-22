@@ -41,14 +41,18 @@ function setTopic(topic) {
 function setRequestPage(num) {
   requestParam.RequestPage = num;
   if (isFiltered && isSearched) {
+    console.log("1");
     return searchWithFilterOnly();
   }
   else if (isSearched) {
+    console.log("2");
     return searchOnly(requestParam.SearchValue);
   }
   else if (isFiltered) {
+    console.log("3");
     return requestWithFilter();
   }
+  console.log("4");
   return requestTopicData(requestParam.TopicName);
 }
 
@@ -253,6 +257,8 @@ function getTopics() {
         .then(res => res.json())
         .then(json => {
           Data = json;
+          console.log(isSearched);
+          console.log(isFiltered);
           if (isSearched) {
             console.log("run");
             document.getElementById("search").value = requestParam.SearchValue;

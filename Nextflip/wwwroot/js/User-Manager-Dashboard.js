@@ -52,10 +52,13 @@ function setRequestPage(num) {
 
 function ShowNotFound() {
   let error;
-  if (isFiltered) {
-    error = `<p>There is no <b>${requestParam.Status}</b> user for this role</p>`
+  if (isFiltered && isSearched) {
+    error = `<p class="fs-5">There is no <b>${requestParam.Status}</b> user in this role contain  <b>${requestParam.SearchValue}</b></p>`
   }
-  else { error = `<p>There is no result for <b>${requestParam.SearchValue}</b></p>` }
+  else if (isFiltered) {
+    error = `<p class="fs-5">There is no <b>${requestParam.Status}</b> user for this role</p>`
+  }
+  else { error = `<p class="fs-5">There is no result for <b>${requestParam.SearchValue}</b></p>` }
   let notFound = document.getElementById("notFound");
   if (notFound.innerHTML != "") {
     notFound.innerHTML = "";

@@ -78,7 +78,7 @@ namespace Nextflip.Models.media
             return count;
         }
 
-        public IEnumerable<Media> GetMediaFilterCategory(int CategoryID, int RowsOnPage, int RequestPage)
+        public IEnumerable<Media> GetMediaFilterCategory(string CategoryName, int RowsOnPage, int RequestPage)
         {
             try
             {
@@ -88,13 +88,13 @@ namespace Nextflip.Models.media
                 {
                     connection.Open();
                     string Sql = "Select M.mediaID, status, title, bannerURL, language, description " +
-                                "from media M, mediaCategory MC " +
-                                "where M.mediaID = MC.mediaID and MC.categoryID = @CategoryID " +
+                                "From media M, mediaCategory MC, category C " +
+                                "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName " +
                                 "ORDER BY status DESC " +
                                 "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        command.Parameters.AddWithValue("@CategoryID", CategoryID);
+                        command.Parameters.AddWithValue("@CategoryName", CategoryName);
                         command.Parameters.AddWithValue("@offset", offset);
                         command.Parameters.AddWithValue("@limit", RowsOnPage);
                         using (var reader = command.ExecuteReader())
@@ -122,18 +122,18 @@ namespace Nextflip.Models.media
                 throw new Exception(ex.Message);
             }
         }
-        public int NumberOfMediasFilterCategory(int CategoryID)
+        public int NumberOfMediasFilterCategory(string CategoryName)
         {
             int count = 0;
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
                 string Sql = "Select COUNT(M.mediaID) " +
-                                "from media M, mediaCategory MC " +
-                                "where M.mediaID = MC.mediaID and MC.categoryID = @CategoryID ";
+                                "From media M, mediaCategory MC, category C " +
+                                "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName ";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
-                    command.Parameters.AddWithValue("@CategoryID", CategoryID);
+                    command.Parameters.AddWithValue("@CategoryName", CategoryName);
                     using (var reader = command.ExecuteReader())
                     {
                         if (reader.Read())
@@ -187,7 +187,7 @@ namespace Nextflip.Models.media
             }
         }
 
-        public IEnumerable<Media> ViewMediasFilterCategory_Status(int CategoryID, string Status, int RowsOnPage, int RequestPage)
+        public IEnumerable<Media> ViewMediasFilterCategory_Status(string CategoyName, string Status, int RowsOnPage, int RequestPage)
         {
             try
             {
@@ -197,12 +197,12 @@ namespace Nextflip.Models.media
                 {
                     connection.Open();
                     string Sql = "Select M.mediaID, status, title, bannerURL, language, description " +
-                                "from media M, mediaCategory MC " +
-                                "where M.mediaID = MC.mediaID and MC.categoryID = @CategoryID and M.status = @Status " +
+                                "From media M, mediaCategory MC, category C " +
+                                "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoyName and M.status = @Status " +
                                 "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        command.Parameters.AddWithValue("@CategoryID", CategoryID);
+                        command.Parameters.AddWithValue("@CategoyName", CategoyName);
                         command.Parameters.AddWithValue("@Status", Status);
                         command.Parameters.AddWithValue("@offset", offset);
                         command.Parameters.AddWithValue("@limit", RowsOnPage);
@@ -231,18 +231,18 @@ namespace Nextflip.Models.media
                 throw new Exception(ex.Message);
             }
         }
-        public int NumberOfMediasFilterCategory_Status(int CategoryID, string Status)
+        public int NumberOfMediasFilterCategory_Status(string CategoyName, string Status)
         {
             int count = 0;
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
                 string Sql = "Select COUNT(M.mediaID) " +
-                                "from media M, mediaCategory MC " +
-                                "where M.mediaID = MC.mediaID and MC.categoryID = @CategoryID and status = @Status";
+                                "From media M, mediaCategory MC, category C " +
+                                "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoyName and M.status = @Status ";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
-                    command.Parameters.AddWithValue("@CategoryID", CategoryID);
+                    command.Parameters.AddWithValue("@CategoyName", CategoyName);
                     command.Parameters.AddWithValue("@Status", Status);
                     using (var reader = command.ExecuteReader())
                     {
@@ -257,7 +257,7 @@ namespace Nextflip.Models.media
             return count;
         }
 
-        public IEnumerable<Media> GetMediasByTitleFilterCategory(string SearchValue, int CategoryID, int RowsOnPage, int RequestPage)
+        public IEnumerable<Media> GetMediasByTitleFilterCategory(string SearchValue, string CategoryName, int RowsOnPage, int RequestPage)
         {
             try
             {
@@ -267,15 +267,15 @@ namespace Nextflip.Models.media
                 {
                     connection.Open();
                     string Sql = "Select M.mediaID, status, title, bannerURL, language, description " +
-                                "From media M, mediaCategory MC " +
+                                "From media M, mediaCategory MC, category C " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
-                                "and M.mediaID = MC.mediaID and MC.categoryID = @CategoryID " +
+                                "and M.mediaID = MC.mediaID and MC.categoryID=C.categoryID and C.name = @CategoryName " +
                                 "ORDER BY status DESC " +
                                 "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@searchValue", SearchValue);
-                        command.Parameters.AddWithValue("@CategoryID", CategoryID);
+                        command.Parameters.AddWithValue("@CategoryName", CategoryName);
                         command.Parameters.AddWithValue("@offset", offset);
                         command.Parameters.AddWithValue("@limit", RowsOnPage);
                         using (var reader = command.ExecuteReader())
@@ -303,20 +303,20 @@ namespace Nextflip.Models.media
                 throw new Exception(ex.Message);
             }
         }
-        public int NumberOfMediasBySearchingFilterCategory(string SearchValue, int CategoryID)
+        public int NumberOfMediasBySearchingFilterCategory(string SearchValue, string CategoryName)
         {
             int count = 0;
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
                 string Sql = "Select COUNT(M.mediaID) " +
-                                "from media M, mediaCategory MC " +
-                                "Where MATCH (title)  AGAINST (@searchValue in natural language mode) " +
-                                "and M.mediaID = MC.mediaID and MC.categoryID = @CategoryID";
+                                "From media M, mediaCategory MC, category C " +
+                                "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
+                                "and M.mediaID = MC.mediaID and MC.categoryID=C.categoryID and C.name = @CategoryName";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     command.Parameters.AddWithValue("@SearchValue", SearchValue);
-                    command.Parameters.AddWithValue("@CategoryID", CategoryID);
+                    command.Parameters.AddWithValue("@CategoryName", CategoryName);
                     using (var reader = command.ExecuteReader())
                     {
                         if (reader.Read())
@@ -330,7 +330,7 @@ namespace Nextflip.Models.media
             return count;
         }
 
-        public IEnumerable<Media> GetMediasByTitleFilterCategory_Status(string SearchValue, int CategoryID, string Status, int RowsOnPage, int RequestPage)
+        public IEnumerable<Media> GetMediasByTitleFilterCategory_Status(string SearchValue, string CategoryName, string Status, int RowsOnPage, int RequestPage)
         {
             try
             {
@@ -340,14 +340,14 @@ namespace Nextflip.Models.media
                 {
                     connection.Open();
                     string Sql = "Select M.mediaID, status, title, bannerURL, language, description " +
-                                "From media M, mediaCategory MC " +
+                                "From media M, mediaCategory MC, category C " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
-                                "and M.mediaID = MC.mediaID and MC.categoryID = @CategoryID and M.status = @Status " +
+                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status " +
                                 "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@searchValue", SearchValue);
-                        command.Parameters.AddWithValue("@CategoryID", CategoryID);
+                        command.Parameters.AddWithValue("@CategoryName", CategoryName);
                         command.Parameters.AddWithValue("@Status", Status);
                         command.Parameters.AddWithValue("@offset", offset);
                         command.Parameters.AddWithValue("@limit", RowsOnPage);
@@ -376,20 +376,20 @@ namespace Nextflip.Models.media
                 throw new Exception(ex.Message);
             }
         }
-        public int NumberOfMediasBySearchingFilterCategory_Status(string SearchValue, int CategoryID, string Status)
+        public int NumberOfMediasBySearchingFilterCategory_Status(string SearchValue, string CategoryName, string Status)
         {
             int count = 0;
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
                 string Sql = "Select COUNT(M.mediaID) " +
-                                "from media M, mediaCategory MC " +
-                                "Where MATCH (title)  AGAINST (@searchValue in natural language mode) " +
-                                "and M.mediaID = MC.mediaID and MC.categoryID = @CategoryID and M.status = @Status";
+                                "From media M, mediaCategory MC, category C " +
+                                "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
+                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status ";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     command.Parameters.AddWithValue("@SearchValue", SearchValue);
-                    command.Parameters.AddWithValue("@CategoryID", CategoryID);
+                    command.Parameters.AddWithValue("@CategoryName", CategoryName);
                     command.Parameters.AddWithValue("@Status", Status);
                     using (var reader = command.ExecuteReader())
                     {

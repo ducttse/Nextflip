@@ -126,9 +126,9 @@ namespace Nextflip.APIControllers
                 {
                     message = "Empty searchValue"
                 };
-                if (request.SearchValue == "") return new JsonResult(message);
-                IEnumerable<Account> accounts = userManagerManagementService.GetAccountListByEmailFilterRoleStatus(request.SearchValue, request.RoleName, request.Status, request.RowsOnPage, request.RequestPage);
-                int count = userManagerManagementService.NumberOfAccountsBySearchingFilterRoleStatus(request.SearchValue, request.RoleName, request.Status);
+                if (request.SearchValue.Trim() == "") return new JsonResult(message);
+                IEnumerable<Account> accounts = userManagerManagementService.GetAccountListByEmailFilterRoleStatus(request.SearchValue.Trim(), request.RoleName, request.Status, request.RowsOnPage, request.RequestPage);
+                int count = userManagerManagementService.NumberOfAccountsBySearchingFilterRoleStatus(request.SearchValue.Trim(), request.RoleName, request.Status);
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {
@@ -154,9 +154,9 @@ namespace Nextflip.APIControllers
                 {
                     message = "Empty searchValue"
                 };
-                if (request.SearchValue == "") return new JsonResult(message);
-                IEnumerable<Account> accounts = userManagerManagementService.GetAccountListByEmail(request.SearchValue, request.RowsOnPage, request.RequestPage);
-                int count = userManagerManagementService.NumberOfAccountsBySearching(request.SearchValue);
+                if (request.SearchValue.Trim() == "") return new JsonResult(message);
+                IEnumerable<Account> accounts = userManagerManagementService.GetAccountListByEmail(request.SearchValue.Trim(), request.RowsOnPage, request.RequestPage);
+                int count = userManagerManagementService.NumberOfAccountsBySearching(request.SearchValue.Trim());
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {
@@ -182,9 +182,9 @@ namespace Nextflip.APIControllers
                 {
                     message = "Empty searchValue"
                 };
-                if (request.SearchValue == "") return new JsonResult(message);
-                IEnumerable<Account> accounts = userManagerManagementService.GetAccountListByEmailFilterRole(request.SearchValue, request.RoleName, request.RowsOnPage, request.RequestPage);
-                int count = userManagerManagementService.NumberOfAccountsBySearchingFilterRole(request.SearchValue, request.RoleName);
+                if (request.SearchValue.Trim() == "") return new JsonResult(message);
+                IEnumerable<Account> accounts = userManagerManagementService.GetAccountListByEmailFilterRole(request.SearchValue.Trim(), request.RoleName, request.RowsOnPage, request.RequestPage);
+                int count = userManagerManagementService.NumberOfAccountsBySearchingFilterRole(request.SearchValue.Trim(), request.RoleName);
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {

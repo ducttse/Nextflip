@@ -17,7 +17,6 @@ function loadStorageData() {
     };
   }
   else {
-    console.log("false")
     requestParam = JSON.parse(sessionStorage.getItem("requestParam"));
   }
   if (sessionStorage.getItem("isSearched") === null) {
@@ -42,25 +41,21 @@ function setTopic(topic) {
 function setRequestPage(num) {
   requestParam.RequestPage = num;
   if (isFiltered && isSearched) {
-    console.log("1");
     return searchWithFilterOnly();
   }
   else if (isSearched) {
-    console.log("2");
     return searchOnly(requestParam.SearchValue);
   }
   else if (isFiltered) {
-    console.log("3");
     return requestWithFilter();
   }
-  console.log("4");
   return requestTopicData(requestParam.TopicName);
 }
 
 function ShowNotFound() {
   let error;
   if (isFiltered) {
-    error = `<p>There is no ${requestParam.Status} ticket for this topic</p>`
+    error = `<p>There is no <b>${requestParam.Status}</b> ticket for this topic</p>`
   }
   else { error = `<p>There is no result for <b>${requestParam.SearchValue}</b></p>` }
   let notFound = document.getElementById("notFound");
@@ -149,10 +144,15 @@ function requestTopicData(topic) {
   return fetch("/api/ViewSupporterDashboard/ViewSupportTicketByTopic", initObject);
 }
 
+function requestTopicDataAndResetPahe(topic) {
+  requestParam.RequestPage = 1;
+  setPageDataCurrentPage(1);
+  return requestTopicData(topic);
+}
+
 function search(searchValue) {
   requestParam.RequestPage = 1;
   setPageDataCurrentPage(1);
-  requestParam.SearchValue = searchValue;
   if (searchValue == "") {
     isSearched = false;
     return;
@@ -188,7 +188,6 @@ function search(searchValue) {
 }
 
 function searchOnly(searchValue) {
-  requestParam.SearchValue = searchValue;
   if (searchValue == "") {
     isSearched = false;
     return;
@@ -250,7 +249,7 @@ function getTopics() {
     .then(res => res.json())
     .then(json => {
       TopicArr = json;
-      appendCollase("Topic", "topicName", requestTopicData, appendTicketToWrapper);
+      appendCollase("Topic", "topicName", requestTopicDataAndResetPahe, appendTicketToWrapper);
       setRequestPage(requestParam.RequestPage)
         .then(res => res.json())
         .then(json => {
@@ -265,7 +264,6 @@ function getTopics() {
             let options = document.getElementById('filter').getElementsByTagName('option');
             for (let i = 0; i < options.length; i++) {
               if (options[ i ].value == requestParam.Status) {
-                console.log("...");
                 options[ i ].selected = 'selected';
               }
             }
@@ -304,10 +302,12 @@ function doFilter() {
     let choosenValue = filter.options[ filter.selectedIndex ].value;
     if (choosenValue === "All") {
       requestParam.Status = "";
+      isFiltered = false;
       if (isSearched) {
         searchOnly(requestParam.SearchValue)
           .then(res => res.json())
           .then(json => {
+            HideNotFound();
             Data = json;
             appendTicketToWrapper();
           })
@@ -317,10 +317,10 @@ function doFilter() {
         requestTopicData(requestParam.TopicName)
           .then(res => res.json())
           .then(json => {
+            HideNotFound();
             Data = json;
             appendTicketToWrapper();
           })
-        isFiltered = false;
         return;
       }
     }
@@ -347,7 +347,6 @@ function doFilter() {
     }
   })
 }
-
 
 function resetFilter() {
   document.getElementById('filter').getElementsByTagName('option')[ 0 ].selected = 'selected';

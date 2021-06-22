@@ -1,9 +1,9 @@
-@{
+﻿@{
     Layout = "_CustomLayout";
 }
 @section Styles {
-    <link href="@Url.Content("~/css/Supporter-Dashboard.css")" rel="stylesheet" type="text/css" />
-    <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/css/User-Manager.css")" rel="stylesheet" type="text/css" />
+     <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
 }
 <div class="ui_wrapper col-10 pt-3">
     <div class="w-90 ms-4"> 
@@ -14,8 +14,8 @@
                 <select id="filter" class="ms-2 form-select">
                     <option selected>All</option>
                     <option value="Pending">Pending</option>
-                    <option value="Assigned">Assigned</option>
-                    <option value="Closed">Closed</option>
+                    <option value="Enabled">Enabled</option>
+                    <option value="Disabled">Disabled</option>
                 </select> 
             </div>
         </div>
@@ -26,25 +26,25 @@
                 <table class="table table-bordered table-responsive table-hover w-100">
                     <thead class="table-light">
                         <tr>
-                            <th class="col">#</th>
-                            <th class="col">User email</th>        
-                            <th class="col">Status</th>
-                            <th class="col">Content</th>
-                            <th class="col"></th>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Language</th>
+                            <th scope="col">Status</th>
+                            <th scope="col"></th>
                         </tr>
                     </thead>
                     <tbody id="dataWapper"></tbody>
                 </table>
             </div>
-            <div class="d-flex justify-content-center" id="pagination"></div>
+            <div id="pagination"></div>
         </div>
     </div>
 </div>
 <script src="~/js/Pagination.js"></script>
 <script src="~/js/Slide-Bar.js"></script>
 <script src="~/js/Search-Component.js"></script>
-<script src="~/js/Supporter-Dashboard.js"></script>
+<script src="~/js/View-Editor-Dashboard.js"></script>
 <script> 
-getTopics();
-appendSearch("Search user's email", "");
+   getCategories();
+   appendSearch("Search media's name", "");
 </script>

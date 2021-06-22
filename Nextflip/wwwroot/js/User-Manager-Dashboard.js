@@ -1,13 +1,37 @@
 let Data;
-let requestParam = {
-  RequestPage: 1,
-  RowsOnPage: 10,
-  RoleName: "Customer Supporter",
-  SearchValue: "",
-  Status: ""
-};
+let requestParam;
 let isSearched = false;
 let isFiltered = false;
+
+function loadStorageData() {
+  if (sessionStorage.getItem("requestParam") === null) {
+    console.log("true")
+    requestParam = {
+      RowsOnPage: 10,
+      RequestPage: 1,
+      RoleName: "Customer Supporter",
+      SearchValue: "",
+      Status: ""
+    };
+  }
+  else {
+    requestParam = JSON.parse(sessionStorage.getItem("requestParam"));
+  }
+  if (sessionStorage.getItem("isSearched") === null) {
+    isSearched = false;
+  }
+  else {
+    isSearched = (sessionStorage.getItem("isSearched") === 'true');
+  }
+  if (sessionStorage.getItem("isFiltered") === null) {
+    isFiltered = false;
+  }
+  else {
+    isFiltered = (sessionStorage.getItem("isFiltered") === 'true');
+  }
+}
+loadStorageData();
+
 function setTopic(topic) {
   requestParam.RoleName = topic;
 }
@@ -29,7 +53,7 @@ function setRequestPage(num) {
 function ShowNotFound() {
   let error;
   if (isFiltered) {
-    error = `<p>There is no ${requestParam.Status} ticket for this topic</p>`
+    error = `<p>There is no <b>${requestParam.Status}</b> user for this role</p>`
   }
   else { error = `<p>There is no result for <b>${requestParam.SearchValue}</b></p>` }
   let notFound = document.getElementById("notFound");
@@ -69,13 +93,13 @@ function renderUser(user, index) {
         </td>
         <td>
             <a class="text-decoration-none" 
+            onclick="return storeToStorage();"
             href="/Edit/${user.userID}">
             <i class="fas fa-edit"></i>
             </a>
         </td>
     </tr>`;
 }
-
 
 function setTotalPage() {
   pageData.totalPage = Data.totalPage
@@ -167,13 +191,19 @@ function requestUserData(role) {
   return fetch("/api/UserManagerManagement/GetAccountsListOnlyByRole", initObject);
 }
 
+function requestUserDataAndResetPage(role) {
+  requestParam.RequestPage = 1;
+  setPageDataCurrentPage(1);
+  return requestUserData(role);
+}
+
 function getRoles() {
   fetch("/api/UserManagerManagement/GetRoleNameList")
     .then(res => res.json())
     .then(json => {
       TopicArr = json;
-      appendCollase("Role", "roleName", requestUserData, appendUserToWrapper)
-      requestUserData("Customer Supporter")
+      appendCollase("Role", "roleName", requestUserDataAndResetPage, appendUserToWrapper)
+      requestUserDataAndResetPage("Customer Supporter")
         .then(res => res.json())
         .then(json => {
           Data = json;
@@ -241,14 +271,28 @@ function doFilter() {
   filter.addEventListener("change", () => {
     let choosenValue = filter.options[ filter.selectedIndex ].value;
     if (choosenValue === "All") {
-      requestUserData(requestParam.RoleName)
-        .then(res => res.json())
-        .then(json => {
-          Data = json;
-          appendUserToWrapper();
-        })
+      requestParam.Status = "";
       isFiltered = false;
-      return;
+      if (isSearched) {
+        searchOnly(requestParam.SearchValue)
+          .then(res => res.json())
+          .then(json => {
+            HideNotFound();
+            Data = json;
+            appendUserToWrapper();
+          })
+        return;
+      }
+      else {
+        requestUserDataAndResetPage(requestParam.RoleName)
+          .then(res => res.json())
+          .then(json => {
+            HideNotFound();
+            Data = json;
+            appendUserToWrapper();
+          })
+        return;
+      }
     }
     else {
       isFiltered = true;
@@ -290,3 +334,9 @@ function resetFilter() {
 }
 
 doFilter();
+
+function storeToStorage() {
+  sessionStorage.setItem("requestParam", JSON.stringify(requestParam));
+  sessionStorage.setItem("isFiltered", isFiltered.toString());
+  sessionStorage.setItem("isSearched", isSearched.toString());
+}

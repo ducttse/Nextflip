@@ -1,16 +1,17 @@
 ﻿let TopicArr;
-function renderItem(item) {
+let currentIndex;
+function renderItem(item, itemName, index) {
     return `
-        <li class="topicItem" topic="${item.topicName}">
+        <li class="topicItem p-2 rounded-3 mt-1" id="item_${index}" index=${index} topic="${item[ itemName ]}" prop="${itemName}">
             <a href="#" class="text-decoration-none link-light rounded">
-            ${item.topicName}
+            ${item[ itemName ]}
             </a>
         </li>`;
 }
 
-function renderCollapse() {
-    let Items = TopicArr.map((item) => {
-        return renderItem(item);
+function renderCollapse(Name, itemName) {
+    let Items = TopicArr.map((item, index) => {
+        return renderItem(item, itemName, index);
     })
     Items = Items.join("");
     return `
@@ -21,7 +22,7 @@ function renderCollapse() {
             data-bs-target="#topic-collapse"
             aria-expanded="true"
         >
-            Topic
+            ${Name}
         </button>
         <div class="collapse show" id="topic-collapse">
             <ul class="btn-toggle-nav list-unstyled pb-1 small">
@@ -31,21 +32,50 @@ function renderCollapse() {
     </li>`;
 }
 
-function appendCollase(requestFunc, appendToWrapper) {
-    document.getElementById("topic_List").insertAdjacentHTML("afterbegin", renderCollapse());
+function appendCollase(name, itemName, requestFunc, appendToWrapper) {
+    document.getElementById("topic_List").insertAdjacentHTML("afterbegin", renderCollapse(name, itemName));
     setClickToItems(requestFunc, appendToWrapper);
+}
+
+function setChoosenColor(chooseIndex) {
+    let current = document.getElementById(`item_${currentIndex}`);
+    if (current !== null) {
+        current.classList.remove("choose");
+    }
+    currentIndex = chooseIndex;
+    let choosenItem = document.getElementById(`item_${chooseIndex}`);
+    choosenItem.classList.add("choose");
 }
 
 function setClickToItems(requestFunc, appendToWrapper) {
     let collection = document.getElementsByClassName("topicItem");
     for (let item of collection) {
         let topic = item.getAttribute("topic");
+        let index = item.getAttribute("index");
         item.addEventListener("click", () => {
             requestFunc(topic)
                 .then(res => res.json())
                 .then(json => {
-                    Data.data = json;
-                    appendToWrapper(0, Data.data.length);
+                    Data = json;
+                    if (json.totalPage == 0) {
+                        ShowNotFound();
+                    }
+                    else {
+                        if (pageData !== null) {
+                            if (pageData.currentPage !== 1) {
+                                setCurrentColor();
+                                removeCurrentColor();
+                                pageData.currentPage = 1;
+                            }
+                        }
+                        resetSearch();
+                        resetFilter();
+                        HideNotFound();
+                        setTopic(topic);
+                        isSearched = false;
+                        setChoosenColor(index);
+                        appendToWrapper();
+                    }
                 });
         })
     }

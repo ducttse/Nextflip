@@ -54,11 +54,8 @@ namespace Nextflip
             services.AddTransient<ISeasonDAO, SeasonDAO>();
             services.AddTransient<ISubtitleDAO, SubtitleDAO>();
 
-            services.AddTransient<ICategoryService, CategoryService>();
-            services.AddTransient<IEpisodeService, EpisodeService>();
-            services.AddTransient<IMediaService, MediaService>();
-            services.AddTransient<ISeasonService, SeasonService>();
-            services.AddTransient<ISubtitleService, SubtitleService>();
+            services.AddTransient<ISubscribedUserService, SubscribedUserService>();
+
 
           
             //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)

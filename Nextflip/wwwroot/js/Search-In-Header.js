@@ -28,22 +28,20 @@ function showError(searchValue) {
     let error = `<div id="error">  
                     <p class="text-light fs-4">Sorry we couldn't find any match <b>${searchValue}</b></p>
                 </div>`
-    console.log(error);
     resultHolder.insertAdjacentHTML("afterbegin", error);
 }
 
 function renderResult(result) {
-    console.log(result);
     return `
-    <div class="col-4">
-        <a class="text-decoration-none" href="/WatchMedia/MediaDetails/${result.media.mediaID}">
+    <div class="col-4 result mb-2">
+        <div onclick="return AppendDetails('${result.media.mediaID}');">
             <img
                 src="${result.media.bannerURL}"
                 alt="${result.media.mediaID}"
-                style="width: 85%; height: 85%;"
+                style="width: 100%; height: 85%;"
             />
             <div><p class="link-light p-2 fs-5">${result.media.title}</p></div>
-        </a>
+        </div>
     </div>`;
 }
 
@@ -53,8 +51,10 @@ function renderResults(resultArray) {
     })
     rendered = rendered.join("");
     return `
-    <div class="row">
-        ${rendered}
+    <div class="container">
+        <div class="row">
+            ${rendered}
+        </div>
     </div>
     `
 }
@@ -85,7 +85,6 @@ function setEnterEvent(func) {
 }
 
 function search(searchValue) {
-    console.log(searchValue);
     fetch(`/api/ViewSubscribedUserDashboard/GetMediasByTitle/${searchValue}`)
         .then(res => res.json())
         .then(json => {

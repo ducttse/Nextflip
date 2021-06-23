@@ -13,12 +13,12 @@ function renderImageHolder(media) {
   }
   return `
   <div class="col-3 imageHolder px-1">
-  <a href="/WatchMedia/MediaDetails/${media.mediaID}">
-    <img
-      src="${CheckedURL}"
-      class="w-100 h-90"
-      alt="..."/>
-  </a>
+    <div onclick="return AppendDetails('${media.mediaID}');">
+      <img
+        src="${CheckedURL}"
+        class="w-100 h-90"
+        alt="..."/>
+    </div>
   </div>`;
 }
 
@@ -87,7 +87,6 @@ function fetchCategoryID(category) {
       appendToWrapper(renderLisrHolder(category));
     });
 }
-
 
 function Run() {
   fetch("/api/ViewSubscribedUserDashboard/GetCategories")

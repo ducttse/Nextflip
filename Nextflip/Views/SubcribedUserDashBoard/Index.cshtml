@@ -4,12 +4,38 @@
 }
 @section styles{
     <link rel="Stylesheet" href="@Href("~/css/User-Dashboard.css")" />
+    <link rel="Stylesheet" href="@Href("~/css/Media-Details.css")" />
     <link rel="Stylesheet" href="@Href("~/css/Header.css")" />
 }
 <div id="wrapper">
 </div>
+<div class="modal fade" id="modalDetail" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-body bg-dark">
+                <button
+                type="button"
+                class="btn-close btn-close-white "
+                data-bs-dismiss="modal"
+                aria-label="Close"
+                ></button>
+                <div id="wrapper">
+                    <div class="w-100 h-100" id="imageHolder">    
+                    </div>
+                    <div id="content_holder" class="w-50 h-100">
+                        <div class="up row mx-auto" id="infor_hodler">
+                        </div>
+                        <div class="above" id="details_holder">
+                        </div>
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
 <script src="~/js/User-Dashboard.js"></script>
 <script src="~/js/Search-In-Header.js"></script>
+<script src="~/js/Media-Details.js"></script>
 <script>
     setGoToSearchEvent();
 </Script>

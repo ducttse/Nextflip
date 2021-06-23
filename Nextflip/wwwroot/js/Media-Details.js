@@ -1,17 +1,17 @@
 function ShowEpisode(el) {
   let iconRight = el;
-  let iconDown = el.parentElement.getElementsByClassName("fa-caret-down")[0];
+  let iconDown = el.parentElement.getElementsByClassName("fa-caret-down")[ 0 ];
   let episode =
-    el.parentElement.parentElement.getElementsByClassName("episode_holder")[0];
+    el.parentElement.parentElement.getElementsByClassName("episode_holder")[ 0 ];
   iconRight.classList.add("hide");
   episode.classList.remove("hide");
   iconDown.classList.remove("hide");
 }
 function HideEpisode(el) {
-  let iconRight = el.parentElement.getElementsByClassName("fa-caret-right")[0];
+  let iconRight = el.parentElement.getElementsByClassName("fa-caret-right")[ 0 ];
   let iconDown = el;
   let episode =
-    el.parentElement.parentElement.getElementsByClassName("episode_holder")[0];
+    el.parentElement.parentElement.getElementsByClassName("episode_holder")[ 0 ];
   episode.classList.add("hide");
   iconRight.classList.remove("hide");
   iconDown.classList.add("hide");
@@ -84,7 +84,7 @@ function renderSeasons(episodeArray, title, mediaID) {
 
 function renderAboveSection(seasons, episodeMap, mediaID) {
   let renderedArray = seasons.map((season) => {
-    return renderSeasons(episodeMap[season.seasonID], season.title, mediaID);
+    return renderSeasons(episodeMap[ season.seasonID ], season.title, mediaID);
   });
   renderedArray = renderedArray.join("");
   return `
@@ -93,7 +93,7 @@ function renderAboveSection(seasons, episodeMap, mediaID) {
     </div>`;
 }
 
-function appendToWrapper(data) {
+function appendToDetailWrapper(data) {
   document
     .getElementById("imageHolder")
     .insertAdjacentHTML("afterbegin", renderImg(data.media));
@@ -115,14 +115,38 @@ function appendToWrapper(data) {
     );
 }
 
-function onload(json) {
-  appendToWrapper(json);
+function clearWrapper() {
+  document.getElementById("imageHolder").innerHTML = "";
+  document.getElementById("infor_hodler").innerHTML = "";
+  document.getElementById("details_holder").innerHTML = "";
 }
 
-function Run(id) {
-  fetch(`/api/ViewMediaDetails/GetMediaDetails/${id}`)
+function onload(json) {
+  appendToDetailWrapper(json);
+  var myModal = new bootstrap.Modal(document.getElementById('modalDetail'), {
+    keyboard: false
+  })
+  myModal.show();
+}
+
+function debounce(func, timeout = 300) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => { func.apply(this, args); }, timeout);
+  };
+}
+let mediaID;
+const processChange = debounce(() => {
+  fetch(`/api/ViewMediaDetails/GetMediaDetails/${mediaID}`)
     .then((response) => response.json())
     .then((json) => {
       onload(json);
     });
+});
+
+function AppendDetails(id) {
+  mediaID = id;
+  clearWrapper();
+  processChange();
 }

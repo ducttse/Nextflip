@@ -7,9 +7,9 @@ namespace Nextflip.Models
 {
     public class NotificationObject
     {
-        public string Message { get; set; }
-        public string NameErr { get; set; }
-        public string DateTimeErr { get; set; }
-        public string EmailErr { get; set; }
+        public string message { get; set; }
+        public string nameErr { get; set; }
+        public string dateTimeErr { get; set; }
+        public string emailErr { get; set; }
     }
 }

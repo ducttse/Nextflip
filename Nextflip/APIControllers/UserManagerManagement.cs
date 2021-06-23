@@ -287,22 +287,22 @@ namespace Nextflip.APIControllers
         public IActionResult CreateStaff([FromServices] IUserManagerManagementService userManagerManagementService,
                                         [FromBody] Account account)
         {
-            NotificationObject noti = new NotificationObject { Message = "Create Fail" };
+            NotificationObject noti = new NotificationObject { message = "fail" };
             try
             {
-                if (account.fullname.Trim() == string.Empty) noti.NameErr = "Full name must not be empty";
+                if (account.fullname.Trim() == string.Empty) noti.nameErr = "Full name must not be empty";
                 bool isMatchForm = Regex.IsMatch(account.userEmail, @"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.IgnoreCase);
                 if (!isMatchForm)
                 {
-                    noti.EmailErr = "Email is invalid format";
+                    noti.emailErr = "Email is invalid format";
                 }
                 else if (userManagerManagementService.IsExistedEmail(account.userEmail))
                 {
-                    noti.EmailErr = "Email is existed";
+                    noti.emailErr = "Email is existed";
                 }
-                if (account.dateOfBirth == default(DateTime)) noti.DateTimeErr = "Date of birth must not be empty";
+                if (account.dateOfBirth == default(DateTime)) noti.dateTimeErr = "Date of birth must not be empty";
                 bool result = userManagerManagementService.AddNewStaff(account);
-                if (result == true) noti.Message = "Create success";
+                if (result == true) noti.message = "success";
             }
             catch (Exception ex)
             {
@@ -316,13 +316,13 @@ namespace Nextflip.APIControllers
         public IActionResult UpdateExpiredDate([FromServices] IUserManagerManagementService userManagerManagementService,
                                                     [FromBody] Subsciption subscript)
         {
-            NotificationObject noti = new NotificationObject { Message = "Fail" };
+            NotificationObject noti = new NotificationObject { message = "Fail" };
             try
             {
                 subscript.StartDate = DateTime.Now;
-                if (subscript.StartDate.CompareTo(subscript.EndDate) > 0) noti.DateTimeErr = "Date is invalid";
+                if (subscript.StartDate.CompareTo(subscript.EndDate) > 0) noti.dateTimeErr = "Date is invalid";
                 bool result = userManagerManagementService.UpdateExpiredDate(subscript);
-                if (result) noti.Message = "success";
+                if (result) noti.message = "success";
             }
             catch (Exception ex)
             {
@@ -336,13 +336,13 @@ namespace Nextflip.APIControllers
         public IActionResult EditStaffInfo([FromServices] IUserManagerManagementService userManagerManagementService,
                                             [FromBody] Account account)
         {
-            NotificationObject noti = new NotificationObject { Message = "Fail" };
+            NotificationObject noti = new NotificationObject { message = "Fail" };
             try
             {
-                if (account.fullname.Trim() == string.Empty) noti.NameErr = "Full name must not be empty";
-                if (account.dateOfBirth == default(DateTime)) noti.DateTimeErr = "Date of birth must not be empty";
+                if (account.fullname.Trim() == string.Empty) noti.nameErr = "Full name must not be empty";
+                if (account.dateOfBirth == default(DateTime)) noti.dateTimeErr = "Date of birth must not be empty";
                 bool result = userManagerManagementService.UpdateStaffInfo(account);
-                if (result == true) noti.Message = "Success";
+                if (result == true) noti.message = "Success";
             }
             catch (Exception ex)
             {

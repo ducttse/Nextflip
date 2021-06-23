@@ -1,0 +1,36 @@
+﻿@{
+    Layout = "_CustomLayout";
+}
+@section Styles {
+    <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
+}
+<div class="col-10">
+      <div class="mt-5 col-4 mx-auto shadow-lg p-3 mb-5 bg-body rounded">
+        <label class="form-label">Email</label>
+        <input id="email" type="text" class="form-control" />
+        <label class="form-label">Fullname</label>
+        <input id="fullname" type="text" class="form-control" />
+        <div class="row g-2">
+          <div class="col-6">
+            <label class="form-label">Date of birth</label>
+            <input id="dob" type="date" class="form-control" />
+          </div>
+          <div class="col-6">
+            <label class="form-label">Role</label>
+            <select id="role" class="form-select" aria-label="Default select example">
+              <option selected>Choose role</option>
+              <option value="User Manager">User Manager</option>
+              <option value="Media Manager">Media Manager</option>
+              <option value="Media Editor">Media Editor</option>
+              <option value="Customer Supporter">Customer Supporter</option>
+            </select>
+          </div>
+          <button class="col-4 mx-auto btn btn-primary" onclick="CreateStaff()">Create new staff</button>
+        </div>
+      </div>
+    </div>
+<script src="~/js/Slide-Bar.js"></script>
+<script src="~/js/Add-Staff.js"></script>
+<script>
+    appendSearch("Search account's email", "");
+</script>

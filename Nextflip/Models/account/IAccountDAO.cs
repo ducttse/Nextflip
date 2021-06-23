@@ -10,7 +10,7 @@ namespace Nextflip.Models.account
         IEnumerable<Account> GetAllAccounts();
         IEnumerable<Account> GetAccountListByEmailFilterRoleStatus(string searchValue, string roleName, string status, int RowsOnPage, int RequestPage);
         int NumberOfAccountsBySearchingFilterRoleStatus(string searchValue, string roleName, string status);
-        bool ChangeAccountStatus(string userID);
+        bool ChangeAccountStatus(string userID, string note);
         bool AddNewStaff(string fullname, string userEmail, string password, int intRole);
         bool EditStaffProfile(String userID, String fullname, DateTime dateOfBirth, int intRole);
         bool ChangeStaffPassword(String userID, String password);
@@ -26,6 +26,7 @@ namespace Nextflip.Models.account
 
         IEnumerable<Account> GetAccountsListOnlyByRole(string roleName, int RowsOnPage, int RequestPage);
         int NumberOfAccountsByRole(string roleName);
+        Account GetDetailOfAccount(string userID);
     }
 
 }

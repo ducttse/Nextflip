@@ -20,6 +20,7 @@ namespace Nextflip.Models.account
         public DateTime dateOfBirth { get; set; }
         public string status { get; set; }
         public string pictureURL { get; set; }
+        public string note { get; set; }
 
     }
 }

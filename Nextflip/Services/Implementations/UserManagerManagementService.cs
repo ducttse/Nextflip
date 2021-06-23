@@ -34,5 +34,6 @@ namespace Nextflip.Services.Implementations
                 => _accountDao.GetAccountsListOnlyByRole(roleName, RowsOnPage, RequestPage);
 
         public int NumberOfAccountsByRole(string roleName) => _accountDao.NumberOfAccountsByRole(roleName);
+        public bool ChangeAccountStatus(string userID, string note) => _accountDao.ChangeAccountStatus(userID, note);
     }
 }

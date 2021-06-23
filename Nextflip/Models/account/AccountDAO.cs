@@ -23,7 +23,6 @@ namespace Nextflip.Models.account
                     connection.Open();
                     string Sql = "Select userID, userEmail, roleName, fullname, status " +
                             "From account";
-                    Debug.WriteLine(Sql);
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         using (var reader = command.ExecuteReader())
@@ -121,11 +120,38 @@ namespace Nextflip.Models.account
             return count;
         }
 
-
-
-        public bool ChangeAccountStatus(string userID)
+        public bool ChangeAccountStatus(string userID, string note)
         {
-            throw new NotImplementedException();
+            var result = false;
+            string newStatus = "Inactive";
+            try
+            {
+                if (GetDetailOfAccount(userID).status.Equals("Inactive")) newStatus = "Active";
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "UPDATE account " +
+                        "SET status=@status, note=@note " +
+                        "WHERE userID = @userID";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@status", newStatus);
+                        command.Parameters.AddWithValue("@note", note);
+                        command.Parameters.AddWithValue("@userID", userID);
+                        int rowEffects = command.ExecuteNonQuery();
+                        if (rowEffects > 0)
+                        {
+                            result = true;
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return result;
         }
 
         public bool AddNewStaff(string fullname, string userEmail, string password, int intRole)
@@ -210,9 +236,6 @@ namespace Nextflip.Models.account
             }
             return count;
         }
-
-
-
 
         public IEnumerable<Account> GetAccountsListAccordingRequest(int NumberOfPage, int RowsOnPage, int RequestPage)
         {                                                                           
@@ -332,8 +355,7 @@ namespace Nextflip.Models.account
                     return accounts;
                 }
         */
-
-        
+ 
         public IEnumerable<Account> GetAccountsListByRoleAccordingRequest(string roleName, string status, int RowsOnPage, int RequestPage)
         {
             var accounts = new List<Account>();
@@ -539,6 +561,46 @@ namespace Nextflip.Models.account
                 connection.Close();
             }
             return count;
+        }
+
+
+        public Account GetDetailOfAccount(string userID)
+        {
+            Account account = null;
+            try { 
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            {
+                connection.Open();
+                string Sql = "Select userID, userEmail, roleName, fullname, dateOfBirth, status " +
+                                "From account " +
+                                "Where userID = @userID";
+                using (var command = new MySqlCommand(Sql, connection))
+                {
+                    command.Parameters.AddWithValue("@userID", userID);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            account = new Account
+                            {
+                                userID = reader.GetString(0),
+                                userEmail = reader.GetString(1),
+                                roleName = reader.GetString(2),
+                                fullname = reader.GetString(3),
+                                dateOfBirth = reader.GetDateTime(4),
+                                status = reader.GetString(5)
+                            };
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return account;
         }
     }
 }

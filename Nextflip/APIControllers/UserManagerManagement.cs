@@ -63,6 +63,8 @@ namespace Nextflip.APIControllers
             public string Status { get; set; }
             public int RowsOnPage { get; set; }
             public int RequestPage { get; set; }
+            public string UserID { get; set; }
+            public string Note { get; set; }
         }
 
         //Get all + filter
@@ -200,7 +202,28 @@ namespace Nextflip.APIControllers
             }
         }
 
-
+        [Route("ChangeAccountStatus")]
+        public JsonResult ChangeAccountStatus([FromServices] IUserManagerManagementService userManagerManagementService, [FromForm] Request request)
+        {
+            try
+            {
+                bool result = userManagerManagementService.ChangeAccountStatus(request.UserID, request.Note);
+                var message = new
+                {
+                    message = "success"
+                };
+                return new JsonResult(message);
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("ChangeAccountStatus: " + e.Message);
+                var message = new
+                {
+                    message = e.Message
+                };
+                return new JsonResult(message);
+            }
+        }        
         /*        [Route("GetAllActiveAccounts")]
                 public JsonResult GetAllActiveAccounts([FromServices] IUserManagerManagementService userManagerManagementService)
                 {

@@ -22,5 +22,6 @@ namespace Nextflip.Services.Interfaces
 
         IEnumerable<Account> GetAccountsListOnlyByRole(string roleName, int RowsOnPage, int RequestPage);
         int NumberOfAccountsByRole(string roleName);
+        bool ChangeAccountStatus(string userID, string note);
     }
 }

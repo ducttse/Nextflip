@@ -120,22 +120,20 @@ namespace Nextflip.Models.account
             return count;
         }
 
-        public bool ChangeAccountStatus(string userID, string note)
+        public bool InactiveAccount(string userID, string note)
         {
-            var result = false;
-            string newStatus = "Inactive";
+            bool result = false;
             try
             {
-                if (GetDetailOfAccount(userID).status.Equals("Inactive")) newStatus = "Active";
+                if (GetDetailOfAccount(userID).status.Equals("Inactive")) return false;
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
                     string Sql = "UPDATE account " +
-                        "SET status=@status, note=@note " +
+                        "SET status= 'Inactive', note=@note " +
                         "WHERE userID = @userID";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        command.Parameters.AddWithValue("@status", newStatus);
                         command.Parameters.AddWithValue("@note", note);
                         command.Parameters.AddWithValue("@userID", userID);
                         int rowEffects = command.ExecuteNonQuery();
@@ -601,6 +599,78 @@ namespace Nextflip.Models.account
                 throw new Exception(ex.Message);
             }
             return account;
+        }
+
+        public Account GetDetailOfInactiveAccount(string userID)
+        {
+            Account account = null;
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select userID, userEmail, roleName, fullname, dateOfBirth, status, note " +
+                                    "From account " +
+                                    "Where userID = @userID";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userID", userID);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                account = new Account
+                                {
+                                    userID = reader.GetString(0),
+                                    userEmail = reader.GetString(1),
+                                    roleName = reader.GetString(2),
+                                    fullname = reader.GetString(3),
+                                    dateOfBirth = reader.GetDateTime(4),
+                                    status = reader.GetString(5),
+                                    note = reader.GetString(6)
+                                };
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return account;
+        }
+
+        public bool ActiveAccount(string userID)
+        {
+            bool result = false;
+            try
+            {
+                if (GetDetailOfAccount(userID).status.Equals("Active")) return false;
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "UPDATE account " +
+                        "SET status= 'Active', note=null " +
+                        "WHERE userID = @userID";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userID", userID);
+                        int rowEffects = command.ExecuteNonQuery();
+                        if (rowEffects > 0)
+                        {
+                            result = true;
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return result;
         }
     }
 }

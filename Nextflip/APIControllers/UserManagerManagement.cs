@@ -202,28 +202,84 @@ namespace Nextflip.APIControllers
             }
         }
 
-        [Route("ChangeAccountStatus")]
-        public JsonResult ChangeAccountStatus([FromServices] IUserManagerManagementService userManagerManagementService, [FromForm] Request request)
+        [Route("InactiveAccount")]
+        public JsonResult InactiveAccount([FromServices] IUserManagerManagementService userManagerManagementService, [FromForm] Request request)
         {
             try
             {
-                bool result = userManagerManagementService.ChangeAccountStatus(request.UserID, request.Note);
-                var message = new
+                bool result = userManagerManagementService.InactiveAccount(request.UserID, request.Note);
+                var message1 = new
                 {
                     message = "success"
                 };
-                return new JsonResult(message);
+                var message2 = new
+                {
+                    message = "fail"
+                };
+                if (result) return new JsonResult(message1); else return new JsonResult(message2);
             }
             catch (Exception e)
             {
-                _logger.LogInformation("ChangeAccountStatus: " + e.Message);
+                _logger.LogInformation("Inactive an account: " + e.Message);
                 var message = new
                 {
                     message = e.Message
                 };
                 return new JsonResult(message);
             }
-        }        
+        }
+
+        [Route("ActiveAccount")]
+        public JsonResult ActiveAccount([FromServices] IUserManagerManagementService userManagerManagementService, [FromForm] Request request)
+        {
+            try
+            {
+                bool result = userManagerManagementService.ActiveAccount(request.UserID);
+                var message1 = new
+                {
+                    message = "success"
+                };
+                var message2 = new
+                {
+                    message = "fail"
+                };
+                if (result) return new JsonResult(message1); else return new JsonResult(message2);
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("Active an account: " + e.Message);
+                var message = new
+                {
+                    message = e.Message
+                };
+                return new JsonResult(message);
+            }
+        }
+
+        [Route("ReasonInactived")]
+        public JsonResult ReasonInactived([FromServices] IUserManagerManagementService userManagerManagementService, [FromBody] Request request)
+        {
+            try
+            {
+                string note = userManagerManagementService.GetDetailOfInactiveAccount(request.UserID).note;
+                var message = new
+                {
+                    reason = note
+                };
+                return new JsonResult(message);
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("Active an account: " + e.Message);
+                var message = new
+                {
+                    message = e.Message
+                };
+                return new JsonResult(message);
+            }
+        }
+
+
         /*        [Route("GetAllActiveAccounts")]
                 public JsonResult GetAllActiveAccounts([FromServices] IUserManagerManagementService userManagerManagementService)
                 {

@@ -10,6 +10,9 @@ using Nextflip.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Nextflip.Models.role;
+using Nextflip.Models.subscription;
+using System.Text.RegularExpressions;
+using Nextflip.Models;
 
 namespace Nextflip.APIControllers
 {
@@ -279,7 +282,91 @@ namespace Nextflip.APIControllers
             }
         }
 
+        [Route("CreateStaff")]
+        [HttpPost]
+        public IActionResult CreateStaff([FromServices] IUserManagerManagementService userManagerManagementService,
+                                        [FromBody] Account account)
+        {
+            NotificationObject noti = new NotificationObject { Message = "Create Fail" };
+            try
+            {
+                if (account.fullname.Trim() == string.Empty) noti.NameErr = "Full name must not be empty";
+                bool isMatchForm = Regex.IsMatch(account.userEmail, @"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.IgnoreCase);
+                if (!isMatchForm)
+                {
+                    noti.EmailErr = "Email is invalid format";
+                }
+                else if (userManagerManagementService.IsExistedEmail(account.userEmail))
+                {
+                    noti.EmailErr = "Email is existed";
+                }
+                if (account.dateOfBirth == default(DateTime)) noti.DateTimeErr = "Date of birth must not be empty";
+                bool result = userManagerManagementService.AddNewStaff(account);
+                if (result == true) noti.Message = "Create success";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("CreateStaff: " + ex.Message);
+            }
+            return new JsonResult(noti);
+        }
 
+        [Route("UpdateExpiredDate")]
+        [HttpPost]
+        public IActionResult UpdateExpiredDate([FromServices] IUserManagerManagementService userManagerManagementService,
+                                                    [FromBody] Subsciption subscript)
+        {
+            NotificationObject noti = new NotificationObject { Message = "Fail" };
+            try
+            {
+                subscript.StartDate = DateTime.Now;
+                if (subscript.StartDate.CompareTo(subscript.EndDate) > 0) noti.DateTimeErr = "Date is invalid";
+                bool result = userManagerManagementService.UpdateExpiredDate(subscript);
+                if (result) noti.Message = "success";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("UpdateExpiredDate: " + ex.Message);
+            }
+            return new JsonResult(noti);
+        }
+
+        [Route("EditStaffInfo")]
+        [HttpPost]
+        public IActionResult EditStaffInfo([FromServices] IUserManagerManagementService userManagerManagementService,
+                                            [FromBody] Account account)
+        {
+            NotificationObject noti = new NotificationObject { Message = "Fail" };
+            try
+            {
+                if (account.fullname.Trim() == string.Empty) noti.NameErr = "Full name must not be empty";
+                if (account.dateOfBirth == default(DateTime)) noti.DateTimeErr = "Date of birth must not be empty";
+                bool result = userManagerManagementService.UpdateStaffInfo(account);
+                if (result == true) noti.Message = "Success";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("EditStaffInfo: " + ex.Message);
+            }
+            return new JsonResult(noti);
+        }
+
+        [Route("GetStaffProfile")]
+        [HttpPost]
+        public IActionResult GetStaffProfile([FromServices] IUserManagerManagementService userManagerManagementService,
+                                    [FromBody] string userID)
+        {
+            Account account = null;
+            try
+            {
+                account = userManagerManagementService.GetAccountByID(userID);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("EditStaffInfo: " + ex.Message);
+            }
+            return new JsonResult(account);
+        }
         /*        [Route("GetAllActiveAccounts")]
                 public JsonResult GetAllActiveAccounts([FromServices] IUserManagerManagementService userManagerManagementService)
                 {

@@ -566,34 +566,35 @@ namespace Nextflip.Models.account
         public Account GetDetailOfAccount(string userID)
         {
             Account account = null;
-            try { 
-            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            try
             {
-                connection.Open();
-                string Sql = "Select userID, userEmail, roleName, fullname, dateOfBirth, status " +
-                                "From account " +
-                                "Where userID = @userID";
-                using (var command = new MySqlCommand(Sql, connection))
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
-                    command.Parameters.AddWithValue("@userID", userID);
-                    using (var reader = command.ExecuteReader())
+                    connection.Open();
+                    string Sql = "Select userID, userEmail, roleName, fullname, dateOfBirth, status " +
+                                    "From account " +
+                                    "Where userID = @userID";
+                    using (var command = new MySqlCommand(Sql, connection))
                     {
-                        if (reader.Read())
+                        command.Parameters.AddWithValue("@userID", userID);
+                        using (var reader = command.ExecuteReader())
                         {
-                            account = new Account
+                            if (reader.Read())
                             {
-                                userID = reader.GetString(0),
-                                userEmail = reader.GetString(1),
-                                roleName = reader.GetString(2),
-                                fullname = reader.GetString(3),
-                                dateOfBirth = reader.GetDateTime(4),
-                                status = reader.GetString(5)
-                            };
+                                account = new Account
+                                {
+                                    userID = reader.GetString(0),
+                                    userEmail = reader.GetString(1),
+                                    roleName = reader.GetString(2),
+                                    fullname = reader.GetString(3),
+                                    dateOfBirth = reader.GetDateTime(4),
+                                    status = reader.GetString(5)
+                                };
+                            }
                         }
                     }
+                    connection.Close();
                 }
-                connection.Close();
-            }
             }
             catch (Exception ex)
             {
@@ -673,6 +674,134 @@ namespace Nextflip.Models.account
                 throw new Exception(ex.Message);
             }
             return result;
+        }
+
+        public bool AddNewStaff(Account account)
+        {
+            try
+            {
+                bool isAdded = false;
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "insert into account(userID, hashedPassword, fullname, userEmail, roleName, dateOfBirth, status) " +
+                                   "values(@userID, @hashedPassword, @fullname, @userEmail, @roleName, @dateOfBirth, @status)";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userID", "5IYdNXbIrWhnMCAa");
+                        command.Parameters.AddWithValue("@hashedPassword", "5IYdNXbIrWhBnjmOMCAa");
+                        command.Parameters.AddWithValue("@fullname", account.fullname);
+                        command.Parameters.AddWithValue("@userEmail", account.userEmail);
+                        command.Parameters.AddWithValue("@roleName", account.roleName);
+                        command.Parameters.AddWithValue("@dateOfBirth", account.dateOfBirth);
+                        command.Parameters.AddWithValue("@status", "Active");
+                        int rowAffect = command.ExecuteNonQuery();
+                        if (rowAffect > 0) isAdded = true;
+                    }
+                    connection.Close();
+                }
+                return isAdded;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public bool UpdateStaffInfo(Account account)
+        {
+            try
+            {
+                bool isUpdate = false;
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Update account " +
+                                "Set fullname = @fullname, roleName = @roleName, dateOfBirth = @dateOfBirth, pictureURL = @pictureURL " +
+                                "Where userID = @userID";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userID", account.userID);
+                        command.Parameters.AddWithValue("@fullname", account.fullname);
+                        command.Parameters.AddWithValue("@userEmail", account.userEmail);
+                        command.Parameters.AddWithValue("@roleName", account.roleName);
+                        command.Parameters.AddWithValue("@dateOfBirth", account.dateOfBirth);
+                        command.Parameters.AddWithValue("@pictureURL", account.pictureURL);
+                        int rowAffect = command.ExecuteNonQuery();
+                        if (rowAffect > 0) isUpdate = true;
+                    }
+                    connection.Close();
+                }
+                return isUpdate;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public Account GetAccountByID(string userID)
+        {
+            Account account = null;
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select fullname, userEmail, dateOfBirth, roleName, pictureURL " +
+                                    "From account " +
+                                    "Where userID = @userID";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userID", userID);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                account = new Account
+                                {
+                                    userID = userID,
+                                    fullname = reader.GetString(0),
+                                    userEmail = reader.GetString(1),
+                                    dateOfBirth = reader.GetDateTime(2),
+                                    roleName = reader.GetString(3),
+                                    pictureURL = reader.IsDBNull(4) ? null : reader.GetString(4)
+                                };
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return account;
+        }
+        public bool IsExistedEmail(string email)
+        {
+            try
+            {
+                bool isExisted = false;
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select userEmail " +
+                                "From account " +
+                                "Where userEmail = @email";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@email", email);
+                        var reader = command.ExecuteReader();
+                        if (reader.Read()) isExisted = true;
+                    }
+                    connection.Close();
+                }
+                return isExisted;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

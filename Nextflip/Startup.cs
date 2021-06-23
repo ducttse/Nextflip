@@ -30,6 +30,7 @@ using Nextflip.Models.supportTopic;
 using Nextflip.Models.supportTicket;
 using Nextflip.Models.role;
 using Microsoft.AspNetCore.Http;
+using Nextflip.Models.subscription;
 
 namespace Nextflip
 {
@@ -72,6 +73,7 @@ namespace Nextflip
             services.AddTransient<IMediaManagerManagementService, MediaManagerManagementService>();
             services.AddTransient<IRoleDAO, RoleDAO>();
             services.AddTransient<IRoleService, RoleService>();
+            services.AddTransient<ISubscriptionDAO, SubscriptionDAO>();
 
 
             ///get connection string

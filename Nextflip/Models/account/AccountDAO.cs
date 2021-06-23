@@ -688,8 +688,12 @@ namespace Nextflip.Models.account
                                    "values(@userID, @hashedPassword, @fullname, @userEmail, @roleName, @dateOfBirth, @status)";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        command.Parameters.AddWithValue("@userID", "5IYdNXbIrWhnMCAa");
-                        command.Parameters.AddWithValue("@hashedPassword", "5IYdNXbIrWhBnjmOMCAa");
+                        command.Parameters.AddWithValue("@userID", generateID());
+                        command.Parameters.AddWithValue("@hashedPassword", generateID());
+                        string generateID()
+                        {
+                            return Guid.NewGuid().ToString("N");
+                        }
                         command.Parameters.AddWithValue("@fullname", account.fullname);
                         command.Parameters.AddWithValue("@userEmail", account.userEmail);
                         command.Parameters.AddWithValue("@roleName", account.roleName);

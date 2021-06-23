@@ -287,7 +287,7 @@ namespace Nextflip.APIControllers
         public IActionResult CreateStaff([FromServices] IUserManagerManagementService userManagerManagementService,
                                         [FromBody] Account account)
         {
-            NotificationObject noti = new NotificationObject { Message = "Create Fail" };
+            NotificationObject noti = new NotificationObject { Message = "Fail" };
             try
             {
                 if (account.fullname.Trim() == string.Empty) noti.NameErr = "Full name must not be empty";
@@ -302,7 +302,7 @@ namespace Nextflip.APIControllers
                 }
                 if (account.dateOfBirth == default(DateTime)) noti.DateTimeErr = "Date of birth must not be empty";
                 bool result = userManagerManagementService.AddNewStaff(account);
-                if (result == true) noti.Message = "Create success";
+                if (result == true) noti.Message = "Success";
             }
             catch (Exception ex)
             {

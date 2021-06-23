@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Nextflip.utils;
+using Microsoft.AspNetCore.Mvc;
 using Nextflip.Models.account;
 using Nextflip.Services.Implementations;
 using System;
@@ -291,8 +292,7 @@ namespace Nextflip.APIControllers
             try
             {
                 if (account.fullname.Trim() == string.Empty) noti.nameErr = "Full name must not be empty";
-                bool isMatchForm = Regex.IsMatch(account.userEmail, @"^[^@\s]+@[^@\s]+\.[^@\s]+$", RegexOptions.IgnoreCase);
-                if (!isMatchForm)
+                if (EmailUtil.IsValid(account.userEmail) == false)
                 {
                     noti.emailErr = "Email is invalid format";
                 }

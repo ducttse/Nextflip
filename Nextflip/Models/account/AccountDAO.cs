@@ -126,6 +126,7 @@ namespace Nextflip.Models.account
             try
             {
                 if (GetDetailOfAccount(userID).status.Equals("Inactive")) return false;
+                if (note == null || note.Trim().Equals("")) return false;
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
@@ -648,6 +649,7 @@ namespace Nextflip.Models.account
             try
             {
                 if (GetDetailOfAccount(userID).status.Equals("Active")) return false;
+                if (GetDetailOfInactiveAccount(userID).note == null || GetDetailOfInactiveAccount(userID).note.Trim().Equals("")) return false;
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();

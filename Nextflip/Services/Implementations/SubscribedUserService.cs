@@ -56,6 +56,7 @@ namespace Nextflip.Services.Implementations
         //media
         public Media GetMediaByID(string mediaID) => _mediaDAO.GetMediaByID(mediaID);
 
+        public IEnumerable<Media> GetMediasByTitle(string searchValue) => _mediaDAO.GetMediasByTitle(searchValue);
         public IEnumerable<Media> GetFavoriteMediasByUserID(string userID)
         {
             var favoriteMedias = new List<Media>();

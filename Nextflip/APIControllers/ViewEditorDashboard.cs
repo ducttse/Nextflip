@@ -176,11 +176,11 @@ namespace Nextflip.APIControllers
         }
 
         [Route("GetCategories")]
-        public IActionResult GetCategories([FromServices] IMediaService mediaService)
+        public IActionResult GetCategories([FromServices] ISubscribedUserService subscribedUserService)
         {
             try
             {
-                IEnumerable<Category> categories = mediaService.GetCategories();
+                IEnumerable<Category> categories = subscribedUserService.GetCategories();
                 return new JsonResult(categories);
             }
             catch (Exception ex)

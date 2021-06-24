@@ -18,7 +18,7 @@ namespace Nextflip.Services.Interfaces
         //media
         Media GetMediaByID(string mediaID);
         IEnumerable<Media> GetFavoriteMediasByUserID(string userID);
-        //IEnumerable<Media> GetMediasByTitle(string title);
+        IEnumerable<Media> GetMediasByTitle(string title);
         IEnumerable<Media> GetMediasByCategoryID(int categoryID);
         //season
         IEnumerable<Season> GetSeasonsByMediaID(string mediaID);

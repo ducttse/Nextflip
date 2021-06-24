@@ -9,6 +9,45 @@ namespace Nextflip.Models.media
 {
     public class MediaDAO: IMediaDAO
     {
+        public IEnumerable<Media> GetMediasByTitle(string searchValue)
+        {
+            try
+            {
+                var medias = new List<Media>();
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select mediaID,status, title, bannerURL, language, description " +
+                                "From media " +
+                                "Where MATCH (title)  AGAINST (@searchValue in boolean mode) ";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@searchValue", $"{searchValue}*");
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                medias.Add(new Media
+                                {
+                                    MediaID = reader.GetString(0),
+                                    Status = reader.GetString(1),
+                                    Title = reader.GetString(2),
+                                    BannerURL = reader.GetString(3),
+                                    Language = reader.GetString(4),
+                                    Description = reader.GetString(5),
+                                });
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+                return medias;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
         public IEnumerable<Media> GetMediasByTitle(string searchValue, int RowsOnPage, int RequestPage)
         {
             try

@@ -8,14 +8,27 @@ namespace Nextflip.Models.account
     public interface IAccountDAO
     {
         IEnumerable<Account> GetAllAccounts();
-        IEnumerable<Account> GetAccountListByEmail(string searchValue);
-        Boolean ChangeAccountStatus(string userID);
-        Boolean AddNewStaff(string fullname, string userEmail, string password, int intRole);
-        Boolean EditStaffProfile(String userID, String fullname, DateTime dateOfBirth, int intRole);
-        Boolean ChangeStaffPassword(String userID, String password);
-        int NumberOfAccounts();
-        IEnumerable<Account> GetAccountsListAccordingRequest(int NumberOfPage, int RowsOnPage, int RequestPage);
+        IEnumerable<Account> GetAccountListByEmailFilterRoleStatus(string searchValue, string roleName, string status, int RowsOnPage, int RequestPage);
+        int NumberOfAccountsBySearchingFilterRoleStatus(string searchValue, string roleName, string status);
+        bool InactiveAccount(string userID, string note);
+        int NumberOfAccountsBySearching(string searchValue);
+        int NumberOfAccountsByRoleAndStatus(string roleName, string status);
+        IEnumerable<Account> GetAccountsListByRoleAccordingRequest(string roleName, string status, int RowsOnPage, int RequestPage);
+        IEnumerable<Account> GetAccountListByEmail(string searchValue, int RowsOnPage, int RequestPage);
 
+        IEnumerable<Account> GetAccountListByEmailFilterRole(string searchValue, string roleName, int RowsOnPage, int RequestPage);
+        int NumberOfAccountsBySearchingFilterRole(string searchValue, string roleName);
+
+        IEnumerable<Account> GetAccountsListOnlyByRole(string roleName, int RowsOnPage, int RequestPage);
+        int NumberOfAccountsByRole(string roleName);
+        Account GetDetailOfAccount(string userID);
+        Account GetDetailOfInactiveAccount(string userID);
+        bool ActiveAccount(string userID);
+        // add update 
+        bool AddNewStaff(Account account);
+        bool UpdateStaffInfo(Account account);
+        Account GetAccountByID(string userID);
+        bool IsExistedEmail(string email);
     }
 
 }

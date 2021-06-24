@@ -1,78 +1,121 @@
-let Data = {
-  data: []
-};
-let requestParam = {
-  NumberOfPage: 3,
-  RowsOnPage: 10,
-  RequestPage: 1
-};
-function getData() {
-  return Data.data;
+let Data;
+let requestParam;
+let isSearched = false;
+let isFiltered = false;
+
+function loadStorageData() {
+  if (sessionStorage.getItem("requestParam") === null) {
+    console.log("true")
+    requestParam = {
+      RowsOnPage: 12,
+      RequestPage: 1,
+      RoleName: "Customer Supporter",
+      SearchValue: "",
+      Status: ""
+    };
+  }
+  else {
+    requestParam = JSON.parse(sessionStorage.getItem("requestParam"));
+  }
+  if (sessionStorage.getItem("isSearched") === null) {
+    isSearched = false;
+  }
+  else {
+    isSearched = (sessionStorage.getItem("isSearched") === 'true');
+  }
+  if (sessionStorage.getItem("isFiltered") === null) {
+    isFiltered = false;
+  }
+  else {
+    isFiltered = (sessionStorage.getItem("isFiltered") === 'true');
+  }
+}
+loadStorageData();
+
+function setTopic(topic) {
+  requestParam.RoleName = topic;
+}
+
+function setRequestPage(num) {
+  requestParam.RequestPage = num;
+  if (isFiltered && isSearched) {
+    return searchWithFilterOnly();
+  }
+  else if (isFiltered) {
+    return requestWithFilterOnly();
+  }
+  else if (isSearched) {
+    return searchOnly(requestParam.SearchValue);
+  }
+  return requestUserData(requestParam.RoleName);
+}
+
+function ShowNotFound() {
+  let error;
+  if (isFiltered && isSearched) {
+    error = `<p class="fs-5">There is no <b>${requestParam.Status}</b> user in this role contain  <b>${requestParam.SearchValue}</b></p>`
+  }
+  else if (isFiltered) {
+    error = `<p class="fs-5">There is no <b>${requestParam.Status}</b> user for this role</p>`
+  }
+  else { error = `<p class="fs-5">There is no result for <b>${requestParam.SearchValue}</b></p>` }
+  let notFound = document.getElementById("notFound");
+  if (notFound.innerHTML != "") {
+    notFound.innerHTML = "";
+  }
+  notFound.insertAdjacentHTML("afterbegin", error);
+  notFound.classList.remove("hide");
+  document.getElementById("table_holder").classList.add("hide");
+  if (!isFiltered) {
+    document.getElementById("filter").setAttribute("disabled", "disabled");
+  }
+}
+
+function HideNotFound() {
+  let notFound = document.getElementById("notFound");
+  if (!notFound.classList.contains("hide")) {
+    notFound.classList.add("hide");
+    document.getElementById("table_holder").classList.remove("hide");
+    if (!isFiltered) {
+      document.getElementById("filter").removeAttribute("disabled");
+    }
+  }
 }
 
 function renderUser(user, index) {
   return `
-    <tr>
+    <tr style="max-width: 45px">
         <td>${index + 1}</td>
         <td>${user.userEmail}</td>
         <td>${user.roleName}</td>
         <td>${user.fullname}</td>
         <td class="checkBox">
-            <input type="checkbox" 
-            name="userRole" 
-
-            initValue=${user.status}
-            value="${user.status}" 
-            ${user.status === "Active" ? "checked" : ""} /> ${user.status}
+          <div>
+            <input class="status_btn" type="checkbox" userID="${user.userID}" value="${user.status}" ${user.status === "Active" ? "checked" : ""}  />
+          </div>
         </td>
         <td>
             <a class="text-decoration-none" 
+            onclick="return storeToStorage();"
             href="/Edit/${user.userID}">
-            <i class="fas fa-edit"></i>Edit
+            <i class="fas fa-edit"></i>
             </a>
         </td>
     </tr>`;
 }
-function reRenderCheckbox() {
-  var checkBoxList = document.getElementsByClassName("checkBox");
-  for (let index = 0; index < checkBoxList.length; index++) {
-    let child = checkBoxList[ index ];
-    let checkBoxEl = child.querySelector("input[type=checkbox]");
-    checkBoxEl.addEventListener("click", () => {
-      if (checkBoxEl.checked) {
-        child.innerHTML = "";
-        checkBoxEl.setAttribute("value", "Active");
-        child.append(checkBoxEl);
-        child.append(" Active");
-      } else {
-        child.innerHTML = "";
-        checkBoxEl.setAttribute("value", "Inactive");
-        child.append(checkBoxEl);
-        child.append(" Inactive");
-      }
-      console.log(checkBoxEl);
-      console.log(checkBoxEl.getAttribute("initValue"));
-      if (
-        checkBoxEl.getAttribute("initValue") !==
-        checkBoxEl.getAttribute("value")
-      ) {
-        child.classList.add("text-warning");
-        // document.getElementById("message").innerHTML =
-        //   "Something changed. Click to save";
-      }
-      // remove if unchange
-      else if (child.classList.contains("text-warning")) {
-        child.classList.remove("text-warning");
-      }
-    });
-  }
+
+function setTotalPage() {
+  pageData.totalPage = Data.totalPage
 }
 
-function appendUserToWrapper(start, end) {
-  if (maxPage * requestParam.RowsOnPage - end <= 0) {
-    return;
-  }
-  let userArray = Data.data.slice(start, end).map((user, index) => {
+function countStart() {
+  return (pageData.currentPage - 1) * requestParam.RowsOnPage
+}
+
+function appendUserToWrapper() {
+  setTotalPage();
+  let start = countStart();
+  let userArray = Data.data.slice(0, requestParam.RowsOnPage).map((user, index) => {
     return renderUser(user, start + index);
   });
   userArray = userArray.join("");
@@ -81,92 +124,235 @@ function appendUserToWrapper(start, end) {
     dataWapper.innerHTML = "";
   }
   dataWapper.insertAdjacentHTML("afterbegin", userArray);
-  // add reRender function to each checkbox
-  reRenderCheckbox();
+  appendCurrentArray();
+  addEvent();
 }
 
-function CountCurrentLoadedPage() {
-  return parseInt(Data.data.length / requestParam.RowsOnPage)
+setAppendToDataWrapper(appendUserToWrapper);
+
+function search(searchValue) {
+  requestParam.RequestPage = 1;
+  setPageDataCurrentPage(1);
+  requestParam.SearchValue = searchValue;
+  if (searchValue == "") {
+    isSearched = false;
+    return;
+  }
+  isSearched = true;
+  requestParam.SearchValue = searchValue;
+  if (isFiltered && isSearched) {
+    searchWithFilter()
+  }
+  else {
+    let reqHeader = new Headers();
+    reqHeader.append("Content-Type", "text/json");
+    reqHeader.append("Accept", "application/json, text/plain, */*");
+    let initObject = {
+      method: "POST",
+      headers: reqHeader,
+      body: JSON.stringify(requestParam)
+    };
+    fetch("/api/UserManagerManagement/GetAccountListByEmailFilterRole", initObject)
+      .then(res => res.json())
+      .then(json => {
+        if (json.totalPage == 0) {
+          ShowNotFound();
+        }
+        else {
+          HideNotFound();
+          Data = json;
+          pageData.currentPage = 1;
+          appendUserToWrapper();
+        };
+      })
+  }
 }
 
-function Load(rowsPerPage) {
-  appendUserToWrapper(0, rowsPerPage);
-  appendPagination(Data.data.length, rowsPerPage);
-  setCurrentColor(1);
-  setClickToIndex(appendUserToWrapper);
-}
-
-function PostRequest(page) {
+function searchOnly(searchValue) {
+  requestParam.SearchValue = searchValue;
+  isSearched = true;
   let reqHeader = new Headers();
   reqHeader.append("Content-Type", "text/json");
   reqHeader.append("Accept", "application/json, text/plain, */*");
-  if (page !== 1) {
-    requestParam.RequestPage = page;
-  }
   let initObject = {
     method: "POST",
     headers: reqHeader,
     body: JSON.stringify(requestParam)
   };
-  //
-  return fetch(
-    "/api/UserManagerManagement/GetAccountsListAccordingRequest",
-    initObject
-  )
+  return fetch("/api/UserManagerManagement/GetAccountListByEmailFilterRole", initObject)
 }
 
-function RequestMoreData(RequestPage) {
-  requestParam.RequestPage = RequestPage;
-  console.log(Data.data.length);
+function requestUserData(role) {
+  requestParam.roleName = role;
+  let reqHeader = new Headers();
+  reqHeader.append("Content-Type", "text/json");
+  reqHeader.append("Accept", "application/json, text/plain, */*");
+  let initObject = {
+    method: "POST",
+    headers: reqHeader,
+    body: JSON.stringify(requestParam)
+  };
+  return fetch("/api/UserManagerManagement/GetAccountsListOnlyByRole", initObject);
+}
 
-  PostRequest(RequestPage).then(res => res.json()).then(json => {
-    json.forEach(user => {
-      Data.data.push(user);
+function requestUserDataAndResetPage(role) {
+  requestParam.RequestPage = 1;
+  setPageDataCurrentPage(1);
+  return requestUserData(role);
+}
+
+async function getRoles() {
+  await fetch("/api/UserManagerManagement/GetRoleNameList")
+    .then(res => res.json())
+    .then(json => {
+      TopicArr = json;
+      appendCollase("Role", "roleName", requestUserDataAndResetPage, appendUserToWrapper)
+      return requestUserDataAndResetPage("Customer Supporter")
     })
-    let num = RequestPage - 1;
-    appendUserToWrapper(num * rowsPerPage, (num + 1) * rowsPerPage);
-    setCurrentColor(RequestPage);
+    .then(res => res.json())
+    .then(json => {
+      Data = json;
+      appendUserToWrapper();
+      setChoosenColor(0);
+    });
+  return new Promise((resolve) => {
+    console.log("resolve");
+    resolve("resolved");
   })
 }
 
-function Run(rowsPerPage) {
-  PostRequest(1).then((response) => response.json())
-    .then((json) => {
-      Data.data = json;
-      Load(rowsPerPage);
+function requestWithFilter() {
+  requestParam.RequestPage = 1;
+  setPageDataCurrentPage(1);
+  requestWithFilterOnly()
+    .then(res => res.json())
+    .then(json => {
+      if (json.totalPage == 0) {
+        ShowNotFound();
+      }
+      else {
+        HideNotFound();
+        Data = json;
+        pageData.currentPage = 1;
+        appendUserToWrapper();
+      }
+    })
+}
+
+function requestWithFilterOnly() {
+
+  let reqHeader = new Headers();
+  reqHeader.append("Content-Type", "text/json");
+  reqHeader.append("Accept", "application/json, text/plain, */*");
+  let initObject = {
+    method: "POST",
+    headers: reqHeader,
+    body: JSON.stringify(requestParam)
+  };
+  return fetch("/api/UserManagerManagement/GetAccountsListByRoleAccordingRequest", initObject);
+}
+
+function searchWithFilter() {
+  requestParam.RequestPage = 1;
+  setPageDataCurrentPage(1);
+  searchWithFilterOnly()
+    .then(res => res.json())
+    .then(json => {
+      if (json.totalPage == 0) {
+        ShowNotFound();
+      }
+      else {
+        HideNotFound();
+        Data = json;
+        pageData.currentPage = 1;
+        appendUserToWrapper();
+      }
     });
 }
 
-function search(searchValue) {
-  if (!searchValue) {
-    return;
+function searchWithFilterOnly() {
+  let reqHeader = new Headers();
+  reqHeader.append("Content-Type", "text/json");
+  reqHeader.append("Accept", "application/json, text/plain, */*");
+  let initObject = {
+    method: "POST",
+    headers: reqHeader,
+    body: JSON.stringify(requestParam)
+  };
+  return fetch("/api/UserManagerManagement/GetAccountListByEmailFilterRoleStatus", initObject)
+}
+
+function doFilter() {
+  let filter = document.getElementById("filter");
+  filter.addEventListener("change", () => {
+    let choosenValue = filter.options[ filter.selectedIndex ].value;
+    if (choosenValue === "All") {
+      requestParam.Status = "";
+      isFiltered = false;
+      if (isSearched) {
+        searchOnly(requestParam.SearchValue)
+          .then(res => res.json())
+          .then(json => {
+            HideNotFound();
+            Data = json;
+            appendUserToWrapper();
+          })
+        return;
+      }
+      else {
+        requestUserDataAndResetPage(requestParam.RoleName)
+          .then(res => res.json())
+          .then(json => {
+            HideNotFound();
+            Data = json;
+            appendUserToWrapper();
+          })
+        return;
+      }
+    }
+    else {
+      isFiltered = true;
+      requestParam.Status = choosenValue;
+      if (isFiltered && isSearched) {
+        searchWithFilter();
+      }
+      else {
+        requestWithFilter()
+          .then(res => res.json())
+          .then(json => {
+            if (json.totalPage == 0) {
+              ShowNotFound();
+              return;
+            }
+            Data = json;
+            HideNotFound();
+            appendUserToWrapper();
+            setChoosenColor(TopicArr.findIndex((role) => {
+              return role.roleName === requestParam.RoleName;
+            }))
+          })
+      }
+    }
   }
-  ReRun();
-  fetch(`/api/UserManagerManagement/GetAccountListByEmail/${searchValue}`)
-    .then((response) => response.json())
-    .then((json) => {
-      Data.data = json;
-      Load(rowsPerPage);
-    });
+  )
 }
 
-function preLoad() {
-  return new Promise((resolve, reject) => {
-    setMaxPage(resolve);
-  });
+function resetSearch() {
+  document.getElementById("search").value = "";
+  requestParam.SearchValue = "";
+  isSearched = false;
 }
 
-function setMaxPage(resolve) {
-  fetch("/api/UserManagerManagement/NumberOfAccounts")
-    .then((res) => res.json())
-    .then((json) => {
-      rowsPerPage = requestParam.RowsOnPage;
-      maxPage = parseInt(parseInt(json) / rowsPerPage);
-      resolve("resolved");
-    });
+function resetFilter() {
+  document.getElementById('filter').getElementsByTagName('option')[ 0 ].selected = 'selected';
+  isFiltered = false;
+  requestParam.Status = "";
 }
 
-function ReRun() {
-  document.getElementById("dataWapper").innerHTML = "";
-  document.getElementById("pagination").innerHTML = "";
+doFilter();
+
+function storeToStorage() {
+  sessionStorage.setItem("requestParam", JSON.stringify(requestParam));
+  sessionStorage.setItem("isFiltered", isFiltered.toString());
+  sessionStorage.setItem("isSearched", isSearched.toString());
 }

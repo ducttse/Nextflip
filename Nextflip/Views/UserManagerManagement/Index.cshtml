@@ -1,49 +1,109 @@
 @{
     Layout = "_CustomLayout";
 }
-
 @section Styles {
     <link href="@Url.Content("~/css/User-Manager.css")" rel="stylesheet" type="text/css" />
+     <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
 }
-<div id="search_wrapper">
-</div>
-<div class="ui_wrapper">
-    <form method="POST" action="">
-        <table class="table table-bordered w-100">
-            <thead class="table-dark">
-                <tr>
-                    <td class="col-1">#</td>
-                    <td class="col-3">Email</td>        
-                    <td class="col-1">Role</td>
-                    <td class="col-2">Full name</td>
-                    <td class="col-1">Active</td>
-                    <td class="col-1"></td>
-                </tr>
-            </thead>
-            <tbody id="dataWapper"></tbody>
-        </table>
-        <div id="pagination"></div>
-        <div id="submitButton">
-            <!-- Submit button -->
-            <p class="text-warning" id="message"></p>
-            <button class="btn btn-primary" type="submit" name="btn" value="save">
-                Save
-            </button>
+<div class="ui_wrapper col-10">
+    <div class="w-100"> 
+        <div class="btn-group w-100 px-3 pt-3 pb-2 bg-primary">
+            <div id="search_wrapper" class="col-10"></div>
+            <div class="col-2 d-inline-flex mb-2">
+                <label class="form-label mt-2 text-light">Filter</label>
+                <select id="filter" class="ms-2 form-select">
+                    <option selected>All</option>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                </select> 
+            </div>
         </div>
-    </form>
+        <div id="notFound" class="hide"> 
+        </div>
+        <div id="table_holder" style="min-height:80vh;">
+            <table class="table table-bordered table-responsive table-hover w-100">
+                <thead class="table-secondary">
+                    <tr>
+                        <th class="col">#</th>
+                        <th class="col">Email</th>        
+                        <th class="col">Role</th>
+                        <th class="col">Full name</th>
+                        <th class="col">Active</th>
+                        <th class="col"></th>
+                    </tr>
+                </thead>
+                <tbody id="dataWapper"></tbody>
+            </table>
+        </div>
+        <div id="pagination" class="d-flex justify-content-center"></div>
+    </div>
 </div>
+    <!-- Modal form -->
+    <div class="modal fade" id="modalForm" tabindex="-1" aria-labelledby="Form_UserID" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="Form_Label">Deactive User</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+            <div class="modal-body">
+            <input type="hidden" id="Form_UserID"/>
+              <div class="mb-3">
+                <label for="message-text" class="col-form-label">Leave reason for this activity</label>
+                <textarea name="note" style="height: 350px" class="form-control" id="note" ></textarea>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-bg-danger" data-bs-dismiss="modal">Cancel</button>
+              <button type="button" class="btn btn-primary" id="submit_btn">Submit</button>
+            </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal check -->
+    <div class="modal fade" id="modalCheck" tabindex="-1" aria-labelledby="Check_Label" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="Check_Label"> Are use sure to active this user? </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <b>Reason:</b> <p id="reason"></p>
+          </div>
+          <div class="modal-footer">
+            <input type="hidden" id="Check_UserID"/>
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal"> Cancel </button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="confirm_btn"> Confirm </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="modal_flash" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div class="row text-center" id="flash_message">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal -->
 <script src="~/js/Pagination.js"></script>
+<script src="~/js/Slide-Bar.js"></script>
 <script src="~/js/Search-Component.js"></script>
 <script src="~/js/User-Manager-Dashboard.js"></script>
+<script src="~/js/User-Status-Manager.js"></script>
 <script>
-let rowsPerPage;
-let maxPage;
-preLoad().then(msg =>{
-    if(msg === "resolved"){
-        Run(rowsPerPage);
-        appendSearch("Search Email", "");
-        setClick(search);
-    }
-})
-
+    getRoles().then(() => { 
+        SetEvent();
+        appendSearch("Search account's email", "");
+        let button = `<a href="/UserManagerManagement/CreateStaff" class="side_bar_btn btn btn-lg btn-dark text-decoration-none link-light text-start w-100">
+                    Create new staff
+                  </a>`;
+        appendButton(button);
+    })
+    
 </script>

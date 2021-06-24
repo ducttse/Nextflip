@@ -12,7 +12,7 @@ namespace Nextflip.APIControllers
     [ApiController]
     public class ViewSubscribedUserDashboard : ControllerBase
     {
-        private readonly ILogger _logger;
+        /*private readonly ILogger _logger;
 
         public ViewSubscribedUserDashboard(ILogger<ViewSubscribedUserDashboard> logger)
         {
@@ -103,6 +103,6 @@ namespace Nextflip.APIControllers
                 _logger.LogInformation("GetMediasByCategoryID: " + ex.Message);
                 return new JsonResult("error occur");
             }
-        }
+        }*/
     }
 }

@@ -4,8 +4,11 @@
 @section Styles {
     <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
 }
-<div class="col-10">
-      <div class="mt-5 col-5 mx-auto shadow-lg p-3 mb-5 bg-body rounded">
+<div class="col-10 align-self-center">
+      <div>
+        <p class="fs-1 text-center">Add new staff</p>
+      <div>
+      <div class="col-5 mx-auto shadow-lg p-5 bg-body rounded">
       <div class="row g-3 needs-validation" novalidate>
         <div class="col-12">
           <label for="email" class="form-label">Email</label>
@@ -37,10 +40,22 @@
             </select>
           </div>
         </div>
-        <button class="col-4 mt-3 mx-auto btn btn-primary" onclick="CreateStaff()">Create new staff</button>
+        <button class="col-4 mt-5 mx-auto btn btn-primary" onclick="CreateStaff()">Create new staff</button>
       </div>
       </div>
 </div>
+    <!-- Modal -->
+    <div class="modal fade" id="modal_flash" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div class="row text-center" id="flash_message">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal -->
 <script src="~/js/Slide-Bar.js"></script>
 <script src="~/js/Add-Staff.js"></script>
 <script>

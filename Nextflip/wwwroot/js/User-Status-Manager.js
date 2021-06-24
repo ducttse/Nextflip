@@ -13,7 +13,7 @@ function appendFlashMessageContent(isSuccess) {
     let fail = ` <i class="far fa-times-circle fa-5x text-danger"></i>
                     <p class="fs-5">Opps! Something went wrong</p>
                     <button type="button" class="col-4 mx-auto btn btn-danger text-white" data-bs-dismiss="modal">
-                        Try again
+                     Try again
                     </button>`
     let success = ` <i class="far fa-check-circle fa-5x" style="color: #4bca81"></i>
                     <p class="fs-5">Success</p>
@@ -36,7 +36,13 @@ function reuqestDeactive() {
     let Note = document.getElementById("note").value;
     formData.append('UserID', UserID);
     formData.append('Note', Note);
-    isRequest = true;
+    if (note.length == 0) {
+        isRequest = true;
+    }
+    else {
+        isRequest = false;
+    }
+    console.log(isRequest);
     fetch("https://localhost:44341/api/UserManagerManagement/InactiveAccount", {
         body: formData,
         method: "post"
@@ -57,6 +63,7 @@ function reuqestDeactive() {
                 appendFlashMessageContent(false);
             }
             document.getElementById("note").value = "";
+            console.log(isSuccess);
         });
 }
 
@@ -88,7 +95,11 @@ function requestActive() {
 }
 
 function setNote(note) {
-    document.getElementById("reason").innerHTML = note;
+    let reason = document.getElementById("reason");
+    if (reason.innerHTML != "") {
+        reason.innerHTML = "";
+    }
+    reason.insertAdjacentHTML("beforeend", note);
 }
 
 function getNote(userid) {
@@ -135,8 +146,8 @@ function SetEvent() {
         showModal("modal_flash");
     })
     document.getElementById("modal_flash").addEventListener("hide.bs.modal", () => {
-        isRequest = !isRequest;
-        isSuccess = !isSuccess;
+        isRequest = false;
+        isSuccess = false;
         if (isFiltered && isSearched) {
             searchWithFilter();
         }

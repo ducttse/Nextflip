@@ -7,7 +7,7 @@ function loadStorageData() {
   if (sessionStorage.getItem("requestParam") === null) {
     console.log("true")
     requestParam = {
-      RowsOnPage: 10,
+      RowsOnPage: 12,
       RequestPage: 1,
       RoleName: "Customer Supporter",
       SearchValue: "",
@@ -115,7 +115,7 @@ function countStart() {
 function appendUserToWrapper() {
   setTotalPage();
   let start = countStart();
-  let userArray = Data.data.slice(0, 10).map((user, index) => {
+  let userArray = Data.data.slice(0, requestParam.RowsOnPage).map((user, index) => {
     return renderUser(user, start + index);
   });
   userArray = userArray.join("");

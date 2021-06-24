@@ -45,6 +45,13 @@ function setRequetsParam() {
     }
 }
 
+function showModal() {
+    var myModal = new bootstrap.Modal(document.getElementById("modal_flash"), {
+        keyboard: false
+    })
+    myModal.show();
+}
+
 function CreateStaff() {
     setRequetsParam();
     requestApi()
@@ -52,8 +59,10 @@ function CreateStaff() {
         .then(json => {
             console.log(json);
             let success = validate(json);
-            if (success = "success") {
+            if (success == "success") {
                 resetRequestParam();
+                appendFlashMessageContent(true);
+                showModal();
             }
         })
 }
@@ -65,6 +74,9 @@ function debounce(func, timeout = 300) {
         timer = setTimeout(() => { func.apply(this, args); }, timeout);
     };
 }
+
+
+
 
 function validate(json) {
     if (json.message != null) {
@@ -150,3 +162,24 @@ const checkEmail = debounce(() => {
         }
         );
 });
+
+function appendFlashMessageContent(isSuccess) {
+    let fail = ` <i class="far fa-times-circle fa-5x text-danger"></i>
+                    <p class="fs-5">Opps! Something went wrong</p>
+                    <button type="button" class="col-4 mx-auto btn btn-danger text-white" data-bs-dismiss="modal">
+                        Try again
+                    </button>`
+    let success = ` <i class="far fa-check-circle fa-5x" style="color: #4bca81"></i>
+                    <p class="fs-5">Success</p>
+                    <button type="button" class="col-4 mx-auto btn btn-success text-white" 
+                        style=" background-color: #4bca81 !important; border: #4bca81 !important;"
+                        data-bs-dismiss="modal">
+                        Continue
+                    </button>`;
+
+    let flashModal = document.getElementById("flash_message");
+    if (flashModal.innerHTML != "") {
+        flashModal.innerHTML = "";
+    }
+    flashModal.insertAdjacentHTML("afterbegin", isSuccess ? success : fail);
+}

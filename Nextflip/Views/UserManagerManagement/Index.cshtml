@@ -5,12 +5,12 @@
     <link href="@Url.Content("~/css/User-Manager.css")" rel="stylesheet" type="text/css" />
      <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
 }
-<div class="ui_wrapper col-10 pt-3">
-    <div class="w-90 ms-4"> 
-        <div class="btn-group w-100 p-3 rounded-top" style="background-color: #8899A6;">
+<div class="ui_wrapper col-10">
+    <div class="w-100"> 
+        <div class="btn-group w-100 px-3 pt-3 pb-2 bg-primary">
             <div id="search_wrapper" class="col-10"></div>
             <div class="col-2 d-inline-flex mb-2">
-                <label class="form-label mt-2">Filter</label>
+                <label class="form-label mt-2 text-light">Filter</label>
                 <select id="filter" class="ms-2 form-select">
                     <option selected>All</option>
                     <option value="Active">Active</option>
@@ -20,9 +20,9 @@
         </div>
         <div id="notFound" class="hide"> 
         </div>
-        <div id="table_holder">
+        <div id="table_holder" style="min-height:80vh;">
             <table class="table table-bordered table-responsive table-hover w-100">
-                <thead class="table-light">
+                <thead class="table-secondary">
                     <tr>
                         <th class="col">#</th>
                         <th class="col">Email</th>        
@@ -34,8 +34,8 @@
                 </thead>
                 <tbody id="dataWapper"></tbody>
             </table>
-            <div id="pagination" class="d-flex justify-content-center"></div>
         </div>
+        <div id="pagination" class="d-flex justify-content-center"></div>
     </div>
 </div>
     <!-- Modal form -->
@@ -69,7 +69,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <p id="reason"></p>
+            <b>Reason:</b> <p id="reason"></p>
           </div>
           <div class="modal-footer">
             <input type="hidden" id="Check_UserID"/>

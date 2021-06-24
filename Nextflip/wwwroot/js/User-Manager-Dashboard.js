@@ -42,7 +42,7 @@ function setRequestPage(num) {
     return searchWithFilterOnly();
   }
   else if (isFiltered) {
-    return requestWithFilter();
+    return requestWithFilterOnly();
   }
   else if (isSearched) {
     return searchOnly(requestParam.SearchValue);
@@ -90,8 +90,8 @@ function renderUser(user, index) {
         <td>${user.roleName}</td>
         <td>${user.fullname}</td>
         <td class="checkBox">
-          <div class="col-2 mx-auto">
-            <input type="checkbox" name="" id="" value="${user.status}" ${user.status === "Active" ? "checked" : ""}  />
+          <div>
+            <input class="status_btn" type="checkbox" userID="${user.userID}" value="${user.status}" ${user.status === "Active" ? "checked" : ""}  />
           </div>
         </td>
         <td>
@@ -125,6 +125,7 @@ function appendUserToWrapper() {
   }
   dataWapper.insertAdjacentHTML("afterbegin", userArray);
   appendCurrentArray();
+  addEvent();
 }
 
 setAppendToDataWrapper(appendUserToWrapper);
@@ -200,26 +201,45 @@ function requestUserDataAndResetPage(role) {
   return requestUserData(role);
 }
 
-function getRoles() {
-  fetch("/api/UserManagerManagement/GetRoleNameList")
+async function getRoles() {
+  await fetch("/api/UserManagerManagement/GetRoleNameList")
     .then(res => res.json())
     .then(json => {
       TopicArr = json;
       appendCollase("Role", "roleName", requestUserDataAndResetPage, appendUserToWrapper)
-      requestUserDataAndResetPage("Customer Supporter")
-        .then(res => res.json())
-        .then(json => {
-          Data = json;
-          appendUserToWrapper();
-          setChoosenColor(0);
-        })
+      return requestUserDataAndResetPage("Customer Supporter")
+    })
+    .then(res => res.json())
+    .then(json => {
+      Data = json;
+      appendUserToWrapper();
+      setChoosenColor(0);
     });
-
+  return new Promise((resolve, reject) => {
+    resolve("resolved");
+  })
 }
 
 function requestWithFilter() {
   requestParam.RequestPage = 1;
   setPageDataCurrentPage(1);
+  requestWithFilterOnly()
+    .then(res => res.json())
+    .then(json => {
+      if (json.totalPage == 0) {
+        ShowNotFound();
+      }
+      else {
+        HideNotFound();
+        Data = json;
+        pageData.currentPage = 1;
+        appendUserToWrapper();
+      }
+    })
+}
+
+function requestWithFilterOnly() {
+
   let reqHeader = new Headers();
   reqHeader.append("Content-Type", "text/json");
   reqHeader.append("Accept", "application/json, text/plain, */*");
@@ -234,15 +254,7 @@ function requestWithFilter() {
 function searchWithFilter() {
   requestParam.RequestPage = 1;
   setPageDataCurrentPage(1);
-  let reqHeader = new Headers();
-  reqHeader.append("Content-Type", "text/json");
-  reqHeader.append("Accept", "application/json, text/plain, */*");
-  let initObject = {
-    method: "POST",
-    headers: reqHeader,
-    body: JSON.stringify(requestParam)
-  };
-  fetch("/api/UserManagerManagement/GetAccountListByEmailFilterRoleStatus", initObject)
+  searchWithFilterOnly()
     .then(res => res.json())
     .then(json => {
       if (json.totalPage == 0) {

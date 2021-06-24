@@ -36,3 +36,17 @@ function setClick() {
     search(searhObj.value);
   });
 }
+
+function setEnterEvent(func) {
+  document.getElementById("search").addEventListener("keyup", (evt) => {
+    if (evt.keyCode === 13) {
+      func()
+    }
+  })
+}
+function goToSearch() {
+  let value = document.getElementById("search").value;
+  window.location.href = `/SubcribedUserDashBoard/Search/${value}`;
+}
+
+setEnterEvent(goToSearch);

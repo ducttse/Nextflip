@@ -60,7 +60,7 @@ namespace Nextflip.APIControllers
         }
 
 
-        public class Request
+        public class Requesta
         {
             public string SearchValue { get; set; }
             public string RoleName { get; set; }
@@ -75,7 +75,7 @@ namespace Nextflip.APIControllers
         [HttpPost]
         [Route("GetAccountsListByRoleAccordingRequest")]
         public JsonResult GetAccountsListByRoleAccordingRequest([FromServices] IUserManagerManagementService userManagerManagementService,
-                                [FromBody] Request request)
+                                [FromBody] Requesta request)
         {
             try
             {
@@ -100,7 +100,7 @@ namespace Nextflip.APIControllers
         [HttpPost]
         [Route("GetAccountsListOnlyByRole")]
         public JsonResult GetAccountsListOnlyByRole([FromServices] IUserManagerManagementService userManagerManagementService,
-                                [FromBody] Request request)
+                                [FromBody] Requesta request)
         {
             try
             {
@@ -124,7 +124,7 @@ namespace Nextflip.APIControllers
 
         //Search + Filter Role + Status
         [Route("GetAccountListByEmailFilterRoleStatus")]
-        public JsonResult GetAccountListByEmailFilterRoleStatus([FromServices] IUserManagerManagementService userManagerManagementService, [FromBody] Request request)
+        public JsonResult GetAccountListByEmailFilterRoleStatus([FromServices] IUserManagerManagementService userManagerManagementService, [FromBody] Requesta request)
         {
             try
             {
@@ -152,7 +152,7 @@ namespace Nextflip.APIControllers
 
         //Search
         [Route("GetAccountListByEmail")]
-        public JsonResult GetAccountListByEmail([FromServices] IUserManagerManagementService userManagerManagementService, [FromBody] Request request)
+        public JsonResult GetAccountListByEmail([FromServices] IUserManagerManagementService userManagerManagementService, [FromBody] Requesta request)
         {
             try
             {
@@ -180,7 +180,7 @@ namespace Nextflip.APIControllers
 
         // Search + Filter Role
         [Route("GetAccountListByEmailFilterRole")]
-        public JsonResult GetAccountListByEmailFilterRole([FromServices] IUserManagerManagementService userManagerManagementService, [FromBody] Request request)
+        public JsonResult GetAccountListByEmailFilterRole([FromServices] IUserManagerManagementService userManagerManagementService, [FromBody] Requesta request)
         {
             try
             {
@@ -207,7 +207,7 @@ namespace Nextflip.APIControllers
         }
 
         [Route("InactiveAccount")]
-        public JsonResult InactiveAccount([FromServices] IUserManagerManagementService userManagerManagementService, [FromForm] Request request)
+        public JsonResult InactiveAccount([FromServices] IUserManagerManagementService userManagerManagementService, [FromForm] Requesta request)
         {
             try
             {
@@ -234,7 +234,7 @@ namespace Nextflip.APIControllers
         }
 
         [Route("ActiveAccount")]
-        public JsonResult ActiveAccount([FromServices] IUserManagerManagementService userManagerManagementService, [FromForm] Request request)
+        public JsonResult ActiveAccount([FromServices] IUserManagerManagementService userManagerManagementService, [FromForm] Requesta request)
         {
             try
             {
@@ -261,7 +261,7 @@ namespace Nextflip.APIControllers
         }
 
         [Route("ReasonInactived")]
-        public JsonResult ReasonInactived([FromServices] IUserManagerManagementService userManagerManagementService, [FromBody] Request request)
+        public JsonResult ReasonInactived([FromServices] IUserManagerManagementService userManagerManagementService, [FromBody] Requesta request)
         {
             try
             {
@@ -290,7 +290,7 @@ namespace Nextflip.APIControllers
         {
             NotificationObject noti = new NotificationObject { message = "fail" };
             try
-            {
+            { 
                 if (account.fullname.Trim() == string.Empty) noti.nameErr = "Full name must not be empty";
                 if (EmailUtil.IsValid(account.userEmail) == false)
                 {
@@ -300,7 +300,7 @@ namespace Nextflip.APIControllers
                 {
                     noti.emailErr = "Email is existed";
                 }
-                if (account.dateOfBirth == default(DateTime)) noti.dateTimeErr = "Date of birth must not be empty";
+                if (account.dateOfBirth == null) noti.dateTimeErr = "Date of birth is Invalid";
                 bool result = userManagerManagementService.AddNewStaff(account);
                 if (result == true) noti.message = "success";
             }
@@ -340,7 +340,7 @@ namespace Nextflip.APIControllers
             try
             {
                 if (account.fullname.Trim() == string.Empty) noti.nameErr = "Full name must not be empty";
-                if (account.dateOfBirth == default(DateTime)) noti.dateTimeErr = "Date of birth must not be empty";
+                if (account.dateOfBirth == null) noti.dateTimeErr = "Date of birth is invalid";
                 bool result = userManagerManagementService.UpdateStaffInfo(account);
                 if (result == true) noti.message = "Success";
             }

@@ -67,6 +67,7 @@ namespace Nextflip
             //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
+            services.AddControllers().AddNewtonsoftJson();
             services.AddTransient<IAccountDAO, AccountDAO>();
             services.AddTransient<IUserManagerManagementService, UserManagerManagementService>();
             services.AddTransient<IMediaEditRequestDAO, MediaEditRequestDAO>();

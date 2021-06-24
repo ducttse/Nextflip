@@ -292,7 +292,7 @@ namespace Nextflip.APIControllers
             try
             { 
                 if (account.fullname.Trim() == string.Empty) noti.nameErr = "Full name must not be empty";
-                if (EmailUtil.IsValid(account.userEmail) == false)
+                if (EmailUtil.IsValidEmail(account.userEmail) == false)
                 {
                     noti.emailErr = "Email is invalid format";
                 }

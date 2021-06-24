@@ -10,7 +10,7 @@
               placeholder="${placeHolderText}"
               value="${searchValue}"
             />
-          <div id="searchBtn" class="btn btn-danger d-inline">Search</div>
+          <div id="searchBtn" class="btn btn-primary d-inline">Search</div>
         </div>
       </div>
     </div>

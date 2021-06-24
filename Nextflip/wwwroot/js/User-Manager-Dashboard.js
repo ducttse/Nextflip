@@ -200,7 +200,8 @@ function requestUserDataAndResetPage(role) {
   return requestUserData(role);
 }
 
-function getRoles() {
+async function getRoles() {
+  console.log("get role");
   fetch("/api/UserManagerManagement/GetRoleNameList")
     .then(res => res.json())
     .then(json => {
@@ -214,7 +215,10 @@ function getRoles() {
           setChoosenColor(0);
         })
     });
-
+  return new Promise((resolve) => {
+    console.log("resolve");
+    resolve("resolved");
+  })
 }
 
 function requestWithFilter() {

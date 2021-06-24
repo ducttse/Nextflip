@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Nextflip.utils;
+using Microsoft.AspNetCore.Mvc;
 using Nextflip.Models.account;
 using Nextflip.Services.Implementations;
 using System;
@@ -10,6 +11,9 @@ using Nextflip.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Nextflip.Models.role;
+using Nextflip.Models.subscription;
+using System.Text.RegularExpressions;
+using Nextflip.Models;
 
 namespace Nextflip.APIControllers
 {
@@ -56,7 +60,7 @@ namespace Nextflip.APIControllers
         }
 
 
-        public class Request
+        public class Requesta
         {
             public string SearchValue { get; set; }
             public string RoleName { get; set; }
@@ -71,7 +75,7 @@ namespace Nextflip.APIControllers
         [HttpPost]
         [Route("GetAccountsListByRoleAccordingRequest")]
         public JsonResult GetAccountsListByRoleAccordingRequest([FromServices] IUserManagerManagementService userManagerManagementService,
-                                [FromBody] Request request)
+                                [FromBody] Requesta request)
         {
             try
             {
@@ -96,7 +100,7 @@ namespace Nextflip.APIControllers
         [HttpPost]
         [Route("GetAccountsListOnlyByRole")]
         public JsonResult GetAccountsListOnlyByRole([FromServices] IUserManagerManagementService userManagerManagementService,
-                                [FromBody] Request request)
+                                [FromBody] Requesta request)
         {
             try
             {
@@ -120,7 +124,7 @@ namespace Nextflip.APIControllers
 
         //Search + Filter Role + Status
         [Route("GetAccountListByEmailFilterRoleStatus")]
-        public JsonResult GetAccountListByEmailFilterRoleStatus([FromServices] IUserManagerManagementService userManagerManagementService, [FromBody] Request request)
+        public JsonResult GetAccountListByEmailFilterRoleStatus([FromServices] IUserManagerManagementService userManagerManagementService, [FromBody] Requesta request)
         {
             try
             {
@@ -148,7 +152,7 @@ namespace Nextflip.APIControllers
 
         //Search
         [Route("GetAccountListByEmail")]
-        public JsonResult GetAccountListByEmail([FromServices] IUserManagerManagementService userManagerManagementService, [FromBody] Request request)
+        public JsonResult GetAccountListByEmail([FromServices] IUserManagerManagementService userManagerManagementService, [FromBody] Requesta request)
         {
             try
             {
@@ -176,7 +180,7 @@ namespace Nextflip.APIControllers
 
         // Search + Filter Role
         [Route("GetAccountListByEmailFilterRole")]
-        public JsonResult GetAccountListByEmailFilterRole([FromServices] IUserManagerManagementService userManagerManagementService, [FromBody] Request request)
+        public JsonResult GetAccountListByEmailFilterRole([FromServices] IUserManagerManagementService userManagerManagementService, [FromBody] Requesta request)
         {
             try
             {
@@ -203,7 +207,7 @@ namespace Nextflip.APIControllers
         }
 
         [Route("InactiveAccount")]
-        public JsonResult InactiveAccount([FromServices] IUserManagerManagementService userManagerManagementService, [FromForm] Request request)
+        public JsonResult InactiveAccount([FromServices] IUserManagerManagementService userManagerManagementService, [FromForm] Requesta request)
         {
             try
             {
@@ -230,7 +234,7 @@ namespace Nextflip.APIControllers
         }
 
         [Route("ActiveAccount")]
-        public JsonResult ActiveAccount([FromServices] IUserManagerManagementService userManagerManagementService, [FromForm] Request request)
+        public JsonResult ActiveAccount([FromServices] IUserManagerManagementService userManagerManagementService, [FromForm] Requesta request)
         {
             try
             {
@@ -257,7 +261,7 @@ namespace Nextflip.APIControllers
         }
 
         [Route("ReasonInactived")]
-        public JsonResult ReasonInactived([FromServices] IUserManagerManagementService userManagerManagementService, [FromBody] Request request)
+        public JsonResult ReasonInactived([FromServices] IUserManagerManagementService userManagerManagementService, [FromBody] Requesta request)
         {
             try
             {
@@ -279,7 +283,90 @@ namespace Nextflip.APIControllers
             }
         }
 
+        [Route("CreateStaff")]
+        [HttpPost]
+        public IActionResult CreateStaff([FromServices] IUserManagerManagementService userManagerManagementService,
+                                        [FromBody] Account account)
+        {
+            NotificationObject noti = new NotificationObject { message = "fail" };
+            try
+            { 
+                if (account.fullname.Trim() == string.Empty) noti.nameErr = "Full name must not be empty";
+                if (EmailUtil.IsValid(account.userEmail) == false)
+                {
+                    noti.emailErr = "Email is invalid format";
+                }
+                else if (userManagerManagementService.IsExistedEmail(account.userEmail))
+                {
+                    noti.emailErr = "Email is existed";
+                }
+                if (account.dateOfBirth == null) noti.dateTimeErr = "Date of birth is Invalid";
+                bool result = userManagerManagementService.AddNewStaff(account);
+                if (result == true) noti.message = "success";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("CreateStaff: " + ex.Message);
+            }
+            return new JsonResult(noti);
+        }
 
+        [Route("UpdateExpiredDate")]
+        [HttpPost]
+        public IActionResult UpdateExpiredDate([FromServices] IUserManagerManagementService userManagerManagementService,
+                                                    [FromBody] Subsciption subscript)
+        {
+            NotificationObject noti = new NotificationObject { message = "Fail" };
+            try
+            {
+                subscript.StartDate = DateTime.Now;
+                if (subscript.StartDate.CompareTo(subscript.EndDate) > 0) noti.dateTimeErr = "Date is invalid";
+                bool result = userManagerManagementService.UpdateExpiredDate(subscript);
+                if (result) noti.message = "success";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("UpdateExpiredDate: " + ex.Message);
+            }
+            return new JsonResult(noti);
+        }
+
+        [Route("EditStaffInfo")]
+        [HttpPost]
+        public IActionResult EditStaffInfo([FromServices] IUserManagerManagementService userManagerManagementService,
+                                            [FromBody] Account account)
+        {
+            NotificationObject noti = new NotificationObject { message = "Fail" };
+            try
+            {
+                if (account.fullname.Trim() == string.Empty) noti.nameErr = "Full name must not be empty";
+                if (account.dateOfBirth == null) noti.dateTimeErr = "Date of birth is invalid";
+                bool result = userManagerManagementService.UpdateStaffInfo(account);
+                if (result == true) noti.message = "Success";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("EditStaffInfo: " + ex.Message);
+            }
+            return new JsonResult(noti);
+        }
+
+        [Route("GetStaffProfile")]
+        [HttpPost]
+        public IActionResult GetStaffProfile([FromServices] IUserManagerManagementService userManagerManagementService,
+                                    [FromBody] string userID)
+        {
+            Account account = null;
+            try
+            {
+                account = userManagerManagementService.GetAccountByID(userID);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("EditStaffInfo: " + ex.Message);
+            }
+            return new JsonResult(account);
+        }
         /*        [Route("GetAllActiveAccounts")]
                 public JsonResult GetAllActiveAccounts([FromServices] IUserManagerManagementService userManagerManagementService)
                 {

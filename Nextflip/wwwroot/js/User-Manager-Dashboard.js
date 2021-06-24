@@ -215,7 +215,8 @@ async function getRoles() {
       appendUserToWrapper();
       setChoosenColor(0);
     });
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
+    console.log("resolve");
     resolve("resolved");
   })
 }

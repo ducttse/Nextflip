@@ -3,7 +3,7 @@ let currentIndex;
 function renderItem(item, itemName, index) {
     return `
         <li class="topicItem p-2 rounded-3 mt-1" id="item_${index}" index=${index} topic="${item[ itemName ]}" prop="${itemName}">
-            <a href="#" class="text-decoration-none link-light rounded">
+            <a href="#" class="ps-3 text-decoration-none link-light rounded">
             ${item[ itemName ]}
             </a>
         </li>`;
@@ -17,7 +17,7 @@ function renderCollapse(Name, itemName) {
     return `
     <li class="mb-1">
         <button
-            class="btn btn-dark btn-lg text-light align-items-center rounded collapsed"
+            class="side_bar_btn btn btn-lg btn-dark text-light text-start rounded collapsed w-100"
             data-bs-toggle="collapse"
             data-bs-target="#topic-collapse"
             aria-expanded="true"
@@ -45,6 +45,11 @@ function setChoosenColor(chooseIndex) {
     currentIndex = chooseIndex;
     let choosenItem = document.getElementById(`item_${chooseIndex}`);
     choosenItem.classList.add("choose");
+}
+
+function appendButton(button) {
+    console.log("append")
+    document.getElementById("topic_List").insertAdjacentHTML("afterbegin", button);
 }
 
 function setClickToItems(requestFunc, appendToWrapper) {

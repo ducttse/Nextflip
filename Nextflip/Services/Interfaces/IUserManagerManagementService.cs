@@ -1,4 +1,5 @@
 ﻿using Nextflip.Models.account;
+using Nextflip.Models.subscription;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,5 +26,10 @@ namespace Nextflip.Services.Interfaces
         bool InactiveAccount(string userID, string note);
         bool ActiveAccount(string userID);
         Account GetDetailOfInactiveAccount(string userID);
+        bool AddNewStaff(Account account);
+        bool IsExistedEmail(string email);
+        bool UpdateExpiredDate(Subsciption subsciption);
+        Account GetAccountByID(string userID);
+        bool UpdateStaffInfo(Account account);
     }
 }

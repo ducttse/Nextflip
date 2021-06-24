@@ -30,6 +30,7 @@ using Nextflip.Models.supportTopic;
 using Nextflip.Models.supportTicket;
 using Nextflip.Models.role;
 using Microsoft.AspNetCore.Http;
+using Nextflip.Models.subscription;
 
 namespace Nextflip
 {
@@ -66,12 +67,14 @@ namespace Nextflip
             //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
+            services.AddControllers().AddNewtonsoftJson();
             services.AddTransient<IAccountDAO, AccountDAO>();
             services.AddTransient<IUserManagerManagementService, UserManagerManagementService>();
             services.AddTransient<IMediaEditRequestDAO, MediaEditRequestDAO>();
             services.AddTransient<IMediaManagerManagementService, MediaManagerManagementService>();
             services.AddTransient<IRoleDAO, RoleDAO>();
             services.AddTransient<IRoleService, RoleService>();
+            services.AddTransient<ISubscriptionDAO, SubscriptionDAO>();
 
 
             ///get connection string

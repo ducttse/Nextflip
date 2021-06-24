@@ -7,7 +7,7 @@
 }
 <div class="ui_wrapper col-10 pt-3">
     <div class="w-90 ms-4"> 
-        <div class="btn-group w-100">
+        <div class="btn-group w-100 p-3 rounded-top" style="background-color: #8899A6;">
             <div id="search_wrapper" class="col-10"></div>
             <div class="col-2 d-inline-flex mb-2">
                 <label class="form-label mt-2">Filter</label>
@@ -34,7 +34,7 @@
                 </thead>
                 <tbody id="dataWapper"></tbody>
             </table>
-            <div id="pagination"></div>
+            <div id="pagination" class="d-flex justify-content-center"></div>
         </div>
     </div>
 </div>
@@ -97,13 +97,13 @@
 <script src="~/js/User-Manager-Dashboard.js"></script>
 <script src="~/js/User-Status-Manager.js"></script>
 <script>
-    getRoles()
-    .then( (msg) => {
-        if(msg == "resolved"){
-                appendSearch("Search account's email", "");
-                SetEvent();
-            }
-        }
-    )
+    getRoles().then(() => { 
+        SetEvent();
+        appendSearch("Search account's email", "");
+        let button = `<a href="/UserManagerManagement/CreateStaff" class="side_bar_btn btn btn-lg btn-dark text-decoration-none link-light text-start w-100">
+                    Create new staff
+                  </a>`;
+        appendButton(button);
+    })
     
 </script>

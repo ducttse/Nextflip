@@ -14,5 +14,22 @@ namespace Nextflip.Controllers
         {
             return View();
         }
+        public ActionResult CreateStaff()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult EditExpiredDate(string id)
+        {
+            ViewBag.UserID = id;
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult EditStaffProfile(string id)
+        {
+            ViewBag.UserID = id;
+            return View();
+        }
     }
 }

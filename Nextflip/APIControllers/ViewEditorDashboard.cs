@@ -40,7 +40,7 @@ namespace Nextflip.APIControllers
         //Search all 
         [HttpPost]
         [Route("GetMediasByTitle")]
-        public JsonResult GetMediasByTitle([FromServices] IMediaService mediaService, [FromBody] Request request)
+        public JsonResult GetMediasByTitle([FromServices] IEditorService editorService, [FromBody] Request request)
         {
             try
             {
@@ -49,12 +49,12 @@ namespace Nextflip.APIControllers
                     message = "Empty searchValue"
                 };
                 if (request.SearchValue.Trim() == "") return new JsonResult(message);
-                IEnumerable<Media> medias = mediaService.GetMediasByTitle(request.SearchValue.Trim(), request.RowsOnPage, request.RequestPage);
-                int count = mediaService.NumberOfMediasBySearching(request.SearchValue.Trim());
+                IEnumerable<Media> medias = editorService.GetMediasByTitle(request.SearchValue.Trim(), request.RowsOnPage, request.RequestPage);
+                int count = editorService.NumberOfMediasBySearching(request.SearchValue.Trim());
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {
-                    TotalPage = Math.Ceiling(totalPage),
+                    TotalPage = (int)Math.Ceiling(totalPage),
                     Data = medias
                 };
                 return (new JsonResult(result));
@@ -69,7 +69,7 @@ namespace Nextflip.APIControllers
         //Search all + filter category
         [HttpPost]
         [Route("GetMediasByTitleFilterCategory")]
-        public JsonResult GetMediasByTitleFilterCategory([FromServices] IMediaService mediaService, [FromBody] Request request)
+        public JsonResult GetMediasByTitleFilterCategory([FromServices] IEditorService editorService, [FromBody] Request request)
         {
             try
             {
@@ -78,12 +78,12 @@ namespace Nextflip.APIControllers
                     message = "Empty searchValue"
                 };
                 if (request.SearchValue.Trim() == "") return new JsonResult(message);
-                IEnumerable<Media> medias = mediaService.GetMediasByTitleFilterCategory(request.SearchValue.Trim(), request.CategoryName, request.RowsOnPage, request.RequestPage);
-                int count = mediaService.NumberOfMediasBySearchingFilterCategory(request.SearchValue.Trim(), request.CategoryName);
+                IEnumerable<Media> medias = editorService.GetMediasByTitleFilterCategory(request.SearchValue.Trim(), request.CategoryName, request.RowsOnPage, request.RequestPage);
+                int count = editorService.NumberOfMediasBySearchingFilterCategory(request.SearchValue.Trim(), request.CategoryName);
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {
-                    TotalPage = Math.Ceiling(totalPage),
+                    TotalPage = (int)Math.Ceiling(totalPage),
                     Data = medias
                 };
                 return (new JsonResult(result));
@@ -98,7 +98,7 @@ namespace Nextflip.APIControllers
         //Search all + filter category + filter status 
         [HttpPost]
         [Route("GetMediasByTitleFilterCategory_Status")]
-        public JsonResult GetMediasByTitleFilterCategory_Status([FromServices] IMediaService mediaService, [FromBody] Request request)
+        public JsonResult GetMediasByTitleFilterCategory_Status([FromServices] IEditorService editorService, [FromBody] Request request)
         {
             try
             {
@@ -107,12 +107,12 @@ namespace Nextflip.APIControllers
                     message = "Empty searchValue"
                 };
                 if (request.SearchValue.Trim() == "") return new JsonResult(message);
-                IEnumerable<Media> medias = mediaService.GetMediasByTitleFilterCategory_Status(request.SearchValue.Trim(), request.CategoryName, request.Status, request.RowsOnPage, request.RequestPage);
-                int count = mediaService.NumberOfMediasBySearchingFilterCategory_Status(request.SearchValue.Trim(), request.CategoryName, request.Status);
-                double totalPage = (double)count / (double)request.RowsOnPage;
+                IEnumerable<Media> medias = editorService.GetMediasByTitleFilterCategory_Status(request.SearchValue.Trim(), request.CategoryName, request.Status, request.RowsOnPage, request.RequestPage);
+                int count = editorService.NumberOfMediasBySearchingFilterCategory_Status(request.SearchValue.Trim(), request.CategoryName, request.Status);
+                double totalPage = (int)(double)count / (double)request.RowsOnPage;
                 var result = new
                 {
-                    TotalPage = Math.Ceiling(totalPage),
+                    TotalPage = (int)Math.Ceiling(totalPage),
                     Data = medias
                 };
                 return (new JsonResult(result));
@@ -128,17 +128,17 @@ namespace Nextflip.APIControllers
         //View all filter category
         [HttpPost]
         [Route("ViewMediasFilterCategory")]
-        public IActionResult ViewMediasFilterCategory([FromServices] IMediaService mediaService,
+        public IActionResult ViewMediasFilterCategory([FromServices] IEditorService editorService,
             [FromBody] Request request)
         {
             try
             {
-                IEnumerable<Media> medias = mediaService.GetMediaFilterCategory(request.CategoryName, request.RowsOnPage, request.RequestPage);
-                int count = mediaService.NumberOfMediasFilterCategory(request.CategoryName);
+                IEnumerable<Media> medias = editorService.GetMediaFilterCategory(request.CategoryName, request.RowsOnPage, request.RequestPage);
+                int count = editorService.NumberOfMediasFilterCategory(request.CategoryName);
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {
-                    TotalPage = Math.Ceiling(totalPage),
+                    TotalPage = (int)Math.Ceiling(totalPage),
                     Data = medias
                 };
                 return (new JsonResult(result));
@@ -153,14 +153,14 @@ namespace Nextflip.APIControllers
         //View all filter category + status
         [HttpPost]
         [Route("ViewMediasFilterCategory_Status")]
-        public IActionResult ViewMediasFilterCategory_Status([FromServices] IMediaService mediaService,
+        public IActionResult ViewMediasFilterCategory_Status([FromServices] IEditorService editorService,
             [FromBody] Request request)
         {
             try
             {
-                IEnumerable<Media> medias = mediaService.ViewMediasFilterCategory_Status(request.CategoryName, request.Status, request.RowsOnPage, request.RequestPage);
-                int count = mediaService.NumberOfMediasFilterCategory_Status(request.CategoryName, request.Status);
-                double totalPage = (double)count / (double)request.RowsOnPage;
+                IEnumerable<Media> medias = editorService.ViewMediasFilterCategory_Status(request.CategoryName, request.Status, request.RowsOnPage, request.RequestPage);
+                int count = editorService.NumberOfMediasFilterCategory_Status(request.CategoryName, request.Status);
+                double totalPage = (int)(double)count / (double)request.RowsOnPage;
                 var result = new
                 {
                     TotalPage = Math.Ceiling(totalPage),
@@ -176,11 +176,11 @@ namespace Nextflip.APIControllers
         }
 
         [Route("GetCategories")]
-        public IActionResult GetCategories([FromServices] ICategoryService categoryService)
+        public IActionResult GetCategories([FromServices] ISubscribedUserService subscribedUserService)
         {
             try
             {
-                IEnumerable<Category> categories = categoryService.GetCategories();
+                IEnumerable<Category> categories = subscribedUserService.GetCategories();
                 return new JsonResult(categories);
             }
             catch (Exception ex)

@@ -10,7 +10,7 @@
               placeholder="${placeHolderText}"
               value="${searchValue}"
             />
-          <div id="searchBtn" class="btn btn-danger d-inline">Search</div>
+          <div id="searchBtn" class="btn btn-primary d-inline border-start-0 border border-light">Search</div>
         </div>
       </div>
     </div>
@@ -36,3 +36,17 @@ function setClick() {
     search(searhObj.value);
   });
 }
+
+function setEnterEvent(func) {
+  document.getElementById("search").addEventListener("keyup", (evt) => {
+    if (evt.keyCode === 13) {
+      func()
+    }
+  })
+}
+function goToSearch() {
+  let value = document.getElementById("search").value;
+  window.location.href = `/SubcribedUserDashBoard/Search/${value}`;
+}
+
+setEnterEvent(goToSearch);

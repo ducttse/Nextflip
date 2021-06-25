@@ -30,6 +30,7 @@ using Nextflip.Models.supportTopic;
 using Nextflip.Models.supportTicket;
 using Nextflip.Models.role;
 using Microsoft.AspNetCore.Http;
+using Nextflip.Models.subscription;
 
 namespace Nextflip
 {
@@ -55,23 +56,22 @@ namespace Nextflip
             services.AddTransient<IMediaFavoriteDAO, MediaFavoriteDAO>();
             services.AddTransient<ISeasonDAO, SeasonDAO>();
             services.AddTransient<ISubtitleDAO, SubtitleDAO>();
+            services.AddTransient<ISubscribedUserService, SubscribedUserService>();
+            services.AddTransient<IEditorService, EditorService>();
 
-            services.AddTransient<ICategoryService, CategoryService>();
-            services.AddTransient<IEpisodeService, EpisodeService>();
-            services.AddTransient<IMediaService, MediaService>();
-            services.AddTransient<ISeasonService, SeasonService>();
-            services.AddTransient<ISubtitleService, SubtitleService>();
 
 
             //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
+            services.AddControllers().AddNewtonsoftJson();
             services.AddTransient<IAccountDAO, AccountDAO>();
             services.AddTransient<IUserManagerManagementService, UserManagerManagementService>();
             services.AddTransient<IMediaEditRequestDAO, MediaEditRequestDAO>();
             services.AddTransient<IMediaManagerManagementService, MediaManagerManagementService>();
             services.AddTransient<IRoleDAO, RoleDAO>();
             services.AddTransient<IRoleService, RoleService>();
+            services.AddTransient<ISubscriptionDAO, SubscriptionDAO>();
 
 
             ///get connection string

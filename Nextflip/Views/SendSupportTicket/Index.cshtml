@@ -1,22 +1,23 @@
 ﻿@{
     Layout = "_CustomLayout";
 }
-<div class="ui_wrapper">
+@section Styles {
+     <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
+}
+<div class="col-10 align-self-center">
   <div class="mx-auto col-10 shadow-lg p-3 mb-5 bg-body rounded">
-      <form class="mx-auto">
         <label class="h2 form-label" for="option">Topic</label>
-        <select name="option" id="option" class="form-select form-select-lg mb-3 w-75">
+        <select name="option" id="option" class="form-select form-select-lg mb-3 w-100">
           <option selected>Select Topic</option>
         </select>
         <label class="h3 form-label" for="content">Content</label>
         <textarea
-          class="form-control form-control-lg w-75"
+          class="form-control form-control-lg w-100"
           name="content"
           id="content"
-          cols="103"
-          rows="20"
+          rows="10"
         ></textarea>
-        <div class="d-flex flex-row-reverse w-75 mt-3">
+        <div class="d-flex flex-row-reverse w-100 mt-3">
           <button type="submit" class="btn btn-primary mx-1 btn-lg">
             Submit
           </button>
@@ -24,7 +25,13 @@
             Cancel
           </button>
         </div>
-      </form>
   </div>
 </div>
 <script src="~/js/SendSupportTicket.js"></script>
+<script src="~/js/Slide-Bar.js"></script>
+<script>
+  let button = `<a href="/UserManagerManagement/Index" class="side_bar_btn btn btn-lg btn-dark text-decoration-none link-light text-start w-100">
+                    Back
+                  </a>`;
+  appendButton(button);
+</script>

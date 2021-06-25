@@ -23,7 +23,6 @@ namespace Nextflip.Models.account
                     connection.Open();
                     string Sql = "Select userID, userEmail, roleName, fullname, status " +
                             "From account";
-                    Debug.WriteLine(Sql);
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         using (var reader = command.ExecuteReader())
@@ -121,11 +120,37 @@ namespace Nextflip.Models.account
             return count;
         }
 
-
-
-        public bool ChangeAccountStatus(string userID)
+        public bool InactiveAccount(string userID, string note)
         {
-            throw new NotImplementedException();
+            bool result = false;
+            try
+            {
+                if (GetDetailOfAccount(userID).status.Equals("Inactive")) return false;
+                if (note == null || note.Trim().Equals("")) return false;
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "UPDATE account " +
+                        "SET status= 'Inactive', note=@note " +
+                        "WHERE userID = @userID";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@note", note);
+                        command.Parameters.AddWithValue("@userID", userID);
+                        int rowEffects = command.ExecuteNonQuery();
+                        if (rowEffects > 0)
+                        {
+                            result = true;
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return result;
         }
 
         public bool AddNewStaff(string fullname, string userEmail, string password, int intRole)
@@ -210,9 +235,6 @@ namespace Nextflip.Models.account
             }
             return count;
         }
-
-
-
 
         public IEnumerable<Account> GetAccountsListAccordingRequest(int NumberOfPage, int RowsOnPage, int RequestPage)
         {                                                                           
@@ -332,8 +354,7 @@ namespace Nextflip.Models.account
                     return accounts;
                 }
         */
-
-        
+ 
         public IEnumerable<Account> GetAccountsListByRoleAccordingRequest(string roleName, string status, int RowsOnPage, int RequestPage)
         {
             var accounts = new List<Account>();
@@ -539,6 +560,252 @@ namespace Nextflip.Models.account
                 connection.Close();
             }
             return count;
+        }
+
+
+        public Account GetDetailOfAccount(string userID)
+        {
+            Account account = null;
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select userID, userEmail, roleName, fullname, dateOfBirth, status " +
+                                    "From account " +
+                                    "Where userID = @userID";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userID", userID);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                account = new Account
+                                {
+                                    userID = reader.GetString(0),
+                                    userEmail = reader.GetString(1),
+                                    roleName = reader.GetString(2),
+                                    fullname = reader.GetString(3),
+                                    dateOfBirth = reader.GetDateTime(4),
+                                    status = reader.GetString(5)
+                                };
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return account;
+        }
+
+        public Account GetDetailOfInactiveAccount(string userID)
+        {
+            Account account = null;
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select userID, userEmail, roleName, fullname, dateOfBirth, status, note " +
+                                    "From account " +
+                                    "Where userID = @userID";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userID", userID);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                account = new Account
+                                {
+                                    userID = reader.GetString(0),
+                                    userEmail = reader.GetString(1),
+                                    roleName = reader.GetString(2),
+                                    fullname = reader.GetString(3),
+                                    dateOfBirth = reader.GetDateTime(4),
+                                    status = reader.GetString(5),
+                                    note = reader.GetString(6)
+                                };
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return account;
+        }
+
+        public bool ActiveAccount(string userID)
+        {
+            bool result = false;
+            try
+            {
+                if (GetDetailOfAccount(userID).status.Equals("Active")) return false;
+                if (GetDetailOfInactiveAccount(userID).note == null || GetDetailOfInactiveAccount(userID).note.Trim().Equals("")) return false;
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "UPDATE account " +
+                        "SET status= 'Active', note=null " +
+                        "WHERE userID = @userID";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userID", userID);
+                        int rowEffects = command.ExecuteNonQuery();
+                        if (rowEffects > 0)
+                        {
+                            result = true;
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return result;
+        }
+
+        public bool AddNewStaff(Account account)
+        {
+            try
+            {
+                bool isAdded = false;
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "insert into account(userID, hashedPassword, fullname, userEmail, roleName, dateOfBirth, status) " +
+                                   "values(@userID, @hashedPassword, @fullname, @userEmail, @roleName, @dateOfBirth, @status)";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userID", generateID());
+                        command.Parameters.AddWithValue("@hashedPassword", generateID());
+                        string generateID()
+                        {
+                            return Guid.NewGuid().ToString("N");
+                        }
+                        command.Parameters.AddWithValue("@fullname", account.fullname);
+                        command.Parameters.AddWithValue("@userEmail", account.userEmail);
+                        command.Parameters.AddWithValue("@roleName", account.roleName);
+                        command.Parameters.AddWithValue("@dateOfBirth", account.dateOfBirth);
+                        command.Parameters.AddWithValue("@status", "Active");
+                        int rowAffect = command.ExecuteNonQuery();
+                        if (rowAffect > 0) isAdded = true;
+                    }
+                    connection.Close();
+                }
+                return isAdded;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public bool UpdateStaffInfo(Account account)
+        {
+            try
+            {
+                bool isUpdate = false;
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Update account " +
+                                "Set fullname = @fullname, roleName = @roleName, dateOfBirth = @dateOfBirth, pictureURL = @pictureURL " +
+                                "Where userID = @userID";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userID", account.userID);
+                        command.Parameters.AddWithValue("@fullname", account.fullname);
+                        command.Parameters.AddWithValue("@userEmail", account.userEmail);
+                        command.Parameters.AddWithValue("@roleName", account.roleName);
+                        command.Parameters.AddWithValue("@dateOfBirth", account.dateOfBirth);
+                        command.Parameters.AddWithValue("@pictureURL", account.pictureURL);
+                        int rowAffect = command.ExecuteNonQuery();
+                        if (rowAffect > 0) isUpdate = true;
+                    }
+                    connection.Close();
+                }
+                return isUpdate;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public Account GetAccountByID(string userID)
+        {
+            Account account = null;
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select fullname, userEmail, dateOfBirth, roleName, pictureURL " +
+                                    "From account " +
+                                    "Where userID = @userID";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userID", userID);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                account = new Account
+                                {
+                                    userID = userID,
+                                    fullname = reader.GetString(0),
+                                    userEmail = reader.GetString(1),
+                                    dateOfBirth = reader.GetDateTime(2),
+                                    roleName = reader.GetString(3),
+                                    pictureURL = reader.IsDBNull(4) ? null : reader.GetString(4)
+                                };
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return account;
+        }
+        public bool IsExistedEmail(string email)
+        {
+            try
+            {
+                bool isExisted = false;
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select userEmail " +
+                                "From account " +
+                                "Where userEmail = @email";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@email", email);
+                        var reader = command.ExecuteReader();
+                        if (reader.Read()) isExisted = true;
+                    }
+                    connection.Close();
+                }
+                return isExisted;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

@@ -10,15 +10,10 @@ namespace Nextflip.Models.account
         IEnumerable<Account> GetAllAccounts();
         IEnumerable<Account> GetAccountListByEmailFilterRoleStatus(string searchValue, string roleName, string status, int RowsOnPage, int RequestPage);
         int NumberOfAccountsBySearchingFilterRoleStatus(string searchValue, string roleName, string status);
-        bool ChangeAccountStatus(string userID);
-        bool AddNewStaff(string fullname, string userEmail, string password, int intRole);
-        bool EditStaffProfile(String userID, String fullname, DateTime dateOfBirth, int intRole);
-        bool ChangeStaffPassword(String userID, String password);
+        bool InactiveAccount(string userID, string note);
         int NumberOfAccountsBySearching(string searchValue);
         int NumberOfAccountsByRoleAndStatus(string roleName, string status);
         IEnumerable<Account> GetAccountsListByRoleAccordingRequest(string roleName, string status, int RowsOnPage, int RequestPage);
-        //        IEnumerable<Account> GetAllActiveAccounts();
-        //       IEnumerable<Account> GetAllInactiveAccounts();
         IEnumerable<Account> GetAccountListByEmail(string searchValue, int RowsOnPage, int RequestPage);
 
         IEnumerable<Account> GetAccountListByEmailFilterRole(string searchValue, string roleName, int RowsOnPage, int RequestPage);
@@ -26,6 +21,14 @@ namespace Nextflip.Models.account
 
         IEnumerable<Account> GetAccountsListOnlyByRole(string roleName, int RowsOnPage, int RequestPage);
         int NumberOfAccountsByRole(string roleName);
+        Account GetDetailOfAccount(string userID);
+        Account GetDetailOfInactiveAccount(string userID);
+        bool ActiveAccount(string userID);
+        // add update 
+        bool AddNewStaff(Account account);
+        bool UpdateStaffInfo(Account account);
+        Account GetAccountByID(string userID);
+        bool IsExistedEmail(string email);
     }
 
 }

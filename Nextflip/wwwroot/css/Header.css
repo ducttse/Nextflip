@@ -1,1 +1,15 @@
-﻿
+﻿#searchBtn,
+#notiButton {
+    cursor: pointer;
+}
+
+#search_holder {
+}
+
+.hide {
+    display: none;
+}
+
+.show {
+    transition-timing-function: ease;
+}

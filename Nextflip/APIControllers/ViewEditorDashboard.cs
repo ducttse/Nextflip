@@ -112,7 +112,7 @@ namespace Nextflip.APIControllers
                 double totalPage = (int)(double)count / (double)request.RowsOnPage;
                 var result = new
                 {
-                    TotalPage = Math.Ceiling(totalPage),
+                    TotalPage = (int)Math.Ceiling(totalPage),
                     Data = medias
                 };
                 return (new JsonResult(result));

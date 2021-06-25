@@ -56,8 +56,8 @@ namespace Nextflip
             services.AddTransient<IMediaFavoriteDAO, MediaFavoriteDAO>();
             services.AddTransient<ISeasonDAO, SeasonDAO>();
             services.AddTransient<ISubtitleDAO, SubtitleDAO>();
-
             services.AddTransient<ISubscribedUserService, SubscribedUserService>();
+            services.AddTransient<IEditorService, EditorService>();
 
 
 

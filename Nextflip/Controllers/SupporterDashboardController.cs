@@ -42,7 +42,6 @@ namespace Nextflip.Controllers
                 return View("Error");
             }
         }
-
     }
 
     public partial class Request

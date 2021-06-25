@@ -9,7 +9,7 @@ function loadStorageData() {
   if (sessionStorage.getItem("requestParam") === null) {
     console.log("true")
     requestParam = {
-      RowsOnPage: 8,
+      RowsOnPage: 12,
       RequestPage: 1,
       TopicName: "Account",
       SearchValue: "",
@@ -148,7 +148,7 @@ function requestTopicData(topic) {
   return fetch("/api/ViewSupporterDashboard/ViewSupportTicketByTopic", initObject);
 }
 
-function requestTopicDataAndResetPahe(topic) {
+function requestTopicDataAndResetPage(topic) {
   requestParam.RequestPage = 1;
   setPageDataCurrentPage(1);
   return requestTopicData(topic);
@@ -248,12 +248,12 @@ function searchWithFilterOnly() {
   return fetch("/api/ViewSupporterDashboard/SearchSupportTicketByTopicAndStatus", initObject)
 }
 
-function getTopics() {
-  fetch("/api/ViewSupporterDashboard/GetAllSupportTopics")
+async function getTopics() {
+  await fetch("/api/ViewSupporterDashboard/GetAllSupportTopics")
     .then(res => res.json())
     .then(json => {
       TopicArr = json;
-      appendCollase("Topic", "topicName", requestTopicDataAndResetPahe, appendTicketToWrapper);
+      appendCollase("Topic", "topicName", requestTopicDataAndResetPage, appendTicketToWrapper);
       setRequestPage(requestParam.RequestPage)
         .then(res => res.json())
         .then(json => {
@@ -278,6 +278,9 @@ function getTopics() {
           }))
         })
     })
+  return new Promise((resolve) => {
+    resolve("resolved");
+  })
 }
 
 function resetSearch() {

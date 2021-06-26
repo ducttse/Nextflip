@@ -135,7 +135,7 @@ function showModal(modalName) {
     currentModal = myModal;
 }
 
-function SetEvent() {
+function setEvent() {
     document.getElementById("confirm_btn").addEventListener("click", () => {
         requestActive().then(() => {
             hideModal();
@@ -152,14 +152,11 @@ function SetEvent() {
     document.getElementById("modal_flash").addEventListener("hide.bs.modal", () => {
         isRequest = false;
         isSuccess = false;
-        if (isFiltered && isSearched) {
-            searchWithFilter();
+        if (isSearched) {
+            search(requestParam.SearchValue);
         }
         else if (isFiltered) {
             requestWithFilter();
-        }
-        else if (isSearched) {
-            search(requestParam.SearchValue);
         }
     })
     document.getElementById("modalForm").addEventListener("hide.bs.modal", () => {

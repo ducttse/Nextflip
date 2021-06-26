@@ -29,6 +29,6 @@ namespace Nextflip.Services.Interfaces
         //subtitle
         Subtitle GetSubtitleByID(string subtitleID);
         IEnumerable<Subtitle> GetSubtitlesByEpisodeID(string episodeID);
-
+        
     }
 }

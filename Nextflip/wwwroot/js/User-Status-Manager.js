@@ -30,25 +30,25 @@ function appendFlashMessageContent(isSuccess) {
     flashModal.insertAdjacentHTML("afterbegin", isSuccess ? success : fail);
 }
 
-function reuqestDeactive() {
+async function reuqestDeactive() {
     let formData = new FormData();
     let UserID = document.getElementById("Form_UserID").value;
     let Note = document.getElementById("note").value;
     formData.append('UserID', UserID);
     formData.append('Note', Note);
-    if (note.length == 0) {
+    if (Note.trim().length != 0) {
         isRequest = true;
     }
     else {
         isRequest = false;
     }
-    console.log(isRequest);
-    fetch("https://localhost:44341/api/UserManagerManagement/InactiveAccount", {
+    await fetch("https://localhost:44341/api/UserManagerManagement/InactiveAccount", {
         body: formData,
         method: "post"
     })
         .then(res => res.json())
         .then(json => {
+            console.log("in fetch DEactive");
             isSuccess = false;
             if (json.message !== null) {
                 if (json.message == "success") {
@@ -63,16 +63,16 @@ function reuqestDeactive() {
                 appendFlashMessageContent(false);
             }
             document.getElementById("note").value = "";
-            console.log(isSuccess);
         });
+    return new Promise((resolve) => { resolve("resolved") });
 }
 
-function requestActive() {
+async function requestActive() {
     let formData = new FormData();
     let UserID = document.getElementById("Check_UserID").value;
     formData.append('UserID', UserID);
     isRequest = true;
-    fetch("https://localhost:44341/api/UserManagerManagement/ActiveAccount", {
+    await fetch("https://localhost:44341/api/UserManagerManagement/ActiveAccount", {
         body: formData,
         method: "post"
     })
@@ -92,6 +92,7 @@ function requestActive() {
                 appendFlashMessageContent(false);
             }
         });
+    return new Promise((resolve) => { resolve("resolved") });
 }
 
 function setNote(note) {
@@ -135,15 +136,18 @@ function showModal(modalName) {
 }
 
 function SetEvent() {
-    document.getElementById("confirm_btn").addEventListener("click", async () => {
-        await requestActive();
-        await hideModal();
-        showModal("modal_flash");
+    document.getElementById("confirm_btn").addEventListener("click", () => {
+        requestActive().then(() => {
+            hideModal();
+            showModal("modal_flash");
+        })
     });
-    document.getElementById("submit_btn").addEventListener("click", async () => {
-        await reuqestDeactive();
-        await hideModal();
-        showModal("modal_flash");
+    document.getElementById("submit_btn").addEventListener("click", () => {
+        reuqestDeactive().then(() => {
+            hideModal();
+            showModal("modal_flash");
+        })
+
     })
     document.getElementById("modal_flash").addEventListener("hide.bs.modal", () => {
         isRequest = false;
@@ -159,12 +163,22 @@ function SetEvent() {
         }
     })
     document.getElementById("modalForm").addEventListener("hide.bs.modal", () => {
-        if (!isRequest && !isSuccess) {
+        if (isRequest) {
+            if (!isSuccess) {
+                rollBack();
+            }
+        }
+        else {
             rollBack();
         }
     })
     document.getElementById("modalCheck").addEventListener("hide.bs.modal", () => {
-        if (!isRequest && !isSuccess) {
+        if (isRequest) {
+            if (!isSuccess) {
+                rollBack();
+            }
+        }
+        else {
             rollBack();
         }
     })

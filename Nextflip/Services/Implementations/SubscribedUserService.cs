@@ -56,6 +56,7 @@ namespace Nextflip.Services.Implementations
         //media
         public Media GetMediaByID(string mediaID) => _mediaDAO.GetMediaByID(mediaID);
 
+        public IEnumerable<Media> GetMediasByTitle(string searchValue) => _mediaDAO.GetMediasByTitle(searchValue);
         public IEnumerable<Media> GetFavoriteMediasByUserID(string userID)
         {
             var favoriteMedias = new List<Media>();
@@ -67,13 +68,14 @@ namespace Nextflip.Services.Implementations
             }
             return favoriteMedias;
         }
-        public IEnumerable<Media> GetMediasByTitle(string title) => _mediaDAO.GetMediasByTitle(title);
+   //     public IEnumerable<Media> GetMediasByTitle(string title) => _mediaDAO.GetMediasByTitle(title);
         public IEnumerable<Media> GetMediasByCategoryID(int categoryID)
         {
             var medias = new List<Media>();
             IList<string> mediaIDs = _mediaCategoryDAO.GetMediaIDs(categoryID);
-            foreach (var mediaID in mediaIDs)
+            for(int i = 0; i<=20; i++)
             {
+                string mediaID = mediaIDs[i];
                 Media media = _mediaDAO.GetMediaByID(mediaID);
                 medias.Add(media);
             }
@@ -90,6 +92,7 @@ namespace Nextflip.Services.Implementations
         //subtitle
         public Subtitle GetSubtitleByID(string subtitleID) => _subtitleDAO.GetSubtitleByID(subtitleID);
         public IEnumerable<Subtitle> GetSubtitlesByEpisodeID(string episodeID) => _subtitleDAO.GetSubtitlesByEpisodeID(episodeID);
-
+        
     }
 }
+

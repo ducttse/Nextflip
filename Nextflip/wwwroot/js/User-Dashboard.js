@@ -13,12 +13,12 @@ function renderImageHolder(media) {
   }
   return `
   <div class="col-3 imageHolder px-1">
-  <a href="/WatchMedia/MediaDetails/${media.mediaID}">
-    <img
-      src="${CheckedURL}"
-      class="w-100 h-90"
-      alt="..."/>
-  </a>
+    <div onclick="return AppendDetails('${media.mediaID}');">
+      <img
+        src="${CheckedURL}"
+        class="w-100 h-90"
+        alt="..."/>
+    </div>
   </div>`;
 }
 
@@ -80,7 +80,6 @@ function fetchCategoryID(category) {
   )
     .then((res) => res.json())
     .then((json) => {
-      console.log(json);
       if (json.length < 8) {
         return;
       }
@@ -89,12 +88,10 @@ function fetchCategoryID(category) {
     });
 }
 
-
 function Run() {
   fetch("/api/ViewSubscribedUserDashboard/GetCategories")
     .then((res) => res.json())
     .then((categories) => {
-      console.log(categories);
       categories.forEach((category) => {
         fetchCategoryID(category);
       });

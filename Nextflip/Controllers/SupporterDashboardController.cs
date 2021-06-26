@@ -15,18 +15,20 @@ namespace Nextflip.Controllers
         {
             _logger = logger;
         }
+        [HttpGet]
         public IActionResult Index()
         {
             try
             {
                 return View();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogInformation("SupporterDashboardController/Index: " + e.Message);
                 return View("Error");
             }
         }
+        [HttpGet]
         public IActionResult Detail(string id)
         {
             try
@@ -34,12 +36,20 @@ namespace Nextflip.Controllers
                 ViewBag.ticketId = id;
                 return View();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 _logger.LogInformation("SupporterDashboardController/Detail: " + e.Message);
                 return View("Error");
             }
         }
+    }
 
+    public partial class Request
+    {
+        public int RowsOnPage { get; set; }
+        public int RequestPage { get; set; }
+        public string TopicName { get; set; }
+        public string SearchValue { get; set; }
+        public string Status { get; set; }
     }
 }

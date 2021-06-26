@@ -10,17 +10,17 @@ namespace Nextflip.Models.account
 {
     public class Account
     {
-        [Key]
         public string userID { get; set; }
         public string userEmail { get; set; }
         public string googleID { get; set; }
         public string googleEmail { get; set; }
         public string roleName { get; set; }
+        public string hashedPassword { get; set; }
         public string fullname { get; set; }
-        [DataType(DataType.Date)]
         public DateTime dateOfBirth { get; set; }
         public string status { get; set; }
         public string pictureURL { get; set; }
+        public string note { get; set; }
 
     }
 }

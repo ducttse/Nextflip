@@ -1,23 +1,46 @@
 ﻿@{
-    Layout = "_CustomLayout";
+    ViewBag.Title = "Search Media";
+    Layout = "_UserDashboardLayout";
 }
 @section Styles {
     <link href="@Url.Content("~/css/Search-Media.css")" rel="stylesheet" type="text/css" />
+    <link rel="Stylesheet" href="@Href("~/css/Header.css")" />
+    <link rel="Stylesheet" href="@Href("~/css/Media-Details.css")" />
 }
-<div class="row">
-    <div class="col-1">
-        <a class="btn btn-light" href="/SubcribedUserDashBoard/Index"><i class="fas fa-arrow-left"></i></a>
-    </div>
-    <div id="search_wrapper" class="col-10 mx-auto">
-    </div>
-</div>
+@section PreScript{
+    @if (ViewBag.SearchValue != null)
+    {
+     <script> search('@ViewBag.SearchValue'); </script>
+    }
+}
 <div id="result_holder" class="col-10 mx-auto mt-3">
-    <div id="backround"></div>
 </div>
-<script src="~/js/Search-Media.js"></script>
-<script src="~/js/Search-Component.js"></script>
+<div class="modal fade" id="modalDetail" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-body" style="background-color: #000;">
+                <button
+                type="button"
+                class="btn-close btn-close-white "
+                data-bs-dismiss="modal"
+                aria-label="Close"
+                ></button>
+                <div id="wrapper">
+                    <div class="w-100 h-100" id="imageHolder">    
+                    </div>
+                    <div id="content_holder" class="w-50 h-100">
+                        <div class="up row mx-auto" id="infor_hodler">
+                        </div>
+                        <div class="above" id="details_holder">
+                        </div>
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/Search-In-Header.js"></script>
+<script src="~/js/Media-Details.js"></script>
 <script>
-    search('@ViewBag.SearchValue');
-    appendSearch("Search Media", '@ViewBag.SearchValue');
-    setClick(search);
+    setSearchEvent();
 </script>

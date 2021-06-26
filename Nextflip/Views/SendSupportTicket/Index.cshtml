@@ -1,30 +1,44 @@
 ﻿@{
-    Layout = "_CustomLayout";
+    Layout = "_UserDashboardLayout";
 }
-<div class="ui_wrapper">
-  <div class="mx-auto col-10 shadow-lg p-3 mb-5 bg-body rounded">
-      <form class="mx-auto">
-        <label class="h2 form-label" for="option">Topic</label>
-        <select name="option" id="option" class="form-select form-select-lg mb-3 w-75">
-          <option selected>Select Topic</option>
-        </select>
-        <label class="h3 form-label" for="content">Content</label>
-        <textarea
-          class="form-control form-control-lg w-75"
-          name="content"
-          id="content"
-          cols="103"
-          rows="20"
-        ></textarea>
-        <div class="d-flex flex-row-reverse w-75 mt-3">
-          <button type="submit" class="btn btn-primary mx-1 btn-lg">
+@section styles{
+    <link rel="Stylesheet" href="@Href("~/css/Header.css")" />
+}
+<div class="w-100 mt-4 align-self-center">
+  <div id="form_cotainer" class="mx-auto col-8 shadow-lg p-3 mb-5 bg-body rounded needs-validation">
+        <div>
+          <label class="h3 form-label" for="option">Topic</label>
+          <select name="option" id="option" class="form-select form-select-lg mb-3 w-25" required>
+          </select>
+        </div>
+        <div>
+          <label class="h3 form-label" for="content">Content</label>
+          <textarea class="form-control form-control-lg w-100" name="content" id="content" rows="10" required value=""></textarea>
+          <div class="invalid-feedback">
+            This field must not empty
+          </div>
+        </div>
+        <div class="d-flex flex-row-reverse w-100 mt-3">
+          <button type="submit" class="btn btn-primary mx-1 btn-lg" onclick="sendTicket()">
             Submit
           </button>
           <button type="submit" class="btn btn-primary mx-1 btn-lg">
             Cancel
           </button>
         </div>
-      </form>
+  </div>
+</div>
+<!-- toast -->
+<div id="message_toast" class="toast hide position-fixed bottom-0 end-0 align-items-center show fs-5" role="alert" aria-live="assertive" aria-atomic="true">
+  <div class="d-flex">
+    <div class="toast-body">
+      <div class="ps-2" id="toast_content">
+      </div>
+    </div>
+    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" onclick="hideToast()"></button>
   </div>
 </div>
 <script src="~/js/SendSupportTicket.js"></script>
+<script>
+  requestTopic();
+</script>

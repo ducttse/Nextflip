@@ -40,7 +40,10 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetAllAccounts: " + ex.Message);
-                return new JsonResult("Error occur");
+                return new JsonResult(new
+                {
+                    message = ex.Message
+                });
             }
         }
 
@@ -55,7 +58,10 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetRoleNameList: " + ex.Message);
-                return new JsonResult("An error occur");
+                return new JsonResult(new
+                {
+                    message = ex.Message
+                });
             }
         }
 
@@ -92,7 +98,10 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetAccountsListByRoleAccordingRequest: " + ex.Message);
-                return new JsonResult("Error occur");
+                return new JsonResult(new
+                {
+                    message = ex.Message
+                });
             }
         }
 
@@ -117,7 +126,10 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetAccountsListByRoleAccordingRequest: " + ex.Message);
-                return new JsonResult("Error occur");
+                return new JsonResult(new
+                {
+                    message = ex.Message
+                });
             }
         }
 
@@ -146,7 +158,10 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetAccountListByEmail: " + ex.Message);
-                return new JsonResult("Error occur");
+                return new JsonResult(new
+                {
+                    message = ex.Message
+                });
             }
         }
 
@@ -174,7 +189,10 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetAccountListByEmail: " + ex.Message);
-                return new JsonResult("Error occur");
+                return new JsonResult(new
+                {
+                    message = ex.Message
+                });
             }
         }
 
@@ -202,7 +220,10 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetAccountListByEmail: " + ex.Message);
-                return new JsonResult("Error occur");
+                return new JsonResult(new
+                {
+                    message = ex.Message
+                });
             }
         }
 

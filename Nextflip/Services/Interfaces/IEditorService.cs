@@ -23,5 +23,6 @@ namespace Nextflip.Services.Interfaces
         int NumberOfMediasFilterCategory_Status(string CategoryName, string Status);
         bool RequestDisableMedia(string mediaID);
         Media GetMediaByID(string mediaID);
+        bool AddMediaRequest(string userEmail, string mediaID, string note, string previewLink);
     }
 }

@@ -145,14 +145,13 @@ namespace Nextflip.Models.mediaEditRequest
             bool result = false;
             try
             {
+                if (!GetMediaEditRequestByID(requestID).status.Equals("Pending")) return false;
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    //Editor_Request() = true;
                     string Sql = "Update mediaEditRequest " +
                             "Set status = 'Approved' " +
                             "Where requestID = @requestID";
-                    Debug.WriteLine(Sql);
                     MySqlCommand command = new MySqlCommand(Sql, connection);
                     command.Parameters.AddWithValue("@requestID", requestID);
                     int rows = command.ExecuteNonQuery();
@@ -166,21 +165,22 @@ namespace Nextflip.Models.mediaEditRequest
             return result;
         }
 
-        public bool DisapproveRequest(int requestID)
+        public bool DisapproveRequest(int requestID, string note)
         {
             bool result = false;
             try
             {
+                if (!GetMediaEditRequestByID(requestID).status.Equals("Pending")) return false;
+                if (note == null || note.Trim().Equals("")) return false;
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    //Editor_Request() = false;
                     string Sql = "Update mediaEditRequest " +
-                            "Set status = 'Disapproved' " +
+                            "Set status = 'Disapproved', note = @note " +
                             "Where requestID = @requestID";
-                    Debug.WriteLine(Sql);
                     MySqlCommand command = new MySqlCommand(Sql, connection);
                     command.Parameters.AddWithValue("@requestID", requestID);
+                    command.Parameters.AddWithValue("@note", note);
                     int rows = command.ExecuteNonQuery();
                     if (rows > 0) result = true;
                 }
@@ -419,6 +419,46 @@ namespace Nextflip.Models.mediaEditRequest
                 connection.Close();
             }
             return count;
+        }
+
+        public MediaEditRequest GetMediaEditRequestByID(int requestID)
+        {
+            try
+            {
+                var request = new MediaEditRequest();
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select requestID, userEmail, mediaID, status, note, previewLink " +
+                                "From mediaEditRequest " +
+                                "Where requestID = @requestID";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@requestID", requestID);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                request = new MediaEditRequest
+                                {
+                                    requestID = reader.GetInt32(0),
+                                    userEmail = reader.GetString(1),
+                                    mediaID = reader.GetString(2),
+                                    status = reader.GetString(3),
+                                    note = reader.GetString(4),
+                                    previewLink = reader.GetString(5)
+                                };
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+                return request;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
     }

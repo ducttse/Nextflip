@@ -1,4 +1,5 @@
 ﻿using Nextflip.Models.media;
+using Nextflip.Models.mediaEditRequest;
 using Nextflip.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -10,7 +11,12 @@ namespace Nextflip.Services.Implementations
     public class EditorService : IEditorService
     {
         private readonly IMediaDAO _mediaDAO;
-        public EditorService(IMediaDAO mediaDAO) =>  _mediaDAO = mediaDAO;
+        private readonly IMediaEditRequestDAO _mediaEditRequestDAO;
+        public EditorService(IMediaEditRequestDAO mediaEditRequestDAO, IMediaDAO mediaDAO)
+        {
+            _mediaEditRequestDAO = mediaEditRequestDAO;
+            _mediaDAO = mediaDAO;
+        }
         public IEnumerable<Media> GetMediasByTitle(string searchValue, int RowsOnPage, int RequestPage) => _mediaDAO.GetMediasByTitle(searchValue, RowsOnPage, RequestPage);
         public int NumberOfMediasBySearching(string searchValue) => _mediaDAO.NumberOfMediasBySearching(searchValue);
 
@@ -33,5 +39,7 @@ namespace Nextflip.Services.Implementations
 
         public bool RequestDisableMedia(string mediaID) => _mediaDAO.RequestDisableMedia(mediaID);
         public Media GetMediaByID(string mediaID) => _mediaDAO.GetMediaByID(mediaID);
+        public bool AddMediaRequest(string userEmail, string mediaID, string note, string previewLink)
+                => _mediaEditRequestDAO.AddMediaRequest(userEmail, mediaID, note, previewLink);
     }
 }

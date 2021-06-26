@@ -26,5 +26,7 @@ namespace Nextflip.Models.media
         int NumberOfMediasFilterCategory_Status(string CategoryName, string Status);
 
         bool RequestDisableMedia(string mediaID);
+        bool ApproveChangeMediaStatus(string mediaID);
+        bool DisapproveChangeMediaStatus(string mediaID);
     }
 }

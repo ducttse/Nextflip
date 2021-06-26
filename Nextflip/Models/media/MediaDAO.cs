@@ -478,5 +478,71 @@ namespace Nextflip.Models.media
             }
             return result;
         }
+
+        public bool ApproveChangeMediaStatus(string mediaID)
+        {
+            var result = false;
+            try
+            {
+                string newStatus = null;
+                Media media = GetMediaByID(mediaID);
+                if (media.Status.Equals("Disabled")) newStatus = "Enabled";
+                if (media.Status.Equals("Enabled")) newStatus = "Disabled";
+                string mediaID_preview = mediaID + "_preview";
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql1 = "Update media " +
+                            "Set status = @newStatus " +
+                            "Where mediaID = @mediaID";
+                    string Sql2 = "Delete from media " +
+                            "Where mediaID = @mediaID_preview";
+                    MySqlCommand command1 = new MySqlCommand(Sql1, connection);
+                    MySqlCommand command2 = new MySqlCommand(Sql2, connection);
+                    command1.Parameters.AddWithValue("@newStatus", newStatus);
+                    command1.Parameters.AddWithValue("@mediaID", mediaID);
+                    command2.Parameters.AddWithValue("@mediaID_preview", mediaID_preview);
+                    int rowEffects1 = command1.ExecuteNonQuery();
+                    int rowEffects2 = command2.ExecuteNonQuery();
+                    if (rowEffects1 > 0 && rowEffects2 > 0)
+                    {
+                        result = true;
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return result;
+        }
+        public bool DisapproveChangeMediaStatus(string mediaID)
+        {
+            var result = false;
+            try
+            {
+                string mediaID_preview = mediaID + "_preview";
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Delete from media " +
+                            "Where mediaID = @mediaID_preview";
+                    MySqlCommand command = new MySqlCommand(Sql, connection);
+                    command.Parameters.AddWithValue("@mediaID_preview", mediaID_preview);
+                    int rowEffects = command.ExecuteNonQuery();
+                    if (rowEffects > 0)
+                    {
+                        result = true;
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return result;
+        }
     }
 }

@@ -194,18 +194,22 @@ namespace Nextflip.APIControllers
 
         [HttpPost]
         [Route("RequestDisableMedia")]
-        public IActionResult RequestDisableMedia([FromServices] IEditorService editorService,
-            [FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromBody] Request request)
+        public IActionResult RequestDisableMedia([FromServices] IEditorService editorService, [FromForm] Request request)
         {
             try
             {
+                var messageFail = new
+                {
+                    message = "fail"
+                };
                 bool requestDisableMedia = editorService.RequestDisableMedia(request.MediaID);
-                bool addMediaRequest = mediaManagerManagementService.AddMediaRequest(request.UserEmail, request.MediaID, request.Note, request.LinkPreview); 
-                var result = new
+                bool addMediaRequest = editorService.AddMediaRequest(request.UserEmail, request.MediaID, request.Note, request.LinkPreview);
+                if (!requestDisableMedia || !addMediaRequest) return new JsonResult(messageFail);
+                var message = new
                 {
                     message = "success"
                 };
-                return (new JsonResult(result));
+                return (new JsonResult(message));
             }
             catch (Exception e)
             {

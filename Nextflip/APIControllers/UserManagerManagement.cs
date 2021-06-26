@@ -84,7 +84,7 @@ namespace Nextflip.APIControllers
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {
-                    TotalPage = Math.Ceiling(totalPage),
+                    TotalPage = (int)Math.Ceiling(totalPage),
                     Data = accounts
                 };
                 return (new JsonResult(result));
@@ -109,7 +109,7 @@ namespace Nextflip.APIControllers
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {
-                    TotalPage = Math.Ceiling(totalPage),
+                    TotalPage = (int)Math.Ceiling(totalPage),
                     Data = accounts
                 };
                 return (new JsonResult(result));
@@ -138,7 +138,7 @@ namespace Nextflip.APIControllers
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {
-                    TotalPage = Math.Ceiling(totalPage),
+                    TotalPage = (int)Math.Ceiling(totalPage),
                     Data = accounts
                 };
                 return (new JsonResult(result));
@@ -166,7 +166,7 @@ namespace Nextflip.APIControllers
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {
-                    TotalPage = Math.Ceiling(totalPage),
+                    TotalPage = (int)Math.Ceiling(totalPage),
                     Data = accounts
                 };
                 return (new JsonResult(result));
@@ -194,7 +194,7 @@ namespace Nextflip.APIControllers
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {
-                    TotalPage = Math.Ceiling(totalPage),
+                    TotalPage = (int)Math.Ceiling(totalPage),
                     Data = accounts
                 };
                 return (new JsonResult(result));

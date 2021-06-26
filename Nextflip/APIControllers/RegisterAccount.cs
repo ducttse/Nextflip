@@ -36,6 +36,21 @@ namespace Nextflip.APIControllers
                 return new JsonResult(new { Message = ex.Message });
             }
         }
+        [Route("CheckEmail")]
+        [HttpPost]
+        public IActionResult CheckEmail([FromServices] IAccountService accountService, [FromBody] AccountRegisterForm form)
+        {
+            try
+            {
+                if (accountService.IsExistedEmail(form.UserEmail)) return new JsonResult(new { Message = "Email has already existed exist!" });
+                return new JsonResult(new { Message = "Valid" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("RegisterAccount/CheckEmail: " + ex.Message);
+                return new JsonResult(new { Message = ex.Message });
+            }
+        }
     }
     public partial class AccountRegisterForm
     {

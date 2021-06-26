@@ -21,6 +21,7 @@ namespace Nextflip.Services.Interfaces
         int NumberOfMediasFilterCategory(string CategoryName);
         IEnumerable<Media> ViewMediasFilterCategory_Status(string CategoryName, string Status, int RowsOnPage, int RequestPage);
         int NumberOfMediasFilterCategory_Status(string CategoryName, string Status);
-        bool ChangeMediaStatus(string mediaID, string status);
+        bool RequestDisableMedia(string mediaID);
+        Media GetMediaByID(string mediaID);
     }
 }

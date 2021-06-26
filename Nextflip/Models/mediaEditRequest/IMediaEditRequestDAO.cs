@@ -25,7 +25,6 @@ namespace Nextflip.Models.mediaEditRequest
         int NumberOfPendingMediasFilterStatus(string status);
         IEnumerable<MediaEditRequest> GetPendingMediasFilterStatus(string status, int RowsOnPage, int RequestPage);
 
-        bool AddMediaRequest(string userEmail, string mediaID, string note);
-
+        bool AddMediaRequest(string userEmail, string mediaID, string note, string previewLink);
     }
 }

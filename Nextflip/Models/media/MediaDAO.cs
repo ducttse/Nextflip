@@ -443,26 +443,38 @@ namespace Nextflip.Models.media
             return count;
         }
 
-        public bool ChangeMediaStatus(string mediaID, string status)
+        public bool RequestDisableMedia(string mediaID)
         {
             var result = false;
-            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            try
             {
-                connection.Open();
-                string Sql = "UPDATE media " +
-                    "SET status = @status " +
-                    "WHERE mediaID = @mediaID";
-                using (var command = new MySqlCommand(Sql, connection))
+                Media media = GetMediaByID(mediaID);
+                if (media.Status.Equals("Disabled")) return false;
+                media.MediaID = mediaID + "_preview";
+                string title_preview = media.Title + "_preview";
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
-                    command.Parameters.AddWithValue("@status", status);
-                    command.Parameters.AddWithValue("@mediaID", mediaID);
-                    int rowEffects = command.ExecuteNonQuery();
-                    if (rowEffects > 0)
+                    connection.Open();
+                    string Sql = "INSERT INTO media (mediaID, status, title, bannerURL, language, description) " +
+                        "VALUES (@mediaID_preview, 'Pending', @title, @bannerURL, @language, @description) ";
+                    using (var command = new MySqlCommand(Sql, connection))
                     {
-                        result = true;
+                        command.Parameters.AddWithValue("@mediaID_preview", media.MediaID);
+                        command.Parameters.AddWithValue("@title", title_preview);
+                        command.Parameters.AddWithValue("@bannerURL", media.BannerURL);
+                        command.Parameters.AddWithValue("@language", media.Language);
+                        command.Parameters.AddWithValue("@description", media.Description);
+                        int rowEffects = command.ExecuteNonQuery();
+                        if (rowEffects > 0)
+                        {
+                            result = true;
+                        }
                     }
+                    connection.Close();
                 }
-                connection.Close();
+            } catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
             return result;
         }

@@ -35,7 +35,8 @@ namespace Nextflip.Services.Implementations
         public int NumberOfPendingMediasBySearchingFilterStatus(string searchValue, string Status)
             => _mediaEditRequestDao.NumberOfPendingMediasBySearchingFilterStatus(searchValue, Status);
 
-        public bool AddMediaRequest(string userEmail, string mediaID, string note) => _mediaEditRequestDao.AddMediaRequest(userEmail, mediaID, note);
+        public bool AddMediaRequest(string userEmail, string mediaID, string note, string previewLink) 
+                => _mediaEditRequestDao.AddMediaRequest(userEmail, mediaID, note, previewLink);
 
     }
 }

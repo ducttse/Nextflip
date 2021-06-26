@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Nextflip.Models;
 using Nextflip.Models.category;
 using Nextflip.Models.media;
 using Nextflip.Services.Interfaces;
@@ -27,10 +28,11 @@ namespace Nextflip.APIControllers
             public string SearchValue { get; set; }
             public string MediaID { get; set; }
             public string UserEmail { get; set; }
-            public string note { get; set; }
+            public string Note { get; set; }
             public int CategoryID { get; set; }
             public string Status { get; set; }
             public string CategoryName { get; set; }
+            public string LinkPreview { get; set; }
             public int RowsOnPage { get; set; }
             public int RequestPage { get; set; }
 
@@ -191,24 +193,28 @@ namespace Nextflip.APIControllers
         }
 
         [HttpPost]
-        [Route("RequestDisabledMedia")]
-        public IActionResult RequestDisabledMedia([FromServices] IMediaService mediaService,
+        [Route("RequestDisableMedia")]
+        public IActionResult RequestDisableMedia([FromServices] IEditorService editorService,
             [FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromBody] Request request)
         {
             try
             {
-                bool changeMediaStatus = mediaService.ChangeMediaStatus(request.MediaID, "Pending");
-                bool addMediaRequest = mediaManagerManagementService.AddMediaRequest(request.UserEmail, request.MediaID, request.note);
+                bool requestDisableMedia = editorService.RequestDisableMedia(request.MediaID);
+                bool addMediaRequest = mediaManagerManagementService.AddMediaRequest(request.UserEmail, request.MediaID, request.Note, request.LinkPreview); 
                 var result = new
                 {
-
+                    message = "success"
                 };
                 return (new JsonResult(result));
             }
             catch (Exception e)
             {
                 _logger.LogInformation("RequestDisabledMedia: " + e.Message);
-                return new JsonResult("An error occurred");
+                var result = new
+                {
+                    message = e.Message
+                };
+                return new JsonResult(result);
             }
         }
 

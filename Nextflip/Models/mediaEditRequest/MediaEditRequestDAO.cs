@@ -1,4 +1,5 @@
 ﻿using MySql.Data.MySqlClient;
+using Nextflip.Models.media;
 using Nextflip.utils;
 using System;
 using System.Collections.Generic;
@@ -368,7 +369,7 @@ namespace Nextflip.Models.mediaEditRequest
             return requests;
         }
 
-        public bool AddMediaRequest(string userEmail, string mediaID, string note)
+        public bool AddMediaRequest(string userEmail, string mediaID, string note, string previewLink)
         {
             bool result = false;
             try
@@ -376,12 +377,13 @@ namespace Nextflip.Models.mediaEditRequest
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Insert mediaEditRequest (userEmail, mediaID, status, note) " +
-                            "Into (@userEmail, @mediaID, 'Pending', @note)";
+                    string Sql = "Insert Into mediaEditRequest (userEmail, mediaID, status, note, previewLink) " +
+                            "Values (@userEmail, @mediaID, 'Pending', @note, @previewLink) ";
                     MySqlCommand command = new MySqlCommand(Sql, connection);
                     command.Parameters.AddWithValue("@userEmail", userEmail);
                     command.Parameters.AddWithValue("@mediaID", mediaID);
                     command.Parameters.AddWithValue("@note", note);
+                    command.Parameters.AddWithValue("@previewLink", previewLink);
                     int rows = command.ExecuteNonQuery();
                     if (rows > 0) result = true;
                 }
@@ -418,6 +420,7 @@ namespace Nextflip.Models.mediaEditRequest
             }
             return count;
         }
+
     }
 }
 

@@ -31,6 +31,7 @@ namespace Nextflip.Services.Implementations
         public int NumberOfMediasBySearchingFilterCategory_Status(string SearchValue, string CategoryName, string Status)
             => _mediaDAO.NumberOfMediasBySearchingFilterCategory_Status(SearchValue, CategoryName, Status);
 
-        public bool ChangeMediaStatus(string mediaID, string status) => _mediaDAO.ChangeMediaStatus(mediaID, status);
+        public bool RequestDisableMedia(string mediaID) => _mediaDAO.RequestDisableMedia(mediaID);
+        public Media GetMediaByID(string mediaID) => _mediaDAO.GetMediaByID(mediaID);
     }
 }

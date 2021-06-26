@@ -17,7 +17,7 @@ namespace Nextflip.Models.account
         public string roleName { get; set; }
         public string hashedPassword { get; set; }
         public string fullname { get; set; }
-        public DateTime? dateOfBirth { get; set; } = null;
+        public DateTime dateOfBirth { get; set; }
         public string status { get; set; }
         public string pictureURL { get; set; }
         public string note { get; set; }

@@ -66,7 +66,7 @@ function renderCurrentArray() {
   Pages = Pages.join("");
   return `
     <nav>
-      <ul class="pagination">
+      <ul class="pagination my-auto">
         ${Pages}
       </ul>
     </nav>`;

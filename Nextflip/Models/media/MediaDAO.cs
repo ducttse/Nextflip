@@ -19,7 +19,7 @@ namespace Nextflip.Models.media
                     connection.Open();
                     string Sql = "Select mediaID,status, title, bannerURL, language, description " +
                                 "From media " +
-                                "Where MATCH (title)  AGAINST (@searchValue in boolean mode) ";
+                                "Where status = Active And MATCH (title)  AGAINST (@searchValue in boolean mode) ";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@searchValue", $"{searchValue}*");

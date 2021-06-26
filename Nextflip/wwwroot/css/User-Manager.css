@@ -6,6 +6,20 @@
 .w-90 {
   width: 90% !important;
 }
+.w-85 {
+  width: 85% !important;
+}
+.w-70 {
+  width: 70% !important;
+}
+.h-85 {
+  height: 85% !important;
+}
+.table_container {
+  border-radius: 50px;
+  background: #e0e0e0;
+  box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
+}
 input[type="checkbox"] {
   position: relative;
   width: 40px;
@@ -38,5 +52,5 @@ input:checked[type="checkbox"]:before {
   left: 20px;
 }
 .hide {
-  display: none;
+  display: none !important;
 }

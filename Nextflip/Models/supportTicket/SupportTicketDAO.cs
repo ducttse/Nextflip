@@ -51,8 +51,10 @@ namespace Nextflip.Models.supportTicket
 
         }
 
-        public IList<SupportTicket> ViewSupportTicketByTopic(int limit, int offset, string topicName)
+        public IList<SupportTicket> ViewSupportTicketByTopic(int limit, int offset, string topicName, string sortBy, string according)
         {
+            string whereCondition = "";
+            if (!topicName.Equals("All")) whereCondition = "WHERE topicName = @topicName ";
             IList<SupportTicket> supportTickets = new List<SupportTicket>();
             try
             {
@@ -61,8 +63,8 @@ namespace Nextflip.Models.supportTicket
                     connection.Open();
                     string sql = "SELECT supportTicketID, userEmail, topicName, createdDate, status, content " +
                                     "FROM supportTicket " +
-                                    "WHERE topicName = @topicName " +
-                                    "Order By createdDate DESC " +
+                                     whereCondition  +
+                                    "Order By " + sortBy + " " + according + " "+
                                     "LIMIT @limit OFFSET @offset; ";
                     using (var command = new MySqlCommand(sql, connection))
 
@@ -95,6 +97,8 @@ namespace Nextflip.Models.supportTicket
 
         public int GetNumOfSupportTicketsByTopic(string topicName)
         {
+            string whereCondition = "";
+            if (!topicName.Equals("All")) whereCondition = "WHERE topicName = @topicName ;";
             try
             {
                 using (var connection = new MySqlConnection(utils.DbUtil.ConnectionString))
@@ -102,7 +106,7 @@ namespace Nextflip.Models.supportTicket
                     connection.Open();
                     string sql = "Select Count(*) " +
                                     "From supportTicket " +
-                                    "WHERE topicName = @topicName ;";
+                                    whereCondition;
                     using (var command = new MySqlCommand(sql, connection))
 
                     {
@@ -127,8 +131,10 @@ namespace Nextflip.Models.supportTicket
             }
         }
 
-        public IList<SupportTicket> ViewSupportTicketByTopicAndStatus(string topicName, string status, int limit, int offset)
+        public IList<SupportTicket> ViewSupportTicketByTopicAndStatus(string topicName, string status, int limit, int offset, string sortBy, string according)
         {
+            string whereCondition = "WHERE ";
+            if (!topicName.Equals("All")) whereCondition = "WHERE topicName = @topicName AND ";
             IList<SupportTicket> supportTickets = new List<SupportTicket>();
             try
             {
@@ -137,8 +143,8 @@ namespace Nextflip.Models.supportTicket
                     connection.Open();
                     string sql = "SELECT supportTicketID, userEmail, topicName, createdDate, status, content " +
                                     "FROM supportTicket " +
-                                    "WHERE topicName = @topicName AND status = @status " +
-                                    "Order By createdDate DESC " +
+                                    whereCondition + "status = @status " +
+                                    "Order By " + sortBy + " " + according + " "+
                                     "LIMIT @limit OFFSET @offset; ";
                     using (var command = new MySqlCommand(sql, connection))
 
@@ -171,6 +177,8 @@ namespace Nextflip.Models.supportTicket
 
         public int GetNumOfSupportTicketsByTopicAndStatus(string topicName, string status)
         {
+            string whereCondition = "Where ";
+            if (!topicName.Equals("All")) whereCondition = "WHERE topicName = @topicName AND ";
             try
             {
                 using (var connection = new MySqlConnection(utils.DbUtil.ConnectionString))
@@ -178,7 +186,7 @@ namespace Nextflip.Models.supportTicket
                     connection.Open();
                     string sql = "Select Count(*) " +
                                     "From supportTicket " +
-                                    "WHERE topicName = @topicName AND status = @status; ";
+                                    whereCondition + "status = @status; ";
                     using (var command = new MySqlCommand(sql, connection))
 
                     {
@@ -267,10 +275,12 @@ namespace Nextflip.Models.supportTicket
         }
 
 
-        public IList<SupportTicket> SearchSupportTicketByTopic(string searchValue, string topicName, int limit, int offset)
+        public IList<SupportTicket> SearchSupportTicketByTopic(string searchValue, string topicName, int limit, int offset, string sortBy, string according)
 
         {
             IList<SupportTicket> supportTickets = new List<SupportTicket>();
+            string whereCondition = "WHERE ";
+            if (!topicName.Equals("All")) whereCondition = "WHERE topicName = @topicName AND ";
             try
             {
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
@@ -278,8 +288,8 @@ namespace Nextflip.Models.supportTicket
                     connection.Open();
                     string sql = "SELECT supportTicketID, userEmail, topicName, createdDate, status, content " +
                                     "FROM supportTicket " +
-                                    "WHERE topicName = @topicName AND(userEmail like @searchValue OR content like @searchValue) " +
-                                    "Order By createdDate DESC " +
+                                    whereCondition + "(userEmail like @searchValue OR content like @searchValue) " +
+                                    "Order By " + sortBy + " " + according + " "+
                                     "LIMIT @limit OFFSET @offset ; ";
                     using (var command = new MySqlCommand(sql, connection))
 
@@ -313,6 +323,8 @@ namespace Nextflip.Models.supportTicket
 
         public int GetNumOfSupportTicketsByTopicAndSearch(string searchValue, string topicName)
         {
+            string whereCondition = "WHERE ";
+            if (!topicName.Equals("All")) whereCondition = "WHERE topicName = @topicName AND ";
             try
             {
                 using (var connection = new MySqlConnection(utils.DbUtil.ConnectionString))
@@ -320,7 +332,7 @@ namespace Nextflip.Models.supportTicket
                     connection.Open();
                     string sql = "Select Count(*) " +
                                     "From supportTicket " +
-                                    "WHERE topicName = @topicName AND(userEmail like @searchValue OR content like @searchValue); ";
+                                    whereCondition + "(userEmail like @searchValue OR content like @searchValue); ";
                     using (var command = new MySqlCommand(sql, connection))
 
                     {
@@ -346,9 +358,11 @@ namespace Nextflip.Models.supportTicket
             }
         }
 
-        public IList<SupportTicket> SearchSupportTicketByTopicAndByStatus(string searchValue, string topicName, string status, int limit, int offset)
+        public IList<SupportTicket> SearchSupportTicketByTopicAndByStatus(string searchValue, string topicName, string status, int limit, int offset, string sortBy, string according)
 
         {
+            string whereCondition = "WHERE ";
+            if (!topicName.Equals("All")) whereCondition = "WHERE topicName = @topicName AND ";
             IList<SupportTicket> supportTickets = new List<SupportTicket>();
             try
             {
@@ -357,8 +371,8 @@ namespace Nextflip.Models.supportTicket
                     connection.Open();
                     string sql = "SELECT supportTicketID, userEmail, topicName, createdDate, status, content " +
                                     "FROM supportTicket " +
-                                    "WHERE topicName = @topicName AND status = @status AND (userEmail like @searchValue OR content like @searchValue) " +
-                                    "Order By createdDate DESC " +
+                                    whereCondition + "status = @status AND (userEmail like @searchValue OR content like @searchValue) " +
+                                    "Order By " + sortBy + " " + according + " "+
                                     "LIMIT @limit OFFSET @offset; ";
                     using (var command = new MySqlCommand(sql, connection))
 
@@ -391,6 +405,8 @@ namespace Nextflip.Models.supportTicket
         }
         public int GetNumOfSupportTicketsByTopicAndSearchAndStatus(string searchValue, string topicName, string status)
         {
+            string whereCondition = "WHERE ";
+            if (!topicName.Equals("All")) whereCondition = "WHERE topicName = @topicName AND ";
             try
             {
                 using (var connection = new MySqlConnection(utils.DbUtil.ConnectionString))
@@ -398,7 +414,7 @@ namespace Nextflip.Models.supportTicket
                     connection.Open();
                     string sql = "Select Count(*) " +
                                     "From supportTicket " +
-                                    "WHERE topicName = @topicName AND status = @status AND (userEmail like @searchValue OR content like @searchValue) ";
+                                    whereCondition + "status = @status AND (userEmail like @searchValue OR content like @searchValue) ";
                     using (var command = new MySqlCommand(sql, connection))
 
                     {

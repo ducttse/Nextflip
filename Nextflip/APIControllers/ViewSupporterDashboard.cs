@@ -87,16 +87,24 @@ namespace Nextflip.APIControllers
 
         [Route("ViewSupportTicketByTopic")]
         [HttpPost]
-        public IActionResult ViewSupportTicketByTopic([FromServices] ISupportTicketService supportTicketService, [FromBody]Request request)
+        public IActionResult ViewSupportTicketByTopic([FromServices] ISupportTicketService supportTicketService, [FromBody]SupporterRequest request)
         {
             try
             {
                 string topicName = request.TopicName;
-                if ( topicName == null || topicName.Length == 0) throw new Exception("Invalid topic name");
+                if ( topicName == null || topicName.Trim().Length == 0) throw new Exception("Invalid topic name");
                 int limit = request.RowsOnPage;
                 int offset = request.RowsOnPage * (request.RequestPage-1);
+                string sortBy = request.SortBy;
+                if (sortBy == null || sortBy.Trim().Length == 0) sortBy = "createdDate";
+                string according = request.According;
+                if (according == null || according.Trim().Length == 0)
+                {
+                    according = "DESC";
+                    if (!sortBy.Equals("createdDate")) according = "ASC";
+                }
 
-                IList<SupportTicket> supportTickets = supportTicketService.ViewSupportTicketByTopic(limit, offset, topicName);
+                IList<SupportTicket> supportTickets = supportTicketService.ViewSupportTicketByTopic(limit, offset, topicName, sortBy, according);
                 int totalRecord = supportTicketService.GetNumOfSupportTicketsByTopic(topicName);
                 int totalPage = totalRecord / limit + (totalRecord % limit == 0 ? 0 : 1);
 
@@ -111,18 +119,26 @@ namespace Nextflip.APIControllers
 
         [Route("SearchSupportTicketByTopic")]
         [HttpPost]
-        public IActionResult SearchSupportTicketByTopic([FromServices] ISupportTicketService supportTicketService, [FromBody] Request request)
+        public IActionResult SearchSupportTicketByTopic([FromServices] ISupportTicketService supportTicketService, [FromBody] SupporterRequest request)
         {
             try
             {
                 string topicName = request.TopicName;
-                if (topicName == null || topicName.Length == 0) throw new Exception("Invalid topic name");
+                if (topicName == null || topicName.Trim().Length == 0) throw new Exception("Invalid topic name");
                 string searchValue = request.SearchValue;
-                if (searchValue == null || searchValue.Length == 0) throw new Exception("Invalid search value");
+                if (searchValue == null || searchValue.Trim().Length == 0) throw new Exception("Invalid search value");
                 int limit = request.RowsOnPage;
                 int offset = request.RowsOnPage * (request.RequestPage - 1);
+                string sortBy = request.SortBy;
+                if (sortBy == null || sortBy.Trim().Length == 0) sortBy = "createdDate";
+                string according = request.According;
+                if (according == null || according.Trim().Length == 0)
+                {
+                    according = "DESC";
+                    if (!sortBy.Equals("createdDate")) according = "ASC";
+                }
 
-                IList<SupportTicket> supportTickets = supportTicketService.SearchSupportTicketByTopic(searchValue, topicName, limit, offset);
+                IList<SupportTicket> supportTickets = supportTicketService.SearchSupportTicketByTopic(searchValue, topicName, limit, offset, sortBy, according);
                 int totalRecord = supportTicketService.GetNumOfSupportTicketsByTopicAndSearch(searchValue, topicName);
                 int totalPage = totalRecord / limit + (totalRecord % limit == 0 ? 0 : 1);
 
@@ -137,20 +153,28 @@ namespace Nextflip.APIControllers
 
         [Route("SearchSupportTicketByTopicAndStatus")]
         [HttpPost]
-        public IActionResult SearchSupportTicketByTopicAndStatus([FromServices] ISupportTicketService supportTicketService, [FromBody] Request request)
+        public IActionResult SearchSupportTicketByTopicAndStatus([FromServices] ISupportTicketService supportTicketService, [FromBody] SupporterRequest request)
         {
             try
             {
                 string topicName = request.TopicName;
-                if (topicName == null || topicName.Length == 0) throw new Exception("Invalid topic name");
+                if (topicName == null || topicName.Trim().Length == 0) throw new Exception("Invalid topic name");
                 string searchValue = request.SearchValue;
-                if (searchValue == null || searchValue.Length == 0) throw new Exception("Invalid search value");
+                if (searchValue == null || searchValue.Trim().Length == 0) throw new Exception("Invalid search value");
                 string status = request.Status;
-                if (status == null || status.Length == 0) throw new Exception("Invalid status");
+                if (status == null || status.Trim().Length == 0) throw new Exception("Invalid status");
                 int limit = request.RowsOnPage;
                 int offset = request.RowsOnPage * (request.RequestPage-1);
+                string sortBy = request.SortBy;
+                if (sortBy == null || sortBy.Trim().Length == 0) sortBy = "createdDate";
+                string according = request.According;
+                if (according == null || according.Trim().Length == 0)
+                {
+                    according = "DESC";
+                    if (!sortBy.Equals("createdDate")) according = "ASC";
+                }
 
-                IList<SupportTicket> supportTickets = supportTicketService.SearchSupportTicketByTopicAndByStatus(searchValue, topicName, status, limit, offset);
+                IList<SupportTicket> supportTickets = supportTicketService.SearchSupportTicketByTopicAndByStatus(searchValue, topicName, status, limit, offset, sortBy, according);
                 int totalRecord = supportTicketService.GetNumOfSupportTicketsByTopicAndSearchAndStatus(searchValue, topicName, status);
                 int totalPage = totalRecord / limit + (totalRecord % limit == 0 ? 0 : 1);
 
@@ -163,18 +187,26 @@ namespace Nextflip.APIControllers
             }
         }
         [Route("ViewSupportTicketByTopicAndStatus")]
-        public IActionResult ViewSupportTicketByTopicAndStatus([FromServices] ISupportTicketService supportTicketService, [FromBody] Request request)
+        public IActionResult ViewSupportTicketByTopicAndStatus([FromServices] ISupportTicketService supportTicketService, [FromBody] SupporterRequest request)
         {
             try
             {
                 string topicName = request.TopicName;
-                if (topicName == null || topicName.Length == 0) throw new Exception("Invalid topic name");
+                if (topicName == null || topicName.Trim().Length == 0) throw new Exception("Invalid topic name");
                 string status = request.Status;
-                if (status == null || status.Length == 0) throw new Exception("Invalid status");
+                if (status == null || status.Trim().Length == 0) throw new Exception("Invalid status");
                 int limit = request.RowsOnPage;
                 int offset = request.RowsOnPage * (request.RequestPage - 1);
+                string sortBy = request.SortBy;
+                if (sortBy == null || sortBy.Trim().Length == 0) sortBy = "createdDate";
+                string according = request.According;
+                if (according == null || according.Trim().Length == 0)
+                {
+                    according = "DESC";
+                    if (!sortBy.Equals("createdDate")) according = "ASC";
+                }
 
-                IList<SupportTicket> supportTickets = supportTicketService.ViewSupportTicketByTopicAndStatus(topicName, status, limit, offset);
+                IList<SupportTicket> supportTickets = supportTicketService.ViewSupportTicketByTopicAndStatus(topicName, status, limit, offset, sortBy, according);
                 int totalRecord = supportTicketService.GetNumOfSupportTicketsByTopicAndStatus(topicName, status);
                 int totalPage = totalRecord / limit + (totalRecord % limit == 0 ? 0 : 1);
 
@@ -188,13 +220,16 @@ namespace Nextflip.APIControllers
         }
     }
 
-    public partial class Request
+    public partial class SupporterRequest
+
     {
         public int RowsOnPage { get; set; }
         public int RequestPage { get; set; }
         public string TopicName { get; set; }
         public string SearchValue { get; set; }
         public string Status { get; set; }
+        public string SortBy { get; set; }
+        public string According { get; set; }
     }
 
     public partial class ForwardDetails

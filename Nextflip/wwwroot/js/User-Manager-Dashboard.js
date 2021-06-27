@@ -230,7 +230,6 @@ function setSelectedStatus(obj) {
 }
 
 function searchOnly() {
-  isSearched = true;
   let reqHeader = new Headers();
   reqHeader.append("Content-Type", "text/json");
   reqHeader.append("Accept", "application/json, text/plain, */*");

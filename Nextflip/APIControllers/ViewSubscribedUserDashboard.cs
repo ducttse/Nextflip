@@ -36,6 +36,7 @@ namespace Nextflip.APIControllers
         [Route("GetMediasByTitle/{searchValue}")]
         public IActionResult GetMediasByTitle([FromServices] ISubscribedUserService subscribedUserService, string searchValue)
         {
+            
             try
             {
                 IEnumerable<Media> medias = subscribedUserService.GetMediasByTitle(searchValue);
@@ -57,7 +58,7 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetMediasByTitle: " + ex.Message);
-                return new JsonResult("error occur");
+                return new JsonResult("error occur: ");
             }
         }
 

@@ -51,7 +51,7 @@ namespace Nextflip.Models.supportTicket
 
         }
 
-        public IList<SupportTicket> ViewSupportTicketByTopic(int limit, int offset, string topicName)
+        public IList<SupportTicket> ViewSupportTicketByTopic(int limit, int offset, string topicName, string sortBy, string according)
         {
             IList<SupportTicket> supportTickets = new List<SupportTicket>();
             try
@@ -62,7 +62,7 @@ namespace Nextflip.Models.supportTicket
                     string sql = "SELECT supportTicketID, userEmail, topicName, createdDate, status, content " +
                                     "FROM supportTicket " +
                                     "WHERE topicName = @topicName " +
-                                    "Order By createdDate DESC " +
+                                    "Order By " + sortBy + " " + according + " "+
                                     "LIMIT @limit OFFSET @offset; ";
                     using (var command = new MySqlCommand(sql, connection))
 
@@ -127,7 +127,7 @@ namespace Nextflip.Models.supportTicket
             }
         }
 
-        public IList<SupportTicket> ViewSupportTicketByTopicAndStatus(string topicName, string status, int limit, int offset)
+        public IList<SupportTicket> ViewSupportTicketByTopicAndStatus(string topicName, string status, int limit, int offset, string sortBy, string according)
         {
             IList<SupportTicket> supportTickets = new List<SupportTicket>();
             try
@@ -138,7 +138,7 @@ namespace Nextflip.Models.supportTicket
                     string sql = "SELECT supportTicketID, userEmail, topicName, createdDate, status, content " +
                                     "FROM supportTicket " +
                                     "WHERE topicName = @topicName AND status = @status " +
-                                    "Order By createdDate DESC " +
+                                    "Order By " + sortBy + " " + according + " "+
                                     "LIMIT @limit OFFSET @offset; ";
                     using (var command = new MySqlCommand(sql, connection))
 
@@ -267,7 +267,7 @@ namespace Nextflip.Models.supportTicket
         }
 
 
-        public IList<SupportTicket> SearchSupportTicketByTopic(string searchValue, string topicName, int limit, int offset)
+        public IList<SupportTicket> SearchSupportTicketByTopic(string searchValue, string topicName, int limit, int offset, string sortBy, string according)
 
         {
             IList<SupportTicket> supportTickets = new List<SupportTicket>();
@@ -279,7 +279,7 @@ namespace Nextflip.Models.supportTicket
                     string sql = "SELECT supportTicketID, userEmail, topicName, createdDate, status, content " +
                                     "FROM supportTicket " +
                                     "WHERE topicName = @topicName AND(userEmail like @searchValue OR content like @searchValue) " +
-                                    "Order By createdDate DESC " +
+                                    "Order By " + sortBy + " " + according + " "+
                                     "LIMIT @limit OFFSET @offset ; ";
                     using (var command = new MySqlCommand(sql, connection))
 
@@ -346,7 +346,7 @@ namespace Nextflip.Models.supportTicket
             }
         }
 
-        public IList<SupportTicket> SearchSupportTicketByTopicAndByStatus(string searchValue, string topicName, string status, int limit, int offset)
+        public IList<SupportTicket> SearchSupportTicketByTopicAndByStatus(string searchValue, string topicName, string status, int limit, int offset, string sortBy, string according)
 
         {
             IList<SupportTicket> supportTickets = new List<SupportTicket>();
@@ -358,7 +358,7 @@ namespace Nextflip.Models.supportTicket
                     string sql = "SELECT supportTicketID, userEmail, topicName, createdDate, status, content " +
                                     "FROM supportTicket " +
                                     "WHERE topicName = @topicName AND status = @status AND (userEmail like @searchValue OR content like @searchValue) " +
-                                    "Order By createdDate DESC " +
+                                    "Order By " + sortBy + " " + according + " "+
                                     "LIMIT @limit OFFSET @offset; ";
                     using (var command = new MySqlCommand(sql, connection))
 

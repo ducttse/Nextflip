@@ -178,7 +178,7 @@ namespace Nextflip.Models.supportTicket
         public int GetNumOfSupportTicketsByTopicAndStatus(string topicName, string status)
         {
             string whereCondition = "";
-            if (!topicName.Equals("All")) whereCondition = "WHERE topicName = @topicName AND";
+            if (!topicName.Equals("All")) whereCondition = "WHERE topicName = @topicName AND ";
             try
             {
                 using (var connection = new MySqlConnection(utils.DbUtil.ConnectionString))
@@ -280,7 +280,7 @@ namespace Nextflip.Models.supportTicket
         {
             IList<SupportTicket> supportTickets = new List<SupportTicket>();
             string whereCondition = "WHERE ";
-            if (!topicName.Equals("All")) whereCondition = "WHERE topicName = @topicName AND";
+            if (!topicName.Equals("All")) whereCondition = "WHERE topicName = @topicName AND ";
             try
             {
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
@@ -362,7 +362,7 @@ namespace Nextflip.Models.supportTicket
 
         {
             string whereCondition = "WHERE ";
-            if (!topicName.Equals("All")) whereCondition = "WHERE topicName = @topicName AND";
+            if (!topicName.Equals("All")) whereCondition = "WHERE topicName = @topicName AND ";
             IList<SupportTicket> supportTickets = new List<SupportTicket>();
             try
             {

@@ -88,10 +88,9 @@ function renderTicket(ticket, index) {
           <td>${shortContent}</td>
           <td><p class="ticket_status ${bgcolor} rounded text-center text-light px-2 py-1">${ticket.status}<p></td>
           <td>
-              <a class="text-decoration-none" 
-              href="/SupporterDashboard/Detail/${ticket.supportTicketID}">
-                  Detail
-              </a>
+              <p class="detail_btn" onclick="showDetail('${ticket.supportTicketID}')">
+              Detail
+              </p>
           </td>
       </tr>`;
 }

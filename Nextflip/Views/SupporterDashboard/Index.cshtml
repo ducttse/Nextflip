@@ -55,7 +55,7 @@
                 <p class="col-2 my-auto form-text text-center" id="page_notification"></p>
                 <p  class="col-1 me-2 my-auto form-text d-inline-flex">Rows per page</p>
                 <div class="col-1">
-                    <select class="form-select form-select-sm" onchange="setRowsPerPage(this)">
+                    <select class="form-select form-select-sm w-75" onchange="setRowsPerPage(this)">
                         <option value="8" selected>8</option>
                         <option value="10">10</option>
                         <option value="12">12</option>
@@ -68,12 +68,46 @@
         </div>
     </div>
 </div>
+<!-- modal -->
+<div class="modal fade" id="detail_modal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title">Detail</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="detail_wrapper">
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" onclick="sendTicketDetail('customerRelation')" data-bs-dismiss="modal">Forward to customer relation</button>
+            <button type="button" class="btn btn-primary" onclick="sendTicketDetail('technical')" data-bs-dismiss="modal">Forward to technical</button>
+        </div>
+    </div>
+  </div>
+</div>
+<!-- modal -->
+<div class="modal fade" id="modal_flash" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body">
+            <div class="row text-center" id="flash_message">
+            </div>
+          </div>
+        </div>
+    </div>
+</div>
 <script src="~/js/Pagination.js"></script>
 <script src="~/js/Slide-Bar.js"></script>
 <script src="~/js/Search-Component.js"></script>
 <script src="~/js/Supporter-Dashboard.js"></script>
+<script src="~/js/View-Ticket-Details.js"></script>
 <script> 
     requestTopicData();
     appendSearch("Search user's email", "");
     setEnterEvent();
+    let button = `<a id="back_btn" href="/SupporterDashboard/Index" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
+                    Support Ticket
+                  </a>`;
+    appendButton(button);
 </script>

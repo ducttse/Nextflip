@@ -143,7 +143,7 @@ namespace Nextflip.Models.supportTicket
                     connection.Open();
                     string sql = "SELECT supportTicketID, userEmail, topicName, createdDate, status, content " +
                                     "FROM supportTicket " +
-                                    whereCondition +"status = @status " +
+                                    whereCondition + "status = @status " +
                                     "Order By " + sortBy + " " + according + " "+
                                     "LIMIT @limit OFFSET @offset; ";
                     using (var command = new MySqlCommand(sql, connection))
@@ -177,7 +177,7 @@ namespace Nextflip.Models.supportTicket
 
         public int GetNumOfSupportTicketsByTopicAndStatus(string topicName, string status)
         {
-            string whereCondition = "";
+            string whereCondition = "Where ";
             if (!topicName.Equals("All")) whereCondition = "WHERE topicName = @topicName AND ";
             try
             {

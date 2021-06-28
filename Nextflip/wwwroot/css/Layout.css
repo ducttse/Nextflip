@@ -1,6 +1,6 @@
 ﻿#layout_Wrapper {
   width: 100%;
-  min-height: 720px;
+  min-height: 100vh;
 }
 body {
   font-family: sans-serif;

@@ -876,5 +876,32 @@ namespace Nextflip.Models.account
             }
             return false;
         }
+        public bool Login(string email, string password)
+        {
+            try
+            {
+                bool isExisted = false;
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select userID " +
+                                "From account " +
+                                "Where userEmail = @email AND hashedPassword = @password";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@email", email);
+                        command.Parameters.AddWithValue("@password", password);
+                        var reader = command.ExecuteReader();
+                        if (reader.Read()) isExisted = true;
+                    }
+                    connection.Close();
+                }
+                return isExisted;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

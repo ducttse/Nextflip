@@ -109,7 +109,7 @@ function renderUser(user, index) {
             <a class="text-decoration-none" 
             onclick="return storeToStorage();"
             href="/Edit/${user.userID}">
-            <i class="fas fa-edit"></i>
+            Edit
             </a>
         </td>
     </tr>`;
@@ -137,6 +137,16 @@ function appendUserToWrapper() {
   dataWapper.insertAdjacentHTML("afterbegin", userArray);
   appendCurrentArray();
   addEvent();
+}
+
+function setRowsPerPage(obj) {
+  requestParam.RowsOnPage = obj.value;
+  setRequestPage(requestParam.RequestPage)
+    .then(res => res.json())
+    .then(json => {
+      Data = json;
+      appendUserToWrapper();
+    })
 }
 
 function requestUserDataOnly() {

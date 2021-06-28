@@ -41,5 +41,14 @@ namespace Nextflip.Services.Implementations
         public Media GetMediaByID(string mediaID) => _mediaDAO.GetMediaByID(mediaID);
         public bool AddMediaRequest(string userEmail, string mediaID, string note, string previewLink)
                 => _mediaEditRequestDAO.AddMediaRequest(userEmail, mediaID, note, previewLink);
+        public IEnumerable<Media> GetAllMedia(int RowsOnPage, int RequestPage) => _mediaDAO.GetAllMedia(RowsOnPage, RequestPage);
+        public int NumberOfMedias() => _mediaDAO.NumberOfMedias();
+        public IEnumerable<Media> GetAllMediaFilterStatus(string Status, int RowsOnPage, int RequestPage)
+            => _mediaDAO.GetAllMediaFilterStatus(Status, RowsOnPage, RequestPage);
+        public int NumberOfMediasFilterStatus(string Status) => _mediaDAO.NumberOfMediasFilterStatus(Status);
+        public IEnumerable<Media> GetMediasByTitleFilterStatus(string searchValue, string Status, int RowsOnPage, int RequestPage)
+            => _mediaDAO.GetMediasByTitleFilterStatus(searchValue, Status, RowsOnPage, RequestPage);
+        public int NumberOfMediasBySearchingFilterStatus(string searchValue, string Status)
+            => _mediaDAO.NumberOfMediasBySearchingFilterStatus(searchValue, Status);
     }
 }

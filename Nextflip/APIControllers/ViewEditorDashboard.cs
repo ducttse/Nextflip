@@ -222,5 +222,84 @@ namespace Nextflip.APIControllers
             }
         }
 
+        //View all
+        [HttpPost]
+        [Route("ViewAllMedia")]
+        public IActionResult ViewAllMedia([FromServices] IEditorService editorService,
+            [FromBody] Request request)
+        {
+            try
+            {
+                IEnumerable<Media> medias = editorService.GetAllMedia(request.RowsOnPage, request.RequestPage);
+                int count = editorService.NumberOfMedias();
+                double totalPage = (double)count / (double)request.RowsOnPage;
+                var result = new
+                {
+                    TotalPage = (int)Math.Ceiling(totalPage),
+                    Data = medias
+                };
+                return (new JsonResult(result));
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("Get All Medias: " + e.Message);
+                return new JsonResult("An error occurred");
+            }
+        }
+
+        //View all + filter Status
+        [HttpPost]
+        [Route("ViewAllMediaFilterStatus")]
+        public IActionResult ViewAllMediaFilterStatus([FromServices] IEditorService editorService,
+            [FromBody] Request request)
+        {
+            try
+            {
+                IEnumerable<Media> medias = editorService.GetAllMediaFilterStatus(request.Status, request.RowsOnPage, request.RequestPage);
+                int count = editorService.NumberOfMediasFilterStatus(request.Status);
+                double totalPage = (double)count / (double)request.RowsOnPage;
+                var result = new
+                {
+                    TotalPage = (int)Math.Ceiling(totalPage),
+                    Data = medias
+                };
+                return (new JsonResult(result));
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("Get All Medias Filter Status: " + e.Message);
+                return new JsonResult("An error occurred");
+            }
+        }
+
+        //Search all + Filter Status 
+        [HttpPost]
+        [Route("GetMediasByTitleFilterStatus")]
+        public JsonResult GetMediasByTitleFilterStatus([FromServices] IEditorService editorService, [FromBody] Request request)
+        {
+            try
+            {
+                var message = new
+                {
+                    message = "Empty searchValue"
+                };
+                if (request.SearchValue.Trim() == "") return new JsonResult(message);
+                IEnumerable<Media> medias = editorService.GetMediasByTitleFilterStatus(request.SearchValue.Trim(), request.Status, request.RowsOnPage, request.RequestPage);
+                int count = editorService.NumberOfMediasBySearchingFilterStatus(request.SearchValue.Trim(), request.Status);
+                double totalPage = (double)count / (double)request.RowsOnPage;
+                var result = new
+                {
+                    TotalPage = (int)Math.Ceiling(totalPage),
+                    Data = medias
+                };
+                return (new JsonResult(result));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetMediasByTitle: " + ex.Message);
+                return new JsonResult("Error occur");
+            }
+        }
+
     }
 }

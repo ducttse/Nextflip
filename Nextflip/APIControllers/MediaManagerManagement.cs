@@ -60,7 +60,10 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetPendingMediaByUserEmail: " + ex.Message);
-                return new JsonResult("Error occur");
+                return new JsonResult(new
+                {
+                    message = ex.Message
+                });
             }
         }
 
@@ -88,38 +91,70 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetPendingMediaByUserEmailFilterStatus: " + ex.Message);
-                return new JsonResult("Error occur");
+                return new JsonResult(new
+                {
+                    message = ex.Message
+                });
             }
         }
 
-        [Route("ApproveRequest/{requestID}")]
-        public JsonResult ApproveRequest([FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromBody] int requestID)
+        [Route("ApproveRequest")]
+        public JsonResult ApproveRequest([FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromForm] Request request)
         {
             try
             {
-                bool result = mediaManagerManagementService.ApproveRequest(requestID);
-                return new JsonResult(result);
+                var messageFail = new
+                {
+                    message = "fail"
+                };
+                bool approveChangeMediaStatusRequest = mediaManagerManagementService.ApproveRequest(request.RequestID);
+                bool approveChangeMediaStatus = mediaManagerManagementService.ApproveChangeMediaStatus(request.MediaID);
+                if (!approveChangeMediaStatusRequest || !approveChangeMediaStatus) return new JsonResult(messageFail);
+                var message = new
+                {
+                    message = "success"
+                };
+                return new JsonResult(message);
             }
             catch (Exception ex)
             {
                 _logger.LogInformation("ApproveRequest: " + ex.Message);
-                return new JsonResult("Error occur");
+                var result = new
+                {
+                    message = ex.Message
+                };
+                return new JsonResult(result);
             }
 
         }
 
-        [Route("DisapproveRequest/{requestID}")]
-        public JsonResult DisapproveRequest([FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromBody] int requestID)
+        [Route("DisapproveRequest")]
+        public JsonResult DisapproveRequest([FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromForm] Request request)
         {
             try
             {
-                bool result = mediaManagerManagementService.DisappoveRequest(requestID);
-                return new JsonResult(result);
+                var messageFail = new
+                {
+                    message = "fail"
+                };
+                bool disapproveRequest = mediaManagerManagementService.DisappoveRequest(request.RequestID, request.note);
+                if (!disapproveRequest) return new JsonResult(messageFail);
+                bool disapproveChangeMediaStatus = mediaManagerManagementService.DisapproveChangeMediaStatus(request.MediaID);
+                if (!disapproveChangeMediaStatus) return new JsonResult(messageFail);
+                var message = new
+                {
+                    message = "success"
+                };
+                return new JsonResult(message);
             }
             catch (Exception ex)
             {
-                _logger.LogInformation("DisapproveRequest: " + ex.Message);
-                return new JsonResult("Error occur");
+                _logger.LogInformation("ApproveRequest: " + ex.Message);
+                var result = new
+                {
+                    message = ex.Message
+                };
+                return new JsonResult(result);
             }
         }
 
@@ -134,12 +169,18 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("NumberOfPendingMedias: " + ex.Message);
-                return new JsonResult("Error occur");
+                return new JsonResult(new
+                {
+                    message = ex.Message
+                });
             }
         }
 
         public class Request
         {
+            public int RequestID { get; set; }
+            public string MediaID { get; set; }
+            public string note { get; set; }
             public string SearchValue { get; set; }
             public string Status { get; set; }
             public int RowsOnPage { get; set; }
@@ -167,7 +208,10 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetPendingMediasListAccordingRequest: " + ex.Message);
-                return new JsonResult("Error occur");
+                return new JsonResult(new
+                {
+                    message = ex.Message
+                });
             }
         }
         
@@ -192,7 +236,10 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetPendingMediasFilterStatus: " + ex.Message);
-                return new JsonResult("Error occur");
+                return new JsonResult(new
+                {
+                    message = ex.Message
+                });
             }
         }
 

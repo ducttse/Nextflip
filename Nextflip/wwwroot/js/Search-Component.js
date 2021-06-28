@@ -1,7 +1,7 @@
 ﻿function renderSearch(placeHolderText, searchValue) {
   return `
     <div class="row mb-2">
-      <div class="col-6">
+      <div class="col-10">
         <div class="input-group">
           <input
               id="search"
@@ -33,20 +33,16 @@ function appendSearch(placeHolderText, searchValue) {
 function setClick() {
   let searhObj = document.getElementById("search");
   document.getElementById("searchBtn").addEventListener("click", () => {
-    search(searhObj.value);
+    searchAndResetPage(searhObj.value);
   });
 }
 
-function setEnterEvent(func) {
+function setEnterEvent() {
   document.getElementById("search").addEventListener("keyup", (evt) => {
     if (evt.keyCode === 13) {
-      func()
+      if (evt.target.value.trim().length != 0) {
+        searchAndResetPage(evt.target.value);
+      }
     }
   })
 }
-function goToSearch() {
-  let value = document.getElementById("search").value;
-  window.location.href = `/SubcribedUserDashBoard/Search/${value}`;
-}
-
-setEnterEvent(goToSearch);

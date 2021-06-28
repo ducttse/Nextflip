@@ -58,6 +58,7 @@ namespace Nextflip
             services.AddTransient<ISubtitleDAO, SubtitleDAO>();
             services.AddTransient<ISubscribedUserService, SubscribedUserService>();
             services.AddTransient<IEditorService, EditorService>();
+            services.AddTransient<IAccountService, AccountService>();
 
 
 

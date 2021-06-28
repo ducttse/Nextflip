@@ -27,16 +27,16 @@ namespace Nextflip.Services.Implementations
 
         public int GetNumOfSupportTicketsByTopicAndStatus(string topicName, string status) => _supportTicketDAO.GetNumOfSupportTicketsByTopicAndStatus(topicName, status);
 
-        public IList<SupportTicket> SearchSupportTicketByTopic(string searchValue, string topicName, int limit, int offset) => _supportTicketDAO.SearchSupportTicketByTopic(searchValue, topicName, limit, offset);
+        public IList<SupportTicket> SearchSupportTicketByTopic(string searchValue, string topicName, int limit, int offset, string sortBy, string according) => _supportTicketDAO.SearchSupportTicketByTopic(searchValue, topicName, limit, offset, sortBy, according);
 
-        public IList<SupportTicket> SearchSupportTicketByTopicAndByStatus(string searchValue, string topicName, string status, int limit, int offset) => _supportTicketDAO.SearchSupportTicketByTopicAndByStatus(searchValue, topicName, status, limit, offset);
+        public IList<SupportTicket> SearchSupportTicketByTopicAndByStatus(string searchValue, string topicName, string status, int limit, int offset, string sortBy, string according) => _supportTicketDAO.SearchSupportTicketByTopicAndByStatus(searchValue, topicName, status, limit, offset, sortBy, according);
 
         public bool SendSupportTicket(string userEmail, string topicName, string content) => _supportTicketDAO.SendSupportTicket(userEmail, topicName, content);
 
         public SupportTicket ViewSupportTicketByID(string supportTicketID) => _supportTicketDAO.ViewSupportTicketByID(supportTicketID);
 
-        public IList<SupportTicket> ViewSupportTicketByTopic(int limit, int offset, string topicName) => _supportTicketDAO.ViewSupportTicketByTopic(limit, offset, topicName);
+        public IList<SupportTicket> ViewSupportTicketByTopic(int limit, int offset, string topicName, string sortBy, string according) => _supportTicketDAO.ViewSupportTicketByTopic(limit, offset, topicName, sortBy, according);
 
-        public IList<SupportTicket> ViewSupportTicketByTopicAndStatus(string topicName, string status, int limit, int offset) => _supportTicketDAO.ViewSupportTicketByTopicAndStatus(topicName, status, limit, offset);
+        public IList<SupportTicket> ViewSupportTicketByTopicAndStatus(string topicName, string status, int limit, int offset, string sortBy, string according) => _supportTicketDAO.ViewSupportTicketByTopicAndStatus(topicName, status, limit, offset, sortBy, according);
     }
 }

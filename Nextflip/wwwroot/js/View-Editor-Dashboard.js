@@ -1,35 +1,13 @@
 ﻿let Data;
-let requestParam;
+let requestParam = {
+    RowsOnPage: 12,
+    RequestPage: 1,
+    CategoryName: "all",
+    SearchValue: "",
+    Status: ""
+};
 let isSearched = false;
 let isFiltered = false;
-function loadStorageData() {
-    if (sessionStorage.getItem("requestParam") === null) {
-        console.log("true")
-        requestParam = {
-            RowsOnPage: 10,
-            RequestPage: 1,
-            CategoryName: "action",
-            SearchValue: "",
-            Status: ""
-        };
-    }
-    else {
-        requestParam = JSON.parse(sessionStorage.getItem("requestParam"));
-    }
-    if (sessionStorage.getItem("isSearched") === null) {
-        isSearched = false;
-    }
-    else {
-        isSearched = (sessionStorage.getItem("isSearched") === 'true');
-    }
-    if (sessionStorage.getItem("isFiltered") === null) {
-        isFiltered = false;
-    }
-    else {
-        isFiltered = (sessionStorage.getItem("isFiltered") === 'true');
-    }
-}
-loadStorageData();
 
 function setRequestPage(num) {
     requestParam.RequestPage = num;
@@ -37,24 +15,24 @@ function setRequestPage(num) {
         return searchWithFilterOnly();
     }
     else if (isSearched) {
-        return searchOnly(requestParam.SearchValue);
+        return searchOnly();
     }
     else if (isFiltered) {
-        return requestWithFilter();
+        return requestWithFilterOnly();
     }
-    return requestMediaData(requestParam.CategoryName);
-}
-
-function setTopic(topic) {
-    requestParam.TopicName = topic;
+    return requestMediaDataOnly();
 }
 
 function ShowNotFound() {
     let error;
-    if (isFiltered) {
-        error = `<p>There is no <b>${requestParam.Status}</b> ticket for this topic</p>`
+    setTotalPage();
+    if (isFiltered && isSearched) {
+        error = `<p class="fs-6">There is no <b>${requestParam.Status}</b> media in this category contain  <b>${requestParam.SearchValue}</b></p>`
     }
-    else { error = `<p>There is no result for <b>${requestParam.SearchValue}</b></p>` }
+    else if (isFiltered) {
+        error = `<p class="fs-6">There is no <b>${requestParam.Status}</b> media for this category</p>`
+    }
+    else { error = `<p class="fs-6">There is no result for <b>${requestParam.SearchValue}</b></p>` }
     let notFound = document.getElementById("notFound");
     if (notFound.innerHTML != "") {
         notFound.innerHTML = "";
@@ -62,8 +40,9 @@ function ShowNotFound() {
     notFound.insertAdjacentHTML("afterbegin", error);
     notFound.classList.remove("hide");
     document.getElementById("table_holder").classList.add("hide");
+    document.getElementById("pagination").classList.add("hide");
     if (!isFiltered) {
-        document.getElementById("filter").setAttribute("disabled", "disabled");
+        document.getElementById("status_filter").setAttribute("disabled", "disabled");
     }
 }
 
@@ -72,8 +51,9 @@ function HideNotFound() {
     if (!notFound.classList.contains("hide")) {
         notFound.classList.add("hide");
         document.getElementById("table_holder").classList.remove("hide");
+        document.getElementById("pagination").classList.remove("hide");
         if (!isFiltered) {
-            document.getElementById("filter").removeAttribute("disabled");
+            document.getElementById("status_filter").removeAttribute("disabled");
         }
     }
 }
@@ -83,13 +63,13 @@ function renderMedia(media, index) {
       <tr>
           <td>${index + 1}</td>
           <td>${media.title}</td>
-          <td>${media.language}</td>
-          <td>${media.status}</td>
-          <td>
+          <td class="text-center">${media.language}</td>
+          <td class="text-center">${media.status}</td>
+          <td  class="text-center">
               <a class="text-decoration-none" 
-              onclick="return storeToStorage();"
-              href="/Edit/${media.mediaID}">
-                  Detail
+              onclick="return showEditForm();"
+              href="#">
+                  Edit
               </a>
           </td>
       </tr>`;
@@ -120,8 +100,30 @@ function appendMediaToWrapper() {
 
 setAppendToDataWrapper(appendMediaToWrapper);
 
-function requestMediaData(name) {
-    requestParam.CategoryName = name;
+function setSelectedCategory(obj) {
+    requestParam.CategoryName = obj.value;
+    if (isSearched) {
+        searchAndResetPage(requestParam.SearchValue);
+    }
+    else if (isFiltered) {
+        requestWithFilterAndResetPage();
+    }
+    else requestMediaDataAndResetPage();
+}
+
+function setSelectedStatus(obj) {
+    requestParam.Status = obj.value;
+    if (requestParam.Status != "All") {
+        isFiltered = true;
+    }
+    else isFiltered = false;
+    if (isSearched) {
+        searchAndResetPage(requestParam.SearchValue);
+    }
+    else requestWithFilterAndResetPage();
+}
+
+function requestMediaDataOnly() {
     let reqHeader = new Headers();
     reqHeader.append("Content-Type", "text/json");
     reqHeader.append("Accept", "application/json, text/plain, */*");
@@ -130,89 +132,29 @@ function requestMediaData(name) {
         headers: reqHeader,
         body: JSON.stringify(requestParam)
     };
-    return fetch("/api/ViewEditorDashboard/ViewMediasFilterCategory", initObject);
+    let url = (requestParam.CategoryName == "all")
+        ? "/api/ViewEditorDashboard/ViewAllMedia"
+        : "/api/ViewEditorDashboard/ViewMediasFilterCategory";
+    return fetch(url, initObject);
 }
 
-function requestMediaDataAndResetPage(name) {
-    requestParam.RequestPage = 1;
-    setPageDataCurrentPage(1);
-    return requestMediaData(name);
-}
-
-function getCategories() {
-    fetch("/api/ViewEditorDashboard/GetCategories")
+function requestMediaData() {
+    requestMediaDataOnly()
         .then(res => res.json())
         .then(json => {
-            TopicArr = json;
-            appendCollase("Category", "name", requestMediaDataAndResetPage, appendMediaToWrapper);
-            setRequestPage(requestParam.RequestPage)
-                .then(res => res.json())
-                .then(json => {
-                    Data = json;
-                    if (isSearched) {
-                        console.log("run");
-                        document.getElementById("search").value = requestParam.SearchValue;
-                    }
-                    if (isFiltered) {
-                        let options = document.getElementById('filter').getElementsByTagName('option');
-                        for (let i = 0; i < options.length; i++) {
-                            if (options[ i ].value == requestParam.Status) {
-                                options[ i ].selected = 'selected';
-                            }
-                        }
-                    }
-                    appendMediaToWrapper();
-                    setChoosenColor(TopicArr.findIndex((item) => {
-                        return item.topicName === requestParam.TopicName;
-                    }))
-                })
+            console.log(json);
+            Data = json;
+            appendMediaToWrapper();
         })
 }
 
-function search(searchValue) {
+function requestMediaDataAndResetPage() {
     requestParam.RequestPage = 1;
     setPageDataCurrentPage(1);
-    if (searchValue == "") {
-        isSearched = false;
-        return;
-    }
-    isSearched = true;
-    requestParam.SearchValue = searchValue;
-    if (isFiltered && isSearched) {
-        searchWithFilter()
-    }
-    else {
-        let reqHeader = new Headers();
-        reqHeader.append("Content-Type", "text/json");
-        reqHeader.append("Accept", "application/json, text/plain, */*");
-        let initObject = {
-            method: "POST",
-            headers: reqHeader,
-            body: JSON.stringify(requestParam)
-        };
-        fetch("/api/ViewEditorDashboard/GetMediasByTitleFilterCategory", initObject)
-            .then(res => res.json())
-            .then(json => {
-                if (json.totalPage == 0) {
-                    ShowNotFound();
-                }
-                else {
-                    HideNotFound();
-                    Data = json;
-                    pageData.currentPage = 1;
-                    appendMediaToWrapper();
-                }
-            })
-    }
+    requestMediaData();
 }
 
-function searchOnly(searchValue) {
-    if (searchValue == "") {
-        isSearched = false;
-        return;
-    }
-    isSearched = true;
-    requestParam.SearchValue = searchValue;
+function requestWithFilterOnly() {
     let reqHeader = new Headers();
     reqHeader.append("Content-Type", "text/json");
     reqHeader.append("Accept", "application/json, text/plain, */*");
@@ -221,21 +163,14 @@ function searchOnly(searchValue) {
         headers: reqHeader,
         body: JSON.stringify(requestParam)
     };
-    return fetch("/api/ViewEditorDashboard/GetMediasByTitleFilterCategory", initObject)
+    let url = (requestParam.CategoryName == "all")
+        ? (isFiltered ? "/api/ViewEditorDashboard/ViewAllMediaFilterStatus" : "/api/ViewEditorDashboard/ViewAllMedia")
+        : (isFiltered ? "/api/ViewEditorDashboard/ViewMediasFilterCategory_Status" : "/api/ViewEditorDashboard/ViewMediasFilterCategory");
+    return fetch(url, initObject);
 }
 
-function searchWithFilter() {
-    requestParam.RequestPage = 1;
-    setPageDataCurrentPage(1);
-    let reqHeader = new Headers();
-    reqHeader.append("Content-Type", "text/json");
-    reqHeader.append("Accept", "application/json, text/plain, */*");
-    let initObject = {
-        method: "POST",
-        headers: reqHeader,
-        body: JSON.stringify(requestParam)
-    };
-    fetch("/api/ViewEditorDashboard/GetMediasByTitleFilterCategory_Status", initObject)
+function requestWithFilter() {
+    requestWithFilterOnly()
         .then(res => res.json())
         .then(json => {
             if (json.totalPage == 0) {
@@ -244,94 +179,84 @@ function searchWithFilter() {
             else {
                 HideNotFound();
                 Data = json;
-                pageData.currentPage = 1;
                 appendMediaToWrapper();
             }
-        });
-}
-
-function requestWithFilter() {
-    isSearched = true;
-    let reqHeader = new Headers();
-    reqHeader.append("Content-Type", "text/json");
-    reqHeader.append("Accept", "application/json, text/plain, */*");
-    let initObject = {
-        method: "POST",
-        headers: reqHeader,
-        body: JSON.stringify(requestParam)
-    };
-    return fetch("/api/ViewEditorDashboard/ViewMediasFilterCategory_Status", initObject);
-}
-
-function searchWithFilterOnly() {
-    isSearched = true;
-    let reqHeader = new Headers();
-    reqHeader.append("Content-Type", "text/json");
-    reqHeader.append("Accept", "application/json, text/plain, */*");
-    let initObject = {
-        method: "POST",
-        headers: reqHeader,
-        body: JSON.stringify(requestParam)
-    };
-    return fetch("/api/ViewEditorDashboard/GetMediasByTitleFilterCategory_Status", initObject)
+        })
 }
 
 function requestWithFilterAndResetPage() {
     requestParam.RequestPage = 1;
     setPageDataCurrentPage(1);
-    return requestWithFilter();
+    requestWithFilter();
 }
 
-function doFilter() {
-    let filter = document.getElementById("filter");
-    filter.addEventListener("change", () => {
-        let choosenValue = filter.options[ filter.selectedIndex ].value;
-        if (choosenValue === "All") {
-            requestParam.Status = "";
-            isFiltered = false;
-            if (isSearched) {
-                searchOnly(requestParam.SearchValue)
-                    .then(res => res.json())
-                    .then(json => {
-                        Data = json;
-                        HideNotFound();
-                        appendMediaToWrapper();
-                    })
-                return;
+function searchOnly(searchValue) {
+    let reqHeader = new Headers();
+    reqHeader.append("Content-Type", "text/json");
+    reqHeader.append("Accept", "application/json, text/plain, */*");
+    let initObject = {
+        method: "POST",
+        headers: reqHeader,
+        body: JSON.stringify(requestParam)
+    };
+    let url = (requestParam.CategoryName == "all")
+        ? (isFiltered ? "/api/ViewEditorDashboard/GetMediasByTitleFilterStatus" : "/api/ViewEditorDashboard/GetMediasByTitle")
+        : (isFiltered ? "/api/ViewEditorDashboard/GetMediasByTitleFilterCategory_Status" : "/api/ViewEditorDashboard/GetMediasByTitleFilterCategory");
+    return fetch(url, initObject);
+}
+
+function searchWithFilterOnly() {
+    let reqHeader = new Headers();
+    reqHeader.append("Content-Type", "text/json");
+    reqHeader.append("Accept", "application/json, text/plain, */*");
+    let initObject = {
+        method: "POST",
+        headers: reqHeader,
+        body: JSON.stringify(requestParam)
+    };
+    let url = (requestParam.CategoryName == "all")
+        ? (isFiltered ? "/api/ViewEditorDashboard/GetMediasByTitleFilterStatus" : "/api/ViewEditorDashboard/GetMediasByTitle")
+        : (isFiltered ? "/api/ViewEditorDashboard/GetMediasByTitleFilterCategory_Status" : "/api/ViewEditorDashboard/GetMediasByTitleFilterCategory");
+    return fetch(url, initObject);
+}
+
+function search(searchValue) {
+    requestParam.SearchValue = searchValue;
+    let searchFunc = searchOnly;
+    isSearched = true;
+    if (isFiltered) {
+        searchFunc = searchWithFilterOnly;
+    }
+    searchFunc(searchValue)
+        .then(res => res.json())
+        .then(json => {
+            console.log(json);
+            if (json.totalPage != null) {
+                Data = json;
+                if (parseInt(json.totalPage) == 0) {
+                    ShowNotFound();
+                }
+                else {
+                    HideNotFound();
+                    pageData.currentPage = 1;
+                    appendMediaToWrapper();
+                };
             }
             else {
-                requestMediaDataAndResetPage(requestParam.CategoryName)
-                    .then(res => res.json())
-                    .then(json => {
-                        Data = json;
-                        HideNotFound();
-                        appendMediaToWrapper();
-                    })
-                return;
+                ShowNotFound();
             }
-        }
-        isFiltered = true;
-        requestParam.Status = choosenValue;
-        if (isFiltered && isSearched) {
-            searchWithFilter();
-        }
-        else {
-            requestWithFilterAndResetPage()
-                .then(res => res.json())
-                .then(json => {
-                    if (json.totalPage == 0) {
-                        ShowNotFound();
-                        return;
-                    }
-                    Data = json;
-                    HideNotFound();
-                    appendMediaToWrapper();
-                    setChoosenColor(TopicArr.findIndex((item) => {
-                        return item.topicName === requestParam.TopicName;
-                    }))
-                })
-        }
-    })
+        })
+}
+
+function searchAndResetPage(searchValue) {
+    console.log(searchValue);
+    if (searchValue.trim().length == 0) {
+        requestParam.searchValue = "";
+        return;
+    }
+    requestParam.RequestPage = 1;
+    setPageDataCurrentPage(1);
+    search(searchValue);
 }
 
 function resetSearch() {
@@ -339,9 +264,6 @@ function resetSearch() {
     requestParam.SearchValue = "";
     isSearched = false;
 }
-
-doFilter();
-
 
 function resetFilter() {
     document.getElementById('filter').getElementsByTagName('option')[ 0 ].selected = 'selected';

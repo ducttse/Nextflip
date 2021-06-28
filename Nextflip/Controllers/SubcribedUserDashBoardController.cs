@@ -18,5 +18,10 @@ namespace Nextflip.Controllers
             ViewBag.SearchValue = id;
             return View();
         }
+        public IActionResult Profile(string id)
+        {
+            ViewBag.UserID = id;
+            return View();
+        }
     }
 }

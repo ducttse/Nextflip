@@ -304,6 +304,30 @@ namespace Nextflip.APIControllers
             }
         }
 
+        [Route("IsValidEmail/{email}")]
+        public IActionResult IsValidEmail([FromServices] IUserManagerManagementService userManagerManagementService,
+                                string email)
+        {
+            string message = "";
+            try
+            {
+                if (EmailUtil.IsValidEmail(email) == false)
+                {
+                    message = "Email is invalid format";
+                }
+                else if (userManagerManagementService.IsExistedEmail(email))
+                {
+                    message = "Email is existed";
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("IsValidEmail: " + ex.Message);
+                message = ex.Message;
+            }
+            return new JsonResult(message);
+        }
+
         [Route("CreateStaff")]
         [HttpPost]
         public IActionResult CreateStaff([FromServices] IUserManagerManagementService userManagerManagementService,

@@ -5,12 +5,12 @@
     <link href="@Url.Content("~/css/Supporter-Dashboard.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
 }
-<div class="ui_wrapper col-10 pt-3">
-    <div class="w-90 ms-4"> 
-        <div class="btn-group w-100">
+<div class="ui_wrapper col-10">
+    <div class="w-100"> 
+        <div class="btn-group w-100 px-3 pt-3 pb-2 bg-primary">
             <div id="search_wrapper" class="col-10"></div>
             <div class="col-2 d-inline-flex mb-2">
-                <label class="form-label mt-2">Filter</label>
+                <label class="form-label mt-2 text-light">Filter</label>
                 <select id="filter" class="ms-2 form-select">
                     <option selected>All</option>
                     <option value="Pending">Pending</option>
@@ -24,7 +24,7 @@
         <div id="table_holder">
             <div  style="min-height: 580px;">
                 <table class="table table-bordered table-responsive table-hover w-100">
-                    <thead class="table-light">
+                    <thead class="table-primary">
                         <tr>
                             <th class="col">#</th>
                             <th class="col">User email</th>        
@@ -45,6 +45,8 @@
 <script src="~/js/Search-Component.js"></script>
 <script src="~/js/Supporter-Dashboard.js"></script>
 <script> 
-getTopics();
-appendSearch("Search user's email", "");
+getTopics().then(() => {
+    appendSearch("Search user's email", "");
+    }
+);
 </script>

@@ -73,8 +73,9 @@ namespace Nextflip.Services.Implementations
         {
             var medias = new List<Media>();
             IList<string> mediaIDs = _mediaCategoryDAO.GetMediaIDs(categoryID);
-            foreach (var mediaID in mediaIDs)
+            for(int i = 0; i<=20; i++)
             {
+                string mediaID = mediaIDs[i];
                 Media media = _mediaDAO.GetMediaByID(mediaID);
                 medias.Add(media);
             }

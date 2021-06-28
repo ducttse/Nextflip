@@ -17,9 +17,9 @@ namespace Nextflip.Models.media
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select mediaID,status, title, bannerURL, language, description " +
+                    string Sql = "Select mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media " +
-                                "Where MATCH (title)  AGAINST (@searchValue in boolean mode) ";
+                                "Where status = 'Enabled' And (MATCH (title)  AGAINST (@searchValue in boolean mode)) ";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@searchValue", $"{searchValue}*");
@@ -32,10 +32,15 @@ namespace Nextflip.Models.media
                                     MediaID = reader.GetString(0),
                                     Status = reader.GetString(1),
                                     Title = reader.GetString(2),
-                                    BannerURL = reader.GetString(3),
-                                    Language = reader.GetString(4),
-                                    Description = reader.GetString(5),
-                                });
+                                    FilmType = reader.IsDBNull(3) ? null : reader.GetString(3),
+                                    Director = reader.IsDBNull(4) ? null : reader.GetString(4),
+                                    Cast = reader.IsDBNull(5) ? null : reader.GetString(5),
+                                    PublishYear = reader.IsDBNull(6) ? null : reader.GetInt32(6),
+                                    Duration = reader.IsDBNull(7) ? null : reader.GetString(7),
+                                    BannerURL = reader.GetString(8),
+                                    Language = reader.GetString(9),
+                                    Description = reader.GetString(10)
+                                }) ;
                             }
                         }
                     }
@@ -194,7 +199,7 @@ namespace Nextflip.Models.media
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select mediaID, status, title, bannerURL, language, description " +
+                    string Sql = "Select mediaID, status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media " +
                                 "Where mediaID = @mediaID";
                     using (var command = new MySqlCommand(Sql, connection))
@@ -209,9 +214,14 @@ namespace Nextflip.Models.media
                                     MediaID = reader.GetString(0),
                                     Status = reader.GetString(1),
                                     Title = reader.GetString(2),
-                                    BannerURL = reader.GetString(3),
-                                    Language = reader.GetString(4),
-                                    Description = reader.GetString(5),
+                                    FilmType = reader.IsDBNull(3) ? null : reader.GetString(3),
+                                    Director = reader.IsDBNull(4) ? null : reader.GetString(4),
+                                    Cast = reader.IsDBNull(5) ? null : reader.GetString(5),
+                                    PublishYear = reader.IsDBNull(6) ? null : reader.GetInt32(6),
+                                    Duration = reader.IsDBNull(7) ? null : reader.GetString(7),
+                                    BannerURL = reader.GetString(8),
+                                    Language = reader.GetString(9),
+                                    Description = reader.GetString(10)
                                 };
                             }
                         }

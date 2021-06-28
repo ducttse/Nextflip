@@ -21,7 +21,7 @@ namespace Nextflip.Models.category
                     connection.Open();
                     string Sql = "Select categoryID, name " +
                                 "From category " +
-                                "Order By name";
+                                "Order By name ";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
 

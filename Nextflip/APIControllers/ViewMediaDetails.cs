@@ -23,23 +23,19 @@ namespace Nextflip.APIControllers
             _logger = logger;
         }
         [Route ("GetMediaDetails/{mediaID}")]
-        public IActionResult GetMediaDetails([FromServices] IMediaService mediaService,
-                                                [FromServices] ISeasonService seasonService,
-                                                [FromServices] IEpisodeService episodeService,
-                                                [FromServices] ICategoryService categoryService,
-                                                string mediaID)
+        public IActionResult GetMediaDetails([FromServices] ISubscribedUserService subscribedUserService, string mediaID)
         {
             try
             {
-                Media media = mediaService.GetMediaByID(mediaID);
-                IEnumerable<Season> seasons = seasonService.GetSeasonsByMediaID(mediaID);
-                IEnumerable<Category> categories = categoryService.GetCategoriesByMediaID(mediaID);
+                Media media = subscribedUserService.GetMediaByID(mediaID);
+                IEnumerable<Season> seasons = subscribedUserService.GetSeasonsByMediaID(mediaID);
+                IEnumerable<Category> categories = subscribedUserService.GetCategoriesByMediaID(mediaID);
                 var episodesMap = new Dictionary<string, IEnumerable>();
                 if (seasons != null)
                 {
                     foreach (var season in seasons)
                     {
-                        IEnumerable<Episode> episodes = episodeService.GetEpisodesBySeasonID(season.SeasonID);
+                        IEnumerable<Episode> episodes = subscribedUserService.GetEpisodesBySeasonID(season.SeasonID);
                         episodesMap.Add(season.SeasonID, episodes);
                     }
                 }
@@ -55,18 +51,17 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetMediaDetails: " + ex.Message);
-                return new JsonResult("error occur");
+                return new JsonResult("error occur" + ex.Message);
             }
 
         }
 
         [Route("GetEpisode/{mediaID}/{episodeID}")]
-        public IActionResult GetEpisodeByID([FromServices] IEpisodeService episodeService,
-                                                [FromServices] ISeasonService seasonService, string mediaID, string episodeID)
+        public IActionResult GetEpisodeByID([FromServices] ISubscribedUserService subscribedUserService, string mediaID, string episodeID)
         {
             try
             {
-                Episode episode = episodeService.GetEpisodeByID(episodeID);
+                Episode episode = subscribedUserService.GetEpisodeByID(episodeID);
                 var episodeHasMediaID = new
                     {
                         Episode = episode,
@@ -82,11 +77,11 @@ namespace Nextflip.APIControllers
         }
 
         [Route("GetSubtitle/{subtitleID}")]
-        public IActionResult GetSubtitleByID([FromServices] ISubtitleService subtitleService, string subtitleID)
+        public IActionResult GetSubtitleByID([FromServices] ISubscribedUserService subscribedUserService, string subtitleID)
         {
             try
             {
-                Subtitle subtitle = subtitleService.GetSubtitleByID(subtitleID);
+                Subtitle subtitle = subscribedUserService.GetSubtitleByID(subtitleID);
                 return new JsonResult(subtitle);
             }
             catch (Exception ex)
@@ -95,8 +90,5 @@ namespace Nextflip.APIControllers
                 return new JsonResult("error occur");
             }
         }
-
-
-
     }
 }

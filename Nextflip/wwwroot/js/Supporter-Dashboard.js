@@ -1,20 +1,45 @@
 ﻿let Data = {
   data: []
 };
-let requestParam = {
-  RowsOnPage: 10,
-  RequestPage: 1,
-  TopicName: "Account",
-  SearchValue: "",
-  Status: ""
-};
+let requestParam;
 let isSearched = false;
 let isFiltered = false;
+
+function loadStorageData() {
+  if (sessionStorage.getItem("requestParam") === null) {
+    console.log("true")
+    requestParam = {
+      RowsOnPage: 12,
+      RequestPage: 1,
+      TopicName: "Account",
+      SearchValue: "",
+      Status: ""
+    };
+  }
+  else {
+    requestParam = JSON.parse(sessionStorage.getItem("requestParam"));
+  }
+  if (sessionStorage.getItem("isSearched") === null) {
+    isSearched = false;
+  }
+  else {
+    isSearched = (sessionStorage.getItem("isSearched") === 'true');
+  }
+  if (sessionStorage.getItem("isFiltered") === null) {
+    isFiltered = false;
+  }
+  else {
+    isFiltered = (sessionStorage.getItem("isFiltered") === 'true');
+  }
+}
+loadStorageData();
+
 function setTopic(topic) {
   requestParam.TopicName = topic;
 }
 
 function setRequestPage(num) {
+  setPageDataCurrentPage(num);
   requestParam.RequestPage = num;
   if (isFiltered && isSearched) {
     return searchWithFilterOnly();
@@ -29,7 +54,14 @@ function setRequestPage(num) {
 }
 
 function ShowNotFound() {
-  let error = `<p>There is no result for <b>${requestParam.SearchValue}</b></p>`;
+  let error;
+  if (isFiltered && isSearched) {
+    error = `<p class="fs-5">There is no <b>${requestParam.Status}</b> ticket in this topic contain <b>${requestParam.SearchValue}</b></p>`
+  }
+  else if (isFiltered) {
+    error = `<p class="fs-5">There is no <b>${requestParam.Status}</b> ticket for this topic</p>`
+  }
+  else { error = `<p class="fs-5">There is no result for <b>${requestParam.SearchValue}</b></p>` }
   let notFound = document.getElementById("notFound");
   if (notFound.innerHTML != "") {
     notFound.innerHTML = "";
@@ -37,7 +69,9 @@ function ShowNotFound() {
   notFound.insertAdjacentHTML("afterbegin", error);
   notFound.classList.remove("hide");
   document.getElementById("table_holder").classList.add("hide");
-  document.getElementById("filter").setAttribute("disabled", "disabled");
+  if (!isFiltered) {
+    document.getElementById("filter").setAttribute("disabled", "disabled");
+  }
 }
 
 function HideNotFound() {
@@ -45,19 +79,30 @@ function HideNotFound() {
   if (!notFound.classList.contains("hide")) {
     notFound.classList.add("hide");
     document.getElementById("table_holder").classList.remove("hide");
-    document.getElementById("filter").removeAttribute("disabled");
+    if (!isFiltered) {
+      document.getElementById("filter").removeAttribute("disabled");
+    }
   }
 }
 
+function makeShortContent(content) {
+  if (content.length > 100) {
+    return content.slice(0, 100) + "..."
+  }
+  return content
+}
+
 function renderTicket(ticket, index) {
+  let shortContent = makeShortContent(ticket.content);
   return `
-      <tr>
+      <tr style="min-height: 70px;">
           <td>${index + 1}</td>
           <td>${ticket.userEmail}</td>
-          <td>${ticket.topicName}</td>
           <td>${ticket.status}</td>
+          <td>${shortContent}</td>
           <td>
               <a class="text-decoration-none" 
+              onclick="return storeToStorage();"
               href="/SupporterDashboard/Detail/${ticket.supportTicketID}">
                   Detail
               </a>
@@ -103,10 +148,15 @@ function requestTopicData(topic) {
   return fetch("/api/ViewSupporterDashboard/ViewSupportTicketByTopic", initObject);
 }
 
+function requestTopicDataAndResetPage(topic) {
+  requestParam.RequestPage = 1;
+  setPageDataCurrentPage(1);
+  return requestTopicData(topic);
+}
+
 function search(searchValue) {
   requestParam.RequestPage = 1;
   setPageDataCurrentPage(1);
-  requestParam.SearchValue = searchValue;
   if (searchValue == "") {
     isSearched = false;
     return;
@@ -142,7 +192,6 @@ function search(searchValue) {
 }
 
 function searchOnly(searchValue) {
-  requestParam.SearchValue = searchValue;
   if (searchValue == "") {
     isSearched = false;
     return;
@@ -160,13 +209,9 @@ function searchOnly(searchValue) {
   return fetch("/api/ViewSupporterDashboard/SearchSupportTicketByTopic", initObject)
 }
 
-function searchWithFilterOnly() {
-  if (searchValue == "") {
-    isSearched = false;
-    return;
-  }
-  isSearched = true;
-  requestParam.SearchValue = searchValue;
+function searchWithFilter() {
+  requestParam.RequestPage = 1;
+  setPageDataCurrentPage(1);
   let reqHeader = new Headers();
   reqHeader.append("Content-Type", "text/json");
   reqHeader.append("Accept", "application/json, text/plain, */*");
@@ -191,12 +236,7 @@ function searchWithFilterOnly() {
 }
 
 function searchWithFilterOnly() {
-  if (searchValue == "") {
-    isSearched = false;
-    return;
-  }
   isSearched = true;
-  requestParam.SearchValue = searchValue;
   let reqHeader = new Headers();
   reqHeader.append("Content-Type", "text/json");
   reqHeader.append("Accept", "application/json, text/plain, */*");
@@ -208,20 +248,39 @@ function searchWithFilterOnly() {
   return fetch("/api/ViewSupporterDashboard/SearchSupportTicketByTopicAndStatus", initObject)
 }
 
-function getTopics() {
-  fetch("/api/ViewSupporterDashboard/GetAllSupportTopics")
+async function getTopics() {
+  await fetch("/api/ViewSupporterDashboard/GetAllSupportTopics")
     .then(res => res.json())
     .then(json => {
       TopicArr = json;
-      appendCollase("Topic", "topicName", requestTopicData, appendTicketToWrapper);
-      requestTopicData("Account")
+      appendCollase("Topic", "topicName", requestTopicDataAndResetPage, appendTicketToWrapper);
+      setRequestPage(requestParam.RequestPage)
         .then(res => res.json())
         .then(json => {
           Data = json;
+          console.log(isSearched);
+          console.log(isFiltered);
+          if (isSearched) {
+            console.log("run");
+            document.getElementById("search").value = requestParam.SearchValue;
+          }
+          if (isFiltered) {
+            let options = document.getElementById('filter').getElementsByTagName('option');
+            for (let i = 0; i < options.length; i++) {
+              if (options[ i ].value == requestParam.Status) {
+                options[ i ].selected = 'selected';
+              }
+            }
+          }
           appendTicketToWrapper();
-          setChoosenColor(0);
+          setChoosenColor(TopicArr.findIndex((item) => {
+            return item.topicName === requestParam.TopicName;
+          }))
         })
     })
+  return new Promise((resolve) => {
+    resolve("resolved");
+  })
 }
 
 function resetSearch() {
@@ -249,14 +308,28 @@ function doFilter() {
   filter.addEventListener("change", () => {
     let choosenValue = filter.options[ filter.selectedIndex ].value;
     if (choosenValue === "All") {
-      requestTopicData(requestParam.TopicName)
-        .then(res => res.json())
-        .then(json => {
-          Data = json;
-          appendTicketToWrapper();
-        })
+      requestParam.Status = "";
       isFiltered = false;
-      return;
+      if (isSearched) {
+        searchOnly(requestParam.SearchValue)
+          .then(res => res.json())
+          .then(json => {
+            HideNotFound();
+            Data = json;
+            appendTicketToWrapper();
+          })
+        return;
+      }
+      else {
+        requestTopicData(requestParam.TopicName)
+          .then(res => res.json())
+          .then(json => {
+            HideNotFound();
+            Data = json;
+            appendTicketToWrapper();
+          })
+        return;
+      }
     }
     isFiltered = true;
     requestParam.Status = choosenValue;
@@ -267,11 +340,15 @@ function doFilter() {
       requestWithFilter()
         .then(res => res.json())
         .then(json => {
+          if (json.totalPage == 0) {
+            ShowNotFound();
+            return;
+          }
           Data = json;
+          HideNotFound();
           appendTicketToWrapper();
-          setChoosenColor(TopicArr.findIndex((role) => {
-            console.log(role);
-            return role.topicName === requestParam.TopicName;
+          setChoosenColor(TopicArr.findIndex((item) => {
+            return item.topicName === requestParam.TopicName;
           }))
         })
     }
@@ -284,3 +361,10 @@ function resetFilter() {
   requestParam.Status = "";
 }
 doFilter();
+
+
+function storeToStorage() {
+  sessionStorage.setItem("requestParam", JSON.stringify(requestParam));
+  sessionStorage.setItem("isFiltered", isFiltered.toString());
+  sessionStorage.setItem("isSearched", isSearched.toString());
+}

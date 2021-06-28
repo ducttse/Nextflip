@@ -12,12 +12,12 @@
     <!-- font awesome -->
     <script src="https://kit.fontawesome.com/c82ac77d9b.js"
             crossorigin="anonymous"></script>
-    <title>CustomLayout</title>
+    <title>@ViewBag.Title</title>
     @RenderSection("styles", false)
     <link href="@Url.Content("~/css/Layout.css")" rel="stylesheet" type="text/css" />
 </head>
 <body>
-    <div id="layout_Wrapper" class="row">
+    <div id="layout_Wrapper" class="d-inline-flex">
     <partial name="/Views/SharedComponents/SlideBar.cshtml" />
     @RenderBody()
     </div>

@@ -20,11 +20,11 @@ namespace Nextflip.APIControllers
         }
 
         [Route("GetCategories")]
-        public IActionResult GetCategories([FromServices] ICategoryService categoryService)
+        public IActionResult GetCategories([FromServices] ISubscribedUserService subscribedUserService)
         {
             try
             {
-                IEnumerable<Category> categories = categoryService.GetCategories();
+                IEnumerable<Category> categories = subscribedUserService.GetCategories();
                 return new JsonResult(categories);
             }catch(Exception ex)
             {
@@ -33,56 +33,56 @@ namespace Nextflip.APIControllers
             }
         }
 
-        [Route("GetMedias")]
-        public IActionResult GetMedias([FromServices] IMediaService mediaService)
-        {
-            try
-            {
-                IEnumerable<Media> medias = mediaService.GetMedias();
-                return new JsonResult(medias);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogInformation("GetMedias: " + ex.Message);
-                return new JsonResult("error occur");
-            }
-        }
-
         [Route("GetMediasByTitle/{searchValue}")]
-        public IActionResult GetMediasByTitle([FromServices] IMediaService mediaService, 
-                                                [FromServices] ICategoryService categoryService, string searchValue)
+        public IActionResult GetMediasByTitle([FromServices] ISubscribedUserService subscribedUserService, string searchValue)
         {
+            
             try
             {
-                IEnumerable<Media> medias = mediaService.GetMediasByTitle(searchValue);
+                IEnumerable<Media> medias = subscribedUserService.GetMediasByTitle(searchValue);
                 var mediaListWithCategory = new List<dynamic>();
                 if (medias != null)
                 {
                     foreach(var media in medias)
                     {
-                        IEnumerable<Category> categories = categoryService.GetCategoriesByMediaID(media.MediaID);
+                        IEnumerable<Category> categories = subscribedUserService.GetCategoriesByMediaID(media.MediaID);
                         mediaListWithCategory.Add(new { 
                                                        Media = media,
                                                        Categories = categories                                                    
                                                     });
                     }
                 }
+                mediaListWithCategory.Reverse();
                 return new JsonResult(mediaListWithCategory);
             }
             catch (Exception ex)
             {
                 _logger.LogInformation("GetMediasByTitle: " + ex.Message);
-                return new JsonResult("error occur");
+                return new JsonResult("error occur: ");
             }
         }
 
         [Route("GetFavoriteMedias/{userID}")]
-        public IActionResult GetFavoriteMedias([FromServices] IMediaService mediaService, string userID)
+        public IActionResult GetFavoriteMedias([FromServices] ISubscribedUserService subscribedUserService, string userID)
         {
             try
             {
-                IEnumerable<Media> medias = mediaService.GetFavoriteMediasByUserID(userID);
-                return new JsonResult(medias);
+                IEnumerable<Media> medias = subscribedUserService.GetFavoriteMediasByUserID(userID);
+                var mediaListWithCategory = new List<dynamic>();
+                if (medias != null)
+                {
+                    foreach (var media in medias)
+                    {
+                        IEnumerable<Category> categories = subscribedUserService.GetCategoriesByMediaID(media.MediaID);
+                        mediaListWithCategory.Add(new
+                        {
+                            Media = media,
+                            Categories = categories
+                        });
+                    }
+                }
+                mediaListWithCategory.Reverse();
+                return new JsonResult(mediaListWithCategory);
             }
             catch (Exception ex)
             {
@@ -92,11 +92,11 @@ namespace Nextflip.APIControllers
         }
 
         [Route("GetMediasByCategoryID/{categoryID}")]
-        public IActionResult GetMediasByCategoryID([FromServices] IMediaService mediaService, int categoryID)
+        public IActionResult GetMediasByCategoryID([FromServices] ISubscribedUserService subscribedUserService, int categoryID)
         {
             try
             {
-                IEnumerable<Media> medias = mediaService.GetMediasByCategoryID(categoryID);
+                IEnumerable<Media> medias = subscribedUserService.GetMediasByCategoryID(categoryID);
                 return new JsonResult(medias);
             }
             catch (Exception ex)

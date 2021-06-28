@@ -1,38 +1,39 @@
-#imageHolder {
-  width: 30%;
-  height: 45vh;
-}
-#description {
-  font: 26px;
-}
-#wrapper {
+.options {
   position: relative;
-  color: white;
+  cursor: pointer;
 }
-#title {
-  font-size: 81px;
+.options:after {
+  content: "";
+  position: absolute;
+  background-color: white;
+  height: 2px;
+  width: 0%;
+  left: 1;
+  bottom: 0px;
+  transition: 0.2s;
 }
-.season_holder {
+.options.chosen::after{
+  content: "";
+  position: absolute;
+  background-color: white;
+  height: 2px;
+  width: 100%;
+  left: 1;
+  bottom: 0px;
 }
-.season_holder > p {
-  font-size: 24px;
+.options:hover::after {
+  width: 100%;
 }
-.episode_holder {
-  margin-left: 2%;
-}
-.episode_holder > p {
-  font-size: 20px;
-}
-.hide {
+.hide{
   display: none;
 }
-.above {
-  margin-left: 3%;
+.episode_detail{
+  cursor: pointer;
+  color: #DDD;
 }
-#content_holder {
-  position: absolute;
-  top: 8px;
-  left: 16px;
-  background-color: rgba(0, 0, 0, 0.9);
-  z-index: 100;
+.episode_detail::after{
+  transition: 0.5s;
+}
+.episode_detail:hover{
+  color: white;
 }

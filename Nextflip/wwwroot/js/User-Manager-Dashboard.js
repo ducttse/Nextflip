@@ -9,7 +9,7 @@ function loadStorageData() {
     requestParam = {
       RowsOnPage: 12,
       RequestPage: 1,
-      RoleName: "Customer Supporter",
+      RoleName: "User Manager",
       SearchValue: "",
       Status: ""
     };
@@ -32,8 +32,16 @@ function loadStorageData() {
 }
 loadStorageData();
 
-function setTopic(topic) {
-  requestParam.RoleName = topic;
+function resetSearch() {
+  document.getElementById("search").value = "";
+  requestParam.SearchValue = "";
+  isSearched = false;
+}
+
+function resetFilter() {
+  document.getElementById('status_filter').getElementsByTagName('option')[ 0 ].selected = 'selected';
+  isFiltered = false;
+  requestParam.Status = "";
 }
 
 function setRequestPage(num) {
@@ -46,20 +54,21 @@ function setRequestPage(num) {
     return requestWithFilterOnly();
   }
   else if (isSearched) {
-    return searchOnly(requestParam.SearchValue);
+    return searchOnly();
   }
-  return requestUserData(requestParam.RoleName);
+  return requestUserDataOnly();
 }
 
 function ShowNotFound() {
   let error;
+  setTotalPage();
   if (isFiltered && isSearched) {
-    error = `<p class="fs-5">There is no <b>${requestParam.Status}</b> user in this role contain  <b>${requestParam.SearchValue}</b></p>`
+    error = `<p class="fs-6">There is no <b>${requestParam.Status}</b> user in this role contain  <b>${requestParam.SearchValue}</b></p>`
   }
   else if (isFiltered) {
-    error = `<p class="fs-5">There is no <b>${requestParam.Status}</b> user for this role</p>`
+    error = `<p class="fs-6">There is no <b>${requestParam.Status}</b> user for this role</p>`
   }
-  else { error = `<p class="fs-5">There is no result for <b>${requestParam.SearchValue}</b></p>` }
+  else { error = `<p class="fs-6">There is no result for <b>${requestParam.SearchValue}</b></p>` }
   let notFound = document.getElementById("notFound");
   if (notFound.innerHTML != "") {
     notFound.innerHTML = "";
@@ -67,8 +76,9 @@ function ShowNotFound() {
   notFound.insertAdjacentHTML("afterbegin", error);
   notFound.classList.remove("hide");
   document.getElementById("table_holder").classList.add("hide");
+  document.getElementById("pagination").classList.add("hide");
   if (!isFiltered) {
-    document.getElementById("filter").setAttribute("disabled", "disabled");
+    document.getElementById("status_filter").setAttribute("disabled", "disabled");
   }
 }
 
@@ -77,8 +87,9 @@ function HideNotFound() {
   if (!notFound.classList.contains("hide")) {
     notFound.classList.add("hide");
     document.getElementById("table_holder").classList.remove("hide");
+    document.getElementById("pagination").classList.remove("hide");
     if (!isFiltered) {
-      document.getElementById("filter").removeAttribute("disabled");
+      document.getElementById("status_filter").removeAttribute("disabled");
     }
   }
 }
@@ -88,7 +99,6 @@ function renderUser(user, index) {
     <tr style="max-width: 45px">
         <td>${index + 1}</td>
         <td>${user.userEmail}</td>
-        <td>${user.roleName}</td>
         <td>${user.fullname}</td>
         <td class="checkBox">
           <div>
@@ -129,62 +139,7 @@ function appendUserToWrapper() {
   addEvent();
 }
 
-setAppendToDataWrapper(appendUserToWrapper);
-
-function search(searchValue) {
-  requestParam.RequestPage = 1;
-  setPageDataCurrentPage(1);
-  requestParam.SearchValue = searchValue;
-  if (searchValue == "") {
-    isSearched = false;
-    return;
-  }
-  isSearched = true;
-  requestParam.SearchValue = searchValue;
-  if (isFiltered && isSearched) {
-    searchWithFilter()
-  }
-  else {
-    let reqHeader = new Headers();
-    reqHeader.append("Content-Type", "text/json");
-    reqHeader.append("Accept", "application/json, text/plain, */*");
-    let initObject = {
-      method: "POST",
-      headers: reqHeader,
-      body: JSON.stringify(requestParam)
-    };
-    fetch("/api/UserManagerManagement/GetAccountListByEmailFilterRole", initObject)
-      .then(res => res.json())
-      .then(json => {
-        if (json.totalPage == 0) {
-          ShowNotFound();
-        }
-        else {
-          HideNotFound();
-          Data = json;
-          pageData.currentPage = 1;
-          appendUserToWrapper();
-        };
-      })
-  }
-}
-
-function searchOnly(searchValue) {
-  requestParam.SearchValue = searchValue;
-  isSearched = true;
-  let reqHeader = new Headers();
-  reqHeader.append("Content-Type", "text/json");
-  reqHeader.append("Accept", "application/json, text/plain, */*");
-  let initObject = {
-    method: "POST",
-    headers: reqHeader,
-    body: JSON.stringify(requestParam)
-  };
-  return fetch("/api/UserManagerManagement/GetAccountListByEmailFilterRole", initObject)
-}
-
-function requestUserData(role) {
-  requestParam.roleName = role;
+function requestUserDataOnly() {
   let reqHeader = new Headers();
   reqHeader.append("Content-Type", "text/json");
   reqHeader.append("Accept", "application/json, text/plain, */*");
@@ -196,35 +151,45 @@ function requestUserData(role) {
   return fetch("/api/UserManagerManagement/GetAccountsListOnlyByRole", initObject);
 }
 
-function requestUserDataAndResetPage(role) {
-  requestParam.RequestPage = 1;
-  setPageDataCurrentPage(1);
-  return requestUserData(role);
+function requestUserData() {
+  requestUserDataOnly()
+    .then(res => res.json())
+    .then(json => {
+      Data = json
+      appendUserToWrapper();
+    })
 }
 
-async function getRoles() {
-  await fetch("/api/UserManagerManagement/GetRoleNameList")
-    .then(res => res.json())
-    .then(json => {
-      TopicArr = json;
-      appendCollase("Role", "roleName", requestUserDataAndResetPage, appendUserToWrapper)
-      return requestUserDataAndResetPage("Customer Supporter")
-    })
-    .then(res => res.json())
-    .then(json => {
-      Data = json;
-      appendUserToWrapper();
-      setChoosenColor(0);
-    });
-  return new Promise((resolve) => {
-    console.log("resolve");
-    resolve("resolved");
-  })
+function requestUserDataAndResetPage() {
+  requestParam.RequestPage = 1;
+  setPageDataCurrentPage(1);
+  return requestUserData();
+}
+
+function setSelectedRole(obj) {
+  requestParam.RoleName = obj.value;
+  if (isFiltered) {
+    resetFilter();
+  }
+  if (isSearched) {
+    searchAndResetPage(requestParam.SearchValue);
+  }
+  else requestUserDataAndResetPage();
+}
+
+function requestWithFilterOnly() {
+  let reqHeader = new Headers();
+  reqHeader.append("Content-Type", "text/json");
+  reqHeader.append("Accept", "application/json, text/plain, */*");
+  let initObject = {
+    method: "POST",
+    headers: reqHeader,
+    body: JSON.stringify(requestParam)
+  };
+  return fetch("/api/UserManagerManagement/GetAccountsListByRoleAccordingRequest", initObject);
 }
 
 function requestWithFilter() {
-  requestParam.RequestPage = 1;
-  setPageDataCurrentPage(1);
   requestWithFilterOnly()
     .then(res => res.json())
     .then(json => {
@@ -240,8 +205,31 @@ function requestWithFilter() {
     })
 }
 
-function requestWithFilterOnly() {
+function requestWithFilterAndResetPage() {
+  requestParam.RequestPage = 1;
+  setPageDataCurrentPage(1);
+  requestWithFilter();
+}
 
+function setSelectedStatus(obj) {
+  if (obj.value == "All") {
+    isFiltered = false;
+    requestParam.Status = "";
+    if (isSearched) {
+      searchAndResetPage(requestParam.SearchValue);
+    }
+    else requestUserDataAndResetPage();
+    return;
+  }
+  isFiltered = true;
+  requestParam.Status = obj.value;
+  if (isSearched) {
+    searchAndResetPage(requestParam.SearchValue);
+  }
+  else requestWithFilterAndResetPage();
+}
+
+function searchOnly() {
   let reqHeader = new Headers();
   reqHeader.append("Content-Type", "text/json");
   reqHeader.append("Accept", "application/json, text/plain, */*");
@@ -250,25 +238,7 @@ function requestWithFilterOnly() {
     headers: reqHeader,
     body: JSON.stringify(requestParam)
   };
-  return fetch("/api/UserManagerManagement/GetAccountsListByRoleAccordingRequest", initObject);
-}
-
-function searchWithFilter() {
-  requestParam.RequestPage = 1;
-  setPageDataCurrentPage(1);
-  searchWithFilterOnly()
-    .then(res => res.json())
-    .then(json => {
-      if (json.totalPage == 0) {
-        ShowNotFound();
-      }
-      else {
-        HideNotFound();
-        Data = json;
-        pageData.currentPage = 1;
-        appendUserToWrapper();
-      }
-    });
+  return fetch("/api/UserManagerManagement/GetAccountListByEmailFilterRole", initObject)
 }
 
 function searchWithFilterOnly() {
@@ -283,74 +253,44 @@ function searchWithFilterOnly() {
   return fetch("/api/UserManagerManagement/GetAccountListByEmailFilterRoleStatus", initObject)
 }
 
-function doFilter() {
-  let filter = document.getElementById("filter");
-  filter.addEventListener("change", () => {
-    let choosenValue = filter.options[ filter.selectedIndex ].value;
-    if (choosenValue === "All") {
-      requestParam.Status = "";
-      isFiltered = false;
-      if (isSearched) {
-        searchOnly(requestParam.SearchValue)
-          .then(res => res.json())
-          .then(json => {
-            HideNotFound();
-            Data = json;
-            appendUserToWrapper();
-          })
-        return;
-      }
-      else {
-        requestUserDataAndResetPage(requestParam.RoleName)
-          .then(res => res.json())
-          .then(json => {
-            HideNotFound();
-            Data = json;
-            appendUserToWrapper();
-          })
-        return;
-      }
-    }
-    else {
-      isFiltered = true;
-      requestParam.Status = choosenValue;
-      if (isFiltered && isSearched) {
-        searchWithFilter();
-      }
-      else {
-        requestWithFilter()
-          .then(res => res.json())
-          .then(json => {
-            if (json.totalPage == 0) {
-              ShowNotFound();
-              return;
-            }
-            Data = json;
-            HideNotFound();
-            appendUserToWrapper();
-            setChoosenColor(TopicArr.findIndex((role) => {
-              return role.roleName === requestParam.RoleName;
-            }))
-          })
-      }
-    }
+function search(searchValue) {
+  requestParam.SearchValue = searchValue;
+  let searchFunc = searchOnly;
+  isSearched = true;
+  if (isFiltered) {
+    searchFunc = searchWithFilterOnly;
   }
-  )
+  searchFunc(searchValue)
+    .then(res => res.json())
+    .then(json => {
+      if (json.totalPage != null) {
+        Data = json;
+        if (parseInt(json.totalPage) == 0) {
+          ShowNotFound();
+        }
+        else {
+          HideNotFound();
+          pageData.currentPage = 1;
+          appendUserToWrapper();
+        };
+      }
+      else {
+        ShowNotFound();
+      }
+    })
 }
 
-function resetSearch() {
-  document.getElementById("search").value = "";
-  requestParam.SearchValue = "";
-  isSearched = false;
+function searchAndResetPage(searchValue) {
+  if (searchValue.trim().length == 0) {
+    requestParam.searchValue = "";
+    return;
+  }
+  requestParam.RequestPage = 1;
+  setPageDataCurrentPage(1);
+  search(searchValue);
 }
 
-function resetFilter() {
-  document.getElementById('filter').getElementsByTagName('option')[ 0 ].selected = 'selected';
-  isFiltered = false;
-  requestParam.Status = "";
-}
-
-doFilter();
+setAppendToDataWrapper(appendUserToWrapper);
 
 function storeToStorage() {
   sessionStorage.setItem("requestParam", JSON.stringify(requestParam));

@@ -2,9 +2,94 @@
   padding-left: 0px !important;
   padding-right: 0px !important;
 }
+.w-95 {
+  width: 95% !important;
+}
 .w-90 {
   width: 90% !important;
 }
+.w-85 {
+  width: 85% !important;
+}
+.h-85{
+  height: 85% !important;
+}
 .hide {
   display: none;
+}
+.ticket_status{
+  font-size: 13px;;
+}
+.status_btn{
+  cursor: pointer;
+}
+.status_btn .me-4{
+  position: relative;
+  color: #435560;
+  border-bottom: 0px solid #000;
+}
+.status_btn .me-4.me-4.chosen{
+  color: #000;
+}
+.status_btn .me-4.chosen::after{
+  content: "";
+  position: absolute;
+  background-color: #212529;
+  height: 2px;
+  width: 100%;
+  left: 0;
+  bottom: -3px;
+  transition: 0.3s;
+}
+.status_btn .me-4::after{
+  content: "";
+  position: absolute;
+  background-color: #212529;
+  height: 2px;
+  width: 0%;
+  left: 0;
+  bottom: -3px;
+  transition: 0.3s;
+}
+.status_btn .me-4:hover{
+  color: black;
+}
+
+.status_btn .me-4:hover::after{
+  width: 100%;
+}
+
+.fa-sort-up{
+  cursor: pointer;
+  position: relative;
+  top: 2px;
+}
+.fa-sort-down{
+  cursor: pointer;
+  position: relative;
+  bottom: 2px;
+}
+.detail_btn{
+  cursor: pointer;
+  color: #0d6efd;
+}
+/* .table_container {
+  border-radius: 50px;
+  background: #e0e0e0;
+  box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
+} */
+.loader {
+  margin-left: auto;
+  margin-right: auto;
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

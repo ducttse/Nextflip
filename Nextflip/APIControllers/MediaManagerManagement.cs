@@ -60,7 +60,10 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetPendingMediaByUserEmail: " + ex.Message);
-                return new JsonResult("Error occur");
+                return new JsonResult(new
+                {
+                    message = ex.Message
+                });
             }
         }
 
@@ -88,7 +91,10 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetPendingMediaByUserEmailFilterStatus: " + ex.Message);
-                return new JsonResult("Error occur");
+                return new JsonResult(new
+                {
+                    message = ex.Message
+                });
             }
         }
 
@@ -163,7 +169,10 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("NumberOfPendingMedias: " + ex.Message);
-                return new JsonResult("Error occur");
+                return new JsonResult(new
+                {
+                    message = ex.Message
+                });
             }
         }
 
@@ -199,7 +208,10 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetPendingMediasListAccordingRequest: " + ex.Message);
-                return new JsonResult("Error occur");
+                return new JsonResult(new
+                {
+                    message = ex.Message
+                });
             }
         }
         
@@ -224,7 +236,10 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetPendingMediasFilterStatus: " + ex.Message);
-                return new JsonResult("Error occur");
+                return new JsonResult(new
+                {
+                    message = ex.Message
+                });
             }
         }
 

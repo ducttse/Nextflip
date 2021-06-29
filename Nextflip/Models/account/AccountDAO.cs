@@ -696,7 +696,7 @@ namespace Nextflip.Models.account
                         }
                         command.Parameters.AddWithValue("@fullname", account.fullname);
                         command.Parameters.AddWithValue("@userEmail", account.userEmail);
-                        command.Parameters.AddWithValue("@roleName", account.roleName);
+                        command.Parameters.AddWithValue("@roleName", account.roleName.ToLower());
                         command.Parameters.AddWithValue("@dateOfBirth", account.dateOfBirth);
                         command.Parameters.AddWithValue("@status", "Active");
                         int rowAffect = command.ExecuteNonQuery();

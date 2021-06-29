@@ -41,8 +41,8 @@ namespace Nextflip.Services.Implementations
         public int NumberOfPendingMediasBySearchingFilterStatus(string searchValue, string Status)
             => _mediaEditRequestDao.NumberOfPendingMediasBySearchingFilterStatus(searchValue, Status);
 
-        public bool ApproveChangeMediaStatus(string mediaID) => _mediaDao.ApproveChangeMediaStatus(mediaID);
-        public bool DisapproveChangeMediaStatus(string mediaID) => _mediaDao.DisapproveChangeMediaStatus(mediaID);
+        public bool ApproveChangeMedia(string mediaID) => _mediaDao.ApproveChangeMedia(mediaID);
+        public bool DisapproveChangeMedia(string mediaID) => _mediaDao.DisapproveChangeMedia(mediaID);
         public IEnumerable<MediaEditRequest> GetMediaRequest(string status, string type, int RowsOnPage, int RequestPage)
             =>_mediaEditRequestDao.GetMediaRequest(status, type, RowsOnPage, RequestPage);
         public int NumberOfMediaRequest(string status, string type)

@@ -109,8 +109,8 @@ namespace Nextflip.APIControllers
                     message = "fail"
                 };
                 bool approveChangeMediaStatusRequest = mediaManagerManagementService.ApproveRequest(request.RequestID);
-                bool approveChangeMediaStatus = mediaManagerManagementService.ApproveChangeMediaStatus(request.MediaID);
-                if (!approveChangeMediaStatusRequest || !approveChangeMediaStatus) return new JsonResult(messageFail);
+                bool approveChangeMedia = mediaManagerManagementService.ApproveChangeMedia(request.MediaID);
+                if (!approveChangeMediaStatusRequest || !approveChangeMedia) return new JsonResult(messageFail);
                 var message = new
                 {
                     message = "success"
@@ -140,7 +140,7 @@ namespace Nextflip.APIControllers
                 };
                 bool disapproveRequest = mediaManagerManagementService.DisappoveRequest(request.RequestID, request.note);
                 if (!disapproveRequest) return new JsonResult(messageFail);
-                bool disapproveChangeMediaStatus = mediaManagerManagementService.DisapproveChangeMediaStatus(request.MediaID);
+                bool disapproveChangeMediaStatus = mediaManagerManagementService.DisapproveChangeMedia(request.MediaID);
                 if (!disapproveChangeMediaStatus) return new JsonResult(messageFail);
                 var message = new
                 {

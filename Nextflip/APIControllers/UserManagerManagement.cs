@@ -328,36 +328,55 @@ namespace Nextflip.APIControllers
             return new JsonResult( new NotificationObject { message = message});
         }
 
+        public partial class JsonAccount
+        {
+            public string userEmail { get; set; }
+            public string roleName { get; set; }
+            public string fullname { get; set; }
+            public string dateOfBirth { get; set; }
+        }
         [Route("CreateStaff")]
         [HttpPost]
         public IActionResult CreateStaff([FromServices] IUserManagerManagementService userManagerManagementService,
-                                        [FromBody] Account account)
+                                        [FromBody] JsonAccount _staffInfo)
         {
             NotificationObject noti = new NotificationObject();
             try
             {
                 bool isValid = true;
-                if (account.fullname.Trim() == string.Empty)
+                if (_staffInfo.fullname.Trim() == string.Empty)
                 {
                     noti.nameErr = "Full name must not be empty";
                     isValid = false;
                 }
-                if (EmailUtil.IsValidEmail(account.userEmail) == false)
+                if (EmailUtil.IsValidEmail(_staffInfo.userEmail) == false)
                 {
                     noti.emailErr = "Email is invalid format";
                     isValid = false;
                 }
-                else if (userManagerManagementService.IsExistedEmail(account.userEmail))
+                else if (userManagerManagementService.IsExistedEmail(_staffInfo.userEmail))
                 {
                     noti.emailErr = "Email is existed";
                     isValid = false;
                 }
-                if (account.dateOfBirth == null) {
+                DateTime date;
+                bool isValidDate = DateTime.TryParse(_staffInfo.dateOfBirth, out date);
+                if (isValidDate == false) {
                     noti.dateTimeErr = "Date of birth is Invalid";
                     isValid = false;
                 }
-                bool result = userManagerManagementService.AddNewStaff(account);
-                if (isValid == true && result == true) noti.message = "Success";
+                if (isValid == true)
+                {
+                    userManagerManagementService.AddNewStaff(new Account 
+                    { 
+                        userEmail = _staffInfo.userEmail,
+                        fullname = _staffInfo.fullname,
+                        roleName = _staffInfo.roleName,
+                        dateOfBirth = date
+                                
+                    });
+                    noti.message = "Success";
+                }
                 else noti.message = "Fail";
             }
             catch (Exception ex)
@@ -375,7 +394,7 @@ namespace Nextflip.APIControllers
            
             try
             {
-                Subsciption subsciption = userManagerManagementService.GetSubsciptionByUserID(user.userID);
+                Subscription subsciption = userManagerManagementService.GetSubsciptionByUserID(user.userID);
                 return new JsonResult(subsciption);
             }
             catch (Exception ex)
@@ -384,23 +403,37 @@ namespace Nextflip.APIControllers
                 return new JsonResult("error occur");
             }
         }
+        public partial class JsonSubscription
+        {
+            public string userID { get; set; }
+            public string EndDate { get; set; }
+        }
         [Route("UpdateExpiredDate")]
         [HttpPost]
         public IActionResult UpdateExpiredDate([FromServices] IUserManagerManagementService userManagerManagementService,
-                                                    [FromBody] Subsciption subscript)
+                                                    [FromBody] JsonSubscription _subscript)
         {
             NotificationObject noti = new NotificationObject ();
             try
             {
+                DateTime endDate;
                 bool isValid = true;
-                subscript.StartDate = DateTime.Now;
-                if (subscript.EndDate == null || subscript.StartDate.CompareTo(subscript.EndDate) > 0)
+                bool isValidDate = DateTime.TryParse(_subscript.EndDate, out endDate);
+                if ( isValidDate == false || DateTime.Now.CompareTo(endDate) > 0)
                 {
                     noti.dateTimeErr = "Date is invalid";
                     isValid = false;
                 }
-                bool result = userManagerManagementService.UpdateExpiredDate(subscript);
-                if (isValid && result == true) noti.message = "Success";
+                if (isValid)
+                {
+                    userManagerManagementService.UpdateExpiredDate( new Subscription 
+                    { 
+                        UserID = _subscript.userID,
+                        StartDate = DateTime.Now,
+                        EndDate = endDate
+                    });
+                    noti.message = "Success";
+                }
                 else noti.message = "Fail";
             }
             catch (Exception ex)
@@ -410,27 +443,40 @@ namespace Nextflip.APIControllers
             return new JsonResult(noti);
         }
 
+
         [Route("EditStaffInfo")]
         [HttpPost]
         public IActionResult EditStaffInfo([FromServices] IUserManagerManagementService userManagerManagementService,
-                                            [FromBody] Account staffInfo)
+                                            [FromBody] JsonAccount _staffInfo)
         {
             NotificationObject noti = new NotificationObject ();
             try
             {
                 bool isValid = true;
-                if (staffInfo.fullname.Trim() == string.Empty)
+                if (_staffInfo.fullname.Trim() == string.Empty)
                 {
                     noti.nameErr = "Full name must not be empty";
                     isValid = false;
                 }
-                if (staffInfo.dateOfBirth == null)
+                DateTime date;
+                bool isValidDate = DateTime.TryParse(_staffInfo.dateOfBirth, out date);
+                if (isValidDate == false)
                 {
                     noti.dateTimeErr = "Date of birth is Invalid";
                     isValid = false;
                 }
-                bool result = userManagerManagementService.UpdateStaffInfo(staffInfo); 
-                if (isValid == true && result == true) noti.message = "Success";
+                if (isValid == true)
+                {
+                    userManagerManagementService.UpdateStaffInfo(new Account
+                    {
+                        userEmail = _staffInfo.userEmail,
+                        fullname = _staffInfo.fullname,
+                        roleName = _staffInfo.roleName,
+                        dateOfBirth = date
+
+                    });
+                    noti.message = "Success";
+                }
                 else noti.message = "Fail";
             }
             catch (Exception ex)

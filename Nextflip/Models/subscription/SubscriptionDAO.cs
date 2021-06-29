@@ -8,7 +8,7 @@ namespace Nextflip.Models.subscription
 {
     public class SubscriptionDAO : ISubscriptionDAO
     {
-        public bool UpdateExpiredDate(Subsciption subsciption)
+        public bool UpdateExpiredDate(Subscription subsciption)
         {
             try
             {
@@ -40,11 +40,11 @@ namespace Nextflip.Models.subscription
             }
 
         }
-        public Subsciption GetSubsciptionByUserID(string userID)
+        public Subscription GetSubsciptionByUserID(string userID)
         {
             try
             {
-                Subsciption subsciption = null;
+                Subscription subsciption = null;
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
@@ -58,7 +58,7 @@ namespace Nextflip.Models.subscription
                         {
                             if (reader.Read())
                             {
-                                subsciption = new Subsciption
+                                subsciption = new Subscription
                                 {
                                     SubscriptionID = reader.GetString(0),
                                     UserID = userID,

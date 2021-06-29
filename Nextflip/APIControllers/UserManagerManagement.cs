@@ -333,21 +333,32 @@ namespace Nextflip.APIControllers
         public IActionResult CreateStaff([FromServices] IUserManagerManagementService userManagerManagementService,
                                         [FromBody] Account account)
         {
-            NotificationObject noti = new NotificationObject { message = "fail" };
+            NotificationObject noti = new NotificationObject();
             try
-            { 
-                if (account.fullname.Trim() == string.Empty) noti.nameErr = "Full name must not be empty";
+            {
+                bool isValid = true;
+                if (account.fullname.Trim() == string.Empty)
+                {
+                    noti.nameErr = "Full name must not be empty";
+                    isValid = false;
+                }
                 if (EmailUtil.IsValidEmail(account.userEmail) == false)
                 {
                     noti.emailErr = "Email is invalid format";
+                    isValid = false;
                 }
                 else if (userManagerManagementService.IsExistedEmail(account.userEmail))
                 {
                     noti.emailErr = "Email is existed";
+                    isValid = false;
                 }
-                if (account.dateOfBirth == null) noti.dateTimeErr = "Date of birth is Invalid";
+                if (account.dateOfBirth == null) {
+                    noti.dateTimeErr = "Date of birth is Invalid";
+                    isValid = false;
+                }
                 bool result = userManagerManagementService.AddNewStaff(account);
-                if (result == true) noti.message = "success";
+                if (isValid == true && result == true) noti.message = "Success";
+                else noti.message = "Fail";
             }
             catch (Exception ex)
             {
@@ -401,10 +412,20 @@ namespace Nextflip.APIControllers
             NotificationObject noti = new NotificationObject { message = "Fail" };
             try
             {
-                if (staffInfo.fullname.Trim() == string.Empty) noti.nameErr = "Full name must not be empty";
-                if (staffInfo.dateOfBirth == null) noti.dateTimeErr = "Date of birth is invalid";
-                bool result = userManagerManagementService.UpdateStaffInfo(staffInfo);
-                if (result == true) noti.message = "Success";
+                bool isValid = true;
+                if (staffInfo.fullname.Trim() == string.Empty)
+                {
+                    noti.nameErr = "Full name must not be empty";
+                    isValid = false;
+                }
+                if (staffInfo.dateOfBirth == null)
+                {
+                    noti.dateTimeErr = "Date of birth is Invalid";
+                    isValid = false;
+                }
+                bool result = userManagerManagementService.UpdateStaffInfo(staffInfo); 
+                if (isValid == true && result == true) noti.message = "Success";
+                else noti.message = "Fail";
             }
             catch (Exception ex)
             {

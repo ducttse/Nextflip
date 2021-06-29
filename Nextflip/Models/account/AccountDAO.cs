@@ -726,7 +726,6 @@ namespace Nextflip.Models.account
                     {
                         command.Parameters.AddWithValue("@userID", account.userID);
                         command.Parameters.AddWithValue("@fullname", account.fullname);
-                        command.Parameters.AddWithValue("@userEmail", account.userEmail);
                         command.Parameters.AddWithValue("@roleName", account.roleName);
                         command.Parameters.AddWithValue("@dateOfBirth", account.dateOfBirth);
                         command.Parameters.AddWithValue("@pictureURL", account.pictureURL);
@@ -742,11 +741,42 @@ namespace Nextflip.Models.account
                 throw new Exception(ex.Message);
             }
         }
-        public Account GetAccountByID(string userID)
+
+        public bool IsSubscribedUser(string userID)
         {
-            Account account = null;
             try
             {
+                string roleName = "";
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select roleName " +
+                                "From account " +
+                                "Where userID = @userID";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userID", userID);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                roleName = reader.GetString(0);
+                            }
+                        }
+                    }
+                }
+                return roleName.Equals("subscribed user", StringComparison.OrdinalIgnoreCase);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public Account GetAccountByID(string userID)
+        {
+            try
+            {
+                Account account = null;
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
@@ -765,23 +795,23 @@ namespace Nextflip.Models.account
                                     userID = userID,
                                     fullname = reader.GetString(0),
                                     userEmail = reader.GetString(1),
-                                    googleID = reader.GetString(2),
-                                    googleEmail = reader.GetString(3),
+                                    googleID = reader.IsDBNull(2) ? null : reader.GetString(2),
+                                    googleEmail = reader.IsDBNull(3) ? null : reader.GetString(3),
                                     dateOfBirth = reader.GetDateTime(4),
                                     roleName = reader.GetString(5),
-                                    pictureURL = reader.IsDBNull(6) ? null : reader.GetString(4)
+                                    pictureURL = reader.IsDBNull(6) ? null : reader.GetString(6)
                                 };
                             }
                         }
                     }
                     connection.Close();
                 }
+                return account;
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
-            return account;
         }
         public bool IsExistedEmail(string email)
         {

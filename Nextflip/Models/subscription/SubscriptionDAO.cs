@@ -40,5 +40,42 @@ namespace Nextflip.Models.subscription
             }
 
         }
+        public Subsciption GetSubsciptionByUserID(string userID)
+        {
+            try
+            {
+                Subsciption subsciption = null;
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select SubscriptionID, Status, StartDate, EndDate " +
+                                "From subscription " +
+                                "Where userID = @userID";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userID", userID);
+                        using(var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                subsciption = new Subsciption
+                                {
+                                    SubscriptionID = reader.GetString(0),
+                                    UserID = userID,
+                                    Status = reader.GetString(1),
+                                    StartDate = reader.GetDateTime(2),
+                                    EndDate = reader.GetDateTime(3)
+                                };
+                            }
+                        }
+                    }
+                }
+                return subsciption;
+            }
+            catch ( Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

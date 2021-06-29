@@ -49,5 +49,7 @@ namespace Nextflip.Services.Implementations
         public bool UpdateExpiredDate(Subsciption subsciption) => _subscription.UpdateExpiredDate(subsciption);
         public Account GetAccountByID(string userID) => _accountDao.GetAccountByID(userID);
         public bool UpdateStaffInfo(Account account) => _accountDao.UpdateStaffInfo(account);
+        public Subsciption GetSubsciptionByUserID(string userID) => _subscription.GetSubsciptionByUserID(userID);
+        public bool IsSubscribedUser(string userID) => _accountDao.IsSubscribedUser(userID);
     }
 }

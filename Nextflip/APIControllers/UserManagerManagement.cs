@@ -356,6 +356,23 @@ namespace Nextflip.APIControllers
             return new JsonResult(noti);
         }
 
+        [Route("GetSubscriptionByUserID")]
+        [HttpPost]
+        public IActionResult GetSubscriptionByUserID([FromServices] IUserManagerManagementService userManagerManagementService,
+                                            [FromBody] Account user)
+        {
+           
+            try
+            {
+                Subsciption subsciption = userManagerManagementService.GetSubsciptionByUserID(user.userID);
+                return new JsonResult(subsciption);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetSubscriptionByUserID: " + ex.Message);
+                return new JsonResult("error occur");
+            }
+        }
         [Route("UpdateExpiredDate")]
         [HttpPost]
         public IActionResult UpdateExpiredDate([FromServices] IUserManagerManagementService userManagerManagementService,
@@ -379,14 +396,14 @@ namespace Nextflip.APIControllers
         [Route("EditStaffInfo")]
         [HttpPost]
         public IActionResult EditStaffInfo([FromServices] IUserManagerManagementService userManagerManagementService,
-                                            [FromBody] Account account)
+                                            [FromBody] Account staffInfo)
         {
             NotificationObject noti = new NotificationObject { message = "Fail" };
             try
             {
-                if (account.fullname.Trim() == string.Empty) noti.nameErr = "Full name must not be empty";
-                if (account.dateOfBirth == null) noti.dateTimeErr = "Date of birth is invalid";
-                bool result = userManagerManagementService.UpdateStaffInfo(account);
+                if (staffInfo.fullname.Trim() == string.Empty) noti.nameErr = "Full name must not be empty";
+                if (staffInfo.dateOfBirth == null) noti.dateTimeErr = "Date of birth is invalid";
+                bool result = userManagerManagementService.UpdateStaffInfo(staffInfo);
                 if (result == true) noti.message = "Success";
             }
             catch (Exception ex)
@@ -395,20 +412,35 @@ namespace Nextflip.APIControllers
             }
             return new JsonResult(noti);
         }
-
-        [Route("GetStaffProfile")]
+        [Route("IsSubscribedUser")]
         [HttpPost]
-        public IActionResult GetStaffProfile([FromServices] IUserManagerManagementService userManagerManagementService,
-                                    [FromBody] string userID)
+        public IActionResult IsSubscribedUser([FromServices] IUserManagerManagementService userManagerManagementService,
+                                    [FromBody] Account user)
+        {
+            bool isSubscribedUser = false;
+            try
+            {
+                isSubscribedUser = userManagerManagementService.IsSubscribedUser(user.userID);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("IsSubscribedUser: " + ex.Message);
+            }
+            return new JsonResult(isSubscribedUser);
+        }
+        [Route("GetUserProfile")]
+        [HttpPost]
+        public IActionResult GetUserProfile([FromServices] IUserManagerManagementService userManagerManagementService,
+                                    [FromBody] Account _account)
         {
             Account account = null;
             try
             {
-                account = userManagerManagementService.GetAccountByID(userID);
+                    account = userManagerManagementService.GetAccountByID(_account.userID);
             }
             catch (Exception ex)
             {
-                _logger.LogInformation("EditStaffInfo: " + ex.Message);
+                _logger.LogInformation("GetProfile: " + ex.Message);
             }
             return new JsonResult(account);
         }

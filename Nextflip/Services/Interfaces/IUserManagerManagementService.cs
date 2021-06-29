@@ -31,5 +31,7 @@ namespace Nextflip.Services.Interfaces
         bool UpdateExpiredDate(Subsciption subsciption);
         Account GetAccountByID(string userID);
         bool UpdateStaffInfo(Account account);
+        Subsciption GetSubsciptionByUserID(string userID);
+        bool IsSubscribedUser(string userID);
     }
 }

@@ -8,5 +8,7 @@ namespace Nextflip.Models.subscription
     public interface ISubscriptionDAO
     {
         bool UpdateExpiredDate(Subsciption subsciption);
+
+        Subsciption GetSubsciptionByUserID(string userID);
     }
 }

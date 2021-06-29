@@ -471,19 +471,19 @@ namespace Nextflip.Models.mediaEditRequest
                 {
                     connection.Open();
                     string Sql = null;
-                    if (type.Equals("All") && status.Equals("All")) 
+                    if (type.Equals("all") && status.Equals("all")) 
                     {
                      Sql = "Select requestID, userEmail, mediaID, status, note, previewLink, type, ID " +
                             "From mediaEditRequest " +
                             "LIMIT @offset, @limit";
-                    } else if (type.Equals("All") && !status.Equals("All"))
+                    } else if (type.Equals("all") && !status.Equals("all"))
                     {
                         Sql = "Select requestID, userEmail, mediaID, status, note, previewLink, type, ID " +
                             "From mediaEditRequest " +
                             "Where status = @status " +
                             "LIMIT @offset, @limit";
                     }
-                    else if (!type.Equals("All") && status.Equals("All"))
+                    else if (!type.Equals("all") && status.Equals("all"))
                     {
                         Sql = "Select requestID, userEmail, mediaID, status, note, previewLink, type, ID " +
                             "From mediaEditRequest " +
@@ -498,8 +498,8 @@ namespace Nextflip.Models.mediaEditRequest
                     }
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        if (!status.Equals("All")) command.Parameters.AddWithValue("@status", status);
-                        if (!type.Equals("All")) command.Parameters.AddWithValue("@type", type);
+                        if (!status.Equals("all")) command.Parameters.AddWithValue("@status", status);
+                        if (!type.Equals("all")) command.Parameters.AddWithValue("@type", type);
                         command.Parameters.AddWithValue("@offset", offset);
                         command.Parameters.AddWithValue("@limit", RowsOnPage);
                         using (var reader = command.ExecuteReader())
@@ -536,18 +536,18 @@ namespace Nextflip.Models.mediaEditRequest
             {
                 connection.Open();
                 string Sql = null;
-                if (type.Equals("All") && status.Equals("All"))
+                if (type.Equals("all") && status.Equals("all"))
                 {
                     Sql = "Select COUNT(requestID) " +
                            "From mediaEditRequest ";
                 }
-                else if (type.Equals("All") && !status.Equals("All"))
+                else if (type.Equals("all") && !status.Equals("all"))
                 {
                     Sql = "Select COUNT(requestID) " +
                         "From mediaEditRequest " +
                         "Where status = @status ";
                 }
-                else if (!type.Equals("All") && status.Equals("All"))
+                else if (!type.Equals("all") && status.Equals("all"))
                 {
                     Sql = "Select COUNT(requestID) " +
                         "From mediaEditRequest " +
@@ -561,8 +561,8 @@ namespace Nextflip.Models.mediaEditRequest
                 }
                 using (var command = new MySqlCommand(Sql, connection))
                 {
-                    if (!status.Equals("All")) command.Parameters.AddWithValue("@status", status);
-                    if (!type.Equals("All")) command.Parameters.AddWithValue("@type", type);
+                    if (!status.Equals("all")) command.Parameters.AddWithValue("@status", status);
+                    if (!type.Equals("all")) command.Parameters.AddWithValue("@type", type);
                     using (var reader = command.ExecuteReader())
                     {
                         if (reader.Read())
@@ -585,21 +585,21 @@ namespace Nextflip.Models.mediaEditRequest
                 {
                     connection.Open();
                     string Sql = null;
-                    if (type.Equals("All") && status.Equals("All"))
+                    if (type.Equals("all") && status.Equals("all"))
                     {
                         Sql = "Select requestID, userEmail, mediaID, status, note, previewLink, type, ID " +
                                "From mediaEditRequest " +
                                "Where userEmail LIKE @userEmail " +
                                "LIMIT @offset, @limit";
                     }
-                    else if (type.Equals("All") && !status.Equals("All"))
+                    else if (type.Equals("all") && !status.Equals("all"))
                     {
                         Sql = "Select requestID, userEmail, mediaID, status, note, previewLink, type, ID " +
                             "From mediaEditRequest " +
                             "Where userEmail LIKE @userEmail and status = @status " +
                             "LIMIT @offset, @limit";
                     }
-                    else if (!type.Equals("All") && status.Equals("All"))
+                    else if (!type.Equals("all") && status.Equals("all"))
                     {
                         Sql = "Select requestID, userEmail, mediaID, status, note, previewLink, type, ID " +
                             "From mediaEditRequest " +
@@ -616,8 +616,8 @@ namespace Nextflip.Models.mediaEditRequest
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@userEmail", $"%{searchValue}%");
-                        if (!status.Equals("All")) command.Parameters.AddWithValue("@status", status);
-                        if (!type.Equals("All")) command.Parameters.AddWithValue("@type", type);
+                        if (!status.Equals("all")) command.Parameters.AddWithValue("@status", status);
+                        if (!type.Equals("all")) command.Parameters.AddWithValue("@type", type);
                         command.Parameters.AddWithValue("@offset", offset);
                         command.Parameters.AddWithValue("@limit", RowsOnPage);
                         using (var reader = command.ExecuteReader())
@@ -654,19 +654,19 @@ namespace Nextflip.Models.mediaEditRequest
             {
                 connection.Open();
                 string Sql = null;
-                if (type.Equals("All") && status.Equals("All"))
+                if (type.Equals("all") && status.Equals("all"))
                 {
                     Sql = "Select COUNT(requestID) " +
                            "From mediaEditRequest " +
                            "Where userEmail LIKE @userEmail ";
                 }
-                else if (type.Equals("All") && !status.Equals("All"))
+                else if (type.Equals("all") && !status.Equals("all"))
                 {
                     Sql = "Select COUNT(requestID) " +
                         "From mediaEditRequest " +
                         "Where userEmail LIKE @userEmail and status = @status ";
                 }
-                else if (!type.Equals("All") && status.Equals("All"))
+                else if (!type.Equals("all") && status.Equals("all"))
                 {
                     Sql = "Select COUNT(requestID) " +
                         "From mediaEditRequest " +
@@ -681,8 +681,8 @@ namespace Nextflip.Models.mediaEditRequest
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     command.Parameters.AddWithValue("@userEmail", $"%{searchValue}%");
-                    if (!status.Equals("All")) command.Parameters.AddWithValue("@status", status);
-                    if (!type.Equals("All")) command.Parameters.AddWithValue("@type", type);
+                    if (!status.Equals("all")) command.Parameters.AddWithValue("@status", status);
+                    if (!type.Equals("all")) command.Parameters.AddWithValue("@type", type);
                     using (var reader = command.ExecuteReader())
                     {
                         if (reader.Read())

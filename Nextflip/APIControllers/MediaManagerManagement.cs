@@ -254,8 +254,8 @@ namespace Nextflip.APIControllers
         {
             try
             {
-                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.GetMediaRequest(request.Status, request.Type,request.RowsOnPage, request.RequestPage);
-                int count = mediaManagerManagementService.NumberOfMediaRequest(request.Status, request.Type);
+                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.GetMediaRequest(request.Status.Trim().ToLower(), request.Type.Trim().ToLower(), request.RowsOnPage, request.RequestPage);
+                int count = mediaManagerManagementService.NumberOfMediaRequest(request.Status.Trim().ToLower(), request.Type.Trim().ToLower());
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {
@@ -285,8 +285,8 @@ namespace Nextflip.APIControllers
                     message = "Empty searchValue"
                 };
                 if (request.SearchValue.Trim() == "") return new JsonResult(message);
-                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.SearchingMediaRequest(request.SearchValue.Trim(), request.Status, request.Type, request.RowsOnPage, request.RequestPage);
-                int count = mediaManagerManagementService.NumberOfMediaRequestSearching(request.SearchValue.Trim(), request.Status, request.Type);
+                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.SearchingMediaRequest(request.SearchValue.Trim(), request.Status.Trim().ToLower(), request.Type.Trim().ToLower(), request.RowsOnPage, request.RequestPage);
+                int count = mediaManagerManagementService.NumberOfMediaRequestSearching(request.SearchValue.Trim(), request.Status.Trim().ToLower(), request.Type.Trim().ToLower());
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {

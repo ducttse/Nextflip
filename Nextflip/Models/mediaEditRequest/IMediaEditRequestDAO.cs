@@ -27,5 +27,9 @@ namespace Nextflip.Models.mediaEditRequest
 
         bool AddMediaRequest(string userEmail, string mediaID, string note, string previewLink);
         MediaEditRequest GetMediaEditRequestByID(int requestID);
+        IEnumerable<MediaEditRequest> GetMediaRequest(string status, string type, int RowsOnPage, int RequestPage);
+        int NumberOfMediaRequest(string status, string type);
+        IEnumerable<MediaEditRequest> SearchingMediaRequest(string searchValue, string status, string type, int RowsOnPage, int RequestPage);
+        int NumberOfMediaRequestSearching(string searchValue, string status, string type);
     }
 }

@@ -330,6 +330,7 @@ namespace Nextflip.APIControllers
 
         public partial class JsonAccount
         {
+            public string userId { get; set; }
             public string userEmail { get; set; }
             public string roleName { get; set; }
             public string fullname { get; set; }
@@ -469,7 +470,7 @@ namespace Nextflip.APIControllers
                 {
                     userManagerManagementService.UpdateStaffInfo(new Account
                     {
-                        userEmail = _staffInfo.userEmail,
+                        userID = _staffInfo.userId,
                         fullname = _staffInfo.fullname,
                         roleName = _staffInfo.roleName,
                         dateOfBirth = date

@@ -325,7 +325,7 @@ namespace Nextflip.APIControllers
                 _logger.LogInformation("IsValidEmail: " + ex.Message);
                 message = ex.Message;
             }
-            return new JsonResult(message);
+            return new JsonResult( new NotificationObject { message = message});
         }
 
         [Route("CreateStaff")]

@@ -73,7 +73,7 @@
             <input type="hidden" id="Form_UserID"/>
               <div class="mb-3">
                 <label for="message-text" class="col-form-label">Leave reason for this activity</label>
-                <textarea name="note" style="height: 350px" class="form-control" id="note" ></textarea>
+                <textarea name="note" style="height: 250px" class="form-control" id="note" ></textarea>
               </div>
             </div>
             <div class="modal-footer">
@@ -115,40 +115,46 @@
     </div>
     <!-- Add Staff Modal -->
     <div class="modal fade" id="add_staff_modal" tabindex="-1">
-      <div class="modal-dialog modal-lg">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-body">
               <p class="fs-1 text-center">Add new staff</p>
-              <div class="col-8 mx-auto">
-                <div class="mb-3 row">
-                  <label for="email_detail" class="col-form-label col-3">Email</label>
-                  <div class="col-8 w-45 d-inline-flex pe-0 ">
-                      <input id="email_detail" type="text" class="form-control" oninput="checkEmail()" maxlength="50" required/>
+              <div class="col-8 offset-2">
+                <div class="mb-3 row ms-5">
+                  <label for="email_detail" class="col-form-label col-3 pe-0">Email</label>
+                  <div class="col-8 w-45 d-inline-flex ps-0 pe-0">
+                    <div class="w-100">
+                      <input id="email_detail" type="text" class="form-control" oninput="checkEmail()" required autocomplete="nope"/>
+                      <div class="invalid-feedback">
+                      </div>
+                    </div>
                   </div>
-                  <p class="ps-1 col-1 text-start pb-0">@@gmail.com</p>
-                  <div class="invalid-feedback">
+                  <p class="ps-1 col-1 text-start pt-2 mb-0">@@gmail.com</p>
+                </div>
+                <div class="mb-3 row ms-5">
+                  <label for="fullname_detail" class="col-form-label col-3 pe-0">Fullname</label>
+                  <div class="col-9 w-50 ps-0">
+                    <div class="w-100">
+                      <input id="fullname_detail" type="text" class="form-control" required autocomplete="nope"/>
+                      <div class="invalid-feedback">
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div class="mb-3 row">
-                  <label for="fullname_detail" class="col-form-label col-3">Fullname</label>
-                  <div class="col-9 w-50">
-                    <input id="fullname_detail" type="text" class="form-control" maxlength="50" required/>
-                  </div>
-                  <div class="invalid-feedback">
-                  </div>
-                </div>
-                <div class="mb-3 row">
-                  <label for="dob" class="form-label col-3">Date of birth</label>
-                  <div class="col-9">
-                    <input id="dob" type="date" class="form-control w-50" min="1900-01-01" max="2010-12-31" required/>
-                  </div>
-                  <div class="invalid-feedback">
+                <div class="mb-3 row ms-5">
+                  <label for="dob" class="form-label col-3 pe-0">Date of birth</label>
+                  <div class="col-9 ps-0">
+                    <div class="w-100">
+                      <input id="dob" type="date" class="form-control w-50" min="1900-01-01" max="2021-12-31" required/>
+                      <div class="invalid-feedback">
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div class="mb-3 row">
-                  <label for="role" class="col-3 form-label">Role</label>
-                  <div class="col-9">
-                    <select id="role" class="form-select w-55" aria-label="Default select example" required>
+                <div class="mb-3 row ms-5">
+                  <label for="role" class="col-3 form-label pe-0">Role</label>
+                  <div class="col-9 ps-0">
+                    <select id="role" class="form-select w-55 =" aria-label="Default select example" required>
                       <option value="User Manager" selected>User Manager</option>
                       <option value="Media Manager">Media Manager</option>
                       <option value="Media Editor">Media Editor</option>
@@ -157,7 +163,7 @@
                   </div>
                 </div>
                 <div class="mb-3 row">
-                  <p class="btn btn-danger col-4 mx-auto">Create staff</p>
+                  <p class="btn btn-danger col-4 offset-4" onclick="return requestCreateApi()">Create staff</p>
                 </div>
               </div>
           </div>

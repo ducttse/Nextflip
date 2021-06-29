@@ -720,7 +720,7 @@ namespace Nextflip.Models.account
                 {
                     connection.Open();
                     string Sql = "Update account " +
-                                "Set fullname = @fullname, roleName = @roleName, dateOfBirth = @dateOfBirth, pictureURL = @pictureURL " +
+                                "Set fullname = @fullname, roleName = @roleName, dateOfBirth = @dateOfBirth " +
                                 "Where userID = @userID";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
@@ -728,7 +728,6 @@ namespace Nextflip.Models.account
                         command.Parameters.AddWithValue("@fullname", account.fullname);
                         command.Parameters.AddWithValue("@roleName", account.roleName.ToLower());
                         command.Parameters.AddWithValue("@dateOfBirth", account.dateOfBirth);
-                        command.Parameters.AddWithValue("@pictureURL", account.pictureURL);
                         int rowAffect = command.ExecuteNonQuery();
                         if (rowAffect > 0) isUpdate = true;
                     }

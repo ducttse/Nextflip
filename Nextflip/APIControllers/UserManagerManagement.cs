@@ -389,13 +389,19 @@ namespace Nextflip.APIControllers
         public IActionResult UpdateExpiredDate([FromServices] IUserManagerManagementService userManagerManagementService,
                                                     [FromBody] Subsciption subscript)
         {
-            NotificationObject noti = new NotificationObject { message = "Fail" };
+            NotificationObject noti = new NotificationObject ();
             try
             {
+                bool isValid = true;
                 subscript.StartDate = DateTime.Now;
-                if (subscript.StartDate.CompareTo(subscript.EndDate) > 0) noti.dateTimeErr = "Date is invalid";
+                if (subscript.EndDate == null || subscript.StartDate.CompareTo(subscript.EndDate) > 0)
+                {
+                    noti.dateTimeErr = "Date is invalid";
+                    isValid = false;
+                }
                 bool result = userManagerManagementService.UpdateExpiredDate(subscript);
-                if (result) noti.message = "success";
+                if (isValid && result == true) noti.message = "Success";
+                else noti.message = "Fail";
             }
             catch (Exception ex)
             {
@@ -409,7 +415,7 @@ namespace Nextflip.APIControllers
         public IActionResult EditStaffInfo([FromServices] IUserManagerManagementService userManagerManagementService,
                                             [FromBody] Account staffInfo)
         {
-            NotificationObject noti = new NotificationObject { message = "Fail" };
+            NotificationObject noti = new NotificationObject ();
             try
             {
                 bool isValid = true;

@@ -726,7 +726,7 @@ namespace Nextflip.Models.account
                     {
                         command.Parameters.AddWithValue("@userID", account.userID);
                         command.Parameters.AddWithValue("@fullname", account.fullname);
-                        command.Parameters.AddWithValue("@roleName", account.roleName);
+                        command.Parameters.AddWithValue("@roleName", account.roleName.ToLower());
                         command.Parameters.AddWithValue("@dateOfBirth", account.dateOfBirth);
                         command.Parameters.AddWithValue("@pictureURL", account.pictureURL);
                         int rowAffect = command.ExecuteNonQuery();
@@ -842,7 +842,7 @@ namespace Nextflip.Models.account
         public string RegisterAnAccount(string userEmail, string googleID, string googleEmail, string password, string fullname, string dateOfBirth)
         {
             DateTime dob = Convert.ToDateTime(dateOfBirth);
-            string roleName = "Subscribed User";
+            string roleName = "subscribed user";
             string status = "Active";
             try
             {

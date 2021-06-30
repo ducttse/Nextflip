@@ -19,7 +19,7 @@ namespace Nextflip.Services.Interfaces
         Media GetMediaByID(string mediaID);
         IEnumerable<Media> GetFavoriteMediasByUserID(string userID);
         IEnumerable<Media> GetMediasByTitle(string title);
-        IEnumerable<Media> GetMediasByCategoryID(int categoryID, int limit = 20);
+        IEnumerable<Media> GetMediasByCategoryID(int categoryID, int limit );
         //season
         IEnumerable<Season> GetSeasonsByMediaID(string mediaID);
         Season GetSeasonByID(string seasonID);

@@ -91,11 +91,9 @@ namespace Nextflip.APIControllers
             }
         }
 
-        [Route("GetMediasByCategoryID/{categoryID}/{limit}")]
-        public IActionResult GetMediasByCategoryID([FromServices] ISubscribedUserService subscribedUserService, int categoryID, string _limit)
+        [Route("GetMediasByCategoryID/{categoryID}/{limit=10}")]
+        public IActionResult GetMediasByCategoryID([FromServices] ISubscribedUserService subscribedUserService, int categoryID, int limit)
         {
-            int limit;
-            bool a = int.TryParse(_limit, out limit);
             try
             {
                 IEnumerable<Media> medias = subscribedUserService.GetMediasByCategoryID(categoryID,limit);

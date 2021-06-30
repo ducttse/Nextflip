@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Nextflip.Models.media;
 using Nextflip.Models.mediaEditRequest;
 using Nextflip.Services.Interfaces;
 using System;
@@ -298,6 +299,30 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("SearchingMediaRequest: " + ex.Message);
+                return new JsonResult(new
+                {
+                    message = ex.Message
+                });
+            }
+        }
+
+        //Get Media By ID
+        [Route("GetMediaByID")]
+        public JsonResult GetMediaByID([FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromBody] Request request)
+        {
+            try
+            {
+                Media media = mediaManagerManagementService.GetMediaByID(request.MediaID);
+                var result = new
+                {
+                    Message = "success",
+                    Data = media
+                };
+                return (new JsonResult(result));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetMediaByID: " + ex.Message);
                 return new JsonResult(new
                 {
                     message = ex.Message

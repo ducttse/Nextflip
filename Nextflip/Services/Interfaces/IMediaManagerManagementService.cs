@@ -1,4 +1,5 @@
-﻿using Nextflip.Models.mediaEditRequest;
+﻿using Nextflip.Models.media;
+using Nextflip.Models.mediaEditRequest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,5 +32,6 @@ namespace Nextflip.Services.Interfaces
         int NumberOfMediaRequest(string status, string type);
         IEnumerable<MediaEditRequest> SearchingMediaRequest(string searchValue, string status, string type, int RowsOnPage, int RequestPage);
         int NumberOfMediaRequestSearching(string searchValue, string status, string type);
+        Media GetMediaByID(string mediaID);
     }
 }

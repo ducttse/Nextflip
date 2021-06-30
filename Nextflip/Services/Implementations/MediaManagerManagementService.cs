@@ -51,5 +51,6 @@ namespace Nextflip.Services.Implementations
             => _mediaEditRequestDao.SearchingMediaRequest(searchValue, status, type, RowsOnPage, RequestPage);
         public int NumberOfMediaRequestSearching(string searchValue, string status, string type)
             => _mediaEditRequestDao.NumberOfMediaRequestSearching(searchValue, status, type);
+        public Media GetMediaByID(string mediaID) => _mediaDao.GetMediaByID(mediaID);
     }
 }

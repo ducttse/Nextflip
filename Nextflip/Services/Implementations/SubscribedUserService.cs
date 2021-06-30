@@ -69,11 +69,11 @@ namespace Nextflip.Services.Implementations
             return favoriteMedias;
         }
    //     public IEnumerable<Media> GetMediasByTitle(string title) => _mediaDAO.GetMediasByTitle(title);
-        public IEnumerable<Media> GetMediasByCategoryID(int categoryID)
+        public IEnumerable<Media> GetMediasByCategoryID(int categoryID, int limit )
         {
             var medias = new List<Media>();
             IList<string> mediaIDs = _mediaCategoryDAO.GetMediaIDs(categoryID);
-            for(int i = 0; i<=20; i++)
+            for(int i = 0; i< limit; i++)
             {
                 string mediaID = mediaIDs[i];
                 Media media = _mediaDAO.GetMediaByID(mediaID);

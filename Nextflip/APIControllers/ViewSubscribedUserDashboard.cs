@@ -91,12 +91,12 @@ namespace Nextflip.APIControllers
             }
         }
 
-        [Route("GetMediasByCategoryID/{categoryID}")]
-        public IActionResult GetMediasByCategoryID([FromServices] ISubscribedUserService subscribedUserService, int categoryID)
+        [Route("GetMediasByCategoryID/{categoryID}/{limit=10}")]
+        public IActionResult GetMediasByCategoryID([FromServices] ISubscribedUserService subscribedUserService, int categoryID, int limit)
         {
             try
             {
-                IEnumerable<Media> medias = subscribedUserService.GetMediasByCategoryID(categoryID);
+                IEnumerable<Media> medias = subscribedUserService.GetMediasByCategoryID(categoryID,limit);
                 return new JsonResult(medias);
             }
             catch (Exception ex)

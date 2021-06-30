@@ -16,6 +16,7 @@ function requestApi() {
     };
     return fetch("/api/UserManagerManagement/CreateStaff", initObject);
 }
+let postFix = "@gmail.com";
 
 function resetRequestParam() {
     newUserInfo = {
@@ -30,7 +31,7 @@ function resetRequestParam() {
     document.getElementById("fullname_detail").parentNode.classList.remove("was-validated");
     document.getElementById("dob").value = "";
     document.getElementById("dob").parentNode.classList.remove("was-validated");
-    document.getElementById("role").value = "";
+    document.getElementById("role").value = "User Manager";
     isReset = true;
 }
 
@@ -42,6 +43,7 @@ function showAddStaffModal() {
             keyboard: false
         })
     }
+    resetRequestParam();
     AddStaffModal.show();
 }
 
@@ -100,7 +102,7 @@ function debounce(func, timeout = 300) {
 }
 
 function setNewInfo() {
-    newUserInfo.UserEmail = document.getElementById("email_detail").value;
+    newUserInfo.UserEmail = document.getElementById("email_detail").value + postFix;
     newUserInfo.Fullname = document.getElementById("fullname_detail").value;
     newUserInfo.dateOfBirth = document.getElementById("dob").value;
     newUserInfo.RoleName = document.getElementById("role").value;
@@ -120,7 +122,7 @@ function requestCreateApi() {
         .then(res => res.json())
         .then(json => {
             isReset = false;
-            if (json.message == "fail") {
+            if (json.message == "Fail") {
                 if (json.nameErr != null) {
                     validateFullName(json.nameErr);
                 }
@@ -131,7 +133,7 @@ function requestCreateApi() {
                     validateEmail(json.emailErr);
                 }
             }
-            else if (json.message == "success") {
+            else if (json.message == "Success") {
                 resetRequestParam();
                 hideAddStaffModalOnSuccess();
             }
@@ -157,9 +159,9 @@ function validateDOB(message) {
     let InputEl = document.getElementById("dob");
     let parent = InputEl.parentNode;
     let feedback = parent.querySelector(".invalid-feedback");
-    if (message == "Date of birth must not be empty") {
+    if (message == "Date of birth is Invalid") {
         feedback.innerHTML = message;
-        InputEl.setCustomValidity("empty");
+        InputEl.setCustomValidity("Invalid");
     }
     else {
         feedback.innerHTML = "";
@@ -170,14 +172,14 @@ function validateDOB(message) {
 
 function validateEmail(message) {
     let emailInputEl = document.getElementById("email_detail");
-    let parent = InputEl.parentNode;
+    let parent = emailInputEl.parentNode;
     let feedback = parent.querySelector(".invalid-feedback");
     if (message == "Email is existed") {
-        feedback.innerHTML = json.message;
+        feedback.innerHTML = message;
         emailInputEl.setCustomValidity("existed");
     }
     else if (message == "Email is invalid format") {
-        feedback.innerHTML = json.message;
+        feedback.innerHTML = message;
         emailInputEl.setCustomValidity("invalid");
     }
     else if (message == "") {

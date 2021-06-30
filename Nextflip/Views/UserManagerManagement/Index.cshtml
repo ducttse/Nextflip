@@ -12,11 +12,11 @@
             <div class="d-flex col-3">
               <label class="form-label mt-2 text-light">Role</label>
                 <select id="role_filter" class="ms-2 form-select h-85 w-75" onchange="setSelectedRole(this)">
-                    <option value="User Manager">User Manager</option>
-                    <option value="Media Editor">Media Editor</option>
-                    <option value="Media Manager">Media Manager</option>
-                    <option value="Customer Supporter">Customer Supporter</option>
-                    <option value="Subscribed User">Subscribed User</option>
+                    <option value="user manager">User Manager</option>
+                    <option value="media editor">Media Editor</option>
+                    <option value="media manager">Media Manager</option>
+                    <option value="customer supporter">Customer Supporter</option>
+                    <option value="subscribed user">Subscribed User</option>
                 </select> 
             </div>
             <div class="col-2 d-flex">
@@ -121,7 +121,7 @@
               <p class="fs-1 text-center">Add new staff</p>
               <div class="col-8 offset-2">
                 <div class="mb-3 row ms-5">
-                  <label for="email_detail" class="col-form-label col-3 pe-0">Email</label>
+                  <label id="email_detail_label" for="email_detail" class="col-form-label col-3 pe-0">Email</label>
                   <div class="col-8 w-45 d-inline-flex ps-0 pe-0">
                     <div class="w-100">
                       <input id="email_detail" type="text" class="form-control" oninput="checkEmail()" required autocomplete="nope"/>
@@ -132,7 +132,7 @@
                   <p class="ps-1 col-1 text-start pt-2 mb-0">@@gmail.com</p>
                 </div>
                 <div class="mb-3 row ms-5">
-                  <label for="fullname_detail" class="col-form-label col-3 pe-0">Fullname</label>
+                  <label id="fullname_detail_label" for="fullname_detail" class="col-form-label col-3 pe-0">Fullname</label>
                   <div class="col-9 w-50 ps-0">
                     <div class="w-100">
                       <input id="fullname_detail" type="text" class="form-control" required autocomplete="nope"/>
@@ -142,17 +142,17 @@
                   </div>
                 </div>
                 <div class="mb-3 row ms-5">
-                  <label for="dob" class="form-label col-3 pe-0">Date of birth</label>
+                  <label id="dob_detail" for="dob" class="col-form-label col-3 pe-0">Date of birth</label>
                   <div class="col-9 ps-0">
                     <div class="w-100">
-                      <input id="dob" type="date" class="form-control w-50" min="1900-01-01" max="2021-12-31" required/>
+                      <input id="dob" type="date" class="form-control w-55" min="1900-01-01" max="2021-12-31" required/>
                       <div class="invalid-feedback">
                       </div>
                     </div>
                   </div>
                 </div>
                 <div class="mb-3 row ms-5">
-                  <label for="role" class="col-3 form-label pe-0">Role</label>
+                  <label id="role_detail" for="role" class="col-3 col-form-label pe-0">Role</label>
                   <div class="col-9 ps-0">
                     <select id="role" class="form-select w-55 =" aria-label="Default select example" required>
                       <option value="User Manager" selected>User Manager</option>
@@ -170,12 +170,67 @@
         </div>
       </div>
     </div>
+    <!-- Edit Staff Modal -->
+    <div class="modal fade" id="edit_user_modal" tabindex="-1">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body">
+              <p class="fs-1 text-center">Edit staff</p>
+              <div class="col-8 offset-2">
+                <div class="mb-3 row ms-5">
+                  <label for="email_edit_label" class="col-form-label col-3 pe-0">Email</label>
+                  <div class="col-8 w-45 d-inline-flex ps-0 pe-0">
+                    <div>
+                      <p class="py-2 pe-0 mb-0" id="email_edit_text"></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3 row ms-5">
+                  <label for="fullname_edit_label" class="col-form-label col-3 pe-0">Fullname</label>
+                  <div class="col-9 w-50 ps-0">
+                    <div class="w-100">
+                      <input id="fullname_edit_input" type="text" class="form-control" required autocomplete="nope"/>
+                      <div class="invalid-feedback">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3 row ms-5">
+                  <label id="role_edit_label"for="role" class="col-3 col-form-label pe-0">Role</label>
+                  <div class="col-9 ps-0">
+                    <select id="role_edit_input" class="form-select w-55 =" aria-label="Default select example" required>
+                      <option value="user manager">User Manager</option>
+                      <option value="media editor">Media Editor</option>
+                      <option value="media manager">Media Manager</option>
+                      <option value="customer supporter">Customer Supporter</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="mb-3 row ms-5">
+                  <label id="dob_edit_label" for="dob" class="col-form-label col-3 pe-0">Date of birth</label>
+                  <div class="col-9 ps-0">
+                    <div class="w-100">
+                      <input id="dob_detail_edit" type="date" class="form-control w-55" min="1900-01-01" max="2021-12-31" required/>
+                      <div class="invalid-feedback">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <p class="btn btn-danger col-4 offset-4" onclick="requestEdit()">Save</p>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
 <script src="~/js/Pagination.js"></script>
 <script src="~/js/Slide-Bar.js"></script>
 <script src="~/js/Search-Component.js"></script>
 <script src="~/js/User-Manager-Dashboard.js"></script>
 <script src="~/js/User-Status-Manager.js"></script>
 <script src="~/js/Add-Staff.js"></script>
+<script src="~/js/UM-Edit-User-Profile.js"></script>
 <script>
         requestUserData();
         setEvent();

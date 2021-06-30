@@ -492,7 +492,7 @@ namespace Nextflip.APIControllers
             public string userEmail { get; set; }
             public string googleEmail { get; set; }
             public string roleName { get; set; }
-            public string fullName { get; set; }
+            public string fullname { get; set; }
             public DateTime dateOfBirth { get; set; }
             public Subscription expiration { get; set; }
         }
@@ -512,7 +512,7 @@ namespace Nextflip.APIControllers
                     userEmail = account.userEmail,
                     googleEmail = account.googleEmail,
                     roleName = account.roleName,
-                    fullName = account.fullname,
+                    fullname = account.fullname,
                     expiration = subscription
                 };
             }

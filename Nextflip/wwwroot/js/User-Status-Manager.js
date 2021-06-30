@@ -46,6 +46,9 @@ function setEvent() {
         else if (isFiltered) {
             requestWithFilter();
         }
+        else {
+            requestUserData();
+        }
     })
     document.getElementById("modalForm").addEventListener("hide.bs.modal", () => {
         if (isRequest) {

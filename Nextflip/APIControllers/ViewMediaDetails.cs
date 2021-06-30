@@ -51,7 +51,7 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetMediaDetails: " + ex.Message);
-                return new JsonResult("error occur");
+                return new JsonResult("error occur" + ex.Message);
             }
 
         }

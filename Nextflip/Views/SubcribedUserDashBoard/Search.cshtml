@@ -18,23 +18,38 @@
 <div class="modal fade" id="modalDetail" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
-            <div class="modal-body" style="background-color: #000;">
-                <button
-                type="button"
-                class="btn-close btn-close-white "
-                data-bs-dismiss="modal"
-                aria-label="Close"
-                ></button>
-                <div id="wrapper">
-                    <div class="w-100 h-100" id="imageHolder">    
+            <div class="modal-body" style="background-color: #000">
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+                <div class="wrapper row col-12 mx-auto text-light">
+                <div class="row bg-dark">
+                    <div id="img_holder" class="col-6">
                     </div>
-                    <div id="content_holder" class="w-50 h-100">
-                        <div class="up row mx-auto" id="infor_hodler">
-                        </div>
-                        <div class="above" id="details_holder">
+                    <div class="col-6">
+                        <p class="h3 lh-1 text-warning" id="detail_title"></p>
+                        <div class="overflow-auto" id="detail_table">
                         </div>
                     </div>
-                </div> 
+                </div>
+                <div class="row bg-dark py-2">
+                    <button class="ms-3 btn btn-danger col-1">Play</button>
+                    <button class="ms-2 btn btn-secondary col-2">Add to favourite</button>
+                </div>
+                <div class="row mt-3 bg-dark" style="background-color: #3b3f42">
+                    <div class="d-flex flex-row mb-3">
+                        <div id="description" class="options me-4 p-1 chosen" onclick="chooseOptions('description', this)">
+                            <p class="p-2 h4 text-warning">
+                            Description
+                            </p>
+                        </div>
+                        <div id="season" class="options me-4 p-1" onclick="chooseOptions('season', this)">
+                            <p class="p-2 h4 text-warning">
+                                Season
+                            </p>
+                        </div>
+                    </div>
+                    <div id="option_detail"></div>
+                </div>
             </div>
         </div>
     </div>

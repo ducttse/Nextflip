@@ -1,36 +1,13 @@
 let Data;
-let requestParam;
+let requestParam = {
+  RowsOnPage: 12,
+  RequestPage: 1,
+  RoleName: "User Manager",
+  SearchValue: "",
+  Status: ""
+};
 let isSearched = false;
 let isFiltered = false;
-
-function loadStorageData() {
-  if (sessionStorage.getItem("requestParam") === null) {
-    console.log("true")
-    requestParam = {
-      RowsOnPage: 12,
-      RequestPage: 1,
-      RoleName: "User Manager",
-      SearchValue: "",
-      Status: ""
-    };
-  }
-  else {
-    requestParam = JSON.parse(sessionStorage.getItem("requestParam"));
-  }
-  if (sessionStorage.getItem("isSearched") === null) {
-    isSearched = false;
-  }
-  else {
-    isSearched = (sessionStorage.getItem("isSearched") === 'true');
-  }
-  if (sessionStorage.getItem("isFiltered") === null) {
-    isFiltered = false;
-  }
-  else {
-    isFiltered = (sessionStorage.getItem("isFiltered") === 'true');
-  }
-}
-loadStorageData();
 
 function resetSearch() {
   document.getElementById("search").value = "";
@@ -107,9 +84,10 @@ function renderUser(user, index) {
         </td>
         <td>
             <a class="text-decoration-none" 
-            onclick="return storeToStorage();"
-            href="/Edit/${user.userID}">
-            Edit
+              userID = "${user.userID}"
+              onclick="GetUserProfile(this)"
+              href="#">
+              Edit
             </a>
         </td>
     </tr>`;
@@ -141,6 +119,8 @@ function appendUserToWrapper() {
 
 function setRowsPerPage(obj) {
   requestParam.RowsOnPage = obj.value;
+  requestParam.RequestPage = 1;
+  setPageDataCurrentPage(1);
   setRequestPage(requestParam.RequestPage)
     .then(res => res.json())
     .then(json => {
@@ -301,9 +281,3 @@ function searchAndResetPage(searchValue) {
 }
 
 setAppendToDataWrapper(appendUserToWrapper);
-
-function storeToStorage() {
-  sessionStorage.setItem("requestParam", JSON.stringify(requestParam));
-  sessionStorage.setItem("isFiltered", isFiltered.toString());
-  sessionStorage.setItem("isSearched", isSearched.toString());
-}

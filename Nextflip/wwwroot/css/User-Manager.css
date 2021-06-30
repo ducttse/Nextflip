@@ -57,7 +57,10 @@ input:checked[type="checkbox"]:before {
   display: none !important;
 }
 
-.mb-3.row label::after {
+#email_detail_label::after,
+#fullname_detail_label::after,
+#dob_detail::after,
+#role_detail::after {
   position: relative;
   content: "*";
   color: red;

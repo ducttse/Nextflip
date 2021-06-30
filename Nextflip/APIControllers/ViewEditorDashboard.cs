@@ -203,7 +203,7 @@ namespace Nextflip.APIControllers
                     message = "fail"
                 };
                 bool requestDisableMedia = editorService.RequestDisableMedia(request.MediaID);
-                bool addMediaRequest = editorService.AddMediaRequest(request.UserEmail, request.MediaID, request.Note, request.LinkPreview);
+                bool addMediaRequest = editorService.AddMediaRequest(request.UserEmail, request.MediaID, request.Note, request.LinkPreview, "", request.MediaID);
                 if (!requestDisableMedia || !addMediaRequest) return new JsonResult(messageFail);
                 var message = new
                 {
@@ -298,6 +298,36 @@ namespace Nextflip.APIControllers
             {
                 _logger.LogInformation("GetMediasByTitle: " + ex.Message);
                 return new JsonResult("Error occur");
+            }
+        }
+
+        [HttpPost]
+        [Route("RequestChangeMediaStatus")]
+        public IActionResult RequestChangeMediaStatus([FromServices] IEditorService editorService, [FromForm] Request request)
+        {
+            try
+            {
+                var messageFail = new
+                {
+                    message = "fail"
+                };
+                bool requestChangeMediaStatus = editorService.RequestChangeMediaStatus(request.MediaID, request.Status);
+                bool addMediaRequest = editorService.AddMediaRequest(request.UserEmail, request.MediaID, request.Note, request.LinkPreview, "media", request.MediaID);
+                if (!requestChangeMediaStatus || !addMediaRequest) return new JsonResult(messageFail);
+                var message = new
+                {
+                    message = "success"
+                };
+                return (new JsonResult(message));
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("RequestDisabledMedia: " + e.Message);
+                var result = new
+                {
+                    message = e.Message
+                };
+                return new JsonResult(result);
             }
         }
 

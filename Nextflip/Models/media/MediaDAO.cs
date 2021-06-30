@@ -13,16 +13,18 @@ namespace Nextflip.Models.media
         {
             try
             {
+                string status = "Enabled";
                 var medias = new List<Media>();
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
                     string Sql = "Select mediaID,status, title, bannerURL, language, description " +
                                 "From media " +
-                                "Where status = Active And MATCH (title)  AGAINST (@searchValue in boolean mode) ";
+                                "Where status = @status And MATCH (title)  AGAINST (@searchValue in boolean mode) ";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@searchValue", $"{searchValue}*");
+                        command.Parameters.AddWithValue("@status", status);
                         using (var reader = command.ExecuteReader())
                         {
                             while (reader.Read())

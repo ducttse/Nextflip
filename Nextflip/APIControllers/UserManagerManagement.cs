@@ -387,23 +387,6 @@ namespace Nextflip.APIControllers
             return new JsonResult(noti);
         }
 
-        [Route("GetSubscriptionByUserID")]
-        [HttpPost]
-        public IActionResult GetSubscriptionByUserID([FromServices] IUserManagerManagementService userManagerManagementService,
-                                            [FromBody] Account user)
-        {
-           
-            try
-            {
-                Subscription subsciption = userManagerManagementService.GetSubsciptionByUserID(user.userID);
-                return new JsonResult(subsciption);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogInformation("GetSubscriptionByUserID: " + ex.Message);
-                return new JsonResult("error occur");
-            }
-        }
         public partial class JsonSubscription
         {
             public string userID { get; set; }
@@ -502,21 +485,42 @@ namespace Nextflip.APIControllers
             }
             return new JsonResult(isSubscribedUser);
         }
+
+        public partial class ProfileForEditing
+        {
+            public string userID { get; set; }
+            public string userEmail { get; set; }
+            public string googleEmail { get; set; }
+            public string roleName { get; set; }
+            public string fullName { get; set; }
+            public DateTime dateOfBirth { get; set; }
+            public Subscription expiration { get; set; }
+        }
         [Route("GetUserProfile")]
         [HttpPost]
         public IActionResult GetUserProfile([FromServices] IUserManagerManagementService userManagerManagementService,
                                     [FromBody] Account _account)
         {
-            Account account = null;
+            ProfileForEditing profile = null;
             try
             {
-                    account = userManagerManagementService.GetAccountByID(_account.userID);
+                Account account = userManagerManagementService.GetAccountByID(_account.userID);
+                Subscription subscription = userManagerManagementService.GetSubsciptionByUserID(_account.userID);
+                profile = new ProfileForEditing
+                {
+                    userID = account.userID,
+                    userEmail = account.userEmail,
+                    googleEmail = account.googleEmail,
+                    roleName = account.roleName,
+                    fullName = account.fullname,
+                    expiration = subscription
+                };
             }
             catch (Exception ex)
             {
                 _logger.LogInformation("GetProfile: " + ex.Message);
             }
-            return new JsonResult(account);
+            return new JsonResult(profile);
         }
         /*        [Route("GetAllActiveAccounts")]
                 public JsonResult GetAllActiveAccounts([FromServices] IUserManagerManagementService userManagerManagementService)

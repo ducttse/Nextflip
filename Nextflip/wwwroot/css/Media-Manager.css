@@ -1,5 +1,60 @@
 ﻿.ui_wrapper {
-	font-size: 16px;
 	padding-left: 0px !important;
 	padding-right: 0px !important;
-}
+  }
+  .w-95 {
+	width: 95% !important;
+  }
+  .w-90 {
+	width: 90% !important;
+  }
+  .w-85 {
+	width: 85% !important;
+  }
+  .h-85{
+	height: 85% !important;
+  }
+  .hide {
+	display: none;
+  }
+.status_btn{
+	cursor: pointer;
+  }
+  .status_btn .me-4{
+	position: relative;
+	color: #435560;
+	border-bottom: 0px solid #000;
+  }
+  .status_btn .me-4.me-4.chosen{
+	color: #000;
+  }
+  .status_btn .me-4.chosen::after{
+	content: "";
+	position: absolute;
+	background-color: #212529;
+	height: 2px;
+	width: 100%;
+	left: 0;
+	bottom: -3px;
+	transition: 0.3s;
+  }
+  .status_btn .me-4::after{
+	content: "";
+	position: absolute;
+	background-color: #212529;
+	height: 2px;
+	width: 0%;
+	left: 0;
+	bottom: -3px;
+	transition: 0.3s;
+  }
+  .status_btn .me-4:hover{
+	color: black;
+  }
+  
+  .status_btn .me-4:hover::after{
+	width: 100%;
+  }
+  .ticket_status{
+	  font-size: 14px;
+  }

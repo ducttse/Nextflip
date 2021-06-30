@@ -66,13 +66,15 @@ function renderCurrentArray() {
   Pages = Pages.join("");
   return `
     <nav>
-      <ul class="pagination">
+      <ul class="pagination my-auto">
         ${Pages}
       </ul>
     </nav>`;
 }
 
 function appendCurrentArray() {
+  let noti = `Page ${pageData.currentPage} in ${pageData.totalPage} ${pageData.totalPage == 1 ? "page" : "pages"}`;
+  let notiEl = document.getElementById("page_notification");
   let pagination = document.getElementById("pagination");
   if (pagination === null) {
     return;
@@ -81,6 +83,10 @@ function appendCurrentArray() {
     pagination.innerHTML = ""
   }
   pagination.insertAdjacentHTML("afterbegin", renderCurrentArray());
+  if (notiEl.innerHTML != "") {
+    notiEl.innerHTML = "";
+  }
+  notiEl.insertAdjacentHTML("afterbegin", noti);
   setCurrentColor();
 }
 

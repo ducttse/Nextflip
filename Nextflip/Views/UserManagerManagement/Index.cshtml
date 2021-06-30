@@ -1,17 +1,28 @@
 @{
+    ViewBag.Title = "User Manager";
     Layout = "_CustomLayout";
 }
 @section Styles {
     <link href="@Url.Content("~/css/User-Manager.css")" rel="stylesheet" type="text/css" />
      <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
 }
-<div class="ui_wrapper col-10">
-    <div class="w-100"> 
-        <div class="btn-group w-100 px-3 pt-3 pb-2 bg-primary">
-            <div id="search_wrapper" class="col-10"></div>
-            <div class="col-2 d-inline-flex mb-2">
-                <label class="form-label mt-2 text-light">Filter</label>
-                <select id="filter" class="ms-2 form-select">
+<div class="ui_wrapper col-10" style="background-color: #DDDDDD">
+    <div class="table_container p-2 w-100 mx-auto rounded" style="background-color: #ffffff"> 
+        <div class="btn-group w-100 px-3 pt-3 pb-2 bg-primary border rounded-top">
+            <div id="search_wrapper" class="col-7"></div>
+            <div class="d-flex col-3">
+              <label class="form-label mt-2 text-light">Role</label>
+                <select id="role_filter" class="ms-2 form-select h-85 w-75" onchange="setSelectedRole(this)">
+                    <option value="user manager">User Manager</option>
+                    <option value="media editor">Media Editor</option>
+                    <option value="media manager">Media Manager</option>
+                    <option value="customer supporter">Customer Supporter</option>
+                    <option value="subscribed user">Subscribed User</option>
+                </select> 
+            </div>
+            <div class="col-2 d-flex">
+                <label class="form-label mt-2 text-light">Status</label>
+                <select id="status_filter" class="ms-2 form-select h-85" onchange="setSelectedStatus(this)">
                     <option selected>All</option>
                     <option value="Active">Active</option>
                     <option value="Inactive">Inactive</option>
@@ -20,20 +31,33 @@
         </div>
         <div id="notFound" class="hide"> 
         </div>
-        <div id="table_holder" style="min-height:80vh;">
-            <table class="table table-bordered table-responsive table-hover w-100">
+        <div id="table_holder" class="border rounded-bottom pb-0 mb-2">
+            <table class="table table-striped table-responsive mb-0 table-hover w-100 shadow">
                 <thead class="table-secondary">
                     <tr>
                         <th class="col">#</th>
                         <th class="col">Email</th>        
-                        <th class="col">Role</th>
                         <th class="col">Full name</th>
-                        <th class="col">Active</th>
-                        <th class="col"></th>
+                        <th class="col">Status</th>
+                        <th class="col">Edit</th>
                     </tr>
                 </thead>
                 <tbody id="dataWapper"></tbody>
             </table>
+            <div class="d-flex align-items-center" style="background-color: #DDDDDD">
+                <p class="col-2 my-auto form-text text-center" id="page_notification"></p>
+                <p  class="col-1 me-2 my-auto form-text text-end">Rows per page</p>
+                <div class="col-1">
+                    <select class="form-select form-select-sm w-75" onchange="setRowsPerPage(this)">
+                        <option value="12" selected>12</option>
+                        <option value="14">14</option>
+                        <option value="16">16</option>
+                        <option value="18">18</option>
+                    </select>
+                </div>
+                <div id="pagination" class="col-8 d-flex justify-content-end pe-5">
+                </div>
+            <div>
         </div>
         <div id="pagination" class="d-flex justify-content-center"></div>
     </div>
@@ -50,7 +74,7 @@
             <input type="hidden" id="Form_UserID"/>
               <div class="mb-3">
                 <label for="message-text" class="col-form-label">Leave reason for this activity</label>
-                <textarea name="note" style="height: 350px" class="form-control" id="note" ></textarea>
+                <textarea name="note" style="height: 250px" class="form-control" id="note" ></textarea>
               </div>
             </div>
             <div class="modal-footer">
@@ -90,20 +114,137 @@
         </div>
       </div>
     </div>
-    <!-- Modal -->
+    <!-- Add Staff Modal -->
+    <div class="modal fade" id="add_staff_modal" tabindex="-1">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body">
+              <p class="fs-1 text-center">Add new staff</p>
+              <div class="col-8 offset-2">
+                <div class="mb-3 row ms-5">
+                  <label id="email_detail_label" for="email_detail" class="col-form-label col-3 pe-0">Email</label>
+                  <div class="col-8 w-45 d-inline-flex ps-0 pe-0">
+                    <div class="w-100">
+                      <input id="email_detail" type="text" class="form-control" oninput="checkEmail()" required autocomplete="nope"/>
+                      <div class="invalid-feedback">
+                      </div>
+                    </div>
+                  </div>
+                  <p class="ps-1 col-1 text-start pt-2 mb-0">@@gmail.com</p>
+                </div>
+                <div class="mb-3 row ms-5">
+                  <label id="fullname_detail_label" for="fullname_detail" class="col-form-label col-3 pe-0">Fullname</label>
+                  <div class="col-9 w-50 ps-0">
+                    <div class="w-100">
+                      <input id="fullname_detail" type="text" class="form-control" required autocomplete="nope"/>
+                      <div class="invalid-feedback">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3 row ms-5">
+                  <label id="dob_detail" for="dob" class="col-form-label col-3 pe-0">Date of birth</label>
+                  <div class="col-9 ps-0">
+                    <div class="w-100">
+                      <input id="dob" type="date" class="form-control w-55" min="1900-01-01" max="2021-12-31" required/>
+                      <div class="invalid-feedback">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3 row ms-5">
+                  <label id="role_detail" for="role" class="col-3 col-form-label pe-0">Role</label>
+                  <div class="col-9 ps-0">
+                    <select id="role" class="form-select w-55 =" aria-label="Default select example" required>
+                      <option value="User Manager" selected>User Manager</option>
+                      <option value="Media Manager">Media Manager</option>
+                      <option value="Media Editor">Media Editor</option>
+                      <option value="Customer Supporter">Customer Supporter</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <p class="btn btn-danger col-4 offset-4" onclick="return requestCreateApi()">Create staff</p>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Edit Staff Modal -->
+    <div class="modal fade" id="edit_user_modal" tabindex="-1">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body">
+              <p class="fs-1 text-center">Edit staff</p>
+              <div class="col-8 offset-2">
+                <div class="mb-3 row ms-5">
+                  <label for="email_edit_label" class="col-form-label col-3 pe-0">Email</label>
+                  <div class="col-8 w-45 d-inline-flex ps-0 pe-0">
+                    <div>
+                      <p class="py-2 pe-0 mb-0" id="email_edit_text"></p>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3 row ms-5">
+                  <label for="fullname_edit_label" class="col-form-label col-3 pe-0">Fullname</label>
+                  <div class="col-9 w-50 ps-0">
+                    <div class="w-100">
+                      <input id="fullname_edit_input" type="text" class="form-control" required autocomplete="nope"/>
+                      <div class="invalid-feedback">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3 row ms-5">
+                  <label id="role_edit_label"for="role" class="col-3 col-form-label pe-0">Role</label>
+                  <div class="col-9 ps-0">
+                    <select id="role_edit_input" class="form-select w-55 =" aria-label="Default select example" required>
+                      <option value="user manager">User Manager</option>
+                      <option value="media editor">Media Editor</option>
+                      <option value="media manager">Media Manager</option>
+                      <option value="customer supporter">Customer Supporter</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="mb-3 row ms-5">
+                  <label id="dob_edit_label" for="dob" class="col-form-label col-3 pe-0">Date of birth</label>
+                  <div class="col-9 ps-0">
+                    <div class="w-100">
+                      <input id="dob_detail_edit" type="date" class="form-control w-55" min="1900-01-01" max="2021-12-31" required/>
+                      <div class="invalid-feedback">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3 row">
+                  <p class="btn btn-danger col-4 offset-4" onclick="requestEdit()">Save</p>
+                </div>
+              </div>
+          </div>
+        </div>
+      </div>
+    </div>
 <script src="~/js/Pagination.js"></script>
 <script src="~/js/Slide-Bar.js"></script>
 <script src="~/js/Search-Component.js"></script>
 <script src="~/js/User-Manager-Dashboard.js"></script>
 <script src="~/js/User-Status-Manager.js"></script>
+<script src="~/js/Add-Staff.js"></script>
+<script src="~/js/UM-Edit-User-Profile.js"></script>
 <script>
-    getRoles().then(() => { 
-        SetEvent();
+        requestUserData();
+        setEvent();
         appendSearch("Search account's email", "");
-        let button = `<a href="/UserManagerManagement/CreateStaff" class="side_bar_btn btn btn-lg btn-dark text-decoration-none link-light text-start w-100">
-                    Create new staff
+        setEnterEvent();
+        let button1 = `<a href="/UserManagerManagement/Index" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100">
+                        Manage user account
                   </a>`;
-        appendButton(button);
-    })
-    
+        let button2 = `<a href="#" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
+                        Create new staff
+                      </a>`;
+        appendButton(button1);    
+        appendButton(button2);
+        setRoleName("User Manager");
+        setName("Ngọc Bình")
 </script>

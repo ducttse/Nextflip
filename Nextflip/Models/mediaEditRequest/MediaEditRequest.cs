@@ -15,5 +15,6 @@ namespace Nextflip.Models.mediaEditRequest
         public string previewLink { get; set; }
         public string type { get; set; }
         public string ID { get; set; }
+        public string mediaTitle { get; set; }
     }
 }

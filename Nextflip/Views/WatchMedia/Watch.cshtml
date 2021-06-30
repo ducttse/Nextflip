@@ -1,11 +1,29 @@
 ﻿@{
     Layout = "_WatchMediaLayout";
 }
-<div id="name" class="fixed-top mt-2 ml-5" style="color: white"></div>
-<div id="wrapper"></div>
+<div class="col-8 mx-auto">
+    <div>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a class="text-decoration-none link-warning" href="/Home">Home</a></li>
+                <li class="breadcrumb-item"><a class="text-decoration-none link-warning" href="#">Thể Loại</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Data</li>
+            </ol>
+        </nav>
+    </div>
+    <div>
+        <p class="fs-4 text-warning mb-0" id="media_title">Moriarty</p>
+        <p class="fs-6 text-secondary" id="episode_title">Tập 1</p>
+    </div>
+    <div class="col-12" id="wrapper"></div>
+</div>
+<div>
+    <div class="btn btn-warning">
+        Media Detail
+    <div>
+</div>
 <script src="~/js/Watch-Media.js">
 </script>
-
 <script>
    Run('@ViewBag.MediaID', '@ViewBag.EpisodeID');
 </script>

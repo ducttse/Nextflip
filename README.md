@@ -1,3 +1,5 @@
+[![Build Status](https://dev.azure.com/ducprobmt123/Nextflip/_apis/build/status/ducttse.Nextflip?branchName=master)](https://dev.azure.com/ducprobmt123/Nextflip/_build/latest?definitionId=6&branchName=master)
+
 # Nextflip: Media Streaming Platform
 
 We like FAANG, so we created one. Nextflip is a media streaming platform intended as a school project of 5 students.

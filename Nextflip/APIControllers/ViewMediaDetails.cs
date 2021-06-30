@@ -53,21 +53,69 @@ namespace Nextflip.APIControllers
                 _logger.LogInformation("GetMediaDetails: " + ex.Message);
                 return new JsonResult("error occur" + ex.Message);
             }
-
+        }
+        [Route("GetEpisodesOfMedia/{mediaID}")]
+        public IActionResult GetEpisodesOfMedia([FromServices] ISubscribedUserService subscribedUserService, string mediaID)
+        {
+            try
+            {
+                IEnumerable<Season> seasons = subscribedUserService.GetSeasonsByMediaID(mediaID);
+                IEnumerable<Category> categories = subscribedUserService.GetCategoriesByMediaID(mediaID);
+                var episodesOfMedia = new List<Episode>();
+                if (seasons != null)
+                {
+                    foreach (var season in seasons)
+                    {
+                        IEnumerable<Episode> episodes = subscribedUserService.GetEpisodesBySeasonID(season.SeasonID);
+                        foreach( var episode in episodes)
+                        {
+                            episodesOfMedia.Add(episode);
+                        }
+                    }
+                }
+                return new JsonResult(episodesOfMedia);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetMediaDetails: " + ex.Message);
+                return new JsonResult("error occur" + ex.Message);
+            }
         }
 
+        public partial class EpisodeJson
+        {
+            public string MediaTitle { get; set; }
+            public IEnumerable<Category> Categories { get; set; }
+            public string EpisodeID { get; set; }
+            public string Title { get; set; }
+            public string ThumbnailURL { get; set; }
+            public string SeasonID { get; set; }
+            public string Status { get; set; }
+            public int Number { get; set; }
+            public string EpisodeURL { get; set; }
+        }
         [Route("GetEpisode/{mediaID}/{episodeID}")]
         public IActionResult GetEpisodeByID([FromServices] ISubscribedUserService subscribedUserService, string mediaID, string episodeID)
         {
             try
             {
                 Episode episode = subscribedUserService.GetEpisodeByID(episodeID);
-                var episodeHasMediaID = new
-                    {
-                        Episode = episode,
-                        MediaID = mediaID                    
-                    };
-                return new JsonResult(episodeHasMediaID);
+                IEnumerable<Category> categories = subscribedUserService.GetCategoriesByMediaID(mediaID);
+                Media media = subscribedUserService.GetMediaByID(mediaID);
+                var episodeJson = new EpisodeJson
+                {
+                    MediaTitle = media.Title,
+                    Categories = categories,
+                    EpisodeID = episode.EpisodeID,
+                    Title = episode.Title,
+                    ThumbnailURL = episode.ThumbnailURL,
+                    SeasonID = episode.SeasonID,
+                    Status = episode.Status,
+                    Number = episode.Number,
+                    EpisodeURL = episode.EpisodeURL
+
+                };
+                return new JsonResult(episodeJson);
             }
             catch (Exception ex)
             {

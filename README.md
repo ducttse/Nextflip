@@ -1,4 +1,5 @@
 [![Build Status](https://dev.azure.com/ducprobmt123/Nextflip/_apis/build/status/ducttse.Nextflip?branchName=master)](https://dev.azure.com/ducprobmt123/Nextflip/_build/latest?definitionId=6&branchName=master)
+![GitHub](https://img.shields.io/github/license/ducttse/Nextflip?color=green&logoColor=green)
 
 # Nextflip: Media Streaming Platform
 

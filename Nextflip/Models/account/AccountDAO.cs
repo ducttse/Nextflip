@@ -873,7 +873,7 @@ namespace Nextflip.Models.account
             }
             return null;
         }
-        public bool ChangeProfile(string userID, string userEmail, string password, string fullname, string dateOfBirth, string pictureURL)
+        public bool ChangeProfile(string userID, string userEmail, string fullname, string dateOfBirth, string pictureURL)
         {
             try
             {
@@ -882,14 +882,13 @@ namespace Nextflip.Models.account
                 {
                     connection.Open();
                     string Sql = "UPDATE account " +
-                                    "SET userEmail = @userEmail, hashedPassword = @password, fullname = @fullname, dateOfBirth = @dateOfBirth, pictureURL = @pictureURL" +
+                                    "SET userEmail = @userEmail, fullname = @fullname, dateOfBirth = @dateOfBirth, pictureURL = @pictureURL" +
                                     "WHERE (userID = @userID);";
                     Debug.WriteLine(Sql);
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@userID", userID);
                         command.Parameters.AddWithValue("@userEmail", userEmail);
-                        command.Parameters.AddWithValue("@hashedPassword", password);
                         command.Parameters.AddWithValue("@fullname", fullname);
                         command.Parameters.AddWithValue("@dateOfBirth", dob);
                         using (var reader = command.ExecuteReader())
@@ -931,6 +930,34 @@ namespace Nextflip.Models.account
             {
                 throw new Exception(ex.Message);
             }
+        }
+        public bool ChangePassword (string userID, string password)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "UPDATE account " +
+                                    "SET hashedPassword = @password " +
+                                    "WHERE (userID = @userID);";
+                    Debug.WriteLine(Sql);
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userID", userID);
+                        command.Parameters.AddWithValue("@password", password);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read()) return true;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return false;
         }
     }
 }

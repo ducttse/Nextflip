@@ -1,9 +1,11 @@
-﻿using Nextflip.Models.favoriteList;
+﻿using System;
+using Nextflip.Models.favoriteList;
 using Nextflip.Models.media;
 using Nextflip.Models.mediaCategory;
 using Nextflip.Models.mediaFavorite;
 using Nextflip.Services.Interfaces;
 using System.Collections.Generic;
+using Nextflip.APIControllers;
 
 namespace Nextflip.Services.Implementations
 {
@@ -46,6 +48,7 @@ namespace Nextflip.Services.Implementations
             => _mediaDAO.NumberOfMediasBySearchingFilterCategory(SearchValue, CategoryName);
 
         public IEnumerable<Media> GetMediaFilterCategory(string CategoryName, int RowsOnPage, int RequestPage) => _mediaDAO.GetMediaFilterCategory(CategoryName, RowsOnPage, RequestPage);
+
         public int NumberOfMediasFilterCategory(string CategoryName) => _mediaDAO.NumberOfMediasFilterCategory(CategoryName);
 
         public IEnumerable<Media> ViewMediasFilterCategory_Status(string CategoryName, string Status, int RowsOnPage, int RequestPage) => _mediaDAO.ViewMediasFilterCategory_Status(CategoryName, Status, RowsOnPage, RequestPage);
@@ -71,5 +74,27 @@ namespace Nextflip.Services.Implementations
             => _mediaDAO.NumberOfMediasBySearchingFilterCategory_Status(SearchValue, CategoryName, Status);
 
         public bool RequestDisableMedia(string mediaID) => _mediaDAO.RequestDisableMedia(mediaID);
+
+        public bool AddPreviewMedia(AddMedia.AddMediaModel addMediaModel)
+        {
+            var newPreviewMedia = new Media()
+            {
+                MediaID = String.Empty,
+                Status = String.Empty,
+                Title = addMediaModel.Title,
+                FilmType = addMediaModel.FilmType,
+                Director = addMediaModel.Director,
+                Cast = addMediaModel.Cast,
+                PublishYear = addMediaModel.PublishYear,
+                Duration = addMediaModel.Duration,
+                BannerURL = "",
+                Language = addMediaModel.Language,
+                Description = addMediaModel.Description
+            };
+            var newMediaID = _mediaDAO.AddPreviewMedia(newPreviewMedia);
+            if (newMediaID == null) return false;
+
+            return true;
+        }
     }
 }

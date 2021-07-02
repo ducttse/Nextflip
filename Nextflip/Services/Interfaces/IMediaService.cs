@@ -17,7 +17,7 @@ namespace Nextflip.Services.Interfaces
 
         Media GetMediaByID(string mediaID);
         IEnumerable<Media> GetMediaFilterCategory(string CategoryName, int RowsOnPage, int RequestPage);
-        bool AddPreviewMedia(AddMedia.EditMediaModel editMediaModel);
+        bool AddPreviewMedia(AddMedia.AddMediaModel addMediaModel);
         int NumberOfMediasFilterCategory(string CategoryName);
         IEnumerable<Media> ViewMediasFilterCategory_Status(string CategoryName, string Status, int RowsOnPage, int RequestPage);
         int NumberOfMediasFilterCategory_Status(string CategoryName, string Status);

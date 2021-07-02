@@ -23,13 +23,13 @@ namespace Nextflip.APIControllers
         [Route("AddPreviewMedia")]
         [HttpPost]
         public IActionResult AddPreviewMedia([FromServices] IMediaService mediaService,
-            [FromBody] EditMediaModel editMediaModel)
+            [FromBody] AddMediaModel addMediaModel)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    bool result = mediaService.AddPreviewMedia(editMediaModel);
+                    bool result = mediaService.AddPreviewMedia(addMediaModel);
                     return new JsonResult(result);
                 }
                 catch (Exception exception)
@@ -42,7 +42,7 @@ namespace Nextflip.APIControllers
         }
 
 
-        public class EditMediaModel
+        public class AddMediaModel
         {
             public string Status { get; set; }
             public string Title { get; set; }
@@ -54,7 +54,7 @@ namespace Nextflip.APIControllers
             public string Description { get; set; }
 
             public int NumberOfSeason { get; set; }
-
+            public string Language { get; set; }
             public IList<int> NumberOfEpisodeList { get; set; }
 
         }

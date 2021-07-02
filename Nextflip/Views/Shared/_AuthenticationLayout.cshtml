@@ -1,4 +1,3 @@
-
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,17 +12,12 @@
     <!-- font awesome -->
     <script src="https://kit.fontawesome.com/c82ac77d9b.js"
             crossorigin="anonymous"></script>
-    <title>Document</title>
+    <title>@ViewBag.Title</title>
+    @RenderSection("meta", false)
+    @RenderSection("styles", false)
 </head>
 <body>
-    <div class="col-6 mx-auto">
-        <a class="mx-auto col-6 btn btn-primary"
-           href="/SubcribedUserDashBoard/Index">SubcribedUser DashBoard</a>
-        <a class="col-6 mt-2 btn btn-secondary" href="/SendSupportTicket/Index">SendSupport Ticket</a>
-        <a class="col-6 mt-2 btn btn-danger" href="/SupporterDashboard/Index">SubcribedUser DashBoard</a>
-        <a class="col-6 mt-2 btn btn-success" href="/UserManagerManagement/Index">SubcribedUser DashBoard</a>
-        <a class="col-6 mt-2 btn btn-warning" href="/MediaManagerManagement/Index">MediaManagerManagement</a>
-    </div>
+    @RenderBody()
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
             crossorigin="anonymous"></script>

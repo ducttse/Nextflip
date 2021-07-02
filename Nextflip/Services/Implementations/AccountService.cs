@@ -15,7 +15,7 @@ namespace Nextflip.Services.Implementations
         {
             _accountDAO = accountDAO;
         }
-        public bool ChangeProfile(string userID, string userEmail, string password, string fullname, string dateOfBirth, string pictureURL) => _accountDAO.ChangeProfile(userID, userEmail, password, fullname, dateOfBirth, pictureURL);
+        public bool ChangeProfile(string userID, string userEmail, string fullname, string dateOfBirth, string pictureURL) => _accountDAO.ChangeProfile(userID, userEmail, fullname, dateOfBirth, pictureURL);
 
         public Account GetAccountByID(string userID) => _accountDAO.GetAccountByID(userID);
 
@@ -23,5 +23,6 @@ namespace Nextflip.Services.Implementations
         public bool IsExistedEmail(string email) => _accountDAO.IsExistedEmail(email);
 
         public string RegisterAccount(string userEmail, string googleID, string googleEmail, string password, string fullname, string dateOfBirth) => _accountDAO.RegisterAnAccount(userEmail, googleID, googleEmail, password, fullname, dateOfBirth);
+        public bool ChangePassword(string userID, string password) => _accountDAO.ChangePassword(userID, password);
     }
 }

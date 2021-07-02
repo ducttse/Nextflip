@@ -85,6 +85,7 @@ namespace Nextflip.APIControllers
         public partial class EpisodeJson
         {
             public string MediaTitle { get; set; }
+            public string MediaDescription { get; set; }
             public IEnumerable<Category> Categories { get; set; }
             public string EpisodeID { get; set; }
             public string Title { get; set; }
@@ -99,22 +100,26 @@ namespace Nextflip.APIControllers
         {
             try
             {
+                EpisodeJson episodeJson = null;
                 Episode episode = subscribedUserService.GetEpisodeByID(episodeID);
                 IEnumerable<Category> categories = subscribedUserService.GetCategoriesByMediaID(mediaID);
                 Media media = subscribedUserService.GetMediaByID(mediaID);
-                var episodeJson = new EpisodeJson
+                if (episode != null && media != null)
                 {
-                    MediaTitle = media.Title,
-                    Categories = categories,
-                    EpisodeID = episode.EpisodeID,
-                    Title = episode.Title,
-                    ThumbnailURL = episode.ThumbnailURL,
-                    SeasonID = episode.SeasonID,
-                    Status = episode.Status,
-                    Number = episode.Number,
-                    EpisodeURL = episode.EpisodeURL
-
-                };
+                    episodeJson = new EpisodeJson
+                    {
+                        MediaTitle = media.Title,
+                        MediaDescription = media.Description,
+                        Categories = categories,
+                        EpisodeID = episode.EpisodeID,
+                        Title = episode.Title,
+                        ThumbnailURL = episode.ThumbnailURL,
+                        SeasonID = episode.SeasonID,
+                        Status = episode.Status,
+                        Number = episode.Number,
+                        EpisodeURL = episode.EpisodeURL
+                    };
+                }
                 return new JsonResult(episodeJson);
             }
             catch (Exception ex)

@@ -31,9 +31,10 @@ namespace Nextflip.Models.account
         bool IsExistedEmail(string email);
         public bool ChangeProfile(string userID, string userEmail, string fullname, string dateOfBirth, string pictureURL);
         public string RegisterAnAccount(string userEmail, string googleID, string googleEmail, string password, string fullname, string dateOfBirth);
-        public bool Login(string email, string password);
+        public Account Login(string email, string password);
         bool IsSubscribedUser(string userID);
         public bool ChangePassword(string userID, string password);
+        public Account CheckGoogleLogin(string googleID, string googleEmail);
     }
 
 }

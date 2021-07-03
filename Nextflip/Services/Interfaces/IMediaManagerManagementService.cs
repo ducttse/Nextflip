@@ -38,5 +38,7 @@ namespace Nextflip.Services.Interfaces
         bool DisapproveChangeEpisode(string ID);
         bool ApproveChangeSeason(string ID);
         bool DisapproveChangeSeason(string ID);
+        bool ApproveChangeSubtitle(string ID);
+        bool DisapproveChangeSubtitle(string ID);
     }
 }

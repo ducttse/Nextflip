@@ -34,5 +34,6 @@ namespace Nextflip.Services.Interfaces
         bool RequestChangeEpisodeStatus(string episodeID, string newStatus);
         Media GetMediaByChildID(string childID, string type);
         bool RequestChangeSeasonStatus(string seasonID, string newStatus);
+        bool RequestChangeSubtitleStatus(string subtitleID, string newStatus);
     }
 }

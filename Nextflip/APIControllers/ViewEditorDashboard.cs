@@ -328,11 +328,12 @@ namespace Nextflip.APIControllers
                 {
                     requestChange = editorService.RequestChangeEpisodeStatus(request.ID, request.Status);
                 }
+                else if (request.Type.Trim().Equals("subtitle"))
+                {
+                    requestChange = editorService.RequestChangeSubtitleStatus(request.ID, request.Status);
+                }
                 addMediaRequest = editorService.AddMediaRequest(request.UserEmail, mediaByChildID.MediaID, request.Note, request.LinkPreview, request.Type, request.ID);
 
-                //bool requestChangeMediaStatus = editorService.RequestChangeMediaStatus(request.ID, request.Status);
-                //bool addMediaRequest = editorService.AddMediaRequest(request.UserEmail, mediaByChildID.MediaID, request.Note, request.LinkPreview, "media", request.ID);
-                //if (!requestChangeMediaStatus || !addMediaRequest) return new JsonResult(messageFail);
                 if (!requestChange || !addMediaRequest) return new JsonResult(messageFail);
                 var message = new
                 {

@@ -119,6 +119,8 @@ namespace Nextflip.APIControllers
                     approveChange = mediaManagerManagementService.ApproveChangeSeason(editRequest.ID);
                 else if (editRequest.type.Trim().Equals("episode"))
                     approveChange = mediaManagerManagementService.ApproveChangeEpisode(editRequest.ID);
+                else if (editRequest.type.Trim().Equals("subtitle"))
+                    approveChange = mediaManagerManagementService.ApproveChangeSubtitle(editRequest.ID);
                 if (!approveChange) return new JsonResult(messageFail);
                 var message = new
                 {

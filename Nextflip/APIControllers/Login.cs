@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Nextflip.Models.account;
 using Nextflip.Services.Interfaces;
+using Nextflip.utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Nextflip.APIControllers
@@ -26,11 +29,16 @@ namespace Nextflip.APIControllers
         {
             try
             {
-                if(form.Email.Trim().Length == 0 || form.Password.Trim().Length == 0) return new JsonResult(new { Message = "Please enter Email and Password!" });
-                if (!accountService.IsExistedEmail(form.Email)) return new JsonResult(new { Message = "Email does not exist!" });
-                bool result = accountService.Login(form.Email, form.Password);
-                if (result == false) return new JsonResult(new { Message = "Invalid userEmail or Password" });
-                return new JsonResult(new { Message = true });
+                if (form.Email == null || form.Email.Trim().Length == 0 || form.Password == null || form.Password.Trim().Length == 0) return new JsonResult(new { Message = "Please enter Email and Password !" });
+                Account account = accountService.Login(form.Email.ToLower(), form.Password);
+                if (account == null) return new JsonResult(new { Message = "Incorrect Password !" });
+                string url = null;
+                if (account.roleName.Equals("customer supporter")) url = "/SupporterDashboard/Index";
+                else if (account.roleName.Equals("subscribed user")) url = "/SubcribedUserDashBoard/Index";
+                else if (account.roleName.Equals("media editor")) url = "/EditorDashboard/Index";
+                else if (account.roleName.Equals("user manager")) url = "/UserManagerManagement/Index";
+                else if (account.roleName.Equals("media manager")) url = "/MediaManagerManagement/Index";
+                return new JsonResult(new { Message = true , URL = url});
             }
             catch (Exception ex)
             {
@@ -45,7 +53,8 @@ namespace Nextflip.APIControllers
         {
             try
             {
-                if (!accountService.IsExistedEmail(form.Email)) return new JsonResult(new { Message = "Email does not exist!" });
+                if (!EmailUtil.IsValidEmail(form.Email)) return new JsonResult(new { Message = "Invalid Email !"});
+                if (!accountService.IsExistedEmail(form.Email)) return new JsonResult(new { Message = "Email does not exist !" });
                 return new JsonResult(new { Message = "Valid" });
             }
             catch (Exception ex)
@@ -55,10 +64,37 @@ namespace Nextflip.APIControllers
             }
         }
 
-        public partial class LoginForm
+        [Route("LoginByGmail")]
+        [HttpPost]
+        public IActionResult LoginByGmail([FromServices] IAccountService accountService, [FromBody] LoginForm form)
         {
-            public string Email { get; set; }
-            public string Password { get; set; }
+            string url = null;
+            try
+            {
+                if (form.GoogleID == null || form.GoogleID.Trim().Length == 0 || form.GoogleEmail == null || form.GoogleEmail.Trim().Length == 0) return new JsonResult(new { Message = "Error ! Please try again !" });
+                if(!accountService.CheckGoogleID(form.GoogleID) || !accountService.IsExistedEmail(form.GoogleEmail))  return new JsonResult(new { Message = "New Account", URL = "/Register/Index" });
+                Account account = accountService.CheckGoogleLogin(form.GoogleID, form.GoogleEmail.ToLower());
+                if (account == null) return new JsonResult(new { Message = "Cannot Authorize !" });
+                if (account.roleName.Equals("customer supporter")) url = "/SupporterDashboard/Index";
+                else if (account.roleName.Equals("subscribed user")) url = "/SubcribedUserDashBoard/Index";
+                else if (account.roleName.Equals("media editor")) url = "/EditorDashboard/Index";
+                else if (account.roleName.Equals("user manager")) url = "/UserManagerManagement/Index";
+                else if (account.roleName.Equals("media manager")) url = "/MediaManagerManagement/Index";
+                return new JsonResult(new { Message = true , URL = url});
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("Login/LoginByGmail: " + ex.Message);
+                return new JsonResult(new { Message = true, URL = url });
+            }
         }
+
+    }
+    public partial class LoginForm
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
+        public string GoogleID { get; set; }
+        public string GoogleEmail { get; set; }
     }
 }

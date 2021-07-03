@@ -977,7 +977,6 @@ namespace Nextflip.Models.account
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@googleID", googleID);
-                        command.Parameters.AddWithValue("@googleEmail", googleEmail);
                         var reader = command.ExecuteReader();
                         if (reader.Read()) return new Account
                         {

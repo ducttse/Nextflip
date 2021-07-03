@@ -26,7 +26,7 @@ namespace Nextflip.APIControllers
             try
             {
                 if (accountService.IsExistedEmail(form.UserEmail)) return new JsonResult(new { Message = "Email has already existed exist!" });
-                string result = accountService.RegisterAccount(form.UserEmail, form.GoogleID, form.GoogleEmail, form.Password, form.Fullname, form.DateOfBirth);
+                string result = accountService.RegisterAccount(form.UserEmail, form.GoogleID, form.Password, form.Fullname, form.DateOfBirth);
                 if (result == null) return new JsonResult(new { Message = "An Error Occurred" });
                 return new JsonResult(new { Message = result });
             }
@@ -56,7 +56,6 @@ namespace Nextflip.APIControllers
     {
         public string UserEmail { get; set; }
         public string GoogleID { get; set; }
-        public string GoogleEmail { get; set; }
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
         public string Fullname { get; set; }

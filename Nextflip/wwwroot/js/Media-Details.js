@@ -1,132 +1,123 @@
-function ShowEpisode(el) {
-  let iconRight = el;
-  let iconDown = el.parentElement.getElementsByClassName("fa-caret-down")[ 0 ];
-  let episode =
-    el.parentElement.parentElement.getElementsByClassName("episode_holder")[ 0 ];
-  iconRight.classList.add("hide");
-  episode.classList.remove("hide");
-  iconDown.classList.remove("hide");
-}
-function HideEpisode(el) {
-  let iconRight = el.parentElement.getElementsByClassName("fa-caret-right")[ 0 ];
-  let iconDown = el;
-  let episode =
-    el.parentElement.parentElement.getElementsByClassName("episode_holder")[ 0 ];
-  episode.classList.add("hide");
-  iconRight.classList.remove("hide");
-  iconDown.classList.add("hide");
+let mediaData;
+function renderBanner() {
+  return `<img class="img-fluid"
+    src="${mediaData.media.bannerURL}"
+    alt="${mediaData.media.mediaID}"/>
+    `;
 }
 
-function renderImg(media) {
-  return `
-  <img
-  src="${media.bannerURL}"
-  alt="${media.title}"
-  class="w-100 h-100"
-  />
-  `;
+function renderDetail(title, content) {
+  return `<div flex="row">
+            <p class="feild text-white-50 col-3 d-inline fs-5">${title}:</p>
+            <p class="col-9 d-inline fs-5" style="word-wrap: break-word">
+            ${content == null ? "" : content}
+            </p>
+          </div>`
 }
 
-function renderCategory(arr) {
-  let renderedArr = arr.map((category) => {
-    return `<p class="badge rounded-pill bg-secondary">${category.name}</p>`;
-  });
-  renderedArr = renderedArr.join("");
-  return renderedArr;
+function renderArrayDetail(title, arrContent) {
+  let content = "";
+  if (arrContent != null) {
+    for (let i = 0; i < arrContent.length; i++) {
+      content += arrContent[ i ].name + ", ";
+    }
+    content = content.slice(0, content.length - 2)
+  }
+  return `<div flex="row">
+            <p class="feild text-white-50 col-3 d-inline fs-5">${title}:</p>
+            <p class="col-9 d-inline fs-5" style="word-wrap: break-word">
+            ${arrContent == null ? "" : content}
+            </p>
+          </div>`
 }
 
-function renderUpSection(media, categories) {
-  let renderedCategories = renderCategory(categories);
-  let title = media.title;
-  let displayName =
-    title.charAt(0).toUpperCase() + title.slice(1, title.length + 1);
-  return `
-    <div class="col-12">
-      <p id="title">${displayName}</p>
-      ${renderedCategories}
-      <p id="description">${media.description}</p>
-    </div>
-    <form method="POST" class="row">
-      <button class="btn btn-danger col-2 offset-2">
-        <i class="fas fa-play"></i> <span>Play</span>
-      </button>
-      <button class="btn btn-secondary col-3 mx-1">
-        <i class="fas fa-heart"></i> <span>Add to Favourite</span>
-      </button>
-    </form>`;
+function ShowInfor() {
+  let info = "";
+  info += renderDetail("Director", mediaData.media.director);
+  info += renderDetail("Cast", mediaData.media.cast);
+  info += renderDetail("Language", mediaData.media.language);
+  info += renderDetail("Type", mediaData.media.filmType);
+  info += renderDetail("Publish year", mediaData.media.publishYear);
+  info += renderDetail("Duration", mediaData.media.duration);
+  info += renderArrayDetail("Category", mediaData.categories);
+  return info;
 }
 
-function renderEpisodes(episodes, mediaID) {
-  let renderedArray = episodes.map((episode) => {
-    return `
-      <p>
-        <a class="badge bg-secondary rounded-pill text-decoration-none" href="/WatchMedia/Watch/${mediaID}/${episode.episodeID}">
-          <i class="fas fa-play"></i>
-        </a> Episode ${episode.number} : ${episode.title}
-      </p>`;
-  });
-  return renderedArray.join("");
+function watch(url) {
+  window.location.href = "/WatchMedia/Watch/" + url;
 }
 
-function renderSeasons(episodeArray, title, mediaID) {
-  let episodes = renderEpisodes(episodeArray, mediaID);
-  return `
-    <div>
-        <p>${title}
-            <i class="fas fa-caret-down" onclick="HideEpisode(this)"></i>
-            <i class="fas fa-caret-right hide" onclick="ShowEpisode(this)"></i>
-        </p>
-        <div class="episode_holder">
-            ${episodes}
-        </div>
-    </div>`;
+function renderEpisodeBySeason(id) {
+  let episodes = mediaData.episodesMapSeason[ id ].map((episode) => {
+    return `<div class="row ps-3" onclick="watch('${id}/${episode.episodeID}')">
+                <p class="episode_detail ps-2 d-inline fs-5"><i class="far fa-play-circle d-inline"></i> ${episode.title}</p>
+            </div>`
+  })
+  return episodes.join("");
 }
 
-function renderAboveSection(seasons, episodeMap, mediaID) {
-  let renderedArray = seasons.map((season) => {
-    return renderSeasons(episodeMap[ season.seasonID ], season.title, mediaID);
-  });
-  renderedArray = renderedArray.join("");
-  return `
-    <div class="season_holder">
-      ${renderedArray}
-    </div>`;
+function sessionButton(season) {
+  return `<p>
+            <button class="btn btn-lg btn-dark" type="button" data-bs-toggle="collapse" data-bs-target="#session_${season.seasonID}" aria-expanded="false" aria-controls="collapseExample">
+              ${season.title}
+            </button>
+          </p>
+          <div class="ms-3 ps-1 collapse" id="session_${season.seasonID}">
+            ${renderEpisodeBySeason(season.seasonID)}
+          </div>`
 }
 
-function appendToDetailWrapper(data) {
-  document
-    .getElementById("imageHolder")
-    .insertAdjacentHTML("afterbegin", renderImg(data.media));
-  document
-    .getElementById("infor_hodler")
-    .insertAdjacentHTML(
-      "afterbegin",
-      renderUpSection(data.media, data.categories)
-    );
-  document
-    .getElementById("details_holder")
-    .insertAdjacentHTML(
-      "afterbegin",
-      renderAboveSection(
-        data.seasons,
-        data.episodesMapSeason,
-        data.media.mediaID
-      )
-    );
+function getSeason() {
+  let season = mediaData.seasons.map((item) => {
+    return sessionButton(item);
+  })
+  return season.join("");
+}
+
+function chooseOptions(option, obj) {
+  document.querySelector(".chosen").classList.remove("chosen");
+  if (obj != null) {
+    obj.classList.add("chosen");
+  }
+  else {
+    document.getElementById("description").classList.add("chosen")
+  }
+  switch (option) {
+    case "description":
+      content = `<p class="ps-2">${mediaData.media.description}</p>`
+      break;
+    case "season":
+      content = getSeason();
+      break;
+  }
+  let detail = document.getElementById("option_detail");
+  if (detail.innerHTML != "") {
+    detail.innerHTML = "";
+  }
+  detail.insertAdjacentHTML("afterbegin", content);
+}
+
+function appendToDetailWrapper() {
+  document.getElementById("img_holder").insertAdjacentHTML("afterbegin", renderBanner());
+  document.getElementById("detail_title").insertAdjacentHTML("afterbegin", mediaData.media.title)
+  document.getElementById("detail_table").insertAdjacentHTML("afterbegin", ShowInfor());
+  chooseOptions('description');
 }
 
 function clearWrapper() {
-  document.getElementById("imageHolder").innerHTML = "";
-  document.getElementById("infor_hodler").innerHTML = "";
-  document.getElementById("details_holder").innerHTML = "";
+  document.getElementById("img_holder").innerHTML = "";
+  document.getElementById("detail_title").innerHTML = "";
+  document.getElementById("detail_table").innerHTML = "";
 }
 
-function onload(json) {
-  appendToDetailWrapper(json);
-  var myModal = new bootstrap.Modal(document.getElementById('modalDetail'), {
-    keyboard: false
-  })
-  myModal.show();
+let detailModal;
+function showDetail() {
+  if (detailModal == null) {
+    var detailModal = new bootstrap.Modal(document.getElementById('modalDetail'), {
+      keyboard: false
+    })
+  }
+  detailModal.show();
 }
 
 function debounce(func, timeout = 300) {
@@ -136,12 +127,15 @@ function debounce(func, timeout = 300) {
     timer = setTimeout(() => { func.apply(this, args); }, timeout);
   };
 }
+
 let mediaID;
 const processChange = debounce(() => {
   fetch(`/api/ViewMediaDetails/GetMediaDetails/${mediaID}`)
     .then((response) => response.json())
     .then((json) => {
-      onload(json);
+      mediaData = json;
+      appendToDetailWrapper();
+      showDetail();
     });
 });
 

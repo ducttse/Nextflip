@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Nextflip.Models;
 using Nextflip.Models.category;
 using Nextflip.Models.media;
 using Nextflip.Services.Interfaces;
@@ -27,10 +28,11 @@ namespace Nextflip.APIControllers
             public string SearchValue { get; set; }
             public string MediaID { get; set; }
             public string UserEmail { get; set; }
-            public string note { get; set; }
+            public string Note { get; set; }
             public int CategoryID { get; set; }
             public string Status { get; set; }
             public string CategoryName { get; set; }
+            public string LinkPreview { get; set; }
             public int RowsOnPage { get; set; }
             public int RequestPage { get; set; }
 
@@ -191,24 +193,141 @@ namespace Nextflip.APIControllers
         }
 
         [HttpPost]
-        [Route("RequestDisabledMedia")]
-        public IActionResult RequestDisabledMedia([FromServices] IMediaService mediaService,
-            [FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromBody] Request request)
+        [Route("RequestDisableMedia")]
+        public IActionResult RequestDisableMedia([FromServices] IEditorService editorService, [FromForm] Request request)
         {
             try
             {
-                bool changeMediaStatus = mediaService.ChangeMediaStatus(request.MediaID, "Pending");
-                bool addMediaRequest = mediaManagerManagementService.AddMediaRequest(request.UserEmail, request.MediaID, request.note);
+                var messageFail = new
+                {
+                    message = "fail"
+                };
+                bool requestDisableMedia = editorService.RequestDisableMedia(request.MediaID);
+                bool addMediaRequest = editorService.AddMediaRequest(request.UserEmail, request.MediaID, request.Note, request.LinkPreview, "", request.MediaID);
+                if (!requestDisableMedia || !addMediaRequest) return new JsonResult(messageFail);
+                var message = new
+                {
+                    message = "success"
+                };
+                return (new JsonResult(message));
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("RequestDisabledMedia: " + e.Message);
                 var result = new
                 {
+                    message = e.Message
+                };
+                return new JsonResult(result);
+            }
+        }
 
+        //View all
+        [HttpPost]
+        [Route("ViewAllMedia")]
+        public IActionResult ViewAllMedia([FromServices] IEditorService editorService,
+            [FromBody] Request request)
+        {
+            try
+            {
+                IEnumerable<Media> medias = editorService.GetAllMedia(request.RowsOnPage, request.RequestPage);
+                int count = editorService.NumberOfMedias();
+                double totalPage = (double)count / (double)request.RowsOnPage;
+                var result = new
+                {
+                    TotalPage = (int)Math.Ceiling(totalPage),
+                    Data = medias
                 };
                 return (new JsonResult(result));
             }
             catch (Exception e)
             {
-                _logger.LogInformation("RequestDisabledMedia: " + e.Message);
+                _logger.LogInformation("Get All Medias: " + e.Message);
                 return new JsonResult("An error occurred");
+            }
+        }
+
+        //View all + filter Status
+        [HttpPost]
+        [Route("ViewAllMediaFilterStatus")]
+        public IActionResult ViewAllMediaFilterStatus([FromServices] IEditorService editorService,
+            [FromBody] Request request)
+        {
+            try
+            {
+                IEnumerable<Media> medias = editorService.GetAllMediaFilterStatus(request.Status, request.RowsOnPage, request.RequestPage);
+                int count = editorService.NumberOfMediasFilterStatus(request.Status);
+                double totalPage = (double)count / (double)request.RowsOnPage;
+                var result = new
+                {
+                    TotalPage = (int)Math.Ceiling(totalPage),
+                    Data = medias
+                };
+                return (new JsonResult(result));
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("Get All Medias Filter Status: " + e.Message);
+                return new JsonResult("An error occurred");
+            }
+        }
+
+        //Search all + Filter Status 
+        [HttpPost]
+        [Route("GetMediasByTitleFilterStatus")]
+        public JsonResult GetMediasByTitleFilterStatus([FromServices] IEditorService editorService, [FromBody] Request request)
+        {
+            try
+            {
+                var message = new
+                {
+                    message = "Empty searchValue"
+                };
+                if (request.SearchValue.Trim() == "") return new JsonResult(message);
+                IEnumerable<Media> medias = editorService.GetMediasByTitleFilterStatus(request.SearchValue.Trim(), request.Status, request.RowsOnPage, request.RequestPage);
+                int count = editorService.NumberOfMediasBySearchingFilterStatus(request.SearchValue.Trim(), request.Status);
+                double totalPage = (double)count / (double)request.RowsOnPage;
+                var result = new
+                {
+                    TotalPage = (int)Math.Ceiling(totalPage),
+                    Data = medias
+                };
+                return (new JsonResult(result));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetMediasByTitle: " + ex.Message);
+                return new JsonResult("Error occur");
+            }
+        }
+
+        [HttpPost]
+        [Route("RequestChangeMediaStatus")]
+        public IActionResult RequestChangeMediaStatus([FromServices] IEditorService editorService, [FromForm] Request request)
+        {
+            try
+            {
+                var messageFail = new
+                {
+                    message = "fail"
+                };
+                bool requestChangeMediaStatus = editorService.RequestChangeMediaStatus(request.MediaID, request.Status);
+                bool addMediaRequest = editorService.AddMediaRequest(request.UserEmail, request.MediaID, request.Note, request.LinkPreview, "media", request.MediaID);
+                if (!requestChangeMediaStatus || !addMediaRequest) return new JsonResult(messageFail);
+                var message = new
+                {
+                    message = "success"
+                };
+                return (new JsonResult(message));
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("RequestDisabledMedia: " + e.Message);
+                var result = new
+                {
+                    message = e.Message
+                };
+                return new JsonResult(result);
             }
         }
 

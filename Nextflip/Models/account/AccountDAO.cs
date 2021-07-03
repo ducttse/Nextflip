@@ -1027,5 +1027,33 @@ namespace Nextflip.Models.account
             }
             return false;
         }
+        public bool ChangePassword (string userID, string password)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "UPDATE account " +
+                                    "SET hashedPassword = @password " +
+                                    "WHERE (userID = @userID);";
+                    Debug.WriteLine(Sql);
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userID", userID);
+                        command.Parameters.AddWithValue("@password", password);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read()) return true;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return false;
+        }
     }
 }

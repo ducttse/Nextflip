@@ -12,14 +12,16 @@
 .w-70 {
   width: 70% !important;
 }
+.w-55 {
+  width: 55% !important;
+}
+.w-45 {
+  width: 45% !important;
+}
 .h-85 {
   height: 85% !important;
 }
-.table_container {
-  border-radius: 50px;
-  background: #e0e0e0;
-  box-shadow: 20px 20px 60px #bebebe, -20px -20px 60px #ffffff;
-}
+
 input[type="checkbox"] {
   position: relative;
   width: 40px;
@@ -53,4 +55,13 @@ input:checked[type="checkbox"]:before {
 }
 .hide {
   display: none !important;
+}
+
+#email_detail_label::after,
+#fullname_detail_label::after,
+#dob_detail::after,
+#role_detail::after {
+  position: relative;
+  content: "*";
+  color: red;
 }

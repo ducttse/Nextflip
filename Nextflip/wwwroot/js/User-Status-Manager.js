@@ -9,6 +9,69 @@ function rollBack() {
     ChosenCheckBox.checked ? ChosenCheckBox.checked = false : ChosenCheckBox.checked = true;
 }
 
+let currentModal;
+
+function hideModal() {
+    currentModal.hide();
+}
+
+function showModal(modalName) {
+    var myModal = new bootstrap.Modal(document.getElementById(modalName), {
+        keyboard: false
+    })
+    myModal.show();
+    currentModal = myModal;
+}
+
+function setEvent() {
+    document.getElementById("confirm_btn").addEventListener("click", () => {
+        requestActive().then(() => {
+            hideModal();
+            showModal("modal_flash");
+        })
+    });
+    document.getElementById("submit_btn").addEventListener("click", () => {
+        reuqestDeactive().then(() => {
+            hideModal();
+            showModal("modal_flash");
+        })
+
+    })
+    document.getElementById("modal_flash").addEventListener("hide.bs.modal", () => {
+        isRequest = false;
+        isSuccess = false;
+        if (isSearched) {
+            search(requestParam.SearchValue);
+        }
+        else if (isFiltered) {
+            requestWithFilter();
+        }
+        else {
+            requestUserData();
+        }
+    })
+    document.getElementById("modalForm").addEventListener("hide.bs.modal", () => {
+        if (isRequest) {
+            if (!isSuccess) {
+                rollBack();
+            }
+        }
+        else {
+            rollBack();
+        }
+    })
+    document.getElementById("modalCheck").addEventListener("hide.bs.modal", () => {
+        if (isRequest) {
+            if (!isSuccess) {
+                rollBack();
+            }
+        }
+        else {
+            rollBack();
+        }
+    })
+}
+
 function appendFlashMessageContent(isSuccess) {
     let fail = ` <i class="far fa-times-circle fa-5x text-danger"></i>
                     <p class="fs-5">Opps! Something went wrong</p>
@@ -121,65 +184,7 @@ function getNote(userid) {
         })
 }
 
-let currentModal;
 
-function hideModal() {
-    currentModal.hide();
-}
-
-function showModal(modalName) {
-    var myModal = new bootstrap.Modal(document.getElementById(modalName), {
-        keyboard: false
-    })
-    myModal.show();
-    currentModal = myModal;
-}
-
-function setEvent() {
-    document.getElementById("confirm_btn").addEventListener("click", () => {
-        requestActive().then(() => {
-            hideModal();
-            showModal("modal_flash");
-        })
-    });
-    document.getElementById("submit_btn").addEventListener("click", () => {
-        reuqestDeactive().then(() => {
-            hideModal();
-            showModal("modal_flash");
-        })
-
-    })
-    document.getElementById("modal_flash").addEventListener("hide.bs.modal", () => {
-        isRequest = false;
-        isSuccess = false;
-        if (isSearched) {
-            search(requestParam.SearchValue);
-        }
-        else if (isFiltered) {
-            requestWithFilter();
-        }
-    })
-    document.getElementById("modalForm").addEventListener("hide.bs.modal", () => {
-        if (isRequest) {
-            if (!isSuccess) {
-                rollBack();
-            }
-        }
-        else {
-            rollBack();
-        }
-    })
-    document.getElementById("modalCheck").addEventListener("hide.bs.modal", () => {
-        if (isRequest) {
-            if (!isSuccess) {
-                rollBack();
-            }
-        }
-        else {
-            rollBack();
-        }
-    })
-}
 
 function addEvent() {
     let collection = document.getElementsByClassName("status_btn");

@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nextflip.Models.account;
 using Nextflip.Services.Interfaces;
+using Nextflip.utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Nextflip.APIControllers
@@ -21,56 +23,78 @@ namespace Nextflip.APIControllers
         }
 
 
-        //[Route("LoginAccount")]
-        //[HttpPost]
-        //public IActionResult LoginAccount([FromServices] IAccountService accountService, [FromBody] LoginForm form)
-        //{
-        //    try
-        //    {
-        //        if(form.Email.Trim().Length == 0 || form.Password.Trim().Length == 0) return new JsonResult(new { Message = "Please enter Email and Password!" });
-        //        if (!accountService.IsExistedEmail(form.Email)) return new JsonResult(new { Message = "Email does not exist!" });
-        //        Account result = accountService.Login(form.Email, form.Password);
-        //        if (result == null) return new JsonResult(new { Message = "Invalid userEmail or Password" });
-        //        return new JsonResult(new { Message = true });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogInformation("Login/LoginAccount: " + ex.Message);
-        //        return new JsonResult(new { Message = ex.Message });
-        //    }
-        //}
+        [Route("LoginAccount")]
+        [HttpPost]
+        public IActionResult LoginAccount([FromServices] IAccountService accountService, [FromBody] LoginForm form)
+        {
+            try
+            {
+                if (form.Email == null || form.Email.Trim().Length == 0 || form.Password == null || form.Password.Trim().Length == 0) return new JsonResult(new { Message = "Please enter Email and Password !" });
+                Account account = accountService.Login(form.Email.ToLower(), form.Password);
+                if (account == null) return new JsonResult(new { Message = "Incorrect Password !" });
+                string url = null;
+                if (account.roleName.Equals("customer supporter")) url = "/SupporterDashboard/Index";
+                else if (account.roleName.Equals("subscribed user")) url = "/SubcribedUserDashBoard/Index";
+                else if (account.roleName.Equals("media editor")) url = "/EditorDashboard/Index";
+                else if (account.roleName.Equals("user manager")) url = "/UserManagerManagement/Index";
+                else if (account.roleName.Equals("media manager")) url = "/MediaManagerManagement/Index";
+                return new JsonResult(new { Message = true , URL = url});
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("Login/LoginAccount: " + ex.Message);
+                return new JsonResult(new { Message = ex.Message });
+            }
+        }
 
-        //[Route("CheckEmail")]
-        //[HttpPost]
-        //public IActionResult CheckEmail([FromServices] IAccountService accountService, [FromBody] LoginForm form)
-        //{
-        //    try
-        //    {
-        //        if (!accountService.IsExistedEmail(form.Email)) return new JsonResult(new { Message = "Email does not exist!" });
-        //        return new JsonResult(new { Message = "Valid" });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogInformation("Login/CheckEmail: " + ex.Message);
-        //        return new JsonResult(new { Message = ex.Message });
-        //    }
-        //}
+        [Route("CheckEmail")]
+        [HttpPost]
+        public IActionResult CheckEmail([FromServices] IAccountService accountService, [FromBody] LoginForm form)
+        {
+            try
+            {
+                if (!EmailUtil.IsValidEmail(form.Email)) return new JsonResult(new { Message = "Invalid Email !"});
+                if (!accountService.IsExistedEmail(form.Email)) return new JsonResult(new { Message = "Email does not exist !" });
+                return new JsonResult(new { Message = "Valid" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("Login/CheckEmail: " + ex.Message);
+                return new JsonResult(new { Message = ex.Message });
+            }
+        }
 
-        //[Route("LoginByGmail")]
-        //[HttpPost]
-        //public IActionResult LoginByGmail([FromServices] IAccountService accountService, [FromBody] LoginForm form)
-        //{
-        //    try
-        //    {
-        //        if (accountService.CheckGoogleLogin(form.GoogleID, form.GoogleEmail)) return new JsonResult(new { Message = "Success" });
-        //        return new JsonResult(new { Message = "Failed" });
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogInformation("Login/LoginByGmail: " + ex.Message);
-        //        return new JsonResult(new { Message = ex.Message });
-        //    }
-        //}
+        [Route("LoginByGmail")]
+        [HttpPost]
+        public IActionResult LoginByGmail([FromServices] IAccountService accountService, [FromBody] LoginForm form)
+        {
+            string url = null;
+            try
+            {
+                if (form.GoogleID == null || form.GoogleID.Trim().Length == 0 || form.GoogleEmail == null || form.GoogleEmail.Trim().Length == 0) return new JsonResult(new { Message = "Error ! Please try again !" });
+                if(!accountService.CheckGoogleID(form.GoogleID) || !accountService.IsExistedEmail(form.GoogleEmail))  return new JsonResult(new { Message = "New Account", URL = "/Register/Index" });
+                Account account = accountService.CheckGoogleLogin(form.GoogleID, form.GoogleEmail.ToLower());
+                if (account == null) return new JsonResult(new { Message = "Cannot Authorize !" });
+                if (account.roleName.Equals("customer supporter")) url = "/SupporterDashboard/Index";
+                else if (account.roleName.Equals("subscribed user")) url = "/SubcribedUserDashBoard/Index";
+                else if (account.roleName.Equals("media editor")) url = "/EditorDashboard/Index";
+                else if (account.roleName.Equals("user manager")) url = "/UserManagerManagement/Index";
+                else if (account.roleName.Equals("media manager")) url = "/MediaManagerManagement/Index";
+                return new JsonResult(new { Message = true , URL = url});
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("Login/LoginByGmail: " + ex.Message);
+                return new JsonResult(new { Message = true, URL = url });
+            }
+        }
 
+    }
+    public partial class LoginForm
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
+        public string GoogleID { get; set; }
+        public string GoogleEmail { get; set; }
     }
 }

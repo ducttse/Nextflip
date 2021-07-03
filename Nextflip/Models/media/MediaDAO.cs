@@ -883,6 +883,7 @@ namespace Nextflip.Models.media
             try
             {
                 Media media = GetMediaByID(mediaID);
+                if (media.Status.Trim().Equals("Pending")) return false;
                 media.MediaID = media.MediaID + "_" + newStatus;
                 string title_preview = media.Title + "_preview";
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
@@ -916,6 +917,64 @@ namespace Nextflip.Models.media
                 throw new Exception(ex.Message);
             }
             return result;
+        }
+
+
+        public Media GetMediaByChildID(string childID, string type)
+        {
+            try
+            {
+                Media media = null;
+                string Sql = null;
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    if (type.Trim().Equals("media"))
+                        Sql = "Select M.mediaID, M.status, M.title, M.filmType, M.director, M.cast, M.publishYear, M.duration, M.bannerURL, M.language, M.description " +
+                                "From media M " +
+                                "Where M.mediaID = @childID";
+                    if (type.Trim().Equals("season"))
+                        Sql = "Select M.mediaID, M.status, M.title, M.filmType, M.director, M.cast, M.publishYear, M.duration, M.bannerURL, M.language, M.description " +
+                                "From media M, season S " +
+                                "Where M.mediaID = S.mediaID and S.seasonID = @childID";
+                    else if (type.Trim().Equals("episode"))
+                        Sql = "Select M.mediaID, M.status, M.title, M.filmType, M.director, M.cast, M.publishYear, M.duration, M.bannerURL, M.language, M.description " + "From media M, season S, episode E " +
+                                "Where M.mediaID = S.mediaID and S.seasonID = E.seasonID and E.episodeID = @childID";
+                    else if (type.Trim().Equals("subtitle"))
+                        Sql = "Select M.mediaID, M.status, M.title, M.filmType, M.director, M.cast, M.publishYear, M.duration, M.bannerURL, M.language, M.description " + "From media M, season S, episode E, subtitle ST " +
+                                "Where M.mediaID = S.mediaID and S.seasonID = E.seasonID and E.episodeID = ST.episodeID and ST.subtitleID = @childID";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@childID", childID);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                media = new Media
+                                {
+                                    MediaID = reader.GetString(0),
+                                    Status = reader.GetString(1),
+                                    Title = reader.GetString(2),
+                                    FilmType = reader.IsDBNull(3) ? null : reader.GetString(3),
+                                    Director = reader.IsDBNull(4) ? null : reader.GetString(4),
+                                    Cast = reader.IsDBNull(5) ? null : reader.GetString(5),
+                                    PublishYear = reader.IsDBNull(6) ? null : reader.GetInt32(6),
+                                    Duration = reader.IsDBNull(7) ? null : reader.GetString(7),
+                                    BannerURL = reader.GetString(8),
+                                    Language = reader.GetString(9),
+                                    Description = reader.GetString(10)
+                                };
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+                return media;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

@@ -32,6 +32,8 @@ namespace Nextflip.APIControllers
             public int CategoryID { get; set; }
             public string Status { get; set; }
             public string CategoryName { get; set; }
+            public string ID { get; set; }
+            public string Type { get; set; }
             public string LinkPreview { get; set; }
             public int RowsOnPage { get; set; }
             public int RequestPage { get; set; }
@@ -311,9 +313,22 @@ namespace Nextflip.APIControllers
                 {
                     message = "fail"
                 };
-                bool requestChangeMediaStatus = editorService.RequestChangeMediaStatus(request.MediaID, request.Status);
-                bool addMediaRequest = editorService.AddMediaRequest(request.UserEmail, request.MediaID, request.Note, request.LinkPreview, "media", request.MediaID);
-                if (!requestChangeMediaStatus || !addMediaRequest) return new JsonResult(messageFail);
+                Media mediaByChildID = editorService.GetMediaByChildID(request.ID, request.Type);
+                bool requestChange = false;
+                bool addMediaRequest = false;
+                if (request.Type.Trim().Equals("media"))
+                {
+                    requestChange = editorService.RequestChangeMediaStatus(request.ID, request.Status);
+                    addMediaRequest = editorService.AddMediaRequest(request.UserEmail, mediaByChildID.MediaID, request.Note, request.LinkPreview, request.Type, request.ID);
+                } else if (request.Type.Trim().Equals("episode"))
+                {
+                    requestChange = editorService.RequestChangeEpisodeStatus(request.ID, request.Status);
+                    addMediaRequest = editorService.AddMediaRequest(request.UserEmail, mediaByChildID.MediaID, request.Note, request.LinkPreview, request.Type, request.ID);
+                }
+                //bool requestChangeMediaStatus = editorService.RequestChangeMediaStatus(request.ID, request.Status);
+                //bool addMediaRequest = editorService.AddMediaRequest(request.UserEmail, mediaByChildID.MediaID, request.Note, request.LinkPreview, "media", request.ID);
+                //if (!requestChangeMediaStatus || !addMediaRequest) return new JsonResult(messageFail);
+                if (!requestChange || !addMediaRequest) return new JsonResult(messageFail);
                 var message = new
                 {
                     message = "success"

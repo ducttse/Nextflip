@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Nextflip.Models.episode;
 
 namespace Nextflip.Services.Implementations
 {
@@ -12,10 +13,12 @@ namespace Nextflip.Services.Implementations
     {
         private IMediaEditRequestDAO _mediaEditRequestDao;
         private IMediaDAO _mediaDao;
-        public MediaManagerManagementService(IMediaEditRequestDAO mediaEditRequestDao, IMediaDAO mediaDao)
+        private IEpisodeDAO _episodeDAO;
+        public MediaManagerManagementService(IMediaEditRequestDAO mediaEditRequestDao, IMediaDAO mediaDao, IEpisodeDAO episodeDao)
         {
             _mediaEditRequestDao = mediaEditRequestDao;
             _mediaDao = mediaDao;
+            _episodeDAO = episodeDao;
         }
         public IEnumerable<MediaEditRequest> GetAllPendingMedias() => _mediaEditRequestDao.GetAllPendingMedias();
         
@@ -52,5 +55,8 @@ namespace Nextflip.Services.Implementations
         public int NumberOfMediaRequestSearching(string searchValue, string status, string type)
             => _mediaEditRequestDao.NumberOfMediaRequestSearching(searchValue, status, type);
         public Media GetMediaByID(string mediaID) => _mediaDao.GetMediaByID(mediaID);
+        public MediaEditRequest GetMediaEditRequestByID(int requestID) => _mediaEditRequestDao.GetMediaEditRequestByID(requestID);
+        public bool ApproveChangeEpisode(string episodeID) => _episodeDAO.ApproveChangeEpisode(episodeID);
+        public bool DisapproveChangeEpisode(string episodeID) => _episodeDAO.DisapproveChangeEpisode(episodeID);
     }
 }

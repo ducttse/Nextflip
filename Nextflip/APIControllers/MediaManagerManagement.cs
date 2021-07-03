@@ -109,9 +109,15 @@ namespace Nextflip.APIControllers
                 {
                     message = "fail"
                 };
-                bool approveChangeMediaStatusRequest = mediaManagerManagementService.ApproveRequest(request.RequestID);
-                bool approveChangeMedia = mediaManagerManagementService.ApproveChangeMedia(request.MediaID);
-                if (!approveChangeMediaStatusRequest || !approveChangeMedia) return new JsonResult(messageFail);
+                bool approveRequest = mediaManagerManagementService.ApproveRequest(request.RequestID);
+                if (!approveRequest) return new JsonResult(messageFail);
+                MediaEditRequest editRequest = mediaManagerManagementService.GetMediaEditRequestByID(request.RequestID);
+                bool approveChange = false;
+                if (editRequest.type.Trim().Equals("media"))
+                    approveChange = mediaManagerManagementService.ApproveChangeMedia(editRequest.ID);
+                if (editRequest.type.Trim().Equals("episode"))
+                    approveChange = mediaManagerManagementService.ApproveChangeEpisode(editRequest.ID);
+                if (!approveChange) return new JsonResult(messageFail);
                 var message = new
                 {
                     message = "success"
@@ -141,8 +147,13 @@ namespace Nextflip.APIControllers
                 };
                 bool disapproveRequest = mediaManagerManagementService.DisappoveRequest(request.RequestID, request.note);
                 if (!disapproveRequest) return new JsonResult(messageFail);
-                bool disapproveChangeMediaStatus = mediaManagerManagementService.DisapproveChangeMedia(request.MediaID);
-                if (!disapproveChangeMediaStatus) return new JsonResult(messageFail);
+                MediaEditRequest editRequest = mediaManagerManagementService.GetMediaEditRequestByID(request.RequestID);
+                bool disapproveChange = false;
+                if (editRequest.type.Trim().Equals("media"))
+                    disapproveChange = mediaManagerManagementService.DisapproveChangeMedia(editRequest.ID);
+                if (editRequest.type.Trim().Equals("episode"))
+                    disapproveChange = mediaManagerManagementService.DisapproveChangeEpisode(editRequest.ID);
+                if (!disapproveChange) return new JsonResult(messageFail);
                 var message = new
                 {
                     message = "success"

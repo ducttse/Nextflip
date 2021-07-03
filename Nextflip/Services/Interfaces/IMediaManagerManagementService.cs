@@ -33,5 +33,8 @@ namespace Nextflip.Services.Interfaces
         IEnumerable<MediaEditRequest> SearchingMediaRequest(string searchValue, string status, string type, int RowsOnPage, int RequestPage);
         int NumberOfMediaRequestSearching(string searchValue, string status, string type);
         Media GetMediaByID(string mediaID);
+        MediaEditRequest GetMediaEditRequestByID(int requestID);
+        bool ApproveChangeEpisode(string ID);
+        bool DisapproveChangeEpisode(string ID);
     }
 }

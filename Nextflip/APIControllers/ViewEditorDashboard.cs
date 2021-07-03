@@ -319,12 +319,17 @@ namespace Nextflip.APIControllers
                 if (request.Type.Trim().Equals("media"))
                 {
                     requestChange = editorService.RequestChangeMediaStatus(request.ID, request.Status);
-                    addMediaRequest = editorService.AddMediaRequest(request.UserEmail, mediaByChildID.MediaID, request.Note, request.LinkPreview, request.Type, request.ID);
-                } else if (request.Type.Trim().Equals("episode"))
+                }
+                else if (request.Type.Trim().Equals("season"))
+                {
+                    requestChange = editorService.RequestChangeSeasonStatus(request.ID, request.Status);
+                }
+                else if (request.Type.Trim().Equals("episode"))
                 {
                     requestChange = editorService.RequestChangeEpisodeStatus(request.ID, request.Status);
-                    addMediaRequest = editorService.AddMediaRequest(request.UserEmail, mediaByChildID.MediaID, request.Note, request.LinkPreview, request.Type, request.ID);
                 }
+                addMediaRequest = editorService.AddMediaRequest(request.UserEmail, mediaByChildID.MediaID, request.Note, request.LinkPreview, request.Type, request.ID);
+
                 //bool requestChangeMediaStatus = editorService.RequestChangeMediaStatus(request.ID, request.Status);
                 //bool addMediaRequest = editorService.AddMediaRequest(request.UserEmail, mediaByChildID.MediaID, request.Note, request.LinkPreview, "media", request.ID);
                 //if (!requestChangeMediaStatus || !addMediaRequest) return new JsonResult(messageFail);

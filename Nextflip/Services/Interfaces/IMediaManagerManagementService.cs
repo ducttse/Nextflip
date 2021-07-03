@@ -36,5 +36,7 @@ namespace Nextflip.Services.Interfaces
         MediaEditRequest GetMediaEditRequestByID(int requestID);
         bool ApproveChangeEpisode(string ID);
         bool DisapproveChangeEpisode(string ID);
+        bool ApproveChangeSeason(string ID);
+        bool DisapproveChangeSeason(string ID);
     }
 }

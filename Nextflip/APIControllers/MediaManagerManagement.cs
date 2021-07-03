@@ -115,7 +115,9 @@ namespace Nextflip.APIControllers
                 bool approveChange = false;
                 if (editRequest.type.Trim().Equals("media"))
                     approveChange = mediaManagerManagementService.ApproveChangeMedia(editRequest.ID);
-                if (editRequest.type.Trim().Equals("episode"))
+                else if (editRequest.type.Trim().Equals("season"))
+                    approveChange = mediaManagerManagementService.ApproveChangeSeason(editRequest.ID);
+                else if (editRequest.type.Trim().Equals("episode"))
                     approveChange = mediaManagerManagementService.ApproveChangeEpisode(editRequest.ID);
                 if (!approveChange) return new JsonResult(messageFail);
                 var message = new
@@ -151,7 +153,9 @@ namespace Nextflip.APIControllers
                 bool disapproveChange = false;
                 if (editRequest.type.Trim().Equals("media"))
                     disapproveChange = mediaManagerManagementService.DisapproveChangeMedia(editRequest.ID);
-                if (editRequest.type.Trim().Equals("episode"))
+                else if (editRequest.type.Trim().Equals("season"))
+                    disapproveChange = mediaManagerManagementService.DisapproveChangeSeason(editRequest.ID);
+                else if (editRequest.type.Trim().Equals("episode"))
                     disapproveChange = mediaManagerManagementService.DisapproveChangeEpisode(editRequest.ID);
                 if (!disapproveChange) return new JsonResult(messageFail);
                 var message = new

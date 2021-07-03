@@ -196,7 +196,7 @@ namespace Nextflip.Models.episode
                     }
                     if (episode_Unavailable != null)
                     {
-                        SqlDelete = "Delete from media " +
+                        SqlDelete = "Delete from episode " +
                             "Where episodeID = @ID_Unavailable";
                     }
                     MySqlCommand command = new MySqlCommand(SqlDelete, connection);

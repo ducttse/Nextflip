@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Nextflip.Models.episode;
+using Nextflip.Models.season;
 
 namespace Nextflip.Services.Implementations
 {
@@ -14,11 +15,13 @@ namespace Nextflip.Services.Implementations
         private IMediaEditRequestDAO _mediaEditRequestDao;
         private IMediaDAO _mediaDao;
         private IEpisodeDAO _episodeDAO;
-        public MediaManagerManagementService(IMediaEditRequestDAO mediaEditRequestDao, IMediaDAO mediaDao, IEpisodeDAO episodeDao)
+        private ISeasonDAO _seasonDAO;
+        public MediaManagerManagementService(IMediaEditRequestDAO mediaEditRequestDao, IMediaDAO mediaDao, IEpisodeDAO episodeDao, ISeasonDAO seasonDao)
         {
             _mediaEditRequestDao = mediaEditRequestDao;
             _mediaDao = mediaDao;
             _episodeDAO = episodeDao;
+            _seasonDAO = seasonDao;
         }
         public IEnumerable<MediaEditRequest> GetAllPendingMedias() => _mediaEditRequestDao.GetAllPendingMedias();
         
@@ -58,5 +61,7 @@ namespace Nextflip.Services.Implementations
         public MediaEditRequest GetMediaEditRequestByID(int requestID) => _mediaEditRequestDao.GetMediaEditRequestByID(requestID);
         public bool ApproveChangeEpisode(string episodeID) => _episodeDAO.ApproveChangeEpisode(episodeID);
         public bool DisapproveChangeEpisode(string episodeID) => _episodeDAO.DisapproveChangeEpisode(episodeID);
+        public bool ApproveChangeSeason(string seasonID) => _seasonDAO.ApproveChangeSeason(seasonID);
+        public bool DisapproveChangeSeason(string seasonID) => _seasonDAO.DisapproveChangeSeason(seasonID);
     }
 }

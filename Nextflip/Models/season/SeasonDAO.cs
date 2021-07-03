@@ -91,5 +91,174 @@ namespace Nextflip.Models.season
                 throw new Exception(ex.Message);
             }
         }
+
+        public bool ApproveChangeSeason(string ID)
+        {
+            var result = false;
+            try
+            {
+                string SqlUpdate = null;
+                string SqlDelete = null;
+                string ID_preview = ID + "_preview";
+                string ID_Available = ID + "_Available";
+                string ID_Unavailable = ID + "_Unavailable";
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    Season season_preview = GetSeasonByID(ID_preview);
+                    Season season_Available = GetSeasonByID(ID_Available);
+                    Season season_Unavailable = GetSeasonByID(ID_Unavailable);
+                    if (season_preview != null)
+                    {
+                        SqlUpdate = "Update season " +
+                            "Set mediaID = @mediaID, title = @title, thumbnailURL = @thumbnailURL, number = @number " +
+                            "Where seasonID = @ID";
+                        SqlDelete = "Delete from season " +
+                            "Where seasonID = @ID_preview";
+                    }
+                    if (season_Available != null)
+                    {
+                        SqlUpdate = "Update season " +
+                            "Set status = 'Available' " +
+                            "Where seasonID = @ID";
+                        SqlDelete = "Delete from season " +
+                            "Where seasonID = @ID_Available";
+                    }
+                    if (season_Unavailable != null)
+                    {
+                        SqlUpdate = "Update season " +
+                            "Set status = 'Unavailable' " +
+                            "Where seasonID = @ID";
+                        SqlDelete = "Delete from season " +
+                            "Where seasonID = @ID_Unavailable";
+                    }
+                    MySqlCommand command1 = new MySqlCommand(SqlUpdate, connection);
+                    MySqlCommand command2 = new MySqlCommand(SqlDelete, connection);
+                    command1.Parameters.AddWithValue("@ID", ID);
+                    if (season_preview != null)
+                    {
+                        command1.Parameters.AddWithValue("@title", season_preview.Title);
+                        command1.Parameters.AddWithValue("@mediaID", season_preview.MediaID);
+                        command1.Parameters.AddWithValue("@thumbnailURL", season_preview.ThumbnailURL);
+                        command1.Parameters.AddWithValue("@number", season_preview.Number);
+                        command2.Parameters.AddWithValue("@ID_preview", ID_preview);
+                    }
+                    if (season_Available != null)
+                    {
+                        command2.Parameters.AddWithValue("@ID_Available", ID_Available);
+                    }
+                    if (season_Unavailable != null)
+                    {
+                        command2.Parameters.AddWithValue("@ID_Unavailable", ID_Unavailable);
+                    }
+                    int rowEffects1 = command1.ExecuteNonQuery();
+                    int rowEffects2 = command2.ExecuteNonQuery();
+                    if (rowEffects1 > 0 && rowEffects2 > 0)
+                    {
+                        result = true;
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return result;
+        }
+
+        public bool DisapproveChangeSeason(string ID)
+        {
+            var result = false;
+            try
+            {
+                string SqlDelete = null;
+                string ID_preview = ID + "_preview";
+                string ID_Available = ID + "_Available";
+                string ID_Unavailable = ID + "_Unavailable";
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    Season season_preview = GetSeasonByID(ID_preview);
+                    Season season_Available = GetSeasonByID(ID_Available);
+                    Season season_Unavailable = GetSeasonByID(ID_Unavailable);
+                    if (season_preview != null)
+                    {
+                        SqlDelete = "Delete from season " +
+                            "Where seasonID = @ID_preview";
+                    }
+                    if (season_Available != null)
+                    {
+                        SqlDelete = "Delete from season " +
+                            "Where seasonID = @ID_Available";
+                    }
+                    if (season_Unavailable != null)
+                    {
+                        SqlDelete = "Delete from season " +
+                            "Where seasonID = @ID_Unavailable";
+                    }
+                    MySqlCommand command = new MySqlCommand(SqlDelete, connection);
+                    if (season_preview != null)
+                    {
+                        command.Parameters.AddWithValue("@ID_preview", ID_preview);
+                    }
+                    if (season_Available != null)
+                    {
+                        command.Parameters.AddWithValue("@ID_Available", ID_Available);
+                    }
+                    if (season_Unavailable != null)
+                    {
+                        command.Parameters.AddWithValue("@ID_Unavailable", ID_Unavailable);
+                    }
+                    int rowEffects = command.ExecuteNonQuery();
+                    if (rowEffects > 0)
+                    {
+                        result = true;
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return result;
+        }
+
+        public bool RequestChangeSeasonStatus(string seasonID, string newStatus)
+        {
+            var result = false;
+            try
+            {
+                Season season = GetSeasonByID(seasonID);
+                if (season.Status.Trim().Equals("Pending")) return false;
+                season.SeasonID = season.SeasonID + "_" + newStatus;
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "INSERT INTO season (seasonID, mediaID, title, thumbnailURL, status, number) " +
+                        "VALUES (@seasonID_preview, @mediaID, @title, @thumbnailURL, 'Pending', @number) ";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@seasonID_preview", season.SeasonID);
+                        command.Parameters.AddWithValue("@mediaID", season.MediaID);
+                        command.Parameters.AddWithValue("@title", season.Title);
+                        command.Parameters.AddWithValue("@thumbnailURL", season.ThumbnailURL);
+                        command.Parameters.AddWithValue("@number", season.Number);
+                        int rowEffects = command.ExecuteNonQuery();
+                        if (rowEffects > 0)
+                        {
+                            result = true;
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return result;
+        }
     }
 }

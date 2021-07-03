@@ -72,7 +72,8 @@ namespace Nextflip.Models.account
                         command.Parameters.AddWithValue("@limit", RowsOnPage);
                         using (var reader = command.ExecuteReader())
                         {
-                            while (reader.Read()) {
+                            while (reader.Read())
+                            {
                                 accounts.Add(new Account
                                 {
                                     userID = reader.GetString(0),
@@ -853,7 +854,7 @@ namespace Nextflip.Models.account
                     Debug.WriteLine(Sql);
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        command.Parameters.AddWithValue("@userID", random.Next(0,1000000000));
+                        command.Parameters.AddWithValue("@userID", random.Next(0, 1000000000));
                         command.Parameters.AddWithValue("@userEmail", userEmail);
                         command.Parameters.AddWithValue("@googleID", null);
                         command.Parameters.AddWithValue("@googleEmail", null);
@@ -905,7 +906,6 @@ namespace Nextflip.Models.account
         {
             try
             {
-                bool isExisted = false;
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
@@ -972,7 +972,7 @@ namespace Nextflip.Models.account
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select userID, userEmail, googleID, googleEmail, roleName, hashedPassword,  fullname, dateOfBirth ,  status, pictureURL  "+
+                    string Sql = "Select userID, userEmail, googleID, googleEmail, roleName, hashedPassword,  fullname, dateOfBirth ,  status, pictureURL  " +
                                 "From account " +
                                 "Where googleID = @googleID AND googleEmail = @googleEmail";
                     using (var command = new MySqlCommand(Sql, connection))
@@ -1019,34 +1019,6 @@ namespace Nextflip.Models.account
                         if (reader.Read()) return true;
                     }
                     connection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            return false;
-        }
-        public bool ChangePassword (string userID, string password)
-        {
-            try
-            {
-                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
-                {
-                    connection.Open();
-                    string Sql = "UPDATE account " +
-                                    "SET hashedPassword = @password " +
-                                    "WHERE (userID = @userID);";
-                    Debug.WriteLine(Sql);
-                    using (var command = new MySqlCommand(Sql, connection))
-                    {
-                        command.Parameters.AddWithValue("@userID", userID);
-                        command.Parameters.AddWithValue("@password", password);
-                        using (var reader = command.ExecuteReader())
-                        {
-                            if (reader.Read()) return true;
-                        }
-                    }
                 }
             }
             catch (Exception ex)

@@ -71,8 +71,8 @@ namespace Nextflip.APIControllers
             string url = null;
             try
             {
-                if (form.GoogleID == null || form.GoogleID.Trim().Length == 0) return new JsonResult(new { Message = "Error ! Please try again !" });
-                Account account = accountService.CheckGoogleLogin(form.GoogleID);
+                if (form.Email == null || form.Email.Trim().Length == 0 || !EmailUtil.IsValidEmail(form.Email)) return new JsonResult(new { Message = "Error ! Please try again !" });
+                Account account = accountService.CheckGoogleLogin(form.Email);
                 if (account == null) return new JsonResult(new { Message = "New Account", URL = "/Register/Index" });
                 if (account.roleName.Equals("customer supporter")) url = "/SupporterDashboard/Index";
                 else if (account.roleName.Equals("subscribed user")) url = "/SubcribedUserDashBoard/Index";
@@ -93,6 +93,5 @@ namespace Nextflip.APIControllers
     {
         public string Email { get; set; }
         public string Password { get; set; }
-        public string GoogleID { get; set; }
     }
 }

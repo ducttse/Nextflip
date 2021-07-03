@@ -1,12 +1,8 @@
-﻿using Microsoft.Data.SqlClient;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
+using Nextflip.utils;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Nextflip.utils;
 
 namespace Nextflip.Models.account
 {
@@ -964,7 +960,7 @@ namespace Nextflip.Models.account
             return false;
         }
 
-        public Account CheckGoogleLogin(string googleID)
+        public Account CheckGoogleLogin(string googleEmail)
         {
             try
             {
@@ -973,10 +969,10 @@ namespace Nextflip.Models.account
                     connection.Open();
                     string Sql = "Select userID, userEmail, googleID, googleEmail, roleName, hashedPassword,  fullname, dateOfBirth ,  status, pictureURL  " +
                                 "From account " +
-                                "Where googleID = @googleID ";
+                                "Where userEmail = @googleEmail ";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        command.Parameters.AddWithValue("@googleID", googleID);
+                        command.Parameters.AddWithValue("@googleEmail", googleEmail);
                         var reader = command.ExecuteReader();
                         if (reader.Read()) return new Account
                         {

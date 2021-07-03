@@ -821,7 +821,7 @@ namespace Nextflip.Models.account
                     connection.Open();
                     string Sql = "Select userEmail " +
                                 "From account " +
-                                "Where userEmail = @email";
+                                "Where userEmail = @email OR googleEmail = @email";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@email", email);
@@ -1001,6 +1001,31 @@ namespace Nextflip.Models.account
                 throw new Exception(ex.Message);
             }
             return null;
+        }
+        public bool CheckGoogleID(string googleID)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select userID " +
+                                "From account " +
+                                "Where googleID = @googleID ";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@googleID", googleID);
+                        var reader = command.ExecuteReader();
+                        if (reader.Read()) return true;
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return false;
         }
     }
 }

@@ -822,7 +822,7 @@ namespace Nextflip.Models.account
                     connection.Open();
                     string Sql = "Select userEmail " +
                                 "From account " +
-                                "Where userEmail = @email OR googleEmail = @email";
+                                "Where userEmail = @email ";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@email", email);
@@ -838,7 +838,7 @@ namespace Nextflip.Models.account
                 throw new Exception(ex.Message);
             }
         }
-        public string RegisterAnAccount(string userEmail, string googleID, string googleEmail, string password, string fullname, string dateOfBirth)
+        public string RegisterAnAccount(string userEmail, string googleID, string password, string fullname, string dateOfBirth)
         {
             DateTime dob = Convert.ToDateTime(dateOfBirth);
             string roleName = "subscribed user";
@@ -849,15 +849,14 @@ namespace Nextflip.Models.account
                 {
                     Random random = new Random();
                     connection.Open();
-                    string Sql = "INSERT INTO account(userID, userEmail, googleID, googleEmail, roleName, hashedPassword, fullname, dateOfBirth , status) " +
-                                   "VALUES( @userID, @userEmail, @googleID, @googleEmail, @roleName, @hashedPassword, @fullname, @dateOfBirth, @status); ";
+                    string Sql = "INSERT INTO account(userID, userEmail, googleID, roleName, hashedPassword, fullname, dateOfBirth , status) " +
+                                   "VALUES( @userID, @userEmail, @googleID, @roleName, @hashedPassword, @fullname, @dateOfBirth, @status); ";
                     Debug.WriteLine(Sql);
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@userID", random.Next(0, 1000000000));
                         command.Parameters.AddWithValue("@userEmail", userEmail);
                         command.Parameters.AddWithValue("@googleID", null);
-                        command.Parameters.AddWithValue("@googleEmail", null);
                         command.Parameters.AddWithValue("@roleName", roleName);
                         command.Parameters.AddWithValue("@hashedPassword", password);
                         command.Parameters.AddWithValue("@fullname", fullname);
@@ -965,7 +964,7 @@ namespace Nextflip.Models.account
             return false;
         }
 
-        public Account CheckGoogleLogin(string googleID, string googleEmail)
+        public Account CheckGoogleLogin(string googleID)
         {
             try
             {
@@ -974,7 +973,7 @@ namespace Nextflip.Models.account
                     connection.Open();
                     string Sql = "Select userID, userEmail, googleID, googleEmail, roleName, hashedPassword,  fullname, dateOfBirth ,  status, pictureURL  " +
                                 "From account " +
-                                "Where googleID = @googleID AND googleEmail = @googleEmail";
+                                "Where googleID = @googleID ";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@googleID", googleID);
@@ -1001,31 +1000,6 @@ namespace Nextflip.Models.account
                 throw new Exception(ex.Message);
             }
             return null;
-        }
-        public bool CheckGoogleID(string googleID)
-        {
-            try
-            {
-                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
-                {
-                    connection.Open();
-                    string Sql = "Select userID " +
-                                "From account " +
-                                "Where googleID = @googleID ";
-                    using (var command = new MySqlCommand(Sql, connection))
-                    {
-                        command.Parameters.AddWithValue("@googleID", googleID);
-                        var reader = command.ExecuteReader();
-                        if (reader.Read()) return true;
-                    }
-                    connection.Close();
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-            return false;
         }
     }
 }

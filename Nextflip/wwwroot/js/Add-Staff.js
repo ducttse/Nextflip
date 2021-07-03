@@ -1,25 +1,10 @@
-﻿let requestParam = {
+﻿let newUserInfo = {
     UserEmail: "",
     Fullname: "",
     dateOfBirth: "",
-    RoleName: ""
+    RoleName: "User Manager"
 }
-
-function resetRequestParam() {
-    requestParam = {
-        UserEmail: "",
-        Fullname: "",
-        dateOfBirth: "",
-        RoleName: ""
-    }
-    document.getElementById("email").value = requestParam.UserEmail;
-    document.getElementById("email").parentNode.classList.remove("was-validated");
-    document.getElementById("fullname").value = requestParam.Fullname;
-    document.getElementById("dob").value = requestParam.dateOfBirth;
-    document.getElementById("role").value = requestParam.RoleName;
-
-}
-
+let isReset = false;
 function requestApi() {
     let reqHeader = new Headers();
     reqHeader.append("Content-Type", "text/json");
@@ -27,45 +12,86 @@ function requestApi() {
     let initObject = {
         method: "POST",
         headers: reqHeader,
-        body: JSON.stringify(requestParam)
+        body: JSON.stringify(newUserInfo)
     };
     return fetch("/api/UserManagerManagement/CreateStaff", initObject);
 }
+let postFix = "@gmail.com";
 
-function setRequetsParam() {
-    let email = document.getElementById("email").value;
-    let fullname = document.getElementById("fullname").value;
-    let dob = document.getElementById("dob").value;
-    let role = document.getElementById("role").value;
-    requestParam = {
-        UserEmail: email,
-        Fullname: fullname,
-        dateOfBirth: dob,
-        RoleName: role
+function resetRequestParam() {
+    newUserInfo = {
+        UserEmail: "",
+        Fullname: "",
+        dateOfBirth: "",
+        RoleName: "User Manager"
     }
+    document.getElementById("email_detail").value = "";
+    document.getElementById("email_detail").parentNode.classList.remove("was-validated");
+    document.getElementById("fullname_detail").value = "";
+    document.getElementById("fullname_detail").parentNode.classList.remove("was-validated");
+    document.getElementById("dob").value = "";
+    document.getElementById("dob").parentNode.classList.remove("was-validated");
+    document.getElementById("role").value = "User Manager";
+    isReset = true;
 }
 
-function showModal() {
-    var myModal = new bootstrap.Modal(document.getElementById("modal_flash"), {
-        keyboard: false
+let AddStaffModal;
+
+function showAddStaffModal() {
+    if (AddStaffModal == null) {
+        AddStaffModal = new bootstrap.Modal(document.getElementById("add_staff_modal"), {
+            keyboard: false
+        })
+    }
+    resetRequestParam();
+    AddStaffModal.show();
+}
+
+function hideAddStaffModalOnSuccess() {
+    var myModalEl = document.getElementById('add_staff_modal')
+    myModalEl.addEventListener("hidden.bs.modal", () => {
+        if (isReset) {
+            appendFlashMessageContent(true);
+            showModal("modal_flash");
+            isReset = false;
+        }
+
     })
-    myModal.show();
+    AddStaffModal.hide();
 }
 
-function CreateStaff() {
-    setRequetsParam();
-    requestApi()
+function requestCheckEmail() {
+    let emailInputEl = document.getElementById("email_detail");
+    if (emailInputEl.value.trim() == "") {
+        return;
+    }
+    let parent = emailInputEl.parentNode;
+    let feedback = parent.querySelector(".invalid-feedback");
+    newUserInfo.UserEmail = emailInputEl.value + "@gmail.com";
+    fetch(`/api/UserManagerManagement/IsValidEmail/${newUserInfo.UserEmail}`)
         .then(res => res.json())
         .then(json => {
-            console.log(json);
-            let success = validate(json);
-            if (success == "success") {
-                resetRequestParam();
-                appendFlashMessageContent(true);
-                showModal();
+            if (json.message != null) {
+                if (json.message == "Email is existed") {
+                    feedback.innerHTML = json.message;
+                    emailInputEl.setCustomValidity("existed");
+                }
+                else if (json.message == "Email is invalid format") {
+                    feedback.innerHTML = json.message;
+                    emailInputEl.setCustomValidity("invalid");
+                }
+                else if (json.message == "") {
+                    feedback.innerHTML = "";
+                    emailInputEl.setCustomValidity("");
+                }
             }
+            parent.classList.add("was-validated");
         })
 }
+
+const checkEmail = debounce(() => {
+    requestCheckEmail();
+});
 
 function debounce(func, timeout = 300) {
     let timer;
@@ -75,111 +101,91 @@ function debounce(func, timeout = 300) {
     };
 }
 
-
-
-
-function validate(json) {
-    if (json.message != null) {
-        if (json.message == "success") {
-            return "success";
-        }
-        //check DOB
-        let dob = document.getElementById("dob");
-        let dobContainer = dob.parentNode;
-        let DOBfeedback = dobContainer.querySelector(".invalid-feedback");
-        if (json.dateTimeErr != null) {
-            DOBfeedback.innerHTML = json.dateTimeErr;
-            if (json.emailErr == "Date of birth is Invalid") {
-                dob.setCustomValidity("Invalid");
-            }
-        }
-        else {
-            dob.setCustomValidity("");
-        }
-        dobContainer.classList.add("was-validated");
-        // check role
-        let fullname = document.getElementById("fullname");
-        let nameContainer = fullname.parentNode;
-        let nameFeedback = nameContainer.querySelector(".invalid-feedback");
-        if (json.nameErr != null) {
-            nameFeedback.innerHTML = json.nameErr;
-            if (json.nameErr == "Full name must not be empty") {
-                dob.setCustomValidity("empty");
-            }
-        }
-        else {
-            dob.setCustomValidity("");
-        }
-        nameContainer.classList.add("was-validated");
-        //email
-        let email = document.getElementById("email");
-        let emailInputContainer = email.parentNode;
-        let feedback = emailInputContainer.querySelector(".invalid-feedback");
-        feedback.innerHTML = json.emailErr;
-        if (json.message == "fail") {
-            if (json.emailErr != null) {
-                if (json.emailErr == "Email is existed") {
-                    email.setCustomValidity("existed");
-                }
-                else if (json.emailErr == "Email is invalid format") {
-                    email.setCustomValidity("invalid");
-                }
-            }
-            else {
-                email.setCustomValidity("");
-            }
-        }
-        emailInputContainer.classList.add("was-validated");
-    }
+function setNewInfo() {
+    newUserInfo.UserEmail = document.getElementById("email_detail").value + postFix;
+    newUserInfo.Fullname = document.getElementById("fullname_detail").value;
+    newUserInfo.dateOfBirth = document.getElementById("dob").value;
+    newUserInfo.RoleName = document.getElementById("role").value;
 }
 
-const checkEmail = debounce(() => {
-    requestParam.UserEmail = document.getElementById("email").value;
-    requestParam.dateOfBirth = "";
-    requestApi()
+function requestCreateApi() {
+    setNewInfo();
+    let reqHeader = new Headers();
+    reqHeader.append("Content-Type", "text/json");
+    reqHeader.append("Accept", "application/json, text/plain, */*");
+    let initObject = {
+        method: "POST",
+        headers: reqHeader,
+        body: JSON.stringify(newUserInfo)
+    };
+    fetch("/api/UserManagerManagement/CreateStaff", initObject)
         .then(res => res.json())
         .then(json => {
-            if (json.message != null) {
-                let email = document.getElementById("email");
-                let emailInputContainer = email.parentNode;
-                let feedback = emailInputContainer.querySelector(".invalid-feedback");
-                feedback.innerHTML = json.emailErr;
-                if (json.message == "fail") {
-                    if (json.emailErr != null) {
-                        if (json.emailErr == "Email is existed") {
-                            email.setCustomValidity("existed");
-                        }
-                        else if (json.emailErr == "Email is invalid format") {
-                            email.setCustomValidity("invalid");
-                        }
-                        emailInputContainer.classList.add("was-validated");
-                    }
-                    else {
-                        email.setCustomValidity("");
-                    }
+            isReset = false;
+            if (json.message == "Fail") {
+                if (json.nameErr != null) {
+                    validateFullName(json.nameErr);
+                }
+                if (json.dateTimeErr != null) {
+                    validateDOB(json.dateTimeErr);
+                }
+                if (json.emailErr != null) {
+                    validateEmail(json.emailErr);
                 }
             }
-        }
-        );
-});
-
-function appendFlashMessageContent(isSuccess) {
-    let fail = ` <i class="far fa-times-circle fa-5x text-danger"></i>
-                    <p class="fs-5">Opps! Something went wrong</p>
-                    <button type="button" class="col-4 mx-auto btn btn-danger text-white" data-bs-dismiss="modal">
-                        Try again
-                    </button>`
-    let success = ` <i class="far fa-check-circle fa-5x" style="color: #4bca81"></i>
-                    <p class="fs-5">Success</p>
-                    <button type="button" class="col-4 mx-auto btn btn-success text-white" 
-                        style=" background-color: #4bca81 !important; border: #4bca81 !important;"
-                        data-bs-dismiss="modal">
-                        Continue
-                    </button>`;
-
-    let flashModal = document.getElementById("flash_message");
-    if (flashModal.innerHTML != "") {
-        flashModal.innerHTML = "";
-    }
-    flashModal.insertAdjacentHTML("afterbegin", isSuccess ? success : fail);
+            else if (json.message == "Success") {
+                resetRequestParam();
+                hideAddStaffModalOnSuccess();
+            }
+        })
 }
+
+function validateFullName(message) {
+    let fullNamInputEl = document.getElementById("fullname_detail");
+    let parent = fullNamInputEl.parentNode;
+    let feedback = parent.querySelector(".invalid-feedback");
+    if (message == "Full name must not be empty") {
+        feedback.innerHTML = message;
+        fullNamInputEl.setCustomValidity("empty");
+    }
+    else {
+        feedback.innerHTML = "";
+        fullNamInputEl.setCustomValidity("");
+    }
+    parent.classList.add("was-validated");
+}
+
+function validateDOB(message) {
+    let InputEl = document.getElementById("dob");
+    let parent = InputEl.parentNode;
+    let feedback = parent.querySelector(".invalid-feedback");
+    if (message == "Date of birth is Invalid") {
+        feedback.innerHTML = message;
+        InputEl.setCustomValidity("Invalid");
+    }
+    else {
+        feedback.innerHTML = "";
+        InputEl.setCustomValidity("");
+    }
+    parent.classList.add("was-validated");
+}
+
+function validateEmail(message) {
+    let emailInputEl = document.getElementById("email_detail");
+    let parent = emailInputEl.parentNode;
+    let feedback = parent.querySelector(".invalid-feedback");
+    if (message == "Email is existed") {
+        feedback.innerHTML = message;
+        emailInputEl.setCustomValidity("existed");
+    }
+    else if (message == "Email is invalid format") {
+        feedback.innerHTML = message;
+        emailInputEl.setCustomValidity("invalid");
+    }
+    else if (message == "") {
+        feedback.innerHTML = "";
+        emailInputEl.setCustomValidity("");
+    }
+    parent.classList.add("was-validated");
+}
+

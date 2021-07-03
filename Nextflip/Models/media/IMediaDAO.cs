@@ -25,6 +25,15 @@ namespace Nextflip.Models.media
         IEnumerable<Media> ViewMediasFilterCategory_Status(string CategoryName, string Status, int RowsOnPage, int RequestPage);
         int NumberOfMediasFilterCategory_Status(string CategoryName, string Status);
 
-        bool ChangeMediaStatus(string mediaID, string status);
+        bool RequestDisableMedia(string mediaID);
+        bool ApproveChangeMedia(string mediaID);
+        bool DisapproveChangeMedia(string mediaID);
+        IEnumerable<Media> GetAllMedia(int RowsOnPage, int RequestPage);
+        int NumberOfMedias();
+        IEnumerable<Media> GetAllMediaFilterStatus(string Status, int RowsOnPage, int RequestPage);
+        int NumberOfMediasFilterStatus(string Status);
+        IEnumerable<Media> GetMediasByTitleFilterStatus(string searchValue, string Status, int RowsOnPage, int RequestPage);
+        int NumberOfMediasBySearchingFilterStatus(string searchValue, string Status);
+        bool RequestChangeMediaStatus(string mediaID, string newStatus);
     }
 }

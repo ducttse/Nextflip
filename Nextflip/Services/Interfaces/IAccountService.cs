@@ -8,7 +8,7 @@ namespace Nextflip.Services.Interfaces
 {
     public interface IAccountService
     {
-        public string RegisterAccount(string userEmail, string googleID, string password, string fullname, string dateOfBirth);
+        public string RegisterAccount(string userEmail, string password, string fullname, DateTime dateOfBirth, string pictureURL);
         public bool ChangeProfile(string userID, string userEmail, string fullname, string dateOfBirth, string pictureURL);
         public Account Login(string email, string password);
         public bool IsExistedEmail(string email);

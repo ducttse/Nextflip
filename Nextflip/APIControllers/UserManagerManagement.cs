@@ -28,11 +28,11 @@ namespace Nextflip.APIControllers
             _logger = logger;
         }
 
-        
+
         [Route("GetAllAccounts")]
         public JsonResult GetAllAccounts([FromServices] IUserManagerManagementService userManagerManagementService)
         {
-            try 
+            try
             {
             IEnumerable<Account> accounts = userManagerManagementService.GetAllAccounts();
             return new JsonResult(accounts);
@@ -368,13 +368,13 @@ namespace Nextflip.APIControllers
                 }
                 if (isValid == true)
                 {
-                    userManagerManagementService.AddNewStaff(new Account 
-                    { 
+                    userManagerManagementService.AddNewStaff(new Account
+                    {
                         userEmail = _staffInfo.userEmail,
                         fullname = _staffInfo.fullname,
                         roleName = _staffInfo.roleName,
                         dateOfBirth = date
-                                
+
                     });
                     noti.message = "Success";
                 }
@@ -410,8 +410,8 @@ namespace Nextflip.APIControllers
                 }
                 if (isValid)
                 {
-                    userManagerManagementService.UpdateExpiredDate( new Subscription 
-                    { 
+                    userManagerManagementService.UpdateExpiredDate( new Subscription
+                    {
                         UserID = _subscript.userID,
                         StartDate = DateTime.Now,
                         EndDate = endDate
@@ -490,7 +490,6 @@ namespace Nextflip.APIControllers
         {
             public string userID { get; set; }
             public string userEmail { get; set; }
-            public string googleEmail { get; set; }
             public string roleName { get; set; }
             public string fullname { get; set; }
             public DateTime dateOfBirth { get; set; }
@@ -510,7 +509,6 @@ namespace Nextflip.APIControllers
                 {
                     userID = account.userID,
                     userEmail = account.userEmail,
-                    googleEmail = account.googleEmail,
                     roleName = account.roleName,
                     fullname = account.fullname,
                     expiration = subscription

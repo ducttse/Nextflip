@@ -1,8 +1,6 @@
 ﻿let UserRequestData = {
   userID: "00000000000000000000",
   userEmail: "longpnhse150499@fpt.edu.vn",
-  googleID: null,
-  googleEmail: null,
   roleName: "customer supporter",
   hashedPassword: null,
   fullname: "Phan Ngọc Hoàng Long",

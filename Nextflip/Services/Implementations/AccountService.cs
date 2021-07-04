@@ -22,7 +22,7 @@ namespace Nextflip.Services.Implementations
         public Account Login(string email, string password) => _accountDAO.Login(email, password);
         public bool IsExistedEmail(string email) => _accountDAO.IsExistedEmail(email);
 
-        public string RegisterAccount(string userEmail, string googleID, string password, string fullname, string dateOfBirth) => _accountDAO.RegisterAnAccount(userEmail, googleID, password, fullname, dateOfBirth);
+        public string RegisterAccount(string userEmail, string password, string fullname, DateTime dateOfBirth, string pictureURL) => _accountDAO.RegisterAnAccount(userEmail, password, fullname, dateOfBirth, pictureURL);
         public bool ChangePassword(string userID, string password) => _accountDAO.ChangePassword(userID, password);
         public Account CheckGoogleLogin(string googleID) => _accountDAO.CheckGoogleLogin(googleID);
     }

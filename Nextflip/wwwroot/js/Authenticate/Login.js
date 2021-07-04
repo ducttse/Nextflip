@@ -19,18 +19,58 @@
             console.log(json);
             if (json.message == true) {
                 console.log("login success");
-                //TODO redirect to page
+                window.location.replace(json.url);
             }
             else {
-                document.getElementsByClassName("alert")[ 0 ].classList.remove("d-none");
+                let alert = document.getElementsByClassName("alert")[ 0 ]
+                alert.classList.remove("d-none");
             }
         })
 }
 
-function onSignIn(googleUser) {
-    var profile = googleUser.getBasicProfile();
-    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-    console.log('Name: ' + profile.getName());
-    console.log('Image URL: ' + profile.getImageUrl());
-    console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+async function onSignIn(googleUser) {
+    var profile = await googleUser.getBasicProfile();
+    var auth2 = gapi.auth2.getAuthInstance();
+    console.log(auth2);
+    console.log(googleUser);
+    SignInToBackEnd(profile);
 }
+
+async function SignInToBackEnd(profile) {
+    let reqHeader = new Headers();
+    reqHeader.append("Content-Type", "text/json");
+    reqHeader.append("Accept", "application/json, text/plain, */*");
+    let initObject = {
+        method: "POST",
+        headers: reqHeader,
+        body: JSON.stringify({
+            Email: profile.getEmail()
+        })
+    };
+    await fetch("/api/Login/LoginByGmail", initObject)
+        .then(res => res.json())
+        .then(json => {
+            if (json.message == "New Account") {
+                localStorage.setItem("profile", JSON.stringify({
+                    email: profile.getEmail(),
+                    fullname: profile.getName(),
+                    imgURL: profile.getImageUrl()
+                }));
+                window.location.href = json.url;
+            }
+            else if (json.message == true) {
+                window.location.href = json.url;
+            }
+            else {
+                let alert = document.getElementsByClassName("alert")[ 0 ]
+                alert.classList.remove("d-none");
+            }
+        })
+}
+
+function signOut() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    console.log(auth2);
+    auth2.signOut().then();
+}
+// signOut();

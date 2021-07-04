@@ -47,3 +47,12 @@
     </div>
 <div>
 <script src="~/js/Authenticate/Login.js"></script>
+<script>
+        gapi.load('auth2', function () {
+        auth2 = gapi.auth2.init({
+            client_id: '753240362122-b5jcp3ipgeuo2alsicq580puevmjgp91.apps.googleusercontent.com',
+            cookiepolicy: 'single_host_origin',
+            ux_mode: 'redirect',
+            redirect_uri: 'https://localhost:44341/SubcribedUserDashBoard/'
+        });
+</script>

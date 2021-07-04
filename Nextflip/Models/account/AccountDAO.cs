@@ -1,12 +1,8 @@
-﻿using Microsoft.Data.SqlClient;
-using MySql.Data.MySqlClient;
+﻿using MySql.Data.MySqlClient;
+using Nextflip.utils;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Nextflip.utils;
 
 namespace Nextflip.Models.account
 {
@@ -31,11 +27,11 @@ namespace Nextflip.Models.account
                             {
                                 accounts.Add(new Account
                                 {
-                                    userID = reader.GetString(0),
-                                    userEmail = reader.GetString(1),
-                                    roleName = reader.GetString(2),
-                                    fullname = reader.GetString(3),
-                                    status = reader.GetString(4)
+                                    userID = reader.GetString("userID"),
+                                    userEmail = reader.GetString("userEmail"),
+                                    roleName = reader.GetString("roleName"),
+                                    fullname = reader.GetString("fullname"),
+                                    status = reader.GetString("status")
                                 });
                             }
                         }
@@ -72,15 +68,16 @@ namespace Nextflip.Models.account
                         command.Parameters.AddWithValue("@limit", RowsOnPage);
                         using (var reader = command.ExecuteReader())
                         {
-                            while (reader.Read()) {
-                            accounts.Add(new Account
+                            while (reader.Read())
                             {
-                                userID = reader.GetString(0),
-                                userEmail = reader.GetString(1),
-                                roleName = reader.GetString(2),
-                                fullname = reader.GetString(3),
-                                status = reader.GetString(4)
-                            });
+                                accounts.Add(new Account
+                                {
+                                    userID = reader.GetString("userID"),
+                                    userEmail = reader.GetString("userEmail"),
+                                    roleName = reader.GetString("roleName"),
+                                    fullname = reader.GetString("fullname"),
+                                    status = reader.GetString("status")
+                                });
                             }
                         }
                     }
@@ -194,11 +191,11 @@ namespace Nextflip.Models.account
                             {
                                 accounts.Add(new Account
                                 {
-                                    userID = reader.GetString(0),
-                                    userEmail = reader.GetString(1),
-                                    roleName = reader.GetString(2),
-                                    fullname = reader.GetString(3),
-                                    status = reader.GetString(4)
+                                    userID = reader.GetString("userID"),
+                                    userEmail = reader.GetString("userEmail"),
+                                    roleName = reader.GetString("roleName"),
+                                    fullname = reader.GetString("fullname"),
+                                    status = reader.GetString("status")
                                 });
                             }
                         }
@@ -260,11 +257,11 @@ namespace Nextflip.Models.account
                             {
                                 accounts.Add(new Account
                                 {
-                                    userID = reader.GetString(0),
-                                    userEmail = reader.GetString(1),
-                                    roleName = reader.GetString(2),
-                                    fullname = reader.GetString(3),
-                                    status = reader.GetString(4)
+                                    userID = reader.GetString("userID"),
+                                    userEmail = reader.GetString("userEmail"),
+                                    roleName = reader.GetString("roleName"),
+                                    fullname = reader.GetString("fullname"),
+                                    status = reader.GetString("status")
                                 });
                             }
                         }
@@ -315,7 +312,6 @@ namespace Nextflip.Models.account
                     }
                     return accounts;
                 }
-
                 public IEnumerable<Account> GetAllInactiveAccounts()
                 {
                     var accounts = new List<Account>();
@@ -358,7 +354,7 @@ namespace Nextflip.Models.account
         public IEnumerable<Account> GetAccountsListByRoleAccordingRequest(string roleName, string status, int RowsOnPage, int RequestPage)
         {
             var accounts = new List<Account>();
-            int offset = ((int)(RequestPage-1)) * RowsOnPage;
+            int offset = ((int)(RequestPage - 1)) * RowsOnPage;
             try
             {
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
@@ -381,11 +377,11 @@ namespace Nextflip.Models.account
                             {
                                 accounts.Add(new Account
                                 {
-                                    userID = reader.GetString(0),
-                                    userEmail = reader.GetString(1),
-                                    roleName = reader.GetString(2),
-                                    fullname = reader.GetString(3),
-                                    status = reader.GetString(4)
+                                    userID = reader.GetString("userID"),
+                                    userEmail = reader.GetString("userEmail"),
+                                    roleName = reader.GetString("roleName"),
+                                    fullname = reader.GetString("fullname"),
+                                    status = reader.GetString("status")
                                 });
                             }
                         }
@@ -449,11 +445,11 @@ namespace Nextflip.Models.account
                             {
                                 accounts.Add(new Account
                                 {
-                                    userID = reader.GetString(0),
-                                    userEmail = reader.GetString(1),
-                                    roleName = reader.GetString(2),
-                                    fullname = reader.GetString(3),
-                                    status = reader.GetString(4)
+                                    userID = reader.GetString("userID"),
+                                    userEmail = reader.GetString("userEmail"),
+                                    roleName = reader.GetString("roleName"),
+                                    fullname = reader.GetString("fullname"),
+                                    status = reader.GetString("status")
                                 });
                             }
                         }
@@ -519,11 +515,11 @@ namespace Nextflip.Models.account
                             {
                                 accounts.Add(new Account
                                 {
-                                    userID = reader.GetString(0),
-                                    userEmail = reader.GetString(1),
-                                    roleName = reader.GetString(2),
-                                    fullname = reader.GetString(3),
-                                    status = reader.GetString(4)
+                                    userID = reader.GetString("userID"),
+                                    userEmail = reader.GetString("userEmail"),
+                                    roleName = reader.GetString("roleName"),
+                                    fullname = reader.GetString("fullname"),
+                                    status = reader.GetString("status")
                                 });
                             }
                         }
@@ -583,12 +579,11 @@ namespace Nextflip.Models.account
                             {
                                 account = new Account
                                 {
-                                    userID = reader.GetString(0),
-                                    userEmail = reader.GetString(1),
-                                    roleName = reader.GetString(2),
-                                    fullname = reader.GetString(3),
-                                    dateOfBirth = reader.GetDateTime(4),
-                                    status = reader.GetString(5)
+                                    userID = reader.GetString("userID"),
+                                    userEmail = reader.GetString("userEmail"),
+                                    roleName = reader.GetString("roleName"),
+                                    fullname = reader.GetString("fullname"),
+                                    status = reader.GetString("status")
                                 };
                             }
                         }
@@ -623,13 +618,11 @@ namespace Nextflip.Models.account
                             {
                                 account = new Account
                                 {
-                                    userID = reader.GetString(0),
-                                    userEmail = reader.GetString(1),
-                                    roleName = reader.GetString(2),
-                                    fullname = reader.GetString(3),
-                                    dateOfBirth = reader.GetDateTime(4),
-                                    status = reader.GetString(5),
-                                    note = reader.GetString(6)
+                                    userID = reader.GetString("userID"),
+                                    userEmail = reader.GetString("userEmail"),
+                                    roleName = reader.GetString("roleName"),
+                                    fullname = reader.GetString("fullname"),
+                                    status = reader.GetString("status")
                                 };
                             }
                         }
@@ -779,7 +772,7 @@ namespace Nextflip.Models.account
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select fullname, userEmail, googleID, googleEmail, dateOfBirth, roleName, pictureURL " +
+                    string Sql = "Select fullname, userEmail, dateOfBirth, roleName, pictureURL " +
                                     "From account " +
                                     "Where userID = @userID";
                     using (var command = new MySqlCommand(Sql, connection))
@@ -792,13 +785,11 @@ namespace Nextflip.Models.account
                                 account = new Account
                                 {
                                     userID = userID,
-                                    fullname = reader.GetString(0),
-                                    userEmail = reader.GetString(1),
-                                    googleID = reader.IsDBNull(2) ? null : reader.GetString(2),
-                                    googleEmail = reader.IsDBNull(3) ? null : reader.GetString(3),
-                                    dateOfBirth = reader.GetDateTime(4),
-                                    roleName = reader.GetString(5),
-                                    pictureURL = reader.IsDBNull(6) ? null : reader.GetString(6)
+                                    fullname = reader.GetString("fullname"),
+                                    userEmail = reader.GetString("userEmail"),
+                                    dateOfBirth = reader.GetDateTime("dateOfBirth"),
+                                    roleName = reader.GetString("roleName"),
+                                    pictureURL =  reader.IsDBNull(reader.GetOrdinal("pictureURL")) ? null : reader.GetString("pictureURL")
                                 };
                             }
                         }
@@ -822,7 +813,7 @@ namespace Nextflip.Models.account
                     connection.Open();
                     string Sql = "Select userEmail " +
                                 "From account " +
-                                "Where userEmail = @email";
+                                "Where userEmail = @email ";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@email", email);
@@ -838,30 +829,30 @@ namespace Nextflip.Models.account
                 throw new Exception(ex.Message);
             }
         }
-        public string RegisterAnAccount(string userEmail, string googleID, string googleEmail, string password, string fullname, string dateOfBirth)
+        public string RegisterAnAccount(string userEmail, string password, string fullname, DateTime dateOfBirth, string pictureURL)
         {
-            DateTime dob = Convert.ToDateTime(dateOfBirth);
             string roleName = "subscribed user";
             string status = "Active";
+            if (pictureURL == null) pictureURL = "";
             try
             {
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
+                    Random random = new Random();
                     connection.Open();
-                    string Sql = "INSERT INTO account(userID, userEmail, googleID, googleEmail, roleName, hashedPassword, fullname, dateOfBirth , status) " +
-                                   "VALUES( @userID, @userEmail, @googleID, @googleEmail, @roleName, @hashedPassword, @fullname, @dateOfBirth, @status); ";
+                    string Sql = "INSERT INTO account(userID, userEmail, roleName, hashedPassword, fullname, dateOfBirth , status, pictureURL) " +
+                                   "VALUES( @userID, @userEmail, @roleName, @hashedPassword, @fullname, @dateOfBirth, @status, @pictureURL); ";
                     Debug.WriteLine(Sql);
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        command.Parameters.AddWithValue("@userID", "12345689");
+                        command.Parameters.AddWithValue("@userID", random.Next(0, 1000000000));
                         command.Parameters.AddWithValue("@userEmail", userEmail);
-                        command.Parameters.AddWithValue("@googleID", null);
-                        command.Parameters.AddWithValue("@googleEmail", null);
                         command.Parameters.AddWithValue("@roleName", roleName);
                         command.Parameters.AddWithValue("@hashedPassword", password);
                         command.Parameters.AddWithValue("@fullname", fullname);
                         command.Parameters.AddWithValue("@dateOfBirth", dateOfBirth);
                         command.Parameters.AddWithValue("@status", status);
+                        command.Parameters.AddWithValue("@pictureURL", pictureURL);
                         int result = command.ExecuteNonQuery();
                         if (result > 0) return "Success";
                     }
@@ -873,29 +864,25 @@ namespace Nextflip.Models.account
             }
             return null;
         }
-        public bool ChangeProfile(string userID, string userEmail, string password, string fullname, string dateOfBirth, string pictureURL)
+        public bool ChangeProfile(string userID, string userEmail, string fullname, string dateOfBirth, string pictureURL)
         {
             try
             {
-                DateTime dob = Convert.ToDateTime(dateOfBirth);
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
                     string Sql = "UPDATE account " +
-                                    "SET userEmail = @userEmail, hashedPassword = @password, fullname = @fullname, dateOfBirth = @dateOfBirth, pictureURL = @pictureURL" +
-                                    "WHERE (userID = @userID);";
-                    Debug.WriteLine(Sql);
+                                    "SET userEmail = @userEmail, fullname = @fullname, dateOfBirth = @dateOfBirth, pictureURL = @pictureURL " +
+                                    "WHERE (userID = @userID)";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@userID", userID);
                         command.Parameters.AddWithValue("@userEmail", userEmail);
-                        command.Parameters.AddWithValue("@hashedPassword", password);
                         command.Parameters.AddWithValue("@fullname", fullname);
-                        command.Parameters.AddWithValue("@dateOfBirth", dob);
-                        using (var reader = command.ExecuteReader())
-                        {
-                            if (reader.Read()) return true;
-                        }
+                        command.Parameters.AddWithValue("@dateOfBirth", dateOfBirth);
+                        command.Parameters.AddWithValue("@pictureURL", pictureURL);
+                        int result = command.ExecuteNonQuery();
+                        if (result == 1) return true;
                     }
                 }
             }
@@ -905,15 +892,14 @@ namespace Nextflip.Models.account
             }
             return false;
         }
-        public bool Login(string email, string password)
+        public Account Login(string email, string password)
         {
             try
             {
-                bool isExisted = false;
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select userID " +
+                    string Sql = "Select userID, userEmail, roleName, hashedPassword,  fullname, dateOfBirth ,  status, pictureURL " +
                                 "From account " +
                                 "Where userEmail = @email AND hashedPassword = @password";
                     using (var command = new MySqlCommand(Sql, connection))
@@ -921,16 +907,85 @@ namespace Nextflip.Models.account
                         command.Parameters.AddWithValue("@email", email);
                         command.Parameters.AddWithValue("@password", password);
                         var reader = command.ExecuteReader();
-                        if (reader.Read()) isExisted = true;
+                        if (reader.Read()) return new Account
+                        {
+                            userID = reader.GetString("userID"),
+                            userEmail = reader.GetString("userEmail"),
+                            roleName = reader.GetString("roleName"),
+                            fullname = reader.GetString("fullname"),
+                            dateOfBirth = reader.GetDateTime("dateOfBirth"),
+                            pictureURL = reader.GetString("pictureURL")
+
+                        };
                     }
                     connection.Close();
                 }
-                return isExisted;
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
+            return null;
+        }
+        public bool ChangePassword(string userID, string password)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "UPDATE account " +
+                                    "SET hashedPassword = @password " +
+                                    "WHERE (userID = @userID);";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userID", userID);
+                        command.Parameters.AddWithValue("@password", password);
+                        int result = command.ExecuteNonQuery();
+                        if (result == 1) return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return false;
+        }
+
+        public Account CheckGoogleLogin(string googleEmail)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select userID, userEmail, roleName, hashedPassword,  fullname, dateOfBirth , status, pictureURL  " +
+                                "From account " +
+                                "Where userEmail = @googleEmail ";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@googleEmail", googleEmail);
+                        var reader = command.ExecuteReader();
+                        if (reader.Read()) return new Account
+                        {
+                            userID = reader.GetString("userID"),
+                            userEmail = reader.GetString("userEmail"),
+                            roleName = reader.GetString("roleName"),
+                            fullname = reader.GetString("fullname"),
+                            dateOfBirth = reader.GetDateTime("dateOfBirth"),
+                            pictureURL = reader.IsDBNull(reader.GetOrdinal("pictureURL")) ? null : reader.GetString("pictureURL")
+
+                        };
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return null;
         }
     }
 }

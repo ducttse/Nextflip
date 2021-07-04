@@ -119,6 +119,8 @@ function appendUserToWrapper() {
 
 function setRowsPerPage(obj) {
   requestParam.RowsOnPage = obj.value;
+  requestParam.RequestPage = 1;
+  setPageDataCurrentPage(1);
   setRequestPage(requestParam.RequestPage)
     .then(res => res.json())
     .then(json => {

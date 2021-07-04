@@ -10,9 +10,7 @@ namespace Nextflip.Services.Interfaces
 {
     public interface IMediaManagerManagementService
     {
-        IEnumerable<MediaEditRequest> GetAllPendingMedias();
-        IEnumerable<MediaEditRequest> GetPendingMediaByUserEmail(string searchValue, int RowsOnPage, int RequestPage);
-        int NumberOfPendingMediasBySearching(string searchValue);
+        IEnumerable<MediaEditRequest> GetAllPendingMedias(); 
 
         IEnumerable<MediaEditRequest> GetPendingMediaByUserEmailFilterStatus(string searchValue, string Status, int RowsOnPage, int RequestPage);
         int NumberOfPendingMediasBySearchingFilterStatus(string searchValue, string Status);

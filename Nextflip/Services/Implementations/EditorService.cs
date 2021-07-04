@@ -69,5 +69,13 @@ namespace Nextflip.Services.Implementations
             => _seasonDAO.RequestChangeSeasonStatus(seasonID, newStatus);
         public bool RequestChangeSubtitleStatus(string subtitleID, string newStatus)
             => _subtitleDAO.RequestChangeSubtitleStatus(subtitleID, newStatus);
+        public IEnumerable<MediaEditRequest> GetRequestMediaFilterStatus(string userEmail, string Status, int RowsOnPage, int RequestPage)
+                        => _mediaEditRequestDAO.GetRequestMediaFilterStatus(userEmail, Status, RowsOnPage, RequestPage);
+        public int NumberOfRequestMediaFilterStatus(string userEmail, string Status) 
+            => _mediaEditRequestDAO.NumberOfRequestMediaFilterStatus(userEmail, Status);
+        public IEnumerable<MediaEditRequest> SearchingRequestMediaFilterStatus(string searchValue, string userEmail, string Status, int RowsOnPage, int RequestPage)
+                => _mediaEditRequestDAO.SearchingRequestMediaFilterStatus(searchValue, userEmail, Status, RowsOnPage, RequestPage);
+        public int NumberOfSearchingRequestMediaFilterStatus(string searchValue, string userEmail, string Status) 
+            => _mediaEditRequestDAO.NumberOfSearchingRequestMediaFilterStatus(searchValue, userEmail, Status);
     }
 }

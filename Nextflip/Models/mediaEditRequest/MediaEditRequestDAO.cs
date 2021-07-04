@@ -47,7 +47,7 @@ namespace Nextflip.Models.mediaEditRequest
             return requests;
         }
 
-        public IEnumerable<MediaEditRequest> GetPendingMediaByUserEmail(string searchValue, int RowsOnPage, int RequestPage)
+        public IEnumerable<MediaEditRequest> GetRequestMediaFilterStatus(string userEmail, string Status, int RowsOnPage, int RequestPage)
         {
             var requests = new List<MediaEditRequest>();
             int offset = ((int)(RequestPage - 1)) * RowsOnPage;
@@ -56,13 +56,15 @@ namespace Nextflip.Models.mediaEditRequest
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select requestID, userEmail, mediaID, status, note " +
-                            "From mediaEditRequest " +
-                            "Where userEmail LIKE @userEmail " +
+                    string Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.previewLink, R.type, R.ID, M.title " +
+                              "From mediaEditRequest R, media M " +
+                              "Where R.mediaID = M.mediaID and R.status = @Status and  R.userEmail = @userEmail " +
+                              "ORDER BY requestID DESC " +
                             "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        command.Parameters.AddWithValue("@userEmail", $"%{searchValue}%");
+                        command.Parameters.AddWithValue("@userEmail", userEmail);
+                        command.Parameters.AddWithValue("@Status", Status);
                         command.Parameters.AddWithValue("@offset", offset);
                         command.Parameters.AddWithValue("@limit", RowsOnPage);
                         using (var reader = command.ExecuteReader())
@@ -75,7 +77,11 @@ namespace Nextflip.Models.mediaEditRequest
                                     userEmail = reader.GetString(1),
                                     mediaID = reader.GetString(2),
                                     status = reader.GetString(3),
-                                    note = reader.GetString(4)
+                                    note = reader.GetString(4),
+                                    previewLink = reader.IsDBNull(5) ? null : reader.GetString(5),
+                                    type = reader.GetString(6),
+                                    ID = reader.GetString(7),
+                                    mediaTitle = reader.GetString(8)
                                 });
                             }
                         }
@@ -89,7 +95,7 @@ namespace Nextflip.Models.mediaEditRequest
             return requests;
         }
 
-        public int NumberOfPendingMediasBySearching(string searchValue)
+        public int NumberOfRequestMediaFilterStatus(string userEmail, string Status)
         {
             int count = 0;
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
@@ -97,10 +103,11 @@ namespace Nextflip.Models.mediaEditRequest
                 connection.Open();
                 string Sql = "Select COUNT(requestID) " +
                             "From mediaEditRequest " +
-                            "Where userEmail LIKE @userEmail";
+                            "Where userEmail = @userEmail and status = @Status";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
-                    command.Parameters.AddWithValue("@userEmail", $"%{searchValue}%");
+                    command.Parameters.AddWithValue("@userEmail", userEmail);
+                    command.Parameters.AddWithValue("@Status", Status);
                     using (var reader = command.ExecuteReader())
                     {
                         if (reader.Read())
@@ -702,6 +709,85 @@ namespace Nextflip.Models.mediaEditRequest
             }
             return count;
         }
+
+        public IEnumerable<MediaEditRequest> SearchingRequestMediaFilterStatus(string searchValue, string userEmail, string Status, int RowsOnPage, int RequestPage)
+        {
+            var requests = new List<MediaEditRequest>();
+            int offset = ((int)(RequestPage - 1)) * RowsOnPage;
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.previewLink, R.type, R.ID, M.title " +
+                              "From mediaEditRequest R, media M " +
+                              "Where R.mediaID = M.mediaID and R.status = @Status and  R.userEmail = @userEmail " +
+                              "and MATCH (title)  AGAINST (@searchValue in natural language mode) " +
+                              "ORDER BY requestID DESC " +
+                            "LIMIT @offset, @limit";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userEmail", userEmail);
+                        command.Parameters.AddWithValue("@Status", Status); 
+                        command.Parameters.AddWithValue("@searchValue", searchValue);
+                        command.Parameters.AddWithValue("@offset", offset);
+                        command.Parameters.AddWithValue("@limit", RowsOnPage);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                requests.Add(new MediaEditRequest
+                                {
+                                    requestID = reader.GetInt32(0),
+                                    userEmail = reader.GetString(1),
+                                    mediaID = reader.GetString(2),
+                                    status = reader.GetString(3),
+                                    note = reader.GetString(4),
+                                    previewLink = reader.IsDBNull(5) ? null : reader.GetString(5),
+                                    type = reader.GetString(6),
+                                    ID = reader.GetString(7),
+                                    mediaTitle = reader.GetString(8)
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return requests;
+        }
+
+        public int NumberOfSearchingRequestMediaFilterStatus(string searchValue, string userEmail, string Status)
+        {
+            int count = 0;
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            {
+                connection.Open();
+                string Sql = "Select COUNT(R.requestID) " +
+                            "From mediaEditRequest R, media M  " +
+                            "Where R.mediaID = M.mediaID and R.status = @Status and  R.userEmail = @userEmail " +
+                              "and MATCH (title)  AGAINST (@searchValue in natural language mode) ";
+                using (var command = new MySqlCommand(Sql, connection))
+                {
+                    command.Parameters.AddWithValue("@userEmail", userEmail);
+                    command.Parameters.AddWithValue("@Status", Status);
+                    command.Parameters.AddWithValue("@searchValue", searchValue);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            count = reader.GetInt32(0);
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return count;
+        }
+
     }
 }
 

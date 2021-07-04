@@ -71,10 +71,9 @@ namespace Nextflip.APIControllers
             string url = null;
             try
             {
-                if (form.GoogleID == null || form.GoogleID.Trim().Length == 0 || form.GoogleEmail == null || form.GoogleEmail.Trim().Length == 0) return new JsonResult(new { Message = "Error ! Please try again !" });
-                if(!accountService.CheckGoogleID(form.GoogleID) || !accountService.IsExistedEmail(form.GoogleEmail))  return new JsonResult(new { Message = "New Account", URL = "/Register/Index" });
-                Account account = accountService.CheckGoogleLogin(form.GoogleID, form.GoogleEmail.ToLower());
-                if (account == null) return new JsonResult(new { Message = "Cannot Authorize !" });
+                if (form.Email == null || form.Email.Trim().Length == 0 || !EmailUtil.IsValidEmail(form.Email)) return new JsonResult(new { Message = "Error ! Please try again !" });
+                Account account = accountService.CheckGoogleLogin(form.Email);
+                if (account == null) return new JsonResult(new { Message = "New Account", URL = "/Register/Index" });
                 if (account.roleName.Equals("customer supporter")) url = "/SupporterDashboard/Index";
                 else if (account.roleName.Equals("subscribed user")) url = "/SubcribedUserDashBoard/Index";
                 else if (account.roleName.Equals("media editor")) url = "/EditorDashboard/Index";
@@ -85,7 +84,7 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("Login/LoginByGmail: " + ex.Message);
-                return new JsonResult(new { Message = true, URL = url });
+                return new JsonResult(new { Message = ex.Message});
             }
         }
 
@@ -94,7 +93,5 @@ namespace Nextflip.APIControllers
     {
         public string Email { get; set; }
         public string Password { get; set; }
-        public string GoogleID { get; set; }
-        public string GoogleEmail { get; set; }
     }
 }

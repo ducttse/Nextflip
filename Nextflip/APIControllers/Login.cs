@@ -38,6 +38,8 @@ namespace Nextflip.APIControllers
                 else if (account.roleName.Equals("media editor")) url = "/EditorDashboard/Index";
                 else if (account.roleName.Equals("user manager")) url = "/UserManagerManagement/Index";
                 else if (account.roleName.Equals("media manager")) url = "/MediaManagerManagement/Index";
+                HttpContext.Session.SetString("ACCOUNTID", account.userID);
+                HttpContext.Session.SetString("ACCOUNTNAME", account.fullname);
                 return new JsonResult(new { Message = true , URL = url});
             }
             catch (Exception ex)
@@ -79,6 +81,9 @@ namespace Nextflip.APIControllers
                 else if (account.roleName.Equals("media editor")) url = "/EditorDashboard/Index";
                 else if (account.roleName.Equals("user manager")) url = "/UserManagerManagement/Index";
                 else if (account.roleName.Equals("media manager")) url = "/MediaManagerManagement/Index";
+
+                HttpContext.Session.SetString("ACCOUNT_ID", account.userID);
+                HttpContext.Session.SetString("ACCOUNT_NAME", account.fullname);
                 return new JsonResult(new { Message = true , URL = url});
             }
             catch (Exception ex)
@@ -87,7 +92,6 @@ namespace Nextflip.APIControllers
                 return new JsonResult(new { Message = ex.Message});
             }
         }
-
     }
     public partial class LoginForm
     {

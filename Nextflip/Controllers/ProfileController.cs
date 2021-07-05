@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Nextflip.Controllers
 {
-    public class ProfieController : Controller
+    public class ProfileController : Controller
     {
         public IActionResult Index()
         {

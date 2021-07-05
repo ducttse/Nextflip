@@ -26,8 +26,8 @@ namespace Nextflip.APIControllers
         {
             try
             {
-
-                bool result = accountService.ChangeProfile(profile.UserID, profile.UserEmail, profile.Fullname, profile.DateOfBirth, profile.PictureURL);
+                string userID = HttpContext.Session.GetString("ACCOUNT_ID");
+                bool result = accountService.ChangeProfile(userID, profile.UserEmail, profile.Fullname, profile.DateOfBirth, profile.PictureURL);
                 if(result) return new JsonResult(new { Message = true });
                 return new JsonResult(new { Message = false });
             }
@@ -44,9 +44,10 @@ namespace Nextflip.APIControllers
     {
         try
         {
+            string userID = HttpContext.Session.GetString("ACCOUNT_ID");
             if(profile.Password.Length < 8 || profile.Password.Length > 32) return new JsonResult(new { Message = "Password length must be between 8 - 32 characters!" });
             if(!profile.Password.Equals(profile.ConfirmPassword)) return new JsonResult(new { Message = "Password and Confirm Password did not match!" });
-            bool result = accountService.ChangePassword(profile.UserID, profile.Password);
+            bool result = accountService.ChangePassword(userID, profile.Password);
             if (result) return new JsonResult(new { Message = true });
             return new JsonResult(new { Message = false });
         }
@@ -59,7 +60,6 @@ namespace Nextflip.APIControllers
 }
 public partial class Profile
     {
-        public string UserID { get; set; }
         public string UserEmail { get; set; }
         public string GoogleID { get; set; }
         public string GoogleEmail { get; set; }

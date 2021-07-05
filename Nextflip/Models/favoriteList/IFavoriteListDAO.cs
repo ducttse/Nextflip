@@ -8,5 +8,6 @@ namespace Nextflip.Models.favoriteList
     public interface IFavoriteListDAO
     {
         FavoriteList GetFavoriteList(string userID);
+        void AddNewFavoriteList(string userID);
     }
 }

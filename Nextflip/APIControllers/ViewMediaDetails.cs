@@ -9,6 +9,7 @@ using System.Collections;
 using Microsoft.Extensions.Logging;
 using System;
 using Nextflip.Models.category;
+using Nextflip.Models;
 
 namespace Nextflip.APIControllers
 {
@@ -144,6 +145,43 @@ namespace Nextflip.APIControllers
             {
                 _logger.LogInformation("GetSubtitleByID: " + ex.Message);
                 return new JsonResult("error occur");
+            }
+        }
+
+        public partial class MediaUserID
+        {
+            public string UserID { get; set; }
+            public string MediaID { get; set; }
+        }
+        [Route("AddMediaToFavorite")]
+        [HttpPost]
+        public IActionResult AddMediaToFavorite([FromServices] ISubscribedUserService subscribedUserService, MediaUserID mediaUserID)
+        {
+            try
+            {
+                subscribedUserService.AddMediaToFavoriteList(mediaUserID.UserID, mediaUserID.MediaID);
+                return new JsonResult(new NotificationObject { message = "Success"});
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("AddMediaToFavorite: " + ex.Message);
+                return new JsonResult("error occur");
+            }
+        }
+
+        [Route("RemoveMediaFromFavorite")]
+        [HttpPost]
+        public IActionResult RemoveMediaFromFavorite([FromServices] ISubscribedUserService subscribedUserService, MediaUserID mediaUserID)
+        {
+            try
+            {
+                subscribedUserService.RemoveMediaFromFavoriteList(mediaUserID.UserID, mediaUserID.MediaID);
+                return new JsonResult(new NotificationObject { message = "Success" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("RemoveMediaFromFavorite: " + ex.Message);
+                return new JsonResult(ex.Message);
             }
         }
     }

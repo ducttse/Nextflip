@@ -62,34 +62,6 @@ namespace Nextflip.APIControllers
             }
         }
 
-        [Route("GetFavoriteMedias/{userID}")]
-        public IActionResult GetFavoriteMedias([FromServices] ISubscribedUserService subscribedUserService, string userID)
-        {
-            try
-            {
-                IEnumerable<Media> medias = subscribedUserService.GetFavoriteMediasByUserID(userID);
-                var mediaListWithCategory = new List<dynamic>();
-                if (medias != null)
-                {
-                    foreach (var media in medias)
-                    {
-                        IEnumerable<Category> categories = subscribedUserService.GetCategoriesByMediaID(media.MediaID);
-                        mediaListWithCategory.Add(new
-                        {
-                            Media = media,
-                            Categories = categories
-                        });
-                    }
-                }
-                mediaListWithCategory.Reverse();
-                return new JsonResult(mediaListWithCategory);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogInformation("GetFavoriteMedias: " + ex.Message);
-                return new JsonResult("error occur");
-            }
-        }
 
         [Route("GetMediasByCategoryID/{categoryID}/{limit=10}")]
         public IActionResult GetMediasByCategoryID([FromServices] ISubscribedUserService subscribedUserService, int categoryID, int limit)
@@ -102,6 +74,27 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetMediasByCategoryID: " + ex.Message);
+                return new JsonResult("error occur");
+            }
+        }
+        public partial class Favorite
+        {
+            public string UserID { get; set; }
+            public int Limit { get; set; } = 8;
+            public int Page { get; set; } = 1;
+        }
+        [Route("GetFavoriteList")]
+        [HttpPost]
+        public IActionResult GetFavoriteList([FromServices] ISubscribedUserService subscribedUserService, Favorite favorite)
+        {
+            try
+            {
+                IEnumerable<Media> favoriteList = subscribedUserService.GetFavoriteMediasByUserID(favorite.UserID, favorite.Limit,favorite.Page);
+                return new JsonResult(favoriteList);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetFavoriteList: " + ex.Message);
                 return new JsonResult("error occur");
             }
         }

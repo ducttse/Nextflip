@@ -71,7 +71,7 @@ namespace Nextflip.APIControllers
                 {
                     UserEmail = account.userEmail,
                     Fullname = account.fullname,
-                    DateOfBirth = account.dateOfBirth.ToString("yyyy-MM--dd"),
+                    DateOfBirth = account.dateOfBirth.ToString("yyyy-MM-dd"),
                     PictureURL = account.pictureURL
                 });
             }

@@ -165,7 +165,7 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("AddMediaToFavorite: " + ex.Message);
-                return new JsonResult("error occur");
+                return new JsonResult(new NotificationObject { message = "Fail" });
             }
         }
 
@@ -181,7 +181,24 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("RemoveMediaFromFavorite: " + ex.Message);
-                return new JsonResult(ex.Message);
+                return new JsonResult(new NotificationObject { message = "Fail" });
+            }
+        }
+
+        [Route("IsFavoriteMedia")]
+        [HttpPost]
+        public IActionResult IsFavoriteMedia([FromServices] ISubscribedUserService subscribedUserService, MediaUserID mediaUserID)
+        {
+            try
+            {
+                bool isFavoriteMedia = subscribedUserService.IsFavoriteMedia(mediaUserID.UserID, mediaUserID.MediaID);
+                return new JsonResult(new NotificationObject { message = isFavoriteMedia.ToString()});
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("IsFavoriteMedia: " + ex.Message);
+                return new JsonResult("error occur");
             }
         }
     }

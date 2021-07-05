@@ -5,6 +5,7 @@ using Nextflip.Models.account;
 using Nextflip.Services.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -45,10 +46,9 @@ namespace Nextflip.APIControllers
         {
             try
             {
-                string userID = HttpContext.Session.GetString("ACCOUNT_ID");
                 if(profile.Password.Length < 8 || profile.Password.Length > 32) return new JsonResult(new { Message = "Password length must be between 8 - 32 characters!" });
                 if(!profile.Password.Equals(profile.ConfirmPassword)) return new JsonResult(new { Message = "Password and Confirm Password did not match!" });
-                bool result = accountService.ChangePassword(userID, profile.Password);
+                bool result = accountService.ChangePassword(profile.UserID, profile.Password);
                 if (result) return new JsonResult(new { Message = true });
                 return new JsonResult(new { Message = false });
             }
@@ -61,18 +61,17 @@ namespace Nextflip.APIControllers
 
         [Route("GetProfile")]
         [HttpPost]
-        public IActionResult GetProfile([FromServices] IAccountService accountService)
+        public IActionResult GetProfile([FromServices] IAccountService accountService, Profile profile)
         {
             try
             {
-                string userID = HttpContext.Session.GetString("ACCOUNT_ID");
-                Account account = accountService.GetProfile(userID);
-                if (account == null) return new JsonResult(new { Message = "An error occured ! Please wait and try again !" });
-                return new JsonResult(new Profile
+                Account account = accountService.GetProfile(profile.UserID);
+                if (account == null) return new JsonResult(new { Message = "An error occured ! Please wait a moment and try again !" });
+                return new JsonResult(new
                 {
                     UserEmail = account.userEmail,
                     Fullname = account.fullname,
-                    DateOfBirth = account.dateOfBirth.ToString(),
+                    DateOfBirth = account.dateOfBirth.ToString("yyyy-MM--dd"),
                     PictureURL = account.pictureURL
                 });
             }
@@ -85,6 +84,7 @@ namespace Nextflip.APIControllers
     }
     public partial class Profile
     {
+        public string UserID { get; set; }
         public string UserEmail { get; set; }
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }

@@ -30,10 +30,9 @@
 
 async function onSignIn(googleUser) {
     var profile = await googleUser.getBasicProfile();
-    var auth2 = gapi.auth2.getAuthInstance();
-    console.log(auth2);
-    console.log(googleUser);
-    SignInToBackEnd(profile);
+    gapi.auth2.getAuthInstance().disconnect().then(() => {
+        return SignInToBackEnd(profile);
+    })
 }
 
 async function SignInToBackEnd(profile) {

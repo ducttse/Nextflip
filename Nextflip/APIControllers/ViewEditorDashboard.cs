@@ -381,7 +381,7 @@ namespace Nextflip.APIControllers
             }
         }
 
-        //Get RequestMedia Filter Status
+        //Search RequestMedia Filter Status
         [HttpPost]
         [Route("SearchingRequestMediaFilterStatus")]
         public IActionResult SearchingRequestMediaFilterStatus([FromServices] IEditorService editorService,
@@ -389,6 +389,11 @@ namespace Nextflip.APIControllers
         {
             try
             {
+                var message = new
+                {
+                    message = "Empty searchValue"
+                };
+                if (request.SearchValue.Trim() == "") return new JsonResult(message);
                 IEnumerable<MediaEditRequest> requests = editorService.SearchingRequestMediaFilterStatus(request.SearchValue ,request.UserEmail, request.Status, request.RowsOnPage, request.RequestPage);
                 int count = editorService.NumberOfSearchingRequestMediaFilterStatus(request.SearchValue, request.UserEmail, request.Status);
                 double totalPage = (double)count / (double)request.RowsOnPage;

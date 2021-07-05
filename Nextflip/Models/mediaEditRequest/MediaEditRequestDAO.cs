@@ -51,16 +51,28 @@ namespace Nextflip.Models.mediaEditRequest
         {
             var requests = new List<MediaEditRequest>();
             int offset = ((int)(RequestPage - 1)) * RowsOnPage;
+            string Sql = null;
             try
             {
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.previewLink, R.type, R.ID, M.title " +
+                    if (Status.Trim().ToLower().Equals("all"))
+                    {
+                        Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.previewLink, R.type, R.ID, M.title " +
+                              "From mediaEditRequest R, media M " +
+                              "Where R.mediaID = M.mediaID and  R.userEmail = @userEmail " +
+                              "ORDER BY requestID DESC " +
+                            "LIMIT @offset, @limit";
+                    }
+                    else
+                    {
+                        Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.previewLink, R.type, R.ID, M.title " +
                               "From mediaEditRequest R, media M " +
                               "Where R.mediaID = M.mediaID and R.status = @Status and  R.userEmail = @userEmail " +
                               "ORDER BY requestID DESC " +
                             "LIMIT @offset, @limit";
+                    }
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@userEmail", userEmail);
@@ -98,12 +110,22 @@ namespace Nextflip.Models.mediaEditRequest
         public int NumberOfRequestMediaFilterStatus(string userEmail, string Status)
         {
             int count = 0;
+            string Sql = null;
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = "Select COUNT(requestID) " +
+                if (Status.Trim().ToLower().Equals("all"))
+                {
+                    Sql = "Select COUNT(requestID) " +
+                           "From mediaEditRequest " +
+                           "Where userEmail = @userEmail";
+                }
+                else
+                {
+                    Sql = "Select COUNT(requestID) " +
                             "From mediaEditRequest " +
                             "Where userEmail = @userEmail and status = @Status";
+                }
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     command.Parameters.AddWithValue("@userEmail", userEmail);
@@ -714,21 +736,33 @@ namespace Nextflip.Models.mediaEditRequest
         {
             var requests = new List<MediaEditRequest>();
             int offset = ((int)(RequestPage - 1)) * RowsOnPage;
+            string Sql = null;
             try
             {
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.previewLink, R.type, R.ID, M.title " +
+                    if (Status.Trim().ToLower().Equals("all"))
+                    {
+                        Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.previewLink, R.type, R.ID, M.title " +
+                              "From mediaEditRequest R, media M " +
+                              "Where R.mediaID = M.mediaID and  R.userEmail = @userEmail " +
+                              "and MATCH (title)  AGAINST (@searchValue in natural language mode) " +
+                              "ORDER BY requestID DESC " +
+                              "LIMIT @offset, @limit";
+                    }
+                    else { 
+                        Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.previewLink, R.type, R.ID, M.title " +
                               "From mediaEditRequest R, media M " +
                               "Where R.mediaID = M.mediaID and R.status = @Status and  R.userEmail = @userEmail " +
                               "and MATCH (title)  AGAINST (@searchValue in natural language mode) " +
                               "ORDER BY requestID DESC " +
-                            "LIMIT @offset, @limit";
+                              "LIMIT @offset, @limit";
+                    }
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@userEmail", userEmail);
-                        command.Parameters.AddWithValue("@Status", Status); 
+                        if (!Status.Equals("all")) command.Parameters.AddWithValue("@Status", Status); 
                         command.Parameters.AddWithValue("@searchValue", searchValue);
                         command.Parameters.AddWithValue("@offset", offset);
                         command.Parameters.AddWithValue("@limit", RowsOnPage);
@@ -763,13 +797,24 @@ namespace Nextflip.Models.mediaEditRequest
         public int NumberOfSearchingRequestMediaFilterStatus(string searchValue, string userEmail, string Status)
         {
             int count = 0;
+            string Sql = null;
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = "Select COUNT(R.requestID) " +
+                if (Status.Trim().ToLower().Equals("all"))
+                {
+                    Sql = "Select COUNT(R.requestID) " +
+                            "From mediaEditRequest R, media M  " +
+                            "Where R.mediaID = M.mediaID  and  R.userEmail = @userEmail " +
+                              "and MATCH (title)  AGAINST (@searchValue in natural language mode) ";
+                }
+                else
+                {
+                    Sql = "Select COUNT(R.requestID) " +
                             "From mediaEditRequest R, media M  " +
                             "Where R.mediaID = M.mediaID and R.status = @Status and  R.userEmail = @userEmail " +
                               "and MATCH (title)  AGAINST (@searchValue in natural language mode) ";
+                }
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     command.Parameters.AddWithValue("@userEmail", userEmail);

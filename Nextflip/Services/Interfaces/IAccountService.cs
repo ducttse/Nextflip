@@ -14,5 +14,6 @@ namespace Nextflip.Services.Interfaces
         public bool IsExistedEmail(string email);
         public bool ChangePassword(string userID, string password);
         public Account CheckGoogleLogin(string googleID);
+        public Account GetProfile(string userID);
     }
 }

@@ -1,5 +1,7 @@
-﻿using Nextflip.Models.media;
+﻿using Nextflip.Models.episode;
+using Nextflip.Models.media;
 using Nextflip.Models.mediaEditRequest;
+using Nextflip.Models.season;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,5 +40,7 @@ namespace Nextflip.Services.Interfaces
         bool DisapproveChangeSeason(string ID);
         bool ApproveChangeSubtitle(string ID);
         bool DisapproveChangeSubtitle(string ID);
+        Season GetSeasonByID(string seasonID);
+        Episode GetEpisodeByID(string episodeID);
     }
 }

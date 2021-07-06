@@ -12,5 +12,9 @@ namespace Nextflip.Controllers
         {
             return View();
         }
+        public IActionResult ViewEditRequest()
+        {
+            return View();
+        }
     }
 }

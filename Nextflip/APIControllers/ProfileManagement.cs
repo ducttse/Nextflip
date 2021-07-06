@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Nextflip.Models.account;
+using Nextflip.Models.subscription;
 using Nextflip.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -61,18 +62,21 @@ namespace Nextflip.APIControllers
 
         [Route("GetProfile")]
         [HttpPost]
-        public IActionResult GetProfile([FromServices] IAccountService accountService, Profile profile)
+        public IActionResult GetProfile([FromServices] IAccountService accountService, [FromServices] ISubscriptionService subscriptionService, Profile profile)
         {
             try
             {
                 Account account = accountService.GetProfile(profile.UserID);
                 if (account == null) return new JsonResult(new { Message = "An error occured ! Please wait a moment and try again !" });
+                Subscription subscription = subscriptionService.GetSubsciptionByUserID(profile.UserID);
                 return new JsonResult(new
                 {
                     UserEmail = account.userEmail,
                     Fullname = account.fullname,
                     DateOfBirth = account.dateOfBirth.ToString("yyyy-MM-dd"),
-                    PictureURL = account.pictureURL
+                    PictureURL = account.pictureURL,
+                    SubscriptionID = subscription.SubscriptionID,
+                    SubscriptionEndDate = subscription.EndDate.ToString("yyyy-MM-dd HH:mm:ss")
                 });
             }
             catch (Exception ex)

@@ -56,9 +56,9 @@ namespace Nextflip
             services.AddTransient<IMediaFavoriteDAO, MediaFavoriteDAO>();
             services.AddTransient<ISeasonDAO, SeasonDAO>();
             services.AddTransient<ISubtitleDAO, SubtitleDAO>();
-            services.AddTransient<ISubscribedUserService, SubscribedUserService>();
-            services.AddTransient<IEditorService, EditorService>();
-            services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<IRoleDAO, RoleDAO>();
+            services.AddTransient<IRoleService, RoleService>();
+            services.AddTransient<ISubscriptionDAO, SubscriptionDAO>();
 
 
 
@@ -70,9 +70,10 @@ namespace Nextflip
             services.AddTransient<IUserManagerManagementService, UserManagerManagementService>();
             services.AddTransient<IMediaEditRequestDAO, MediaEditRequestDAO>();
             services.AddTransient<IMediaManagerManagementService, MediaManagerManagementService>();
-            services.AddTransient<IRoleDAO, RoleDAO>();
-            services.AddTransient<IRoleService, RoleService>();
-            services.AddTransient<ISubscriptionDAO, SubscriptionDAO>();
+            services.AddTransient<ISubscribedUserService, SubscribedUserService>();
+            services.AddTransient<IEditorService, EditorService>();
+            services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<ISubscriptionService, SubscriptionService>();
 
 
             ///get connection string
@@ -101,6 +102,7 @@ namespace Nextflip
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

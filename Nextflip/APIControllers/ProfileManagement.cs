@@ -29,8 +29,7 @@ namespace Nextflip.APIControllers
         {
             try
             {
-                string userID = HttpContext.Session.GetString("ACCOUNT_ID");
-                bool result = accountService.ChangeProfile(userID, profile.UserEmail, profile.Fullname, profile.DateOfBirth, profile.PictureURL);
+                bool result = accountService.ChangeProfile(profile.UserID, profile.UserEmail, profile.Fullname, profile.DateOfBirth, profile.PictureURL);
                 if(result) return new JsonResult(new { Message = true });
                 return new JsonResult(new { Message = false });
             }
@@ -69,6 +68,13 @@ namespace Nextflip.APIControllers
                 Account account = accountService.GetProfile(profile.UserID);
                 if (account == null) return new JsonResult(new { Message = "An error occured ! Please wait a moment and try again !" });
                 Subscription subscription = subscriptionService.GetSubsciptionByUserID(profile.UserID);
+                if (subscription == null) return new JsonResult( new
+                {
+                    UserEmail = account.userEmail,
+                    Fullname = account.fullname,
+                    DateOfBirth = account.dateOfBirth.ToString("yyyy-MM-dd"),
+                    PictureURL = account.pictureURL
+                });
                 return new JsonResult(new
                 {
                     UserEmail = account.userEmail,

@@ -11,5 +11,6 @@ namespace Nextflip.Services.Interfaces
         bool UpdateExpiredDate(Subscription subsciption);
 
         Subscription GetSubsciptionByUserID(string userID);
+        public bool PurchaseSubscription(string userID, int interval);
     }
 }

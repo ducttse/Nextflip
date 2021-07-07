@@ -77,5 +77,32 @@ namespace Nextflip.Models.subscription
                 throw new Exception(ex.Message);
             }
         }
+        public bool PurchaseSubscription(string userID, int interval)
+        {
+            Random random = new Random();
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "INSERT INTO subscription(subscriptionID, userID, status ,startDate, endDate) "
+                                + "VALUE(@subscriptionID, @userID, 'Active', @startDate, @endDate)";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@subscriptionID", random.Next(0, 100000));
+                        command.Parameters.AddWithValue("@userID", userID);
+                        command.Parameters.AddWithValue("@startDate", DateTime.Now);
+                        command.Parameters.AddWithValue("@endDate", DateTime.Now.AddDays(interval));
+                        int rowAffect = command.ExecuteNonQuery();
+                        if (rowAffect > 0) return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return false;
+        }
     }
 }

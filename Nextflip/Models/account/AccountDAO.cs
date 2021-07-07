@@ -987,5 +987,59 @@ namespace Nextflip.Models.account
             }
             return null;
         }
+
+        public bool CheckWallet(string userID, double money)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select userID " +
+                                    "From account " +
+                                    "Where userID = @userID AND wallet >= @money";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userID", userID);
+                        command.Parameters.AddWithValue("@money", money);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read()) return true;
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return false;
+        }
+        public bool PurchaseSubscription(string userID, double money)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "UPDATE account " +
+                                    "SET Wallet = Wallet - @money " +
+                                    "WHERE (userID = @userID);";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userID", userID);
+                        command.Parameters.AddWithValue("@money", money);
+                        int result = command.ExecuteNonQuery();
+                        if (result == 1) return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return false;
+        }
     }
 }

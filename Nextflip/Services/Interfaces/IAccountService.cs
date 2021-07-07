@@ -15,5 +15,7 @@ namespace Nextflip.Services.Interfaces
         public bool ChangePassword(string userID, string password);
         public Account CheckGoogleLogin(string googleID);
         public Account GetProfile(string userID);
+        public bool CheckWallet(string userID, double money);
+        public bool PurchaseSubscription(string userID, double money);
     }
 }

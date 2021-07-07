@@ -17,5 +17,6 @@ namespace Nextflip.Services.Implementations
         public Subscription GetSubsciptionByUserID(string userID) => _subscriptionDAO.GetSubsciptionByUserID(userID);
 
         public bool UpdateExpiredDate(Subscription subsciption) => _subscriptionDAO.UpdateExpiredDate(subsciption);
+        public bool PurchaseSubscription(string userID, int interval) => _subscriptionDAO.PurchaseSubscription(userID, interval);
     }
 }

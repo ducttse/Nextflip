@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Nextflip.Models.account;
 using Nextflip.Models.subscription;
 using Nextflip.Services.Interfaces;
+using Nextflip.utils;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -27,9 +28,24 @@ namespace Nextflip.APIControllers
         [HttpPost]
         public IActionResult ChangeProfile([FromServices] IAccountService accountService, [FromBody] Profile profile)
         {
+            bool isValid = true;
+            UpdateError error = new UpdateError();
             try
             {
-                bool result = accountService.ChangeProfile(profile.UserID, profile.UserEmail, profile.Fullname, profile.DateOfBirth, profile.PictureURL);
+                if (profile.Fullname == null || profile.Fullname.Trim().Length == 0 || profile.Fullname.Trim().Length > 50)
+                {
+                    isValid = false;
+                    error.FullnameError = "Invalid fullname";
+                }
+                DateTime date;
+                bool isValidDate = DateTime.TryParse(profile.DateOfBirth, out date);
+                if (isValidDate == false || date.Year >= (DateTime.Now.Year - 8))
+                {
+                    isValid = false;
+                    error.DateOfBirthError = "Date of birth is Invalid";
+                }
+                if (!isValid) return new JsonResult(error);
+                bool result = accountService.ChangeProfile(profile.UserID, profile.Fullname, date, profile.PictureURL);
                 if(result) return new JsonResult(new { Message = true });
                 return new JsonResult(new { Message = false });
             }
@@ -96,11 +112,15 @@ namespace Nextflip.APIControllers
     public partial class Profile
     {
         public string UserID { get; set; }
-        public string UserEmail { get; set; }
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
         public string Fullname { get; set; }
         public string DateOfBirth { get; set; }
         public string PictureURL { get; set; }
+    }
+    public partial class UpdateError
+    {
+        public string FullnameError { get; set; }
+        public string DateOfBirthError { get; set; }
     }
 }

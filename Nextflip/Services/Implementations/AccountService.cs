@@ -15,7 +15,7 @@ namespace Nextflip.Services.Implementations
         {
             _accountDAO = accountDAO;
         }
-        public bool ChangeProfile(string userID, string userEmail, string fullname, string dateOfBirth, string pictureURL) => _accountDAO.ChangeProfile(userID, userEmail, fullname, dateOfBirth, pictureURL);
+        public bool ChangeProfile(string userID, string fullname, DateTime dateOfBirth, string pictureURL) => _accountDAO.ChangeProfile(userID, fullname, dateOfBirth, pictureURL);
 
         public Account GetAccountByID(string userID) => _accountDAO.GetAccountByID(userID);
 

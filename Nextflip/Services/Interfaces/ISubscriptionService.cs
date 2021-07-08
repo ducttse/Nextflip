@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Nextflip.Models.subscription;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Nextflip.Models.subscription
+namespace Nextflip.Services.Interfaces
 {
-    public interface ISubscriptionDAO
+    public interface ISubscriptionService
     {
         bool UpdateExpiredDate(Subscription subsciption);
 

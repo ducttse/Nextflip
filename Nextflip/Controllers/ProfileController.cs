@@ -12,9 +12,5 @@ namespace Nextflip.Controllers
         {
             return View();
         }
-        public IActionResult ResetPassword()
-        {
-            return View();
-        }
     }
 }

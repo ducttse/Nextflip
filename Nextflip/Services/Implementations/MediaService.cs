@@ -75,26 +75,6 @@ namespace Nextflip.Services.Implementations
 
         public bool RequestDisableMedia(string mediaID) => _mediaDAO.RequestDisableMedia(mediaID);
 
-        public bool AddPreviewMedia(AddMedia.AddMediaModel addMediaModel)
-        {
-            var newPreviewMedia = new Media()
-            {
-                MediaID = String.Empty,
-                Status = String.Empty,
-                Title = addMediaModel.Title,
-                FilmType = addMediaModel.FilmType,
-                Director = addMediaModel.Director,
-                Cast = addMediaModel.Cast,
-                PublishYear = addMediaModel.PublishYear,
-                Duration = addMediaModel.Duration,
-                BannerURL = "",
-                Language = addMediaModel.Language,
-                Description = addMediaModel.Description
-            };
-            var newMediaID = _mediaDAO.AddPreviewMedia(newPreviewMedia);
-            if (newMediaID == null) return false;
-
-            return true;
-        }
+       
     }
 }

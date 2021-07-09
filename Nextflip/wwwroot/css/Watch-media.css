@@ -1,0 +1,74 @@
+﻿#episode_list::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+#episode_list::-webkit-scrollbar-thumb {
+  background: #ffc107;
+  border-radius: 10px;
+}
+#episode_list::-webkit-scrollbar-thumb:hover {
+  background: #ffc107;
+}
+#episode_list::-webkit-scrollbar-track {
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: inset 7px 10px 12px 0px #f0f0f0;
+}
+#episode_list .episode .col-8 p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: "----";
+}
+
+#description.short {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#btn_show,
+#btn_hide {
+  cursor: pointer;
+}
+.episode {
+  cursor: pointer;
+}
+.episode:hover {
+  background-color: #6c757d;
+}
+#meida_holder{
+  max-height: 80vh;
+}
+@media only screen and (min-width: 1400px) {
+  #meida_holder{
+    max-height: 70vh;
+  }
+}
+#show_seasons{
+  cursor: pointer;
+}
+#seasons{
+  z-index: 900;
+}
+#seasons .current_season,#seasons .current_season:hover{
+  background-color: #ffc107;
+}
+#seasons div:hover{
+  cursor: pointer;
+  color: #212529;
+  background-color: #d6d6d6;
+}
+.current .col-8 p{
+  color: #ffc107 !important;
+}
+.img_container{
+  overflow: hidden;
+}
+.episode .image {
+  z-index: 1;
+  display: block;
+  transition: transform .4s;   /* smoother zoom */
+}
+.episode:hover .image {
+  transform: scale(1.3);
+  transform-origin: 50% 50%;
+}

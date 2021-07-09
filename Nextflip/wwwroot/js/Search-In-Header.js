@@ -1,20 +1,15 @@
 ﻿function displaySearch() {
     let searchHolder = document.getElementById("search_holder");
     let searchBtn = document.getElementById("searchBtn");
-    if (searchHolder.classList.contains("hide")) {
-        searchHolder.classList.remove("hide");
-        searchHolder.classList.add("show");
-        searchBtn.classList.remove("offset-10");
-        searchBtn.classList.remove("ps-3");
-        searchBtn.classList.add("ps-4");
-
+    if (searchHolder.classList.contains("btn_hide")) {
+        searchHolder.classList.remove("btn_hide");
+        searchHolder.classList.add("btn_show");
+        searchBtn.classList.add("animate");
     }
     else {
-        searchHolder.classList.remove("show");
-        searchBtn.classList.add("offset-10");
-        searchHolder.classList.add("hide");
-        searchBtn.classList.remove("ps-4");
-        searchBtn.classList.add("ps-3");
+        searchHolder.classList.remove("btn_show");
+        searchHolder.classList.add("btn_hide");
+        searchBtn.classList.remove("animate");
     }
 }
 

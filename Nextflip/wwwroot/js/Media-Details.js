@@ -49,7 +49,7 @@ function watch(url) {
 
 function renderEpisodeBySeason(id) {
   let episodes = mediaData.episodesMapSeason[ id ].map((episode) => {
-    return `<div class="row ps-3" onclick="watch('${id}/${episode.episodeID}')">
+    return `<div class="row ps-3" onclick="watch('${mediaData.media.mediaID}/${episode.episodeID}')">
                 <p class="episode_detail ps-2 d-inline fs-5"><i class="far fa-play-circle d-inline"></i> ${episode.title}</p>
             </div>`
   })

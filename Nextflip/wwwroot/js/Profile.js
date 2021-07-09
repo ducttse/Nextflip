@@ -1,8 +1,12 @@
-﻿let Profile;
+let Profile;
 
 function getProfile() {
     return Profile;
 };
+
+function loadToHeader() {
+    document.getElementById("profile_img").setAttribute("src", Profile.pictureURL);
+}
 
 async function loadAccount() {
     let ID = localStorage.getItem("ID");
@@ -45,7 +49,17 @@ function appendUserToWrapper() {
     }
     else document.getElementById("exp_date").innerHTML = Profile.subscriptionEndDate;
 }
+
+const routeRegex = new RegExp("^\/SubcribedUserDashBoard\/[\w\d\s]*$");
+const profileRegex = new RegExp("^\/Profile\/[\w\d\s]*$");
+
+const ProfileRoute = [];
+
+
 loadAccount().then(() => {
-    appendUserToWrapper();
-    setTriggerLoadProfile();
+    loadToHeader();
+    if (document.getElementById("imgAndName_holder") != null) {
+        appendUserToWrapper();
+        setTriggerLoadProfile();
+    }
 })

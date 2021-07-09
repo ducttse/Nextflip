@@ -918,17 +918,6 @@ namespace Nextflip.Models.media
             return result;
         }
 
-        public string AddPreviewMedia(Media newPreviewMedia)
-        {
-            string previewMediaId = null;
-            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
-            {
-                    connection.Open();
-                    string Sql = "EXECUTE createMedia(@mediaID_out, @title, @bannerURL, @language, @description," +
-                                 "@filmType, @director, @cast, @publishyear, @duration)";
-                    ///execute proc
-            }
-            return previewMediaId;
-        }
+       
     }
 }

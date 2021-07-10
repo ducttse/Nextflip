@@ -338,8 +338,8 @@ namespace Nextflip.APIControllers
         }
         [Route("CreateStaff")]
         [HttpPost]
-        public IActionResult CreateStaff([FromServices] IUserManagerManagementService userManagerManagementService,
-                                        [FromBody] JsonAccount _staffInfo)
+        public async Task<IActionResult> CreateStaff([FromServices] IUserManagerManagementService userManagerManagementService,
+                                        [FromServices] ISendMailService sendMailService,[FromBody] JsonAccount _staffInfo)
         {
             NotificationObject noti = new NotificationObject();
             try
@@ -374,8 +374,13 @@ namespace Nextflip.APIControllers
                         fullname = _staffInfo.fullname,
                         roleName = _staffInfo.roleName,
                         dateOfBirth = date
-
                     });
+                    string toEmail = _staffInfo.userEmail;
+                    Account _user = userManagerManagementService.GetAccountByEmail(_staffInfo.userEmail);
+                    string body = $"Dear: {_user.fullname},\n" +
+                                    $"your role: {_user.roleName}  \n" +
+                                    $"Password: {_user.hashedPassword}";
+                    await sendMailService.SendEmailAsync(toEmail, "Password of Staff Account", body);
                     noti.message = "Success";
                 }
                 else noti.message = "Fail";
@@ -386,7 +391,27 @@ namespace Nextflip.APIControllers
             }
             return new JsonResult(noti);
         }
-
+        [Route("SendPasswordToEmail")]
+        [HttpPost]
+        public async Task<IActionResult> ForwardSupportTicket([FromServices] IUserManagerManagementService userManagerManagementService,
+                                                    [FromServices] ISendMailService sendMailService, [FromBody] Account user)
+        {
+            try
+            {
+                string toEmail = user.userEmail;
+                Account _user = userManagerManagementService.GetAccountByEmail(user.userEmail);
+                string body = $"Dear: {_user.fullname},\n" +
+                                $"your role: {_user.roleName}  \n" +
+                                $"Password: {_user.hashedPassword}";
+                await sendMailService.SendEmailAsync(toEmail, "Password of Staff Account", body);
+                return new JsonResult(new { Message = "Send successful" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("SendPasswordToEmail: " + ex.Message);
+                return new JsonResult(new { Message = ex.Message });
+            }
+        }
         public partial class JsonSubscription
         {
             public string userID { get; set; }
@@ -520,6 +545,8 @@ namespace Nextflip.APIControllers
             }
             return new JsonResult(profile);
         }
+
+
         /*        [Route("GetAllActiveAccounts")]
                 public JsonResult GetAllActiveAccounts([FromServices] IUserManagerManagementService userManagerManagementService)
                 {

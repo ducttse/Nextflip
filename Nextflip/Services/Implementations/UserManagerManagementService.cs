@@ -48,6 +48,7 @@ namespace Nextflip.Services.Implementations
         public bool IsExistedEmail(string email) => _accountDao.IsExistedEmail(email);
         public bool UpdateExpiredDate(Subscription subsciption) => _subscription.UpdateExpiredDate(subsciption);
         public Account GetAccountByID(string userID) => _accountDao.GetAccountByID(userID);
+        public Account GetAccountByEmail(string email) => _accountDao.GetAccountByEmail(email);
         public bool UpdateStaffInfo(Account account) => _accountDao.UpdateStaffInfo(account);
         public Subscription GetSubsciptionByUserID(string userID) => _subscription.GetSubsciptionByUserID(userID);
         public bool IsSubscribedUser(string userID) => _accountDao.IsSubscribedUser(userID);

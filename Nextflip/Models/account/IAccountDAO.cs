@@ -28,6 +28,7 @@ namespace Nextflip.Models.account
         bool AddNewStaff(Account account);
         bool UpdateStaffInfo(Account account);
         Account GetAccountByID(string userID);
+        Account GetAccountByEmail(string email);
         bool IsExistedEmail(string email);
         public bool ChangeProfile(string userID, string fullname, DateTime dateOfBirth, string pictureURL);
         public string RegisterAnAccount(string userEmail, string password, string fullname, DateTime dateOfBirth, string pictureURL);

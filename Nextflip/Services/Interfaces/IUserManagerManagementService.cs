@@ -30,6 +30,7 @@ namespace Nextflip.Services.Interfaces
         bool IsExistedEmail(string email);
         bool UpdateExpiredDate(Subscription subsciption);
         Account GetAccountByID(string userID);
+        Account GetAccountByEmail(string email);
         bool UpdateStaffInfo(Account account);
         Subscription GetSubsciptionByUserID(string userID);
         bool IsSubscribedUser(string userID);

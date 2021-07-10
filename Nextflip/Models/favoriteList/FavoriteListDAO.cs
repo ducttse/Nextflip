@@ -54,7 +54,7 @@ namespace Nextflip.Models.favoriteList
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Insert into FavoriteList( userID, favoriteListID) " +
+                    string Sql = "Insert into favoriteList( userID, favoriteListID) " +
                                 "Values( @userID , @favoriteListID) ";
                     using (var command = new MySqlCommand(Sql, connection))
                     {

@@ -30,7 +30,7 @@ function ShowNotFound() {
     let error;
     setTotalPage();
     if (isFiltered && isSearched) {
-        error = `<p class="fs-6">There is no <b>${requestParam.Status}</b> media in this category contain  <b>${requestParam.SearchValue}</b></p>`
+        error = `<p class="fs-6">There is no <b>${requestParam.Status}</b> edit request contain  <b>${requestParam.SearchValue}</b></p>`
     }
     else if (isFiltered) {
         error = `<p class="fs-6">There is no <b>${requestParam.Status}</b> media for this category</p>`

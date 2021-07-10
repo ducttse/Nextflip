@@ -6,6 +6,7 @@ using Nextflip.Services.Interfaces;
 using Nextflip.utils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -38,7 +39,7 @@ namespace Nextflip.APIControllers
                 else if (account.roleName.Equals("media editor")) url = "/EditorDashboard/Index";
                 else if (account.roleName.Equals("user manager")) url = "/UserManagerManagement/Index";
                 else if (account.roleName.Equals("media manager")) url = "/MediaManagerManagement/Index";
-                return new JsonResult(new { Message = true , URL = url});
+                return new JsonResult(new { Message = true , URL = url, UserID = account.userID});
             }
             catch (Exception ex)
             {
@@ -79,7 +80,8 @@ namespace Nextflip.APIControllers
                 else if (account.roleName.Equals("media editor")) url = "/EditorDashboard/Index";
                 else if (account.roleName.Equals("user manager")) url = "/UserManagerManagement/Index";
                 else if (account.roleName.Equals("media manager")) url = "/MediaManagerManagement/Index";
-                return new JsonResult(new { Message = true , URL = url});
+
+                return new JsonResult(new { Message = true , URL = url, UserID = account.userID});
             }
             catch (Exception ex)
             {
@@ -87,7 +89,6 @@ namespace Nextflip.APIControllers
                 return new JsonResult(new { Message = ex.Message});
             }
         }
-
     }
     public partial class LoginForm
     {

@@ -1,4 +1,5 @@
 ﻿using Nextflip.Models.media;
+using Nextflip.Models.mediaEditRequest;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,5 +32,13 @@ namespace Nextflip.Services.Interfaces
         IEnumerable<Media> GetMediasByTitleFilterStatus(string searchValue, string Status, int RowsOnPage, int RequestPage);
         int NumberOfMediasBySearchingFilterStatus(string searchValue, string Status);
         bool RequestChangeMediaStatus(string mediaID, string newStatus);
+        bool RequestChangeEpisodeStatus(string episodeID, string newStatus);
+        Media GetMediaByChildID(string childID, string type);
+        bool RequestChangeSeasonStatus(string seasonID, string newStatus);
+        bool RequestChangeSubtitleStatus(string subtitleID, string newStatus);
+        IEnumerable<MediaEditRequest> GetRequestMediaFilterStatus(string userEmail, string Status, int RowsOnPage, int RequestPage);
+        int NumberOfRequestMediaFilterStatus(string userEmail, string Status);
+        IEnumerable<MediaEditRequest> SearchingRequestMediaFilterStatus(string searchValue, string userEmail, string Status, int RowsOnPage, int RequestPage);
+        int NumberOfSearchingRequestMediaFilterStatus(string searchValue, string userEmail, string Status);
     }
 }

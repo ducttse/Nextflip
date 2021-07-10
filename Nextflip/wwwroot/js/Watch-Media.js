@@ -1,89 +1,128 @@
-﻿function renderMedia(media) {
+function renderMedia(media) {
   return `
   <video
     id="video"
-    class="video-js vjs-default-skin vjs-big-play-centered"
-    data-setup="{}"
-    controls
-    preload="none"
-    data-setup='{ "aspectRatio":"16:9", "playbackRates": [1, 1.5, 2] }'
-  >
+    class="video-js vjs-default-skin vjs-big-play-centered w-100 h-100"
+    controls preload="auto" controlsList="nodownload"
+    poster="${media.thumbnailURL}"
+    data-setup='{ "aspectRatio":"16:9", "playbackRates": [1, 1.5, 2] }'>
     <source src="${media.episodeURL}" type="video/mp4" />
   </video>
   `;
 }
 
-function renderName(data) {
-  return `
-  <div id="name" class="fixed-top mt-2 ml-5" style="color: white">
-    <div class="row">
-      <p class="h4 ml-2">
-        <a class="text-decoration-none link-secondary" href="/WatchMedia/MediaDetails/${data.mediaID}">
-          <i id="icon" class="fas fa-arrow-left h5 pt-1"></i>
-        </a> ${data.episode.title}
-      </p>
-    </div>
-    <div class="ml-3">
-      <p>Episode ${data.episode.number}</p>
-    </div>
-  </div>`;
-}
-
 function appendMedia(data) {
   document
     .getElementById("wrapper")
-    .insertAdjacentHTML("afterbegin", renderMedia(data.episode));
+    .insertAdjacentHTML("afterbegin", renderMedia(data));
+  document.getElementById("media_title").innerHTML = data.mediaTitle + " - " + data.title;
+  let categories = data.categories.map(category => {
+    return category.name;
+  }).join(", ");
+  document.getElementById("category").insertAdjacentHTML("beforeend", " " + categories);
+  document.getElementById("description").insertAdjacentHTML("beforeend", data.mediaDescription);
 }
-
-function appendName(data) {
-  document
-    .getElementById("name")
-      .insertAdjacentHTML("afterbegin", renderName(data));
-}
-
-function hideName() {
-  var name = document.getElementById("name");
-  if (name.classList.contains("show")) {
-    name.classList.remove("show");
-  }
-  name.classList.add("hide");
-}
-function showName() {
-  var name = document.getElementById("name");
-  if (name.classList.contains("hide")) {
-    name.classList.remove("hide");
-  }
-  name.classList.add("show");
-}
-
-// let searchValue = {
-//   searchValue: "dSRFgJ2L3CqrZJrmOkWD@gmail.com"
-// };
-// ////
-// let reqHeader = new Headers();
-// reqHeader.append("Content-Type", "text/json");
-// reqHeader.append("Accept", "application/json, text/plain, */*");
-
-// let initObject = {
-//   method: "POST",
-//   headers: reqHeader,
-//   body: JSON.stringify(searchValue)
-// };
-// ////
-
+let currentEpisodeID;
+let currentSeasonID;
 function Run(mediaID, episodeID) {
+  currentEpisodeID = episodeID;
   fetch(`/api/ViewMediaDetails/GetEpisode/${mediaID}/${episodeID}`)
     .then((response) => response.json())
     .then((json) => {
-      appendName(json);
+      currentSeasonID = json.seasonID;
       appendMedia(json);
-      var video = document.querySelector("video");
-      video.addEventListener("play", () => {
-        setTimeout(hideName, 5000);
-      });
-      video.addEventListener("pause", () => {
-        setTimeout(showName, 500);
-      });
+      getMeidaList(mediaID, json.seasonID);
+      getSeason(mediaID, json.seasonID);
     })
-    .catch((err) => console.log(err));
+}
+
+function renderEpisode(mediaID, episode) {
+  return `
+  <a class="text-decoration-none episode d-flex justify-content-start mb-2 overflow-hidden ${currentEpisodeID == episode.episodeID ? "current" : ""}" href="/WatchMedia/Watch/${mediaID}/${episode.episodeID}">
+    <div class="img_container col-4">
+      <img class="image w-100 h-100" src="${episode.thumbnailURL}" alt="${episode.number}"/>
+    </div>
+    <div class="col-8">
+      <p class="fs-6 text-light ps-2 pt-1 text">Episode ${episode.number} ${episode.title == "" ? "" : (" - " + episode.title)}</p>
+    </div>
+  </a>`;
+}
+
+function getMeidaList(mediaID, seasonID) {
+  fetch(`https://localhost:44341/api/ViewMediaDetails/GetEpisodesOfSeason/${seasonID}`)
+    .then(res => res.json())
+    .then(json => {
+      var seasons = json.map(episode => {
+        return renderEpisode(mediaID, episode);
+      }).join("");
+      let epsidesEL = document.getElementById("episode_list");
+      if (epsidesEL.innerHTML != "") {
+        epsidesEL.innerHTML = "";
+      }
+      epsidesEL.insertAdjacentHTML("afterbegin", seasons);
+    })
+    .catch(err => console.log(err))
+}
+
+function getSeason(mediaID) {
+  fetch(`/api/ViewMediaDetails/GetSeasons/${mediaID}`)
+    .then(res => res.json())
+    .then(json => {
+      let seasons = json.map(season => {
+        if (currentSeasonID == season.seasonID) {
+          setSeasonName(`Season ${season.number}: ${season.title}`);
+        }
+        return `<div class="p-2 d-flex season_btn ${currentSeasonID == season.seasonID ? "current_season" : ""}" seasonID="${season.seasonID}">Season ${season.number}: ${season.title}</div>`;
+      }).join(`<div class="dropdown-divider m-0"></div>`);
+      document.getElementById("seasons").insertAdjacentHTML("afterbegin", seasons);
+      setReloadEpisodes(mediaID);
+    })
+}
+
+function setCorlor() {
+  document.getElementsByClassName("current_season")[ 0 ].classList.remove("current_season");
+  let current = [ ...document.querySelectorAll(".season_btn") ].filter(btn => btn.getAttribute("seasonID") == currentSeasonID);
+  current[ 0 ].classList.add("current_season");
+}
+
+function setSeasonName(name) {
+  let nameHodler = document.getElementById("season_name");
+  if (nameHodler.innerHTML != "") {
+    nameHodler.innerHTML = "";
+  }
+  nameHodler.insertAdjacentHTML("beforeend", name + `<i class="pt-1 ps-1 fas fa-caret-down"></i>`)
+  // <i class="fas fa-caret-down"></i>
+}
+
+function setReloadEpisodes(mediaID) {
+  document.querySelectorAll(".season_btn").forEach(element => {
+    let seasonID = element.getAttribute("seasonID");
+    element.addEventListener("click", (evt) => {
+      currentSeasonID = evt.target.getAttribute("seasonID");
+      reloadEpisodesContainer(mediaID, seasonID)
+      setCorlor();
+      setSeasonName(evt.target.innerText);
+    })
+  });
+}
+
+function reloadEpisodesContainer(mediaID, seasonID) {
+  console.log(mediaID);
+  console.log(seasonID);
+  getMeidaList(mediaID, seasonID);
+}
+
+function showMore(obj) {
+  document.getElementById("description").classList.remove("short");
+  obj.classList.add("d-none");
+  document.getElementById("btn_hide").classList.remove("d-none");
+}
+function hide(obj) {
+  document.getElementById("description").classList.add("short");
+  obj.classList.add("d-none");
+  document.getElementById("btn_show").classList.remove("d-none");
+}
+
+function showSuggestion() {
+
 }

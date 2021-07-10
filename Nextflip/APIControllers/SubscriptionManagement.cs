@@ -1,0 +1,66 @@
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Nextflip.Services.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Nextflip.APIControllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class SubscriptionManagement : ControllerBase
+    {
+        private readonly ILogger _logger;
+        public SubscriptionManagement(ILogger<SubscriptionManagement> logger)
+        {
+            _logger = logger;
+        }
+
+
+        [Route("CheckWallet")]
+        [HttpPost]
+        public IActionResult CheckWallet([FromServices] IAccountService accountService, [FromBody] PaymentForm form)
+        {
+            try
+            {
+                bool result = accountService.CheckWallet(form.UserID, form.Money);
+                if(result) return new JsonResult(new { Message = "Valid" });
+                return new JsonResult(new { Message = "Insufficient money in your Wallet" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("Subscription/CheckWallet: " + ex.Message);
+                return new JsonResult(new { Message = ex.Message });
+            }
+        }
+
+        [Route("ConfirmPayment")]
+        [HttpPost]
+        public IActionResult ConfirmPayment([FromServices] IAccountService accountService, [FromServices]ISubscriptionService subscriptionService, [FromBody] PaymentForm form)
+        {
+            try
+            {
+                if (accountService.PurchaseSubscription(form.UserID, form.Money))
+                {
+                    bool result = subscriptionService.PurchaseSubscription(form.UserID, form.ExtensionDays);
+                    if (result) return new JsonResult(new { Message = "Purchase Successfully ! Your subscription has been extended !" });
+                }
+                return new JsonResult(new { Message = "Payment Error ! Please try again !" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("Subscription/CheckWallet: " + ex.Message);
+                return new JsonResult(new { Message = ex.Message });
+            }
+        }
+        public partial class PaymentForm
+        {
+            public string UserID { get; set; }
+            public int ExtensionDays { get; set; }
+            public double Money { get; set; }
+        }
+    }
+}

@@ -9,5 +9,8 @@ namespace Nextflip.Models.episode
     {
         IEnumerable<Episode> GetEpisodesBySeasonID(string seasonID);
         Episode GetEpisodeByID(string episodeID);
+        bool ApproveChangeEpisode(string ID);
+        bool DisapproveChangeEpisode(string ID);
+        bool RequestChangeEpisodeStatus(string episodeID, string newStatus);
     }
 }

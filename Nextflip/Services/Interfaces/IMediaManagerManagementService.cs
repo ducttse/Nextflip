@@ -1,5 +1,7 @@
-﻿using Nextflip.Models.media;
+﻿using Nextflip.Models.episode;
+using Nextflip.Models.media;
 using Nextflip.Models.mediaEditRequest;
+using Nextflip.Models.season;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +12,7 @@ namespace Nextflip.Services.Interfaces
 {
     public interface IMediaManagerManagementService
     {
-        IEnumerable<MediaEditRequest> GetAllPendingMedias();
-        IEnumerable<MediaEditRequest> GetPendingMediaByUserEmail(string searchValue, int RowsOnPage, int RequestPage);
-        int NumberOfPendingMediasBySearching(string searchValue);
+        IEnumerable<MediaEditRequest> GetAllPendingMedias(); 
 
         IEnumerable<MediaEditRequest> GetPendingMediaByUserEmailFilterStatus(string searchValue, string Status, int RowsOnPage, int RequestPage);
         int NumberOfPendingMediasBySearchingFilterStatus(string searchValue, string Status);
@@ -33,5 +33,14 @@ namespace Nextflip.Services.Interfaces
         IEnumerable<MediaEditRequest> SearchingMediaRequest(string searchValue, string status, string type, int RowsOnPage, int RequestPage);
         int NumberOfMediaRequestSearching(string searchValue, string status, string type);
         Media GetMediaByID(string mediaID);
+        MediaEditRequest GetMediaEditRequestByID(int requestID);
+        bool ApproveChangeEpisode(string ID);
+        bool DisapproveChangeEpisode(string ID);
+        bool ApproveChangeSeason(string ID);
+        bool DisapproveChangeSeason(string ID);
+        bool ApproveChangeSubtitle(string ID);
+        bool DisapproveChangeSubtitle(string ID);
+        Season GetSeasonByID(string seasonID);
+        Episode GetEpisodeByID(string episodeID);
     }
 }

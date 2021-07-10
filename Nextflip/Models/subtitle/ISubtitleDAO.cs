@@ -7,5 +7,8 @@ namespace Nextflip.Models.subtitle
     {
         IEnumerable<Subtitle> GetSubtitlesByEpisodeID(string episodeID);
         Subtitle GetSubtitleByID(string subtitleID);
+        bool ApproveChangeSubtitle(string ID);
+        bool DisapproveChangeSubtitle(string ID);
+        bool RequestChangeSubtitleStatus(string subtitleID, string newStatus);
     }
 }

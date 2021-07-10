@@ -8,9 +8,8 @@ namespace Nextflip.Models.mediaEditRequest
     public interface IMediaEditRequestDAO
     {
         IEnumerable<MediaEditRequest> GetAllPendingMedias();
-        IEnumerable<MediaEditRequest> GetPendingMediaByUserEmail(string searchValue, int RowsOnPage, int RequestPage);
-        int NumberOfPendingMediasBySearching(string searchValue);
-
+        IEnumerable<MediaEditRequest> GetRequestMediaFilterStatus(string userEmail, string Status, int RowsOnPage, int RequestPage);
+        int NumberOfRequestMediaFilterStatus(string userEmail, string Status);
         IEnumerable<MediaEditRequest> GetPendingMediaByUserEmailFilterStatus(string searchValue, string Status, int RowsOnPage, int RequestPage);
         int NumberOfPendingMediasBySearchingFilterStatus(string searchValue, string Status);
 
@@ -31,5 +30,7 @@ namespace Nextflip.Models.mediaEditRequest
         int NumberOfMediaRequest(string status, string type);
         IEnumerable<MediaEditRequest> SearchingMediaRequest(string searchValue, string status, string type, int RowsOnPage, int RequestPage);
         int NumberOfMediaRequestSearching(string searchValue, string status, string type);
+        IEnumerable<MediaEditRequest> SearchingRequestMediaFilterStatus(string searchValue, string userEmail, string Status, int RowsOnPage, int RequestPage);
+        int NumberOfSearchingRequestMediaFilterStatus(string searchValue, string userEmail, string Status);
     }
 }

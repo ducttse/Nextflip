@@ -6,7 +6,7 @@
   <link href="@Url.Content("~/css/Media-Manager.css")" rel="stylesheet" type="text/css" />
   <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
 }
-<div class="ui_wrapper col-10" style="background-color: #DDDDDD">
+<div class="ui_wrapper col-10" style="background-color: #fff">
     <div class="table_container p-2 ps-3 w-100 mx-auto rounded" style="background-color: #ffffff">
         <div class="ms-3 btn-group">
             <div class="status_btn">
@@ -41,11 +41,11 @@
             <table class="table table-borderless table-striped table-responsive mb-0 table-hover w-100">
                 <thead class="table-secondary">
                     <tr>
-                        <th class="col">#</th>
-                        <th class="col text-center">Editor mail</th>        
-                        <th class="col text-center">Content</th>
-                        <th class="col text-center">Status</th>
-                        <th class="col">Preview</th>
+                        <th id="no" class="col">#</th>
+                        <th id="mail" class="col text-center">Editor mail</th>        
+                        <th id="content" class="col text-center">Content</th>
+                        <th id="status" class="col text-center">Status</th>
+                        <th id="preview" class="col">Preview</th>
                     </tr>
                 </thead>
                 <tbody id="requestWrapper"></tbody>

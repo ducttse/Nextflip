@@ -19,6 +19,7 @@ namespace Nextflip.Models.account
         public string status { get; set; }
         public string pictureURL { get; set; }
         public string note { get; set; }
+        public double wallet { get; set; }
 
     }
 }

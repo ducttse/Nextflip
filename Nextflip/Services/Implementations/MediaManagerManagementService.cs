@@ -68,8 +68,8 @@ namespace Nextflip.Services.Implementations
         public bool DisapproveChangeSeason(string seasonID) => _seasonDAO.DisapproveChangeSeason(seasonID);
         public bool ApproveChangeSubtitle(string subtitleID) => _subtitleDAO.ApproveChangeSubtitle(subtitleID);
         public bool DisapproveChangeSubtitle(string subtitleID) => _subtitleDAO.DisapproveChangeSubtitle(subtitleID);
-
         public Season GetSeasonByID(string seasonID) => _seasonDAO.GetSeasonByID(seasonID);
         public Episode GetEpisodeByID(string episodeID) => _episodeDAO.GetEpisodeByID(episodeID);
+
     }
 }

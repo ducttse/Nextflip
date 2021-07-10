@@ -42,7 +42,101 @@ namespace Nextflip.Models.mediaFavorite
                 throw new Exception(ex.Message);
             }
         }
+        public bool IsMediaFavoriteExisted(MediaFavorite mediaFavorite)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select mediaID, favoriteListID " +
+                                "From mediaFavoriteList " +
+                                "Where mediaID = @mediaID And favoriteListID = @favoriteListID";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@mediaID", mediaFavorite.MediaID);
+                        command.Parameters.AddWithValue("@favoriteListID", mediaFavorite.FavoriteListID);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
-        
+        public void AddMediaToFavorite(MediaFavorite mediaFavorite)
+        {
+
+            try
+            {
+                bool isMediaExisted = IsMediaFavoriteExisted(mediaFavorite);
+                if (isMediaExisted == false)
+                {
+                    using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                    {
+                        connection.Open();
+                        string Sql = "Insert into mediaFavoriteList( mediaID, favoriteListID) " +
+                                    "Values( @mediaID , @favoriteListID) ";
+                        using (var command = new MySqlCommand(Sql, connection))
+                        {
+                            command.Parameters.AddWithValue("@mediaID", mediaFavorite.MediaID);
+                            command.Parameters.AddWithValue("@favoriteListID", mediaFavorite.FavoriteListID);
+                            command.ExecuteNonQuery();
+                        }
+                        connection.Close();
+                    }
+                }
+                else
+                {
+                    throw new Exception("This media is existed in Favorite List");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public void RemoveMediaFromFavorite(MediaFavorite mediaFavorite)
+        {
+            try
+            {
+                bool isMediaExisted = IsMediaFavoriteExisted(mediaFavorite);
+                if (isMediaExisted == true)
+                {
+                    using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                    {
+                        connection.Open();
+                        string Sql = "Delete From mediaFavoriteList " +
+                                    "Where mediaID = @mediaID And favoriteListID = @favoriteListID";
+                        using (var command = new MySqlCommand(Sql, connection))
+                        {
+                            command.Parameters.AddWithValue("@mediaID", mediaFavorite.MediaID);
+                            command.Parameters.AddWithValue("@favoriteListID", mediaFavorite.FavoriteListID);
+                            command.ExecuteNonQuery();
+                        }
+                        connection.Close();
+                    }
+                }
+                else
+                {
+                    throw new Exception("This media does not exist in Favorite List");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

@@ -77,6 +77,39 @@ namespace Nextflip.APIControllers
                 return new JsonResult("error occur");
             }
         }
+        public partial class NewestMediaCategory
+        {
+            public IEnumerable<Media> Newest { get; set; }
+            public IEnumerable<Media> Action { get; set; }
+            public IEnumerable<Media> Adventure { get; set; }
+            public IEnumerable<Media> Comedy { get; set; }
+            public IEnumerable<Media> Romance { get; set; }
+            public IEnumerable<Media> Horror { get; set; }
+
+        }
+        [Route("GetMedias/{limit=10}")]
+        public IActionResult GetMedias([FromServices] ISubscribedUserService subscribedUserService, int limit)
+        {
+            try
+            {
+                NewestMediaCategory array = new NewestMediaCategory
+                {
+                    Newest = subscribedUserService.GetNewestMedias(limit),
+                    Action = subscribedUserService.GetMediasByCategoryID(1,limit),
+                    Adventure = subscribedUserService.GetMediasByCategoryID(2, limit),
+                    Comedy = subscribedUserService.GetMediasByCategoryID(3, limit),
+                    Romance = subscribedUserService.GetMediasByCategoryID(4, limit),
+                    Horror = subscribedUserService.GetMediasByCategoryID(5, limit)
+                };
+                return new JsonResult(array);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetMedias: " + ex.Message);
+                return new JsonResult("error occur");
+            }
+        }
+
         public partial class Favorite
         {
             public string UserID { get; set; }

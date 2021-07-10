@@ -46,13 +46,13 @@
                         <th class="col text-center">User email</th>        
                         <th class="col text-center">Create Date <i class="fas fa-sort-up" id="sort" onclick="sort(this)"></i></th>
                         <th class="col text-center">Content</th>
-                        <th class="col text-center">Status</th>
+                        <th class="col text-center" id="status">Status</th>
                         <th class="col">Details</th>
                     </tr>
                 </thead>
                 <tbody id="dataWapper"></tbody>
             </table>
-            <div class="d-flex align-items-center" style="background-color: #DDDDDD">
+            <div class="d-flex align-items-center" style="background-color: #fff">
                 <p class="col-2 my-auto form-text text-center" id="page_notification"></p>
                 <p  class="col-1 me-2 my-auto form-text d-inline-flex">Rows per page</p>
                 <div class="col-1">
@@ -111,6 +111,4 @@
                     Support Ticket
                   </a>`;
     appendButton(button);
-    setRoleName("Ticket Supporter");
-    setName("Hoàng Long")
 </script>

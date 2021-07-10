@@ -57,9 +57,31 @@ const ProfileRoute = [];
 
 
 loadAccount().then(() => {
-    loadToHeader();
+    if (document.getElementById("header") != null) {
+        loadToHeader();
+    }
     if (document.getElementById("imgAndName_holder") != null) {
         appendUserToWrapper();
         setTriggerLoadProfile();
+    }
+    if (document.getElementById("sideBar") != null) {
+        let role;
+        switch (location.pathname.split("/")[ 1 ]) {
+            case "UserManagerManagement":
+                role = "User Manager";
+                break;
+            case "MediaManagerManagement":
+                role = "Media Manager";
+                break;
+            case "EditorDashboard":
+                role = "Media Editor";
+                break;
+            case "SupporterDashboard":
+                role = "Ticket Supporter";
+                break;
+        }
+        setRoleName(role);
+        setName(Profile.fullname);
+        setImg(Profile.pictureURL);
     }
 })

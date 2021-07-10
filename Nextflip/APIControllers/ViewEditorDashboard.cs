@@ -317,6 +317,7 @@ namespace Nextflip.APIControllers
                 Media mediaByChildID = editorService.GetMediaByChildID(request.ID, request.Type);
                 bool requestChange = false;
                 bool addMediaRequest = false;
+                request.ID = request.ID + "_" + request.Status;
                 if (request.Type.Trim().Equals("media"))
                 {
                     requestChange = editorService.RequestChangeMediaStatus(request.ID, request.Status);

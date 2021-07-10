@@ -98,56 +98,41 @@ namespace Nextflip.Models.subtitle
             {
                 string SqlUpdate = null;
                 string SqlDelete = null;
-                string ID_preview = ID + "_preview";
-                string ID_Available = ID + "_Available";
-                string ID_Unavailable = ID + "_Unavailable";
+                string subtitleID = ID.Split('_')[0];
+                Subtitle subtitle = new Subtitle();
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    Subtitle subtitle_preview = GetSubtitleByID(ID_preview);
-                    Subtitle subtitle_Available = GetSubtitleByID(ID_Available);
-                    Subtitle subtitle_Unavailable = GetSubtitleByID(ID_Unavailable);
-                    if (subtitle_preview != null)
+                    if (ID.Split('_')[1].Trim().ToLower().Equals("preview"))
                     {
                         SqlUpdate = "Update subtitle " +
                             "Set episodeID = @episodeID, language = @language, subtitleURL = @subtitleURL " +
-                            "Where subtitleID = @ID";
-                        SqlDelete = "Delete from subtitle " +
-                            "Where subtitleID = @ID_preview";
+                            "Where subtitleID = @subtitleID";
+                        subtitle = GetSubtitleByID(ID);
                     }
-                    if (subtitle_Available != null)
+                    if (ID.Split('_')[1].Trim().ToLower().Equals("available"))
                     {
                         SqlUpdate = "Update subtitle " +
                             "Set status = 'Available' " +
-                            "Where subtitleID = @ID";
-                        SqlDelete = "Delete from subtitle " +
-                            "Where subtitleID = @ID_Available";
+                            "Where subtitleID = @subtitleID";
                     }
-                    if (subtitle_Unavailable != null)
+                    if (ID.Split('_')[1].Trim().ToLower().Equals("unavailable"))
                     {
                         SqlUpdate = "Update subtitle " +
                             "Set status = 'Unavailable' " +
-                            "Where subtitleID = @ID";
-                        SqlDelete = "Delete from subtitle " +
-                            "Where subtitleID = @ID_Unavailable";
+                            "Where subtitleID = @subtitleID";
                     }
+                    SqlDelete = "Delete from subtitle " +
+                        "Where subtitleID = @ID";
                     MySqlCommand command1 = new MySqlCommand(SqlUpdate, connection);
                     MySqlCommand command2 = new MySqlCommand(SqlDelete, connection);
-                    command1.Parameters.AddWithValue("@ID", ID);
-                    if (subtitle_preview != null)
+                    command1.Parameters.AddWithValue("@subtitleID", subtitleID);
+                    command2.Parameters.AddWithValue("@ID", ID);
+                    if (ID.Split('_')[1].Trim().ToLower().Equals("preview"))
                     {
-                        command1.Parameters.AddWithValue("@episodeID", subtitle_preview.EpisodeID);
-                        command1.Parameters.AddWithValue("@language", subtitle_preview.Language);
-                        command1.Parameters.AddWithValue("@subtitleURL", subtitle_preview.SubtitleURL);
-                        command2.Parameters.AddWithValue("@ID_preview", ID_preview);
-                    }
-                    if (subtitle_Available != null)
-                    {
-                        command2.Parameters.AddWithValue("@ID_Available", ID_Available);
-                    }
-                    if (subtitle_Unavailable != null)
-                    {
-                        command2.Parameters.AddWithValue("@ID_Unavailable", ID_Unavailable);
+                        command1.Parameters.AddWithValue("@episodeID", subtitle.EpisodeID);
+                        command1.Parameters.AddWithValue("@language", subtitle.Language);
+                        command1.Parameters.AddWithValue("@subtitleURL", subtitle.SubtitleURL);
                     }
                     int rowEffects1 = command1.ExecuteNonQuery();
                     int rowEffects2 = command2.ExecuteNonQuery();
@@ -170,44 +155,13 @@ namespace Nextflip.Models.subtitle
             var result = false;
             try
             {
-                string SqlDelete = null;
-                string ID_preview = ID + "_preview";
-                string ID_Available = ID + "_Available";
-                string ID_Unavailable = ID + "_Unavailable";
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    Subtitle subtitle_preview = GetSubtitleByID(ID_preview);
-                    Subtitle subtitle_Available = GetSubtitleByID(ID_Available);
-                    Subtitle subtitle_Unavailable = GetSubtitleByID(ID_Unavailable);
-                    if (subtitle_preview != null)
-                    {
-                        SqlDelete = "Delete from subtitle " +
-                            "Where subtitleID = @ID_preview";
-                    }
-                    if (subtitle_Available != null)
-                    {
-                        SqlDelete = "Delete from subtitle " +
-                            "Where subtitleID = @ID_Available";
-                    }
-                    if (subtitle_Unavailable != null)
-                    {
-                        SqlDelete = "Delete from subtitle " +
-                            "Where subtitleID = @ID_Unavailable";
-                    }
+                    string SqlDelete = "Delete from subtitle " +
+                        "Where subtitleID = @ID";
                     MySqlCommand command = new MySqlCommand(SqlDelete, connection);
-                    if (subtitle_preview != null)
-                    {
-                        command.Parameters.AddWithValue("@ID_preview", ID_preview);
-                    }
-                    if (subtitle_Available != null)
-                    {
-                        command.Parameters.AddWithValue("@ID_Available", ID_Available);
-                    }
-                    if (subtitle_Unavailable != null)
-                    {
-                        command.Parameters.AddWithValue("@ID_Unavailable", ID_Unavailable);
-                    }
+                    command.Parameters.AddWithValue("@ID", ID);
                     int rowEffects = command.ExecuteNonQuery();
                     if (rowEffects > 0)
                     {
@@ -223,14 +177,14 @@ namespace Nextflip.Models.subtitle
             return result;
         }
 
-        public bool RequestChangeSubtitleStatus(string subtitleID, string newStatus)
+        public bool RequestChangeSubtitleStatus(string ID, string newStatus)
         {
             var result = false;
             try
             {
+                string subtitleID = ID.Split('_')[0];
                 Subtitle subtitle = GetSubtitleByID(subtitleID);
                 if (subtitle.Status.Trim().Equals("Pending")) return false;
-                subtitle.SubtitleID = subtitle.SubtitleID + "_" + newStatus;
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
@@ -238,7 +192,7 @@ namespace Nextflip.Models.subtitle
                         "VALUES (@subtitleID_preview, @episodeID, @language, 'Pending', @subtitleURL) ";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        command.Parameters.AddWithValue("@subtitleID_preview", subtitle.SubtitleID);
+                        command.Parameters.AddWithValue("@subtitleID_preview", ID);
                         command.Parameters.AddWithValue("@episodeID", subtitle.EpisodeID);
                         command.Parameters.AddWithValue("@language", subtitle.Language);
                         command.Parameters.AddWithValue("@subtitleURL", subtitle.SubtitleURL);
@@ -253,7 +207,7 @@ namespace Nextflip.Models.subtitle
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception("fail. This subtitle is requesting to change status");
             }
             return result;
         }

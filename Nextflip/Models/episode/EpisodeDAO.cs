@@ -100,58 +100,43 @@ namespace Nextflip.Models.episode
             {
                 string SqlUpdate = null;
                 string SqlDelete = null;
-                string ID_preview = ID + "_preview";
-                string ID_Available = ID + "_Available";
-                string ID_Unavailable = ID + "_Unavailable";
+                string episodeID = ID.Split('_')[0];
+                Episode episode = new Episode();
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    Episode episode_preview = GetEpisodeByID(ID_preview);
-                    Episode episode_Available = GetEpisodeByID(ID_Available);
-                    Episode episode_Unavailable = GetEpisodeByID(ID_Unavailable);
-                    if (episode_preview != null)
+                    if (ID.Split('_')[1].Trim().ToLower().Equals("preview"))
                     {
                         SqlUpdate = "Update episode " +
                             "Set seasonID = @seasonID, title = @title, thumbnailURL = @thumbnailURL, number = @number, episodeURL = @episodeURL " +
-                            "Where episodeID = @ID";
-                        SqlDelete = "Delete from episode " +
-                            "Where episodeID = @ID_preview";
+                            "Where episodeID = @episodeID";
+                        episode = GetEpisodeByID(ID);
                     }
-                    if (episode_Available != null)
+                    if (ID.Split('_')[1].Trim().ToLower().Equals("available"))
                     {
                         SqlUpdate = "Update episode " +
                             "Set status = 'Available' " +
-                            "Where episodeID = @ID";
-                        SqlDelete = "Delete from episode " +
-                            "Where episodeID = @ID_Available";
+                            "Where episodeID = @episodeID";
                     }
-                    if (episode_Unavailable != null)
+                    if (ID.Split('_')[1].Trim().ToLower().Equals("unavailable"))
                     {
                         SqlUpdate = "Update episode " +
                             "Set status = 'Unavailable' " +
-                            "Where episodeID = @ID";
-                        SqlDelete = "Delete from episode " +
-                            "Where episodeID = @ID_Unavailable";
+                            "Where episodeID = @episodeID";
                     }
+                    SqlDelete = "Delete from episode " +
+                        "Where episodeID = @ID";
                     MySqlCommand command1 = new MySqlCommand(SqlUpdate, connection);
                     MySqlCommand command2 = new MySqlCommand(SqlDelete, connection);
-                    command1.Parameters.AddWithValue("@ID", ID);
-                    if (episode_preview != null)
+                    command2.Parameters.AddWithValue("@ID", ID);
+                    command1.Parameters.AddWithValue("@episodeID", episodeID);
+                    if (ID.Split('_')[1].Trim().ToLower().Equals("preview"))
                     {
-                        command1.Parameters.AddWithValue("@title", episode_preview.Title);
-                        command1.Parameters.AddWithValue("@seasonID", episode_preview.SeasonID);
-                        command1.Parameters.AddWithValue("@thumbnailURL", episode_preview.ThumbnailURL);
-                        command1.Parameters.AddWithValue("@number", episode_preview.Number);
-                        command1.Parameters.AddWithValue("@episodeURL", episode_preview.EpisodeURL);
-                        command2.Parameters.AddWithValue("@ID_preview", ID_preview);
-                    }
-                    if (episode_Available != null)
-                    {
-                        command2.Parameters.AddWithValue("@ID_Available", ID_Available);
-                    }
-                    if (episode_Unavailable != null)
-                    {
-                        command2.Parameters.AddWithValue("@ID_Unavailable", ID_Unavailable);
+                        command1.Parameters.AddWithValue("@title", episode.Title);
+                        command1.Parameters.AddWithValue("@seasonID", episode.SeasonID);
+                        command1.Parameters.AddWithValue("@thumbnailURL", episode.ThumbnailURL);
+                        command1.Parameters.AddWithValue("@number", episode.Number);
+                        command1.Parameters.AddWithValue("@episodeURL", episode.EpisodeURL);
                     }
                     int rowEffects1 = command1.ExecuteNonQuery();
                     int rowEffects2 = command2.ExecuteNonQuery();
@@ -174,44 +159,13 @@ namespace Nextflip.Models.episode
             var result = false;
             try
             {
-                string SqlDelete = null;
-                string ID_preview = ID + "_preview";
-                string ID_Available = ID + "_Available";
-                string ID_Unavailable = ID + "_Unavailable";
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    Episode episode_preview = GetEpisodeByID(ID_preview);
-                    Episode episode_Available = GetEpisodeByID(ID_Available);
-                    Episode episode_Unavailable = GetEpisodeByID(ID_Unavailable);
-                    if (episode_preview != null)
-                    {
-                        SqlDelete = "Delete from episode " +
-                            "Where episodeID = @ID_preview";
-                    }
-                    if (episode_Available != null)
-                    {
-                        SqlDelete = "Delete from episode " +
-                            "Where episodeID = @ID_Available";
-                    }
-                    if (episode_Unavailable != null)
-                    {
-                        SqlDelete = "Delete from episode " +
-                            "Where episodeID = @ID_Unavailable";
-                    }
+                    string SqlDelete = "Delete from episode " +
+                            "Where episodeID = @ID";
                     MySqlCommand command = new MySqlCommand(SqlDelete, connection);
-                    if (episode_preview != null)
-                    {
-                        command.Parameters.AddWithValue("@ID_preview", ID_preview);
-                    }
-                    if (episode_Available != null)
-                    {
-                        command.Parameters.AddWithValue("@ID_Available", ID_Available);
-                    }
-                    if (episode_Unavailable != null)
-                    {
-                        command.Parameters.AddWithValue("@ID_Unavailable", ID_Unavailable);
-                    }
+                    command.Parameters.AddWithValue("@ID", ID);
                     int rowEffects = command.ExecuteNonQuery();
                     if (rowEffects > 0)
                     {
@@ -227,14 +181,14 @@ namespace Nextflip.Models.episode
             return result;
         }
 
-        public bool RequestChangeEpisodeStatus(string episodeID, string newStatus)
+        public bool RequestChangeEpisodeStatus(string ID, string newStatus)
         {
             var result = false;
             try
             {
+                string episodeID = ID.Split('_')[0];
                 Episode episode = GetEpisodeByID(episodeID);
                 if (episode.Status.Trim().Equals("Pending")) return false;
-                episode.EpisodeID = episode.EpisodeID + "_" + newStatus;
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
@@ -242,7 +196,7 @@ namespace Nextflip.Models.episode
                         "VALUES (@episodeID_preview, @seasonID, @title, @thumbnailURL, 'Pending', @number, @episodeURL) ";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        command.Parameters.AddWithValue("@episodeID_preview", episode.EpisodeID);
+                        command.Parameters.AddWithValue("@episodeID_preview", ID);
                         command.Parameters.AddWithValue("@seasonID", episode.SeasonID);
                         command.Parameters.AddWithValue("@title", episode.Title);
                         command.Parameters.AddWithValue("@thumbnailURL", episode.ThumbnailURL);
@@ -259,7 +213,7 @@ namespace Nextflip.Models.episode
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception("fail. This episode is requesting to change status");
             }
             return result;
         }

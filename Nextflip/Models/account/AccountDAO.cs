@@ -772,7 +772,7 @@ namespace Nextflip.Models.account
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select fullname, userEmail, dateOfBirth, roleName, pictureURL " +
+                    string Sql = "Select fullname, userEmail, dateOfBirth, roleName, pictureURL, wallet " +
                                     "From account " +
                                     "Where userID = @userID";
                     using (var command = new MySqlCommand(Sql, connection))
@@ -789,7 +789,8 @@ namespace Nextflip.Models.account
                                     userEmail = reader.GetString("userEmail"),
                                     dateOfBirth = reader.GetDateTime("dateOfBirth"),
                                     roleName = reader.GetString("roleName"),
-                                    pictureURL =  reader.IsDBNull(reader.GetOrdinal("pictureURL")) ? null : reader.GetString("pictureURL")
+                                    pictureURL =  reader.IsDBNull(reader.GetOrdinal("pictureURL")) ? null : reader.GetString("pictureURL"),
+                                    wallet = reader.GetDouble("wallet")
                                 };
                             }
                         }
@@ -864,7 +865,7 @@ namespace Nextflip.Models.account
             }
             return null;
         }
-        public bool ChangeProfile(string userID, string userEmail, string fullname, string dateOfBirth, string pictureURL)
+        public bool ChangeProfile(string userID, string fullname, DateTime dateOfBirth, string pictureURL)
         {
             try
             {
@@ -872,12 +873,11 @@ namespace Nextflip.Models.account
                 {
                     connection.Open();
                     string Sql = "UPDATE account " +
-                                    "SET userEmail = @userEmail, fullname = @fullname, dateOfBirth = @dateOfBirth, pictureURL = @pictureURL " +
+                                    "SET fullname = @fullname, dateOfBirth = @dateOfBirth, pictureURL = @pictureURL " +
                                     "WHERE (userID = @userID)";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@userID", userID);
-                        command.Parameters.AddWithValue("@userEmail", userEmail);
                         command.Parameters.AddWithValue("@fullname", fullname);
                         command.Parameters.AddWithValue("@dateOfBirth", dateOfBirth);
                         command.Parameters.AddWithValue("@pictureURL", pictureURL);
@@ -986,6 +986,60 @@ namespace Nextflip.Models.account
                 throw new Exception(ex.Message);
             }
             return null;
+        }
+
+        public bool CheckWallet(string userID, double money)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select userID " +
+                                    "From account " +
+                                    "Where userID = @userID AND wallet >= @money";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userID", userID);
+                        command.Parameters.AddWithValue("@money", money);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read()) return true;
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return false;
+        }
+        public bool PurchaseSubscription(string userID, double money)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "UPDATE account " +
+                                    "SET Wallet = Wallet - @money " +
+                                    "WHERE (userID = @userID);";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userID", userID);
+                        command.Parameters.AddWithValue("@money", money);
+                        int result = command.ExecuteNonQuery();
+                        if (result == 1) return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return false;
         }
     }
 }

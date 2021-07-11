@@ -1,29 +1,66 @@
 ﻿@{
     Layout = "_WatchMediaLayout";
 }
-<div class="col-8 mx-auto">
-    <div>
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a class="text-decoration-none link-warning" href="/Home">Home</a></li>
-                <li class="breadcrumb-item"><a class="text-decoration-none link-warning" href="#">Thể Loại</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Data</li>
-            </ol>
-        </nav>
+@section styles{
+    <link rel="Stylesheet" href="@Href("~/css/Header.css")" />
+    <link rel="Stylesheet" href="@Href("~/css/Watch-media.css")" />
+}
+<div id="meida_holder" class="w-100 mt-3 d-flex">
+    <div class="col-1" style="width: 5%;">
     </div>
-    <div>
-        <p class="fs-4 text-warning mb-0" id="media_title">Moriarty</p>
-        <p class="fs-6 text-secondary" id="episode_title">Tập 1</p>
+    <div class="col-7" style="width: 65%;">
+        <div class="col-12" id="wrapper"></div>
     </div>
-    <div class="col-12" id="wrapper"></div>
+    <div class="col-3 ps-3" style="width: 25%;">
+        <div>
+            <p class="text-warning fs-5 mb-1">Episode List</p>
+            <p id="show_seasons" class="mb-1">
+                <a id="season_name" class="link-warning text-decoration-none d-flex" href="#" data-bs-toggle="collapse" data-bs-target="#collapse_seasons" aria-expanded="false">
+                </a>
+            </p>
+            <div class="collapse position-absolute" id="collapse_seasons">
+                <div class="p-0 card card-body border-0 rounded-0" id="seasons">
+                </div>
+            </div>
+        </div>
+        <div class="overflow-auto" id="episode_list" style="max-height: 80%" >
+        </div>
+    </div>
+    <div class="col-1" style="width: 5%;">
+    </div>
 </div>
-<div>
-    <div class="btn btn-warning">
-        Media Detail
-    <div>
+<div class="w-100 d-flex">
+    <div style="width: 5%;">
+    </div>
+    <div style="width: 90%;">
+        <div class="col-1" style="width: 5%;">
+        </div>
+        <p class="fs-5 text-warning mb-0" id="media_title"></p>
+        <div class="d-flex justtify-content-start">
+            <p class="fs-6 mb-0 text-secondary" id="category">Category: </p>
+        </div>
+        <div class="d-flex justtify-content-start">
+            <p class="fs-6 text-secondary short" id="description">Description: </p>
+        </div>
+        <p id="btn_show" class="link-primary text-center" onclick="showMore(this)">Show more</p>
+        <p id="btn_hide" class="link-primary text-center d-none" onclick="hide(this)">Show less</p>
+    </div>
+    <div style="width: 5%;">
+    </div>
 </div>
-<script src="~/js/Watch-Media.js">
-</script>
+<div class="w-100 d-flex">
+    <div style="width: 5%;">
+    </div>
+    <div style="width: 90%;">
+        <p class="text-warning fs-5">More like this</p>
+    </div>
+    <div style="width: 5%;">
+    </div>
+</div>
+<script src="~/js/Watch-Media.js"></script>
+<script src="~/js/Search-In-Header.js"></script>
+<script src="~/js/Profile.js"></script>
 <script>
+    setGoToSearchEvent();
    Run('@ViewBag.MediaID', '@ViewBag.EpisodeID');
 </script>

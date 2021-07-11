@@ -1,0 +1,127 @@
+﻿@{
+    ViewBag.Title = "Profile";
+    Layout = "_UserDashboardLayout";
+}
+@section styles{
+    <link rel="Stylesheet" href="@Href("~/css/Header.css")" />
+    <link rel="Stylesheet" href="@Href("~/css/Profile.css")" />
+}
+<div class="profile_background">
+  <div class="col-8 mx-auto profle_wrapper">
+    <div class="offset-1 d-flex justify-content-start pt-3"
+          id="imgAndName_holder" data-bs-toggle="modal" data-bs-target="#edit_profile_modal">
+    </div>
+    <div class="offset-1 mt-5 ps-2">
+        <div class="mb-3 d-flex justify-content-start">
+          <p class="fs-5 ps-3 p-1 bold">Email: </p>
+          <p class="fs-5 ps-3 p-1" id="email"></p>
+        </div>
+        <div class="mb-3 d-flex justify-content-start">
+          <p class="fs-5 ps-3 p-1 bold">Date of birth: </p>
+          <p class="fs-5 ps-3 p-1" id="dob"></p>
+        </div>
+        <div class="mb-3 d-flex justify-content-start">
+          <p class="fs-5 ps-3 p-1 bold">Expiration date: </p>
+          <p class="fs-5 ps-3 p-1" id="exp_date"></p>
+          <div>
+            <div class="btn btn-dark ms-3">Extend</div>
+          </div>
+        </div>
+        <div class="d-flex justify-content-start">
+          <a class="align-self-center btn btn-dark" data-bs-toggle="modal" data-bs-target="#change_password_modal">Change Password</a>
+        </div>
+    </div>
+  </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="edit_profile_modal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="d-flex justify-content-end mb-2">
+          <div class="mx-auto">
+            <p class="h4">Edit profile</p>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="">
+          <div class="mb-3 row">
+            <label for="fullname_edit" class="offset-1 col-sm-3 col-form-label">Full name</label>
+            <div class="col-sm-8">
+              <input type="text" class="form-control w-65" id="fullname_edit" onkeyup="onInputName()">
+              <div class="invalid-feedback">
+              </div>
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="dob_edit" class="offset-1 col-sm-3 col-form-label">Date of birth</label>
+            <div class="col-sm-8">
+              <input type="date" class="form-control w-65" id="dob_edit">
+              <div class="invalid-feedback">
+              </div>
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="picture_edit" class="offset-1 col-sm-3 col-form-label">Profile picture</label>
+            <div class="col-sm-8">
+              <input type="file" class="form-control w-85" id="picture_edit" onchange="getFile(this)" accept="image/jpeg, image/png" >
+            </div>
+          </div>
+          <div class="alert alert-danger d-none" role="alert">
+            Some thing went wrong!
+          </div>
+        </div>
+        <div class="col-4 mx-auto d-flex justify-content-center">
+            <div class="btn btn-danger col-8" onclick="updateProfile()">Save</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- change pasword modal -->
+<div class="modal fade" id="change_password_modal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered"> 
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="d-flex justify-content-end mb-2">
+          <div class="mx-auto">
+            <p class="h4">Reset password</p>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="">
+          <div class="mb-3 row">
+            <label for="newpassword" class="text-end col-sm-4 col-form-label">Password</label>
+            <div class="col-sm-8">
+              <input type="password" class="form-control w-75" id="newpassword" onkeyup="onInputPassword()">
+              <div class="invalid-feedback">
+              </div>
+            </div>
+          </div>
+          <div class="mb-3 row">
+            <label for="confirmPassword" class="text-end col-sm-4 col-form-label">Confirm password</label>
+            <div class="col-sm-8">
+              <input type="password" class="form-control w-75" id="confirmPassword" onkeyup="onInputConfirmPassword()">
+              <div class="invalid-feedback">
+              </div>
+            </div>
+          </div>
+          <div class="alert alert-danger d-none" role="alert">
+            Some thing went wrong!
+          </div>
+        </div>
+        <div class="col-4 mx-auto d-flex justify-content-center">
+            <button class="btn btn-danger" onclick="requestResetPassword()">Reset Password</button>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="~/js/Search-In-Header.js"></script>
+<script src="~/js/Profile.js"></script>
+<script src="~/js/Edit-Profile.js"></script>
+<script src="~/js/Authenticate/Reset-Password.js"></script>
+
+<script>
+    setGoToSearchEvent();
+</Script>

@@ -23,5 +23,12 @@ namespace Nextflip.Controllers
         {
             return View();
         }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            HomeController homeController = new HomeController();
+            return RedirectToAction("Index", homeController);
+        }
     }
 }

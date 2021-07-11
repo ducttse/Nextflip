@@ -83,13 +83,40 @@ namespace Nextflip.APIControllers
         {
             try
             {
-                IEnumerable<Media>[] array = new IEnumerable<Media>[6];
-                for(int i = 0; i < array.Length; i++)
+                var map = new Dictionary<string, IEnumerable<Media>>();
+                map["newest"] = subscribedUserService.GetNewestMedias(limit);
+                map["action"] = subscribedUserService.GetMediasByCategoryID(1, limit);
+                return new JsonResult(map);
+                var newest = new {
+                    Name = "newest",
+                    Data = subscribedUserService.GetNewestMedias(limit)
+                };
+                var action = new
                 {
-                    if(i == 0) array[i] = subscribedUserService.GetNewestMedias(limit);
-                    else array[i] = subscribedUserService.GetMediasByCategoryID(i, limit);
-                }
-                return new JsonResult(array);
+                    Name = "action",
+                    Data = subscribedUserService.GetMediasByCategoryID(1,limit)
+                };
+                var adventure = new
+                {
+                    Name = "adventure",
+                    Data = subscribedUserService.GetMediasByCategoryID(2, limit)
+                };
+                var comedy = new
+                {
+                    Name = "comedy",
+                    Data = subscribedUserService.GetMediasByCategoryID(3, limit)
+                };
+                var romance = new
+                {
+                    Name = "romance",
+                    Data = subscribedUserService.GetMediasByCategoryID(4, limit)
+                };
+                var horror = new
+                {
+                    Name = "horror",
+                    Data = subscribedUserService.GetMediasByCategoryID(5, limit)
+                };
+                return new JsonResult(new Object[] { newest, action ,adventure, comedy, romance, horror});
             }
             catch (Exception ex)
             {

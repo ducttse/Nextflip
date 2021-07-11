@@ -888,8 +888,6 @@ namespace Nextflip.Models.media
             }
             return result;
         }
-
-
         public Media GetMediaByChildID(string childID, string type)
         {
             try

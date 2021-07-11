@@ -23,5 +23,16 @@ namespace Nextflip.Controllers
             ViewBag.UserID = id;
             return View();
         }
+
+        public IActionResult ViewByCategory(string id)
+        {
+            ViewBag.CategoryID = id;
+            return View();
+        }
+
+        public IActionResult ViewFavourite()
+        {
+            return View();
+        }
     }
 }

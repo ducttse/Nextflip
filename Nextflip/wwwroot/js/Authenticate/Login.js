@@ -59,6 +59,7 @@ async function SignInToBackEnd(profile) {
             }
             else if (json.message == true) {
                 localStorage.setItem("ID", json.userID)
+                localStorage.setItem("URL", json.url)
                 window.location.href = json.url;
             }
             else {

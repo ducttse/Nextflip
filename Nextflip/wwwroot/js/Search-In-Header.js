@@ -28,14 +28,12 @@ function showError(searchValue) {
 
 function renderResult(result) {
     return `
-    <div class="col-4 result mb-2">
-        <div onclick="return AppendDetails('${result.media.mediaID}');">
-            <img
-                src="${result.media.bannerURL}"
-                alt="${result.media.mediaID}"
-                style="width: 100%; height: 85%;"
-            />
-            <div><p class="link-light p-2 fs-5">${result.media.title}</p></div>
+    <div class="col-4 result mb-2 p-1" onclick="return AppendDetails('${result.media.mediaID}');">
+        <div id="img_container">
+            <img src="${result.media.bannerURL}" alt="${result.media.mediaID}" style="width: 100%; height: 100%; object-fit: cover"/>
+            <div id="title">
+                <p class="link-light p-1 fs-6 ">${result.media.title}</p>
+            </div>
         </div>
     </div>`;
 }
@@ -46,11 +44,9 @@ function renderResults(resultArray) {
     })
     rendered = rendered.join("");
     return `
-    <div class="container">
         <div class="row">
             ${rendered}
         </div>
-    </div>
     `
 }
 
@@ -97,11 +93,14 @@ function goToSearch() {
     window.location.href = `/SubcribedUserDashBoard/Search/${value}`;
 }
 
-function setSearchEvent() {
+function setSearchEvent(value) {
     document.getElementById("searchBtn").addEventListener("click", () => {
         displaySearch();
     })
     setEnterEvent(search);
+    if (value != null) {
+        document.getElementById("search").setAttribute("value", value);
+    }
 }
 
 function setGoToSearchEvent() {

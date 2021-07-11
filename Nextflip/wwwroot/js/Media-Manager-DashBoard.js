@@ -71,6 +71,15 @@ function renderRequest(request, index) {
       break;
   }
   let shortText = makeShortNote(request.note);
+  if (isFiltered) {
+    return `
+    <tr>
+        <td>${index + 1}</td> 
+        <td>${request.userEmail}</td>
+        <td>${shortText}</td>
+        <td><a class="text-decoration-none" href="#${request.mediaID}">Preview</a></td>
+    </tr>`;
+  }
   return `
       <tr>
           <td>${index + 1}</td> 
@@ -148,6 +157,7 @@ function setStatus(obj) {
       searchAndResetPage(requestParam.SearchValue);
     }
     else requestEditRequestDataAndResetPage();
+    document.getElementById("status").classList.remove("d-none");
   }
   else {
     isFiltered = true;
@@ -155,6 +165,7 @@ function setStatus(obj) {
       searchAndResetPage(requestParam.SearchValue);
     }
     else requestWithFilterAndResetPage();
+    document.getElementById("status").classList.add("d-none");
   }
 }
 

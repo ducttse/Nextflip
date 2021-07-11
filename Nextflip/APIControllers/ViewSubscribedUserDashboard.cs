@@ -83,10 +83,6 @@ namespace Nextflip.APIControllers
         {
             try
             {
-                var map = new Dictionary<string, IEnumerable<Media>>();
-                map["newest"] = subscribedUserService.GetNewestMedias(limit);
-                map["action"] = subscribedUserService.GetMediasByCategoryID(1, limit);
-                return new JsonResult(map);
                 var newest = new {
                     Name = "newest",
                     Data = subscribedUserService.GetNewestMedias(limit)

@@ -8,6 +8,6 @@ namespace Nextflip.Models.mediaCategory
     public interface IMediaCategoryDAO
     {
         IList<int> GetCategoryIDs(string mediaID);
-        IList<string> GetMediaIDs(int categoryID);
+        IList<string> GetMediaIDs(int categoryID, int limit);
     }
 }

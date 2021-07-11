@@ -55,10 +55,10 @@ namespace Nextflip.Services.Implementations
         public int NumberOfMediasFilterCategory_Status(string CategoryName, string Status) => _mediaDAO.NumberOfMediasFilterCategory_Status(CategoryName, Status);
         
         
-        public IEnumerable<Media> GetMediasByCategoryID(int categoryID)
+        public IEnumerable<Media> GetMediasByCategoryID(int categoryID,int limit)
         {
             var medias = new List<Media>();
-            IList<string> mediaIDs = _mediaCategoryDAO.GetMediaIDs(categoryID);
+            IList<string> mediaIDs = _mediaCategoryDAO.GetMediaIDs(categoryID,limit);
             foreach (var mediaID in mediaIDs)
             {
                 Media media = _mediaDAO.GetMediaByID(mediaID);

@@ -47,5 +47,33 @@ namespace Nextflip.Models.favoriteList
                 throw new Exception(ex.Message);
             }
         }
+        public void AddNewFavoriteList(string userID)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Insert into favoriteList( userID, favoriteListID) " +
+                                "Values( @userID , @favoriteListID) ";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userID", userID);
+                        command.Parameters.AddWithValue("@favoriteListID", generateID());
+                        string generateID()
+                        {
+                            return Guid.NewGuid().ToString("N");
+                        }
+                        command.ExecuteNonQuery();
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        
     }
 }

@@ -6,7 +6,7 @@
     <link href="@Url.Content("~/css/Supporter-Dashboard.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
 }
-<div class="ui_wrapper col-10" style="background-color: #DDDDDD">
+<div class="ui_wrapper col-10" style="background-color: #fff">
     <div class="table_container p-2 w-100 mx-auto rounded" style="background-color: #ffffff">
         <div class="ms-3 btn-group">
             <div class="status_btn">
@@ -22,7 +22,7 @@
                 <p class="me-4 p-1" onclick="setStatus(this)" value="Closed">Closed</p>
             </div>
         </div>
-        <div class="btn-group w-100 px-3 pt-3 pb-2 bg-primary border rounded-top">
+        <div class="btn-group w-100 px-3 pt-3 pb-2 border rounded-top">
             <div id="search_wrapper" class="col-7"></div>
             <div class="d-flex col-3 offset-2">
                 <label class="form-label mt-2 text-light">Topic</label>
@@ -46,13 +46,13 @@
                         <th class="col text-center">User email</th>        
                         <th class="col text-center">Create Date <i class="fas fa-sort-up" id="sort" onclick="sort(this)"></i></th>
                         <th class="col text-center">Content</th>
-                        <th class="col text-center">Status</th>
+                        <th class="col text-center" id="status">Status</th>
                         <th class="col">Details</th>
                     </tr>
                 </thead>
                 <tbody id="dataWapper"></tbody>
             </table>
-            <div class="d-flex align-items-center" style="background-color: #DDDDDD">
+            <div class="d-flex align-items-center table-secondary">
                 <p class="col-2 my-auto form-text text-center" id="page_notification"></p>
                 <p  class="col-1 me-2 my-auto form-text d-inline-flex">Rows per page</p>
                 <div class="col-1">
@@ -111,6 +111,4 @@
                     Support Ticket
                   </a>`;
     appendButton(button);
-    setRoleName("Ticket Supporter");
-    setName("Hoàng Long")
 </script>

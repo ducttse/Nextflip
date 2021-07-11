@@ -184,8 +184,6 @@ function getNote(userid) {
         })
 }
 
-
-
 function addEvent() {
     let collection = document.getElementsByClassName("status_btn");
     for (let i = 0; i < collection.length; i++) {

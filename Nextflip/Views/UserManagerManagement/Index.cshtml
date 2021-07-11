@@ -6,9 +6,9 @@
     <link href="@Url.Content("~/css/User-Manager.css")" rel="stylesheet" type="text/css" />
      <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
 }
-<div class="ui_wrapper col-10" style="background-color: #DDDDDD">
+<div class="ui_wrapper col-10" style="background-color: #fff">
     <div class="table_container p-2 w-100 mx-auto rounded" style="background-color: #ffffff"> 
-        <div class="btn-group w-100 px-3 pt-3 pb-2 bg-primary border rounded-top">
+        <div class="btn-group w-100 px-3 pt-3 pb-2 border rounded-top">
             <div id="search_wrapper" class="col-7"></div>
             <div class="d-flex col-3">
               <label class="form-label mt-2 text-light">Role</label>
@@ -44,7 +44,7 @@
                 </thead>
                 <tbody id="dataWapper"></tbody>
             </table>
-            <div class="d-flex align-items-center" style="background-color: #DDDDDD">
+            <div class="d-flex align-items-center table-secondary">
                 <p class="col-2 my-auto form-text text-center" id="page_notification"></p>
                 <p  class="col-1 me-2 my-auto form-text text-end">Rows per page</p>
                 <div class="col-1">
@@ -164,7 +164,7 @@
                   </div>
                 </div>
                 <div class="mb-3 row">
-                  <p class="btn btn-danger col-4 offset-4" onclick="return requestCreateApi()">Create staff</p>
+                  <p class="btn btn-primary col-4 offset-4" onclick="return requestCreateApi()">Create staff</p>
                 </div>
               </div>
           </div>
@@ -173,54 +173,9 @@
     </div>
     <!-- Edit Staff Modal -->
     <div class="modal fade" id="edit_user_modal" tabindex="-1">
-      <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <div class="modal-body">
-              <p class="fs-1 text-center">Edit staff</p>
-              <div class="col-8 offset-2">
-                <div class="mb-3 row ms-5">
-                  <label for="email_edit_label" class="col-form-label col-3 pe-0">Email</label>
-                  <div class="col-8 w-45 d-inline-flex ps-0 pe-0">
-                    <div>
-                      <p class="py-2 pe-0 mb-0" id="email_edit_text"></p>
-                    </div>
-                  </div>
-                </div>
-                <div class="mb-3 row ms-5">
-                  <label for="fullname_edit_label" class="col-form-label col-3 pe-0">Fullname</label>
-                  <div class="col-9 w-50 ps-0">
-                    <div class="w-100">
-                      <input id="fullname_edit_input" type="text" class="form-control" required autocomplete="nope"/>
-                      <div class="invalid-feedback">
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="mb-3 row ms-5">
-                  <label id="role_edit_label"for="role" class="col-3 col-form-label pe-0">Role</label>
-                  <div class="col-9 ps-0">
-                    <select id="role_edit_input" class="form-select w-55 =" aria-label="Default select example" required>
-                      <option value="user manager">User Manager</option>
-                      <option value="media editor">Media Editor</option>
-                      <option value="media manager">Media Manager</option>
-                      <option value="customer supporter">Customer Supporter</option>
-                    </select>
-                  </div>
-                </div>
-                <div class="mb-3 row ms-5">
-                  <label id="dob_edit_label" for="dob" class="col-form-label col-3 pe-0">Date of birth</label>
-                  <div class="col-9 ps-0">
-                    <div class="w-100">
-                      <input id="dob_detail_edit" type="date" class="form-control w-55" min="1900-01-01" max="2021-12-31" required/>
-                      <div class="invalid-feedback">
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="mb-3 row">
-                  <p class="btn btn-danger col-4 offset-4" onclick="requestEdit()">Save</p>
-                </div>
-              </div>
+          <div class="modal-body" id="edit_body">
           </div>
         </div>
       </div>
@@ -245,6 +200,4 @@
                       </a>`;
         appendButton(button1);    
         appendButton(button2);
-        setRoleName("User Manager");
-        setName("Ngọc Bình")
 </script>

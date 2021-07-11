@@ -24,15 +24,19 @@ namespace Nextflip.Models.account
         Account GetDetailOfAccount(string userID);
         Account GetDetailOfInactiveAccount(string userID);
         bool ActiveAccount(string userID);
-        // add update 
+        // add update
         bool AddNewStaff(Account account);
         bool UpdateStaffInfo(Account account);
         Account GetAccountByID(string userID);
         bool IsExistedEmail(string email);
-        public bool ChangeProfile(string userID, string userEmail, string password, string fullname, string dateOfBirth, string pictureURL);
-        public string RegisterAnAccount(string userEmail, string googleID, string googleEmail, string password, string fullname, string dateOfBirth);
-        public bool Login(string email, string password);
+        public bool ChangeProfile(string userID, string fullname, DateTime dateOfBirth, string pictureURL);
+        public string RegisterAnAccount(string userEmail, string password, string fullname, DateTime dateOfBirth, string pictureURL);
+        public Account Login(string email, string password);
         bool IsSubscribedUser(string userID);
+        public bool ChangePassword(string userID, string password);
+        public Account CheckGoogleLogin(string googleID);
+        public bool CheckWallet(string userID, double money);
+        public bool PurchaseSubscription(string userID, double money);
     }
 
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Nextflip.Controllers
 {
-    public class LoginController1 : Controller
+    public class SubscriptionController : Controller
     {
         public IActionResult Index()
         {

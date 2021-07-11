@@ -17,9 +17,9 @@ namespace Nextflip.Services.Interfaces
         IEnumerable<Category> GetCategoriesByMediaID(string mediaID);
         //media
         Media GetMediaByID(string mediaID);
-        IEnumerable<Media> GetFavoriteMediasByUserID(string userID);
+        IEnumerable<Media> GetFavoriteMediasByUserID(string userID, int limit, int page);
         IEnumerable<Media> GetMediasByTitle(string title);
-        IEnumerable<Media> GetMediasByCategoryID(int categoryID);
+        IEnumerable<Media> GetMediasByCategoryID(int categoryID, int limit );
         //season
         IEnumerable<Season> GetSeasonsByMediaID(string mediaID);
         Season GetSeasonByID(string seasonID);
@@ -29,6 +29,10 @@ namespace Nextflip.Services.Interfaces
         //subtitle
         Subtitle GetSubtitleByID(string subtitleID);
         IEnumerable<Subtitle> GetSubtitlesByEpisodeID(string episodeID);
-        
+        // favorite
+        void AddMediaToFavoriteList(string userID, string mediaID);
+        void RemoveMediaFromFavoriteList(string userID, string mediaID);
+        bool IsFavoriteMedia(string userID, string mediaID);
+        IEnumerable<Media> GetNewestMedias(int limit);
     }
 }

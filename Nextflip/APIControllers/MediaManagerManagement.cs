@@ -141,7 +141,8 @@ namespace Nextflip.APIControllers
         }
 
         [Route("DisapproveRequest")]
-        public JsonResult DisapproveRequest([FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromForm] Request request)
+        public async Task<IActionResult> DisapproveRequest([FromServices] IMediaManagerManagementService mediaManagerManagementService,
+                                        [FromServices] ISendMailService sendMailService, [FromForm] Request request)
         {
             try
             {
@@ -162,6 +163,11 @@ namespace Nextflip.APIControllers
                 else if (editRequest.type.Trim().Equals("subtitle"))
                     disapproveChange = mediaManagerManagementService.DisapproveChangeSubtitle(editRequest.ID);
                 if (!disapproveChange) return new JsonResult(messageFail);
+                string toEmail = editRequest.userEmail;
+                string body = $"Dear,\n" +
+                                $"your request about: << {editRequest.mediaTitle} >> is disapproved \n" +
+                                $"Because: {request.note}";
+                await sendMailService.SendEmailAsync(toEmail, "Notification of your request", body);
                 var message = new
                 {
                     message = "success"

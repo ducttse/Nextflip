@@ -85,31 +85,37 @@ namespace Nextflip.APIControllers
             {
                 var newest = new {
                     Name = "newest",
+                    ID = 0,
                     Data = subscribedUserService.GetNewestMedias(limit)
                 };
                 var action = new
                 {
                     Name = "action",
+                    ID = 1,
                     Data = subscribedUserService.GetMediasByCategoryID(1,limit)
                 };
                 var adventure = new
                 {
                     Name = "adventure",
+                    ID = 2,
                     Data = subscribedUserService.GetMediasByCategoryID(2, limit)
                 };
                 var comedy = new
                 {
                     Name = "comedy",
+                    ID = 3,
                     Data = subscribedUserService.GetMediasByCategoryID(3, limit)
                 };
                 var romance = new
                 {
                     Name = "romance",
+                    ID = 4,
                     Data = subscribedUserService.GetMediasByCategoryID(4, limit)
                 };
                 var horror = new
                 {
                     Name = "horror",
+                    ID = 5,
                     Data = subscribedUserService.GetMediasByCategoryID(5, limit)
                 };
                 return new JsonResult(new Object[] { newest, action ,adventure, comedy, romance, horror});

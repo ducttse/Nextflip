@@ -59,11 +59,7 @@ namespace Nextflip
             services.AddTransient<ISubtitleDAO, SubtitleDAO>();
             services.AddTransient<INotificationDAO, NotificationDAO>();
 
-            services.AddTransient<ICategoryService, CategoryService>();
-            services.AddTransient<IEpisodeService, EpisodeService>();
             services.AddTransient<IMediaService, MediaService>();
-            services.AddTransient<ISeasonService, SeasonService>();
-            services.AddTransient<ISubtitleService, SubtitleService>();
             services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient<IRoleDAO, RoleDAO>();
             services.AddTransient<IRoleService, RoleService>();

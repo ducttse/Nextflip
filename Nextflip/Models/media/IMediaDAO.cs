@@ -36,5 +36,7 @@ namespace Nextflip.Models.media
         int NumberOfMediasBySearchingFilterStatus(string searchValue, string Status);
         bool RequestChangeMediaStatus(string mediaID, string newStatus);
         Media GetMediaByChildID(string childID, string type);
+        string AddMedia(string Title, string FilmType, string Director, string Cast, int? PublishYear, 
+            string Duration, string BannerURL, string Language, string Description);
     }
 }

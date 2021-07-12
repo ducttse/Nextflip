@@ -77,5 +77,8 @@ namespace Nextflip.Services.Implementations
                 => _mediaEditRequestDAO.SearchingRequestMediaFilterStatus(searchValue, userEmail, Status, RowsOnPage, RequestPage);
         public int NumberOfSearchingRequestMediaFilterStatus(string searchValue, string userEmail, string Status) 
             => _mediaEditRequestDAO.NumberOfSearchingRequestMediaFilterStatus(searchValue, userEmail, Status);
+        public string AddMedia(string Title, string FilmType, string Director, string Cast, int? PublishYear,
+            string Duration, string BannerURL, string Language, string Description)
+            => _mediaDAO.AddMedia(Title, FilmType, Director, Cast, PublishYear, Duration, BannerURL, Language, Description);
     }
 }

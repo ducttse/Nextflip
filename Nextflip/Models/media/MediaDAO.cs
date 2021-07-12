@@ -888,8 +888,6 @@ namespace Nextflip.Models.media
             }
             return result;
         }
-
-
         public Media GetMediaByChildID(string childID, string type)
         {
             try
@@ -946,6 +944,7 @@ namespace Nextflip.Models.media
                 throw new Exception(ex.Message);
             }
         }
+
         public IEnumerable<Media> GetNewestMedias(int limit )
         {
             try
@@ -993,6 +992,44 @@ namespace Nextflip.Models.media
             {
                 throw new Exception(ex.Message);
             }
+        }
+
+
+        public string AddMedia(string Title, string FilmType, string Director, string Cast, int? PublishYear, string Duration, string BannerURL, string Language, string Description)
+        {
+            string result = null;
+            try
+            {
+                MySqlConnection connection = new MySqlConnection(DbUtil.ConnectionString);
+                MySqlCommand command = new MySqlCommand();
+                command.Connection = connection;
+                command.CommandType = CommandType.StoredProcedure;
+                connection.Open();
+                AddMediaExecute();
+                void AddMediaExecute()
+                {
+                    command.CommandText = "createMedia"; 
+                    command.Parameters.AddWithValue("@title_Input", Title);
+                    command.Parameters.AddWithValue("@filmType_Input", FilmType);
+                    command.Parameters.AddWithValue("@director_Input", Director);
+                    command.Parameters.AddWithValue("@cast_Input", Cast);
+                    command.Parameters.AddWithValue("@publishYear_Input", PublishYear);
+                    command.Parameters.AddWithValue("@duration_Input", Duration);
+                    command.Parameters.AddWithValue("@bannerURL_Input", BannerURL);
+                    command.Parameters.AddWithValue("@language_Input", Language);
+                    command.Parameters.AddWithValue("@description_Input", Description);
+                    command.Parameters.Add("@mediaID_Output", MySqlDbType.String).Direction
+                        = ParameterDirection.Output;
+                    command.ExecuteNonQuery();
+                    result = (string)command.Parameters["@mediaID_Output"].Value;
+                }
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return result;
         }
     }
 }

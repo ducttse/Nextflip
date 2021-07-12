@@ -26,6 +26,7 @@ using Nextflip.Models.mediaCategory;
 using Nextflip.Models.mediaFavorite;
 using Nextflip.Models.season;
 using Nextflip.Models.subtitle;
+using Nextflip.Models.notification;
 using Nextflip.Models.supportTopic;
 using Nextflip.Models.supportTicket;
 using Nextflip.Models.role;
@@ -56,12 +57,17 @@ namespace Nextflip
             services.AddTransient<IMediaFavoriteDAO, MediaFavoriteDAO>();
             services.AddTransient<ISeasonDAO, SeasonDAO>();
             services.AddTransient<ISubtitleDAO, SubtitleDAO>();
+            services.AddTransient<INotificationDAO, NotificationDAO>();
+
+            services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IEpisodeService, EpisodeService>();
+            services.AddTransient<IMediaService, MediaService>();
+            services.AddTransient<ISeasonService, SeasonService>();
+            services.AddTransient<ISubtitleService, SubtitleService>();
+            services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient<IRoleDAO, RoleDAO>();
             services.AddTransient<IRoleService, RoleService>();
             services.AddTransient<ISubscriptionDAO, SubscriptionDAO>();
-
-
-
             //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();

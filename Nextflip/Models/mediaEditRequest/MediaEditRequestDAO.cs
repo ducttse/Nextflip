@@ -460,9 +460,9 @@ namespace Nextflip.Models.mediaEditRequest
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select requestID, userEmail, mediaID, status, note, previewLink, type, ID " +
-                                "From mediaEditRequest " +
-                                "Where requestID = @requestID";
+                    string Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.previewLink, R.type, R.ID, M.title " +
+                              "From mediaEditRequest R, media M " +
+                              "Where R.mediaID = M.mediaID and R.requestID = @requestID ";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@requestID", requestID);
@@ -479,7 +479,8 @@ namespace Nextflip.Models.mediaEditRequest
                                     note = reader.GetString(4),
                                     previewLink = reader.IsDBNull(5) ? null : reader.GetString(5),
                                     type = reader.GetString(6),
-                                    ID = reader.GetString(7)
+                                    ID = reader.GetString(7),
+                                    mediaTitle = reader.GetString(8)
                                 };
                             }
                         }

@@ -1,9 +1,11 @@
-﻿using Nextflip.Models.favoriteList;
+﻿using System;
+using Nextflip.Models.favoriteList;
 using Nextflip.Models.media;
 using Nextflip.Models.mediaCategory;
 using Nextflip.Models.mediaFavorite;
 using Nextflip.Services.Interfaces;
 using System.Collections.Generic;
+using Nextflip.APIControllers;
 
 namespace Nextflip.Services.Implementations
 {
@@ -46,16 +48,17 @@ namespace Nextflip.Services.Implementations
             => _mediaDAO.NumberOfMediasBySearchingFilterCategory(SearchValue, CategoryName);
 
         public IEnumerable<Media> GetMediaFilterCategory(string CategoryName, int RowsOnPage, int RequestPage) => _mediaDAO.GetMediaFilterCategory(CategoryName, RowsOnPage, RequestPage);
+
         public int NumberOfMediasFilterCategory(string CategoryName) => _mediaDAO.NumberOfMediasFilterCategory(CategoryName);
 
         public IEnumerable<Media> ViewMediasFilterCategory_Status(string CategoryName, string Status, int RowsOnPage, int RequestPage) => _mediaDAO.ViewMediasFilterCategory_Status(CategoryName, Status, RowsOnPage, RequestPage);
         public int NumberOfMediasFilterCategory_Status(string CategoryName, string Status) => _mediaDAO.NumberOfMediasFilterCategory_Status(CategoryName, Status);
         
         
-        public IEnumerable<Media> GetMediasByCategoryID(int categoryID)
+        public IEnumerable<Media> GetMediasByCategoryID(int categoryID,int limit)
         {
             var medias = new List<Media>();
-            IList<string> mediaIDs = _mediaCategoryDAO.GetMediaIDs(categoryID);
+            IList<string> mediaIDs = _mediaCategoryDAO.GetMediaIDs(categoryID,limit);
             foreach (var mediaID in mediaIDs)
             {
                 Media media = _mediaDAO.GetMediaByID(mediaID);
@@ -71,5 +74,7 @@ namespace Nextflip.Services.Implementations
             => _mediaDAO.NumberOfMediasBySearchingFilterCategory_Status(SearchValue, CategoryName, Status);
 
         public bool RequestDisableMedia(string mediaID) => _mediaDAO.RequestDisableMedia(mediaID);
+
+       
     }
 }

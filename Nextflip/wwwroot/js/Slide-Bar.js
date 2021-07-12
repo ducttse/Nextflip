@@ -2,8 +2,8 @@
 let currentIndex;
 
 function appendButton(button) {
-    console.log("append")
-    document.getElementById("topic_List").insertAdjacentHTML("afterbegin", button);
+    console.log("append");
+    document.getElementById("topic_List").querySelector(".text-muted").insertAdjacentHTML("afterend", button);
 }
 
 function setRoleName(role) {
@@ -12,4 +12,8 @@ function setRoleName(role) {
 
 function setName(name) {
     document.getElementById("account_name").innerHTML = name;
+}
+
+function setImg(url) {
+    document.getElementById("profile_img").setAttribute("src", url);
 }

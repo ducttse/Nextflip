@@ -133,14 +133,15 @@ const processChange = debounce(() => {
   fetch(`/api/ViewMediaDetails/GetMediaDetails/${mediaID}`)
     .then((response) => response.json())
     .then((json) => {
+      clearWrapper();
       mediaData = json;
       appendToDetailWrapper();
       showDetail();
     });
 });
 
-function AppendDetails(id) {
+async function AppendDetails(id) {
   mediaID = id;
-  clearWrapper();
+  isFavouriteMedia(id)
   processChange();
 }

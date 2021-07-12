@@ -165,7 +165,7 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("AddMediaToFavorite: " + ex.Message);
-                return new JsonResult(new NotificationObject { message = "Fail" });
+                return new JsonResult(new NotificationObject { message = ex.Message });
             }
         }
 

@@ -43,7 +43,7 @@ namespace Nextflip.Models.mediaCategory
             }
         }
 
-        public IList<string> GetMediaIDs(int categoryID)
+        public IList<string> GetMediaIDs(int categoryID,int limit)
         {
             try
             {
@@ -53,10 +53,13 @@ namespace Nextflip.Models.mediaCategory
                     connection.Open();
                     string Sql = "Select mediaID " +
                                 "From mediaCategory " +
-                                "Where categoryID = @categoryID";
+                                "Where categoryID = @categoryID " +
+                                "Order by mediaID desc " +
+                                "limit @limit";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@categoryID", categoryID);
+                        command.Parameters.AddWithValue("@limit", limit);
                         using (var reader = command.ExecuteReader())
                         {
                             while (reader.Read())

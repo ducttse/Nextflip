@@ -80,6 +80,20 @@ function renderTicket(ticket, index) {
   }
 
   let shortContent = makeShortContent(ticket.content);
+  if (isFiltered) {
+    return `
+    <tr>
+        <td class="text-center">${index + 1}</td>
+        <td>${ticket.userEmail}</td>
+        <td class="text-center">${ticket.createdDate}</td>
+        <td>${shortContent}</td>
+        <td>
+            <p class="detail_btn" onclick="showDetail('${ticket.supportTicketID}')">
+            Detail
+            </p>
+        </td>
+    </tr>`;
+  }
   return `
       <tr>
           <td class="text-center">${index + 1}</td>
@@ -162,6 +176,8 @@ function setStatus(obj) {
       searchAndResetPage(requestParam.SearchValue);
     }
     else requestTopicDataAndResetPage();
+    //show
+    document.getElementById("status").classList.remove("d-none");
   }
   else {
     isFiltered = true;
@@ -169,6 +185,8 @@ function setStatus(obj) {
       searchAndResetPage(requestParam.SearchValue);
     }
     else requestWithFilterAndResetPage();
+    // Hide column 
+    document.getElementById("status").classList.add("d-none");
   }
 
 }

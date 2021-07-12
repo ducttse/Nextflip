@@ -1,0 +1,84 @@
+﻿@{
+    ViewBag.Title = "Media Manager";
+    Layout = "_CustomLayout";
+}
+@section Styles {
+  <link href="@Url.Content("~/css/Media-Manager.css")" rel="stylesheet" type="text/css" />
+  <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
+}
+<div class="ui_wrapper col-10" style="background-color: #fff">
+    <div class="table_container p-2 ps-3 w-100 mx-auto rounded" style="background-color: #ffffff">
+        <div class="ms-3 btn-group">
+            <div class="status_btn">
+                <p class="me-4 p-1 chosen" onclick="setStatus(this)" value="All">All</p>
+            </div>
+            <div class="status_btn">
+                <p class="me-4 p-1 " onclick="setStatus(this)" value="Pending">Pending</p>
+            </div>
+            <div class="status_btn">
+                <p class="me-4 p-1" onclick="setStatus(this)" value="Approved">Approved</p>
+            </div>
+            <div class="status_btn">
+                <p class="me-4 p-1" onclick="setStatus(this)" value="Disapproved">Disapproved</p>
+            </div>
+        </div>
+        <div class="btn-group w-100 px-3 pt-3 pb-2s border rounded-top">
+            <div id="search_wrapper" class="col-7"></div>
+            <div class="d-flex col-3 offset-2">
+                <label class="form-label mt-2 text-light">Type</label>
+                <select id="type_filter" class="ms-2 form-select h-85 w-75" onchange="setSeletedType(this)">
+                    <option value="All">All</option>
+                    <option value="Media">Media</option>
+                    <option value="Season">Season</option>
+                    <option value="Episode">Episode</option>
+                    <option value="Subtitle">Subtitle</option>
+                </select> 
+            </div>
+        </div>
+        <div id="notFound" class="hide"> 
+        </div>
+        <div id="table_holder" class="border rounded-bottom pb-0 mb-2">
+            <table class="table table-borderless table-striped table-responsive mb-0 table-hover w-100">
+                <thead class="table-secondary">
+                    <tr>
+                        <th id="no" class="col">#</th>
+                        <th id="mail" class="col text-center">Editor mail</th>        
+                        <th id="content" class="col text-center">Content</th>
+                        <th id="status" class="col text-center">Status</th>
+                        <th id="preview" class="col">Preview</th>
+                    </tr>
+                </thead>
+                <tbody id="requestWrapper"></tbody>
+            </table>
+            <div class="d-flex align-items-center table-secondary">
+                <p class="col-2 my-auto form-text text-center" id="page_notification"></p>
+                <div class="col-2 me-2">
+                    <p class="my-auto form-text text-end">Rows per page</p>
+                </div>
+                <div class="col-1">
+                    <select class="form-select form-select-sm w-75" onchange="setRowsPerPage(this)">
+                        <option value="6" selected>6</option>
+                        <option value="8">8</option>
+                        <option value="10">10</option>
+                        <option value="12">12</option>
+                    </select>
+                </div>
+                <div id="pagination" class="col-7 d-flex justify-content-end pe-5">
+                </div>
+            <div>
+        </div>
+    </div>
+</div>
+<script src="~/js/Pagination.js"></script>
+<script src="~/js/Slide-Bar.js"></script>
+<script src="~/js/Search-Component.js"></script>
+<script src="~/js/Media-Manager-DashBoard.js"></script>
+<script>
+    requestEditRequestData();
+    appendSearch("Search editor's email", "");
+    setEnterEvent();
+    let button = `<a id="back_btn" href="/MediaManagerManagement/Index" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
+                    Media Manager
+                  </a>`;
+    appendButton(button);
+</script>

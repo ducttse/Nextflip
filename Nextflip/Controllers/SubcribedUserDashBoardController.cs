@@ -13,5 +13,26 @@ namespace Nextflip.Controllers
             return View();
         }
 
+        public IActionResult Search(string id)
+        {
+            ViewBag.SearchValue = id;
+            return View();
+        }
+        public IActionResult Profile(string id)
+        {
+            ViewBag.UserID = id;
+            return View();
+        }
+
+        public IActionResult ViewByCategory(string id)
+        {
+            ViewBag.CategoryID = id;
+            return View();
+        }
+
+        public IActionResult ViewFavourite()
+        {
+            return View();
+        }
     }
 }

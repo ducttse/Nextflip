@@ -4,9 +4,18 @@ namespace Nextflip.Controllers
 {
     public class WatchMediaController : Controller
     {
-        public IActionResult Watch()
+        [HttpGet("WatchMedia/Watch/{id}/{episodeID}")]
+        public IActionResult Watch(string id, string episodeID)
         {
-            return View("Watch");
-        } 
+            ViewBag.MediaID = id;
+            ViewBag.EpisodeID = episodeID;
+            return View();
+        }
+
+        public IActionResult MediaDetails(string id)
+        {
+            ViewBag.MediaID = id;
+            return View();
+        }
     }
-}
+}   

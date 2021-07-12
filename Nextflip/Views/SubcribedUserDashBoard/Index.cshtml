@@ -1,397 +1,64 @@
 ﻿@{
-    Layout = "_CustomLayout";
+    ViewBag.Title = "Home";
+    Layout = "_UserDashboardLayout";
 }
-
-    <div class="mt-5 media_holder">
-      <p class="h3 listTitle">Favourite media</p>
-      <div>
-        <div
-          class="carousel slide h-25"
-          data-type="carousel"
-          data-height="300px"
-          data-animation="dragX"
-          data-bs-ride="carousel"
-          data-interval="false"
-        >
-          <div class="mx-auto carousel-inner">
-            <div class="carousel-item active">
-              <div class="row">
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                    class="w-100"
-                    alt="..."
-                  />
+@section styles{
+    <link rel="Stylesheet" href="@Href("~/css/User-Dashboard.css")" />
+    <link rel="Stylesheet" href="@Href("~/css/Media-Details.css")" />
+    <link rel="Stylesheet" href="@Href("~/css/Header.css")" />
+}
+<div id="wrapper">
+</div>
+<div class="modal fade" id="modalDetail" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-body" style="background-color: #000">
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+                <div class="wrapper row col-12 mx-auto text-light">
+                <div class="row bg-dark">
+                    <div id="img_holder" class="col-6">
+                    </div>
+                    <div class="col-6">
+                        <p class="h3 lh-1 text-warning" id="detail_title"></p>
+                        <div class="overflow-auto" id="detail_table">
+                        </div>
+                    </div>
                 </div>
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                    class="w-100"
-                    alt="..."
-                  />
+                <div class="row bg-dark py-2">
+                    <button class="ms-3 btn btn-danger col-1 d-flex justify-content-center">
+                        <i class="fas fa-play pt-1 pe-2"></i>Play
+                    </button>
+                    <button class="ms-2 btn btn-secondary col-2 d-flex justify-content-center" id="add_btn" onclick="addToFavourite()">
+                        <i class="fas fa-heart pt-1 pe-2"></i>Add to favourite
+                        </button>
+                    <button class="ms-2 btn btn-secondary col-2 d-flex justify-content-center" id="remove_btn" onclick="removeFavourite()">
+                        <i class="fas fa-times pt-1 pe-2"></i>Remove favourite
+                    </button>
                 </div>
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                    class="w-100"
-                    alt="..."
-                  />
+                <div class="row mt-3 bg-dark" style="background-color: #3b3f42">
+                    <div class="d-flex flex-row mb-3">
+                        <div id="description" class="options me-4 p-1 chosen" onclick="chooseOptions('description', this)">
+                            <p class="p-2 h4 text-warning">
+                                Description
+                            </p>
+                        </div>
+                        <div id="season" class="options me-4 p-1" onclick="chooseOptions('season', this)">
+                            <p class="p-2 h4 text-warning">
+                                Season
+                            </p>
+                        </div>
+                    </div>
+                    <div id="option_detail"></div>
                 </div>
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/1280%20x%20720%20banner/avengers-endgame-review.jpg"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-              </div>
             </div>
-            <div class="carousel-item">
-              <div class="row">
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/1280%20x%20720%20banner/avengers-endgame-review.jpg"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <button
-            class="carousel-control-prev"
-            type="button"
-            data-bs-target="#carouselExampleControls"
-            data-bs-slide="prev"
-          >
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button
-            class="carousel-control-next"
-            type="button"
-            data-bs-target="#carouselExampleControls"
-            data-bs-slide="next"
-          >
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
         </div>
-      </div>
     </div>
-    <div class="mt-5 media_holder">
-      <p class="h3 listTitle">Trending</p>
-      <div>
-        <div
-          class="carousel slide h-25"
-          data-type="carousel"
-          data-height="300px"
-          data-animation="dragX"
-          data-bs-ride="carousel"
-          data-interval="false"
-        >
-          <div class="mx-auto carousel-inner">
-            <div class="carousel-item active">
-              <div class="row">
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/1280%20x%20720%20banner/avengers-endgame-review.jpg"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="carousel-item">
-              <div class="row">
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/1280%20x%20720%20banner/avengers-endgame-review.jpg"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <button
-            class="carousel-control-prev"
-            type="button"
-            data-bs-target="#carouselExampleControls"
-            data-bs-slide="prev"
-          >
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button
-            class="carousel-control-next"
-            type="button"
-            data-bs-target="#carouselExampleControls"
-            data-bs-slide="next"
-          >
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
-        </div>
-      </div>
-    </div>
-        <div class="mt-5 media_holder">
-      <p class="h3 listTitle">Favourite media</p>
-      <div>
-        <div
-          class="carousel slide h-25"
-          data-type="carousel"
-          data-height="300px"
-          data-animation="dragX"
-          data-bs-ride="carousel"
-          data-interval="false"
-        >
-          <div class="mx-auto carousel-inner">
-            <div class="carousel-item active">
-              <div class="row">
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/1280%20x%20720%20banner/avengers-endgame-review.jpg"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="carousel-item">
-              <div class="row">
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/1280%20x%20720%20banner/avengers-endgame-review.jpg"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <button
-            class="carousel-control-prev"
-            type="button"
-            data-bs-target="#carouselExampleControls"
-            data-bs-slide="prev"
-          >
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button
-            class="carousel-control-next"
-            type="button"
-            data-bs-target="#carouselExampleControls"
-            data-bs-slide="next"
-          >
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
-        </div>
-      </div>
-    </div>
-    <div class="mt-5 media_holder">
-      <p class="h3 listTitle">Trending</p>
-      <div>
-        <div
-          class="carousel slide h-25"
-          data-type="carousel"
-          data-height="300px"
-          data-animation="dragX"
-          data-bs-ride="carousel"
-          data-interval="false"
-        >
-          <div class="mx-auto carousel-inner">
-            <div class="carousel-item active">
-              <div class="row">
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/1280%20x%20720%20banner/avengers-endgame-review.jpg"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-              </div>
-            </div>
-            <div class="carousel-item">
-              <div class="row">
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/koe8imWOkoi1dAsd03ds_banner1"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-                <div class="col-3">
-                  <img
-                    src="https://storage.googleapis.com/next-flip/Image/1280%20x%20720%20banner/avengers-endgame-review.jpg"
-                    class="w-100"
-                    alt="..."
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <button
-            class="carousel-control-prev"
-            type="button"
-            data-bs-target="#carouselExampleControls"
-            data-bs-slide="prev"
-          >
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-          </button>
-          <button
-            class="carousel-control-next"
-            type="button"
-            data-bs-target="#carouselExampleControls"
-            data-bs-slide="next"
-          >
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-          </button>
-        </div>
-      </div>
-    </div>
-
+</div>
+<script src="~/js/User-Dashboard.js"></script>
+<script src="~/js/Search-In-Header.js"></script>
+<script src="~/js/Media-Details.js"></script>
+<script src="~/js/Favourite-Media.js"></script>
+<script>
+    setGoToSearchEvent();
+</script>

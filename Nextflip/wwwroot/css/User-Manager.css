@@ -1,2 +1,67 @@
 .ui_wrapper {
+  font-size: 16px;
+  padding-left: 0px !important;
+  padding-right: 0px !important;
+}
+.w-90 {
+  width: 90% !important;
+}
+.w-85 {
+  width: 85% !important;
+}
+.w-70 {
+  width: 70% !important;
+}
+.w-55 {
+  width: 55% !important;
+}
+.w-45 {
+  width: 45% !important;
+}
+.h-85 {
+  height: 85% !important;
+}
+
+input[type="checkbox"] {
+  position: relative;
+  width: 40px;
+  height: 20px;
+  -webkit-appearance: none;
+  background-color: #c6c6c6;
+  outline: none;
+  border-radius: 20px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+  transition: 0.5s;
+}
+input:checked[type="checkbox"] {
+  background-color: #4bca81;
+}
+input[type="checkbox"]::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border-radius: 20px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transform: scale(1.1);
+  transition: 0.5s;
+}
+input:checked[type="checkbox"]:before {
+  content: "";
+  left: 20px;
+}
+.hide {
+  display: none !important;
+}
+
+#email_detail_label::after,
+#fullname_detail_label::after,
+#dob_detail::after,
+#role_detail::after {
+  position: relative;
+  content: "*";
+  color: red;
 }

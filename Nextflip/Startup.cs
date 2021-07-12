@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
@@ -14,8 +14,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Nextflip.utils;
-using Nextflip.Services.Interfaces;
+using Nextflip.Models.account;
 using Nextflip.Services.Implementations;
+using Nextflip.Services.Interfaces;
+using Nextflip.Models.mediaEditRequest;
 using Nextflip.Models.category;
 using Nextflip.Models.episode;
 using Nextflip.Models.favoriteList;
@@ -25,6 +27,11 @@ using Nextflip.Models.mediaFavorite;
 using Nextflip.Models.season;
 using Nextflip.Models.subtitle;
 using Nextflip.Models.notification;
+using Nextflip.Models.supportTopic;
+using Nextflip.Models.supportTicket;
+using Nextflip.Models.role;
+using Microsoft.AspNetCore.Http;
+using Nextflip.Models.subscription;
 
 namespace Nextflip
 {
@@ -58,13 +65,50 @@ namespace Nextflip
             services.AddTransient<ISeasonService, SeasonService>();
             services.AddTransient<ISubtitleService, SubtitleService>();
             services.AddTransient<INotificationService, NotificationService>();
+            services.AddTransient<IRoleDAO, RoleDAO>();
+            services.AddTransient<IRoleService, RoleService>();
+            services.AddTransient<ISubscriptionDAO, SubscriptionDAO>();
             //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
             //    .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
+            services.AddControllers().AddNewtonsoftJson();
+            services.AddTransient<IAccountDAO, AccountDAO>();
+            services.AddTransient<IUserManagerManagementService, UserManagerManagementService>();
+            services.AddTransient<IMediaEditRequestDAO, MediaEditRequestDAO>();
+            services.AddTransient<IMediaManagerManagementService, MediaManagerManagementService>();
+            services.AddTransient<ISubscribedUserService, SubscribedUserService>();
+            services.AddTransient<IEditorService, EditorService>();
+            services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<ISubscriptionService, SubscriptionService>();
+
 
             ///get connection string
             DbUtil.ConnectionString = Configuration.GetConnectionString("MySql");
-            
+            //get mail settings
+            services.AddOptions();
+            var mailsettings = Configuration.GetSection("MailSettings");
+            services.Configure<MailSettings>(mailsettings);
+
+            services.AddTransient<ISendMailService, SendMailService>();
+
+            //add SupportTiket, SupportTopic, SupportTicketResponse DAOs to service
+            services.AddTransient<ISupportTicketDAO, SupportTicketDAO>();
+            services.AddTransient<ISupportTopicDAO, SupportTopicDAO>();
+
+            //add supportTicket, SupportTopic services to service
+            services.AddTransient<ISupportTicketService, SupportTicketService>();
+            services.AddTransient<ISupportTopicService, SupportTopicService>();
+
+            //add session
+            services.AddDistributedMemoryCache();
+
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(10);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -88,13 +132,33 @@ namespace Nextflip
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
+                    pattern: "{controller}/{action}/{id?}");
+
+                endpoints.MapGet("/testmail", async context =>
+                {
+
+                    // Lấy dịch vụ sendmailservice
+                    var sendmailservice = context.RequestServices.GetService<ISendMailService>();
+
+                    MailContent content = new MailContent
+                    {
+                        To = "technical.nextflipcompany@gmail.com",
+                        Subject = "Kiểm tra thử",
+                        Body = "Test"
+                    };
+
+                    await sendmailservice.SendMail(content);
+                    await context.Response.WriteAsync("Send mail");
+                });
+
             });
+
         }
     }
 }

@@ -1,0 +1,39 @@
+.options {
+  position: relative;
+  cursor: pointer;
+}
+.options:after {
+  content: "";
+  position: absolute;
+  background-color: white;
+  height: 2px;
+  width: 0%;
+  left: 1;
+  bottom: 0px;
+  transition: 0.2s;
+}
+.options.chosen::after{
+  content: "";
+  position: absolute;
+  background-color: white;
+  height: 2px;
+  width: 100%;
+  left: 1;
+  bottom: 0px;
+}
+.options:hover::after {
+  width: 100%;
+}
+.hide{
+  display: none;
+}
+.episode_detail{
+  cursor: pointer;
+  color: #DDD;
+}
+.episode_detail::after{
+  transition: 0.5s;
+}
+.episode_detail:hover{
+  color: white;
+}

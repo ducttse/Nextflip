@@ -8,5 +8,9 @@ namespace Nextflip.Models.season
     public interface ISeasonDAO
     {
         IEnumerable<Season> GetSeasonsByMediaID(string mediaID);
+        Season GetSeasonByID(string seasonID);
+        bool ApproveChangeSeason(string ID);
+        bool DisapproveChangeSeason(string ID);
+        bool RequestChangeSeasonStatus(string seasonID, string newStatus);
     }
 }

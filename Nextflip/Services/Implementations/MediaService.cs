@@ -1,9 +1,11 @@
-﻿using Nextflip.Models.favoriteList;
+﻿using System;
+using Nextflip.Models.favoriteList;
 using Nextflip.Models.media;
 using Nextflip.Models.mediaCategory;
 using Nextflip.Models.mediaFavorite;
 using Nextflip.Services.Interfaces;
 using System.Collections.Generic;
+using Nextflip.APIControllers;
 
 namespace Nextflip.Services.Implementations
 {
@@ -22,6 +24,8 @@ namespace Nextflip.Services.Implementations
             _mediaCategoryDAO = mediaCategoryDAO;
         }
 
+        public Media GetMediaByID(string mediaID) => _mediaDAO.GetMediaByID(mediaID);
+
         public IEnumerable<Media> GetFavoriteMediasByUserID(string userID)
         {
             var favoriteMedias = new List<Media>();
@@ -31,16 +35,30 @@ namespace Nextflip.Services.Implementations
             {
                 favoriteMedias.Add(_mediaDAO.GetMediaByID(mediaID));
             }
-
+            favoriteMedias.Reverse();
             return favoriteMedias;
         }
 
-        public IEnumerable<Media> GetMediasByTitle(string title) => _mediaDAO.GetMediasByTitle(title);
+        public IEnumerable<Media> GetMediasByTitle(string searchValue, int RowsOnPage, int RequestPage) => _mediaDAO.GetMediasByTitle(searchValue, RowsOnPage, RequestPage);
+        public int NumberOfMediasBySearching(string searchValue) => _mediaDAO.NumberOfMediasBySearching(searchValue);
 
-        public IEnumerable<Media> GetMediasByCategoryID(int categoryID)
+        public IEnumerable<Media> GetMediasByTitleFilterCategory(string SearchValue, string CategoryName, int RowsOnPage, int RequestPage)
+            => _mediaDAO.GetMediasByTitleFilterCategory(SearchValue, CategoryName, RowsOnPage, RequestPage);
+        public int NumberOfMediasBySearchingFilterCategory(string SearchValue, string CategoryName)
+            => _mediaDAO.NumberOfMediasBySearchingFilterCategory(SearchValue, CategoryName);
+
+        public IEnumerable<Media> GetMediaFilterCategory(string CategoryName, int RowsOnPage, int RequestPage) => _mediaDAO.GetMediaFilterCategory(CategoryName, RowsOnPage, RequestPage);
+
+        public int NumberOfMediasFilterCategory(string CategoryName) => _mediaDAO.NumberOfMediasFilterCategory(CategoryName);
+
+        public IEnumerable<Media> ViewMediasFilterCategory_Status(string CategoryName, string Status, int RowsOnPage, int RequestPage) => _mediaDAO.ViewMediasFilterCategory_Status(CategoryName, Status, RowsOnPage, RequestPage);
+        public int NumberOfMediasFilterCategory_Status(string CategoryName, string Status) => _mediaDAO.NumberOfMediasFilterCategory_Status(CategoryName, Status);
+        
+        
+        public IEnumerable<Media> GetMediasByCategoryID(int categoryID,int limit)
         {
             var medias = new List<Media>();
-            IList<string> mediaIDs = _mediaCategoryDAO.GetMediaIDs(categoryID);
+            IList<string> mediaIDs = _mediaCategoryDAO.GetMediaIDs(categoryID,limit);
             foreach (var mediaID in mediaIDs)
             {
                 Media media = _mediaDAO.GetMediaByID(mediaID);
@@ -48,5 +66,15 @@ namespace Nextflip.Services.Implementations
             }
             return medias;
         }
+
+        public IEnumerable<Media> GetMediasByTitleFilterCategory_Status(string SearchValue, string CategoryName, string Status, int RowsOnPage, int RequestPage)
+             => _mediaDAO.GetMediasByTitleFilterCategory_Status(SearchValue, CategoryName, Status, RowsOnPage, RequestPage);
+
+        public int NumberOfMediasBySearchingFilterCategory_Status(string SearchValue, string CategoryName, string Status)
+            => _mediaDAO.NumberOfMediasBySearchingFilterCategory_Status(SearchValue, CategoryName, Status);
+
+        public bool RequestDisableMedia(string mediaID) => _mediaDAO.RequestDisableMedia(mediaID);
+
+       
     }
 }

@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "Register";
+    Layout = "_AuthenticationLayout";
+}
+@section styles{
+    <link rel="Stylesheet" href="@Href("~/css/Register.css")" />
+}
+<div id="wrapper" class="d-flex align-items-center">
+    <div class="col-5 mx-auto shadow-lg px-5 py-3 bg-body rounded align-self-center">
+        <form>
+        <div class="mb-3">
+            <p class="text-center h1">Register</p>
+        </div>
+        <div id="email_container" class="ps-5 mb-3 row d-flex justify">
+            <label class="col-form-label col-4" for="email">Email</label>
+            <div class="col-7">    
+                <input class="form-control" type="text" name="email" id="email" onkeyup="processChange(this)" required/>
+                <div class="invalid-feedback">
+                </div>
+            </div>
+        </div>
+        <div id="password_container" class="ps-5 mb-3 row d-flex justify">
+            <label class="col-form-label col-4" for="password">Password</label>
+            <div class="col-6"> 
+                <input class="form-control" type="password" name="password" id="password" onkeyup="onInputPassword()" required />
+                <div class="invalid-feedback">
+                </div>
+            </div>
+        </div>
+        <div id="repassword_container" class="ps-5 mb-3 row d-flex justify">
+            <label class="col-form-label col-4 pe-0" for="confirmPassword">Confirm Password</label>
+            <div class="col-6">    
+                <input class="form-control" type="password" name="confirmPassword" id="confirmPassword" onkeyup="onInputRePassword()" required/>
+                <div class="invalid-feedback">
+                </div>
+            </div>
+        </div>
+        <div id="dob_container" class="ps-5 mb-3 row d-flex justify">
+            <label class="col-form-label col-4" for="dob">Date of birth</label>
+            <div class="col-6">    
+                <input class="form-control w-90" type="date" name="dob" id="dob" required />
+                <div class="invalid-feedback">
+                </div>
+            </div>
+        </div>
+        <div id="name_container" class="ps-5 mb-3 row d-flex justify">
+            <label class="col-form-label col-4" for="fullname">Full Name</label>
+            <div class="col-6">    
+                <input class="form-control" type="text" name="fullname" id="fullname" onkeyup="onInputNanme()" required/>
+                <div class="invalid-feedback">
+                </div>
+            </div>
+        </div>
+            <button class="col-4 offset-4 btn btn-danger mt-5A" onclick="requestSignUp()">Sign Up</button>
+        </form>
+    </div>
+</div>
+<script src="~/js/Authenticate/Register.js"></script>

@@ -1,0 +1,37 @@
+body{
+    background: black;
+}
+.result {
+    color: white;
+    cursor: pointer;
+    position: relative;
+}
+.result #img_container{
+    overflow: hidden;
+}
+.result img{
+    z-index: 1;
+    display: block;
+    transition: transform .4s;
+}
+.result:hover img {
+    transform: scale(1.2);
+    transform-origin: 50% 50%;
+}
+.result #title{
+    position: absolute;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5); 
+    color: #f1f1f1;
+    width: 100%; 
+}
+
+.result #title p{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.result:hover #title{
+    background: rgba(0, 0, 0, 0.5); 
+}

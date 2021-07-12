@@ -1,0 +1,20 @@
+﻿@{
+    ViewBag.Title = "Ticket support";
+    Layout = "_CustomLayout";
+}
+@section Styles {
+    <link href="@Url.Content("~/css/View-Ticket-Details.css")" rel="stylesheet" type="text/css" />
+}
+<section class="col-10">
+    <div class="col-10 mx-auto align-self-center shadow-lg p-3 bg-body rounded" id="contentWrapper">
+    </div>
+</section>
+<script src="~/js/View-Ticket-Details.js"></script>
+<script src="~/js/Slide-Bar.js"></script>
+<script>
+    Run('@ViewBag.ticketId');
+    let backButton = `<a id="back_btn" href="/SupporterDashboard/Index" class="side_bar_btn btn btn-dark btn-lg text-decoration-none text-start link-light mx-auto w-100">
+                    <i class="fas fa-arrow-left"></i> Back
+                  </a>`;
+    appendButton(backButton);
+</script>

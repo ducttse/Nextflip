@@ -1,0 +1,16 @@
+﻿#topic_List {
+  font-size: 20px;
+}
+.topicItem:hover {
+  background-color: #404040;
+}
+.choose {
+  background-color: #404040;
+}
+.side_bar_btn{
+  background-color: #181818 ;
+  border: #181818;
+}
+.side_bar_btn:hover{
+  background-color: #404040;
+}

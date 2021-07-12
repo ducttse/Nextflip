@@ -40,6 +40,9 @@ function removeFavourite() {
         if (json.message == "Success") {
             document.getElementById("remove_btn").classList.add("d-none");
             document.getElementById("add_btn").classList.remove("d-none");
+            if (location.pathname == "/SubcribedUserDashBoard/ViewFavourite") {
+                location.reload();
+            }
         }
     })
 

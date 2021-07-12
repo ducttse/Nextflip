@@ -16,5 +16,9 @@ namespace Nextflip.Controllers
         {
             return View();
         }
+        public IActionResult ViewAddNewMedia()
+        {
+            return View();
+        }
     }
 }

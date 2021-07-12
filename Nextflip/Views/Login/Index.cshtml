@@ -10,11 +10,14 @@
     <script src="https://apis.google.com/js/platform.js" async defer></script>
 }
 <div id="wrapper" class="d-flex align-items-center">
-    <div id="login_wrapper" class="col-5 col-xxl-4 mx-auto shadow-lg px-5 py-3 bg-body rounded align-self-center">
+    <a class="navbar-brand fw-normal ps-2 position-absolute top-0 start-0 fs-4" style="color: red" href="#">NextFlip</a>
+    <div class="col-6 col-xxl-7">
+        <p class="fs-2 text-center">Welcome back</p>
+    </div>
+    <div id="login_wrapper" class="col-5 col-xxl-4 shadow-lg px-5 py-3 bg-body rounded align-self-center">
         <div class="col-8 mx-auto">
             <p class="h1 text-center">Login<p>
         </div>
-        <div>
         <div class="mb-3 row mx-auto">
             <label for="email" class="col-2 col-form-label">Email</label>
             <div class="col-9 offset-1">
@@ -35,7 +38,7 @@
         </div>
         <div class="row">
             <button class="mx-auto col-xl-4 col-xxl-4 btn btn-danger" onclick="requestLogin()">Login</button>
-        <div>
+        </div>
         <div class='hr'>
             <span class='hr-title'>Or</span>
         </div>
@@ -45,7 +48,7 @@
         <p id="emailHelp" class="form-text text-center">Dont have an ancount? <a href="/Register/Index" class="text-decoration-none">Register here</a></p>
         <p class="text-center"><a class="text-decoration-none" href="/lmao">Forgot password?</a></p>
     </div>
-<div>
+</div>
 <script src="~/js/Authenticate/Login.js"></script>
 <script>
         gapi.load('auth2', function () {

@@ -46,6 +46,7 @@ namespace Nextflip.APIControllers
             public string BannerURL { get; set; }
             public string Language { get; set; }
             public string Description { get; set; }
+            public int[] CategoryIDArray { get; set; }
 
         }
 
@@ -436,9 +437,14 @@ namespace Nextflip.APIControllers
                 if (request.Title.Trim() == "") return new JsonResult(messageFail);
                 string mediaID = editorService.AddMedia(request.Title, request.FilmType, request.Director,
                     request.Cast, request.PublishYear, request.Duration, request.BannerURL, request.Language, request.Description);
-                bool addMediaRequest = editorService.AddMediaRequest(request.UserEmail, mediaID, request.Note, "media", mediaID);
-                bool addMediaCategory = editorService.AddMediaCategory(mediaID, request.CategoryID);
-                if (mediaID == null || !addMediaRequest || !addMediaCategory) return new JsonResult(messageFail);
+                if (mediaID == null) return new JsonResult(messageFail);
+                bool addMediaRequest = editorService.AddMediaRequest(request.UserEmail, mediaID, "", "media", mediaID);
+                if (!addMediaRequest) return new JsonResult(messageFail);
+                for (int i = 0; i < request.CategoryIDArray.Length; i++) 
+                {
+                    bool addMediaCategory = editorService.AddMediaCategory(mediaID, request.CategoryIDArray[i]);
+                    if (!addMediaCategory) return new JsonResult(messageFail);
+                }
                 var message = new
                 {
                     message = "success"
@@ -461,6 +467,7 @@ namespace Nextflip.APIControllers
             public string CategoryID { get; set; }
             public string Name { get; set; }
         }
+
         [Route("AddCategory")]
         [HttpPost]
         public IActionResult AddCategory([FromServices] IEditorService editorService,

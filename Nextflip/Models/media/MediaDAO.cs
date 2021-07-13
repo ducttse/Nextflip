@@ -1027,7 +1027,7 @@ namespace Nextflip.Models.media
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception("Fail. " + ex.Message);
             }
             return result;
         }

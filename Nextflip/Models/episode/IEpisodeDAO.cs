@@ -12,5 +12,7 @@ namespace Nextflip.Models.episode
         bool ApproveChangeEpisode(string ID);
         bool DisapproveChangeEpisode(string ID);
         bool RequestChangeEpisodeStatus(string episodeID, string newStatus);
+        string AddEpisode(Episode episode);
+        string UpdateEpisode(Episode episode);
     }
 }

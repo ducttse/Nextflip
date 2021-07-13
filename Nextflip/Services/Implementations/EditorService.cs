@@ -91,5 +91,16 @@ namespace Nextflip.Services.Implementations
         public bool AddCategory(Category category) => _categoryDAO.AddCategory(category);
         public Category GetCategoryById(int categoryID) => _categoryDAO.GetCategoryByID(categoryID);
         public bool AddMediaCategory(string mediaID, int categoryID) => _mediaCategoryDAO.AddMediaCategory(mediaID, categoryID);
+        public string UpdateMedia(Media media) => _mediaDAO.UpdateMedia(media);
+
+        public string AddSeason(Season season) => _seasonDAO.AddSeason(season);
+
+        public string UpdateSeason(Season season) => _seasonDAO.UpdateSeason(season);
+
+
+        public string AddEpisode(Episode episode) => _episodeDAO.AddEpisode(episode);
+
+        public string UpdateEpisode(Episode episode) => _episodeDAO.UpdateEpisode(episode);
+
     }
 }

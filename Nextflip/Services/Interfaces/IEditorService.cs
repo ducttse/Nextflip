@@ -1,6 +1,8 @@
 ﻿using Nextflip.Models.category;
+using Nextflip.Models.episode;
 using Nextflip.Models.media;
 using Nextflip.Models.mediaEditRequest;
+using Nextflip.Models.season;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,5 +49,13 @@ namespace Nextflip.Services.Interfaces
         bool AddCategory(Category category);
         Category GetCategoryById(int categoryID);
         bool AddMediaCategory(string mediaID, int categoryID);
+        //add media
+        string UpdateMedia(Media media);
+        //season
+        string AddSeason(Season season);
+        string UpdateSeason(Season season);
+        //episode
+        string AddEpisode(Episode episode);
+        string UpdateEpisode(Episode episode);
     }
 }

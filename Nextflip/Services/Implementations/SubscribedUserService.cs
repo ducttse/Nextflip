@@ -60,18 +60,27 @@ namespace Nextflip.Services.Implementations
         public IEnumerable<Media> GetFavoriteMediasByUserID(string userID, int limit , int page)
         {
             var favoriteMedias = new List<Media>();
-            FavoriteList favoriteList = _favoriteListDAO.GetFavoriteList(userID);
-            IList<string> favoriteMediaIDs = _mediaFavoriteDAO.GetMediaIDs(favoriteList.FavoriteListID);
-            int end = limit * (page + 1);
-            end = favoriteMediaIDs.Count > end ? end : favoriteMediaIDs.Count;
-            int start = limit * (page -1);
-            for (int i= start; i < end ; i++)
+            try
             {
-                Media media = _mediaDAO.GetMediaByID(favoriteMediaIDs[i]);
-                if(media.Status.Equals("Enabled"))
+                FavoriteList favoriteList = _favoriteListDAO.GetFavoriteList(userID);
+                if (favoriteList != null)
                 {
-                    favoriteMedias.Add(media);
+                    IList<string> favoriteMediaIDs = _mediaFavoriteDAO.GetMediaIDs(favoriteList.FavoriteListID);
+                    int end = limit * (page + 1);
+                    end = favoriteMediaIDs.Count > end ? end : favoriteMediaIDs.Count;
+                    int start = limit * (page - 1);
+                    for (int i = start; i < end; i++)
+                    {
+                        Media media = _mediaDAO.GetMediaByID(favoriteMediaIDs[i]);
+                        if (media.Status.Equals("Enabled"))
+                        {
+                            favoriteMedias.Add(media);
+                        }
+                    }
                 }
+            }catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
             return favoriteMedias;
         }

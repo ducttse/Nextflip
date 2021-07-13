@@ -9,8 +9,7 @@ using System.Threading.Tasks;
 namespace Nextflip.Models.mediaCategory
 {
     public class MediaCategoryDAO : IMediaCategoryDAO
-    { 
-
+    {
         public IList<int> GetCategoryIDs(string mediaID)
         {
             try
@@ -73,6 +72,36 @@ namespace Nextflip.Models.mediaCategory
             {
                 throw new Exception(ex.Message);
             }
+        }
+
+        public bool AddMediaCategory(string mediaID, int categoryID)
+        {
+            var result = false;
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "INSERT INTO mediaCategory (mediaID, categoryID) " +
+                        "VALUES (@mediaID, @categoryID) ";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@mediaID", mediaID);
+                        command.Parameters.AddWithValue("@categoryID", categoryID);
+                        int rowEffects = command.ExecuteNonQuery();
+                        if (rowEffects > 0)
+                        {
+                            result = true;
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Add mediaCategory fail");
+            }
+            return result;
         }
     }
 }

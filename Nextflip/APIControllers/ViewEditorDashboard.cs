@@ -35,7 +35,6 @@ namespace Nextflip.APIControllers
             public string CategoryName { get; set; }
             public string ID { get; set; }
             public string Type { get; set; }
-            public string LinkPreview { get; set; }
             public int RowsOnPage { get; set; }
             public int RequestPage { get; set; }
             public string Title { get; set; }
@@ -215,7 +214,7 @@ namespace Nextflip.APIControllers
                     message = "fail"
                 };
                 bool requestDisableMedia = editorService.RequestDisableMedia(request.MediaID);
-                bool addMediaRequest = editorService.AddMediaRequest(request.UserEmail, request.MediaID, request.Note, request.LinkPreview, "", request.MediaID);
+                bool addMediaRequest = editorService.AddMediaRequest(request.UserEmail, request.MediaID, request.Note, "", request.MediaID);
                 if (!requestDisableMedia || !addMediaRequest) return new JsonResult(messageFail);
                 var message = new
                 {
@@ -343,7 +342,7 @@ namespace Nextflip.APIControllers
                 {
                     requestChange = editorService.RequestChangeSubtitleStatus(request.ID, request.Status);
                 }
-                addMediaRequest = editorService.AddMediaRequest(request.UserEmail, mediaByChildID.MediaID, request.Note, request.LinkPreview, request.Type, request.ID);
+                addMediaRequest = editorService.AddMediaRequest(request.UserEmail, mediaByChildID.MediaID, request.Note, request.Type, request.ID);
 
                 if (!requestChange || !addMediaRequest) return new JsonResult(messageFail);
                 var message = new
@@ -426,7 +425,7 @@ namespace Nextflip.APIControllers
 
         [HttpPost]
         [Route("AddMedia")]
-        public IActionResult AddMedia([FromServices] IEditorService editorService, [FromForm] Request request)
+        public IActionResult AddMedia([FromServices] IEditorService editorService, [FromBody] Request request)
         {
             try
             {
@@ -434,10 +433,12 @@ namespace Nextflip.APIControllers
                 {
                     message = "fail"
                 };
+                if (request.Title.Trim() == "") return new JsonResult(messageFail);
                 string mediaID = editorService.AddMedia(request.Title, request.FilmType, request.Director,
                     request.Cast, request.PublishYear, request.Duration, request.BannerURL, request.Language, request.Description);
-                bool addMediaRequest = editorService.AddMediaRequest(request.UserEmail, mediaID, request.Note, request.LinkPreview, request.Type, mediaID);
-                if (mediaID == null || !addMediaRequest) return new JsonResult(messageFail);
+                bool addMediaRequest = editorService.AddMediaRequest(request.UserEmail, mediaID, request.Note, "media", mediaID);
+                bool addMediaCategory = editorService.AddMediaCategory(mediaID, request.CategoryID);
+                if (mediaID == null || !addMediaRequest || !addMediaCategory) return new JsonResult(messageFail);
                 var message = new
                 {
                     message = "success"

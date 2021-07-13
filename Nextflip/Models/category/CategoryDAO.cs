@@ -82,5 +82,41 @@ namespace Nextflip.Models.category
                 throw new Exception(ex.Message);
             }
         }
+
+        public Category GetCategoryByName(string categoryName)
+        {
+            try
+            {
+                Category category = null;
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select categoryID, name " +
+                                "From category " +
+                                "Where categoryName = @categoryName ";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@categoryName", categoryName);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                category = new Category
+                                {
+                                    CategoryID = reader.GetInt32(0),
+                                    Name = reader.GetString(1),
+                                };
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+                return category;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

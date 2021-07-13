@@ -67,5 +67,21 @@ function requestResetPassword() {
             if (json.message == true) {
                 window.location.replace("/Profie/Index")
             }
+            else {
+                document.getElementById("change_password_modal").querySelector("alert").classList.remove("d-none");
+            }
         })
 }
+
+function clearChangePasswordForm() {
+    let password = document.getElementById("newpassword");
+    let repassword = document.getElementById("confirmPassword");
+    password.value = "";
+    repassword.value = "";
+    password.parentNode.classList.remove("was-validated");
+    repassword.parentNode.classList.remove("was-validated");
+}
+document.getElementById("change_password_modal").addEventListener("hidden.bs.modal", () => {
+    clearChangePasswordForm();
+    document.getElementById("change_password_modal").querySelector("alert").classList.add("d-none");
+})

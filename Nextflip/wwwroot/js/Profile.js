@@ -1,29 +1,51 @@
-﻿let Data = {
-    "userID": "9A0u0Kmy78OFFycpGkZQ",
-    "userEmail": "IiFPqKJ0bnOjqmOT6p1g@gmail.com",
-    "googleID": null,
-    "googleEmail": null,
-    "roleName": "user manager",
-    "hashedPassword": null,
-    "fullname": "Ngô Minh Dung",
-    "dateOfBirth": "0001-01-01T00:00:00",
-    "status": "Active",
-    "pictureURL": "https://storage.googleapis.com/next-flip/User%20Profile%20Image/Default"
+﻿let Profile;
+
+function getProfile() {
+    return Profile;
+};
+
+async function loadAccount() {
+    let ID = localStorage.getItem("ID");
+    let reqHeader = new Headers();
+    reqHeader.append("Content-Type", "text/json");
+    reqHeader.append("Accept", "application/json, text/plain, */*");
+    let initObject = {
+        method: "POST",
+        headers: reqHeader,
+        body: JSON.stringify(
+            {
+                UserID: ID
+            }
+        )
+    };
+    await fetch("/api/ProfileManagement/GetProfile", initObject)
+        .then(res => res.json())
+        .then(json => {
+            Profile = { ...json, userID: ID }
+        })
+    return new Promise(resolve => { resolve("resolved") })
 }
 
 function renderProfile() {
+    let stamp = Date.now();
     return `<div>
-                <img width="200" height="200" class="rounded-circle" src="${Data.pictureURL}" alt="${Data.userID}"/>
+                <img width="200" height="200" style="object-fit: cover;" class="rounded-circle" src="${Profile.pictureURL}?time=${stamp}" alt="profile picture"/>
             </div> 
-            <div>
-                <p class="text-light h2 pb-3 pt-4 ps-5 mt-5">${Data.fullname}</p>
+            <div class="d-flex">
+                <p class="text-light h2 pb-3 pt-1 ps-5 mt-5">${Profile.fullname}</p><i class="fas fa-pen fa-sm mt-5 pt-3 ps-2"></i>
             </div>`
 }
 
 function appendUserToWrapper() {
     document.getElementById("imgAndName_holder").insertAdjacentHTML("afterbegin", renderProfile());
-    document.getElementById("email").innerHTML = Data.userEmail;
-    document.getElementById("dob").innerHTML = Data.dateOfBirth;
-    document.getElementById("exp_date").innerHTML = "";
+    document.getElementById("email").innerHTML = Profile.userEmail;
+    document.getElementById("dob").innerHTML = Profile.dateOfBirth;
+    if (Profile.subscriptionEndDate == null) {
+        document.getElementById("exp_date").innerHTML = "N/A"
+    }
+    else document.getElementById("exp_date").innerHTML = Profile.subscriptionEndDate;
 }
-appendUserToWrapper();
+loadAccount().then(() => {
+    appendUserToWrapper();
+    setTriggerLoadProfile();
+})

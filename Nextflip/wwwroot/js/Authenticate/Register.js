@@ -82,7 +82,6 @@ function validatePassword() {
         password.setCustomValidity("length issue");
         feedback.textContent = "Invalid Password ! Password length must range from 8 - 32 character !";
     }
-
 }
 
 const onInputRePassword = debounce(() => checkRePassword());
@@ -183,6 +182,3 @@ function requestSignUp() {
         }
     })
 }
-
-
-// function 

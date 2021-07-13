@@ -1065,5 +1065,39 @@ namespace Nextflip.Models.media
             }
             return result;
         }
+
+        public string UpdateMedia(Media media)
+        {
+            string mediaID = null;
+            try
+            {
+                var connection = new MySqlConnection(DbUtil.ConnectionString);
+                var command = new MySqlCommand();
+                command.Connection = connection;
+                command.CommandType = CommandType.StoredProcedure;
+                connection.Open();
+                command.CommandText = "updateMedia";
+                command.Parameters.AddWithValue("@mediaID_InOutput", media.MediaID);
+                command.Parameters.AddWithValue("@title_Input", media.Title);
+                command.Parameters.AddWithValue("@filmType_Input", media.FilmType);
+                command.Parameters.AddWithValue("@director_Input", media.Director);
+                command.Parameters.AddWithValue("@cast_Input", media.Cast);
+                command.Parameters.AddWithValue("@publishYear_Input", media.PublishYear);
+                command.Parameters.AddWithValue("@duration_Input", media.Duration);
+                command.Parameters.AddWithValue("@bannerURL_Input", media.BannerURL);
+                command.Parameters.AddWithValue("@language_Input", media.Language);
+                command.Parameters.AddWithValue("@description_Input", media.Description);
+                command.Parameters.Add("@mediaID_InOutput", MySqlDbType.String).Direction
+                    = ParameterDirection.Output;
+                command.ExecuteNonQuery();
+                mediaID = (string)command.Parameters["@mediaID_InOutput"].Value;
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return mediaID;
+        }
     }
 }

@@ -82,5 +82,36 @@ namespace Nextflip.Models.category
                 throw new Exception(ex.Message);
             }
         }
+
+        public bool AddCategory(Category category)
+        {
+            bool isAdded = false;
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Insert into category(categoryID, name) " +
+                                "values(@categoryID, @name) ";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@categoryID", category.CategoryID);
+                        command.Parameters.AddWithValue("@name", category.Name);
+                        int rowAffect = command.ExecuteNonQuery();
+                        if(rowAffect == 1)
+                        {
+                            isAdded = true;
+                        }
+                    }
+                    connection.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+
+            return isAdded;
+        }
     }
 }

@@ -434,7 +434,9 @@ namespace Nextflip.APIControllers
                 {
                     message = "fail"
                 };
-                if (request.Title.Trim() == "") return new JsonResult(messageFail);
+                if (request.Title.Trim() == "" || request.Description.Trim() == "" || 
+                    request.BannerURL.Trim() == "" || request.CategoryIDArray == null) 
+                    return new JsonResult(messageFail);
                 string mediaID = editorService.AddMedia(request.Title, request.FilmType, request.Director,
                     request.Cast, request.PublishYear, request.Duration, request.BannerURL, request.Language, request.Description);
                 if (mediaID == null) return new JsonResult(messageFail);

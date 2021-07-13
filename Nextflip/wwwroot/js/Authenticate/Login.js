@@ -28,6 +28,18 @@
         })
 }
 
+function renderButton() {
+    gapi.signin2.render('my-signin2', {
+        'scope': 'profile email',
+        'width': 240,
+        'height': 50,
+        'longtitle': false,
+        'theme': 'dark',
+        'onsuccess': onSuccess,
+        'onfailure': onFailure
+    });
+}
+
 async function onSignIn(googleUser) {
     var profile = await googleUser.getBasicProfile();
     gapi.auth2.getAuthInstance().disconnect().then(() => {

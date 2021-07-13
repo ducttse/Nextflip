@@ -1,5 +1,5 @@
 ﻿#wrapper{
-    height: 90vh;
+    height: 97vh;
     width: 100%;
 }
 #login_wrapper{
@@ -14,6 +14,10 @@ div.hr {
     height: 0px;
     line-height: 0px;
   }
+
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    color: #fff;
+}
 
 .hr-title {
     background-color: #fff;

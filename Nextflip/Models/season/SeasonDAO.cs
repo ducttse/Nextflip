@@ -214,5 +214,62 @@ namespace Nextflip.Models.season
             }
             return result;
         }
+        public string AddSeason(Season season)
+        {
+            string seasonID = null;
+            try
+            {
+                MySqlConnection connection = new MySqlConnection(DbUtil.ConnectionString);
+                MySqlCommand command = new MySqlCommand();
+                command.Connection = connection;
+                command.CommandType = CommandType.StoredProcedure;
+                connection.Open();
+                command.CommandText = "createSeason";
+                command.Parameters.AddWithValue("@mediaID_Input", season.MediaID);
+                command.Parameters.AddWithValue("@title_Input", season.Title);
+                command.Parameters.AddWithValue("@thumbnailURL_Input", season.ThumbnailURL);
+                command.Parameters.AddWithValue("@seasonNum_Input", season.Number);
+                command.Parameters.Add("@seasonID_Output", MySqlDbType.String).Direction
+                    = ParameterDirection.Output;
+                command.ExecuteNonQuery();
+                seasonID = (string)command.Parameters["@seasonID_Output"].Value;
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Fail. " + ex.Message);
+            }
+            return seasonID;
+        }
+
+        public string UpdateSeason(Season season)
+        {
+            string seasonID = null;
+            try
+            {
+                var connection = new MySqlConnection(DbUtil.ConnectionString);
+                var command = new MySqlCommand();
+                command.Connection = connection;
+                command.CommandType = CommandType.StoredProcedure;
+                connection.Open();
+                command.CommandText = "updateSeason";
+                command.Parameters.AddWithValue("@seasonID_InOutput", season.SeasonID);
+                command.Parameters.AddWithValue("@title_Input", season.Title);
+                command.Parameters.AddWithValue("@thumbnailURL_Input", season.ThumbnailURL);
+                command.Parameters.AddWithValue("@seasonNum_Input", season.Number);
+                command.Parameters.Add("@seasonID_InOutput", MySqlDbType.String).Direction
+                    = ParameterDirection.Output;
+                command.ExecuteNonQuery();
+                seasonID = (string)command.Parameters["@seasonID_InOutput"].Value;
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return seasonID;
+        }
+
+
     }
 }

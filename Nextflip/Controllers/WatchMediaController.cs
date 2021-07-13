@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Nextflip.Controllers
 {
+    [Authorize(Policy = "subscribed user")]
     public class WatchMediaController : Controller
     {
         [HttpGet("WatchMedia/Watch/{id}/{episodeID}")]

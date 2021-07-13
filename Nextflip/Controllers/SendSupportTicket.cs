@@ -2,9 +2,11 @@
 using Microsoft.Extensions.Logging;
 using Nextflip.Services.Interfaces;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Nextflip.Controllers
 {
+    [Authorize(Policy = "subscribed user")]
     public class SendSupportTicket : Controller
     {
         private readonly ILogger _logger;

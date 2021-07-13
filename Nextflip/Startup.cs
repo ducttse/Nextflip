@@ -12,7 +12,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Nextflip.utils;
 using Nextflip.Models.account;
 using Nextflip.Services.Implementations;
@@ -64,8 +66,6 @@ namespace Nextflip
             services.AddTransient<IRoleDAO, RoleDAO>();
             services.AddTransient<IRoleService, RoleService>();
             services.AddTransient<ISubscriptionDAO, SubscriptionDAO>();
-            //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-            //    .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddControllers().AddNewtonsoftJson();
             services.AddTransient<IAccountDAO, AccountDAO>();
@@ -105,6 +105,46 @@ namespace Nextflip
                 options.Cookie.IsEssential = true;
             });
 
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options => {
+                options.AccessDeniedPath = "/Common/AccessDenied";
+                options.LoginPath = "/Login/Index";
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("user manager", policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser()
+                        .RequireAssertion(context => context.User.HasClaim(ClaimTypes.Role, "user manager"))
+                        .Build();
+                });
+                options.AddPolicy("subscribed user", policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser()
+                        .RequireAssertion(context => context.User.HasClaim(ClaimTypes.Role, "subscribed user"))
+                        .Build();
+                });
+                options.AddPolicy("customer supporter", policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser()
+                        .RequireAssertion(context => context.User.HasClaim(ClaimTypes.Role, "customer supporter"))
+                        .Build();
+                });
+                options.AddPolicy("media editor", policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser()
+                        .RequireAssertion(context => context.User.HasClaim(ClaimTypes.Role, "media editor"))
+                        .Build();
+                });
+                options.AddPolicy("media manager", policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser()
+                        .RequireAssertion(context => context.User.HasClaim(ClaimTypes.Role, "media manager"))
+                        .Build();
+                });
+
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

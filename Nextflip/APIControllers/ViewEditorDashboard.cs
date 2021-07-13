@@ -467,6 +467,64 @@ namespace Nextflip.APIControllers
                 return new JsonResult(result);
             }
         }
+        public class MediaForm
+        {
+            public string MediaID { get; set; }
+            public string Status { get; set; }
+            public string Title { get; set; }
+            public string FilmType { get; set; }
+            public string Director { get; set; }
+            public string Cast { get; set; }
+            public string PublishYear { get; set; }
+            public string Duration { get; set; }
+            public string BannerURL { get; set; }
+            public string Language { get; set; }
+            public string Description { get; set; }
+            public int[] CategoryIDArray { get; set; }
+            public string UserEmail { get; set; }
+        }
+        [HttpPost]
+        [Route("EditMedia")]
+        public IActionResult EditMedia([FromServices] IEditorService editorService, [FromBody] MediaForm frmMedia)
+        {
+            try
+            {
+                uint publishYear;
+                uint.TryParse(frmMedia.PublishYear, out publishYear);
+                bool isValidInput =   frmMedia.MediaID != null && frmMedia.Title != "" && frmMedia.BannerURL != ""
+                                    && frmMedia.Language != "" && frmMedia.Description != "" && frmMedia.FilmType != "" && frmMedia.Director != ""
+                                    && frmMedia.Cast != "" && frmMedia.Duration != "" && frmMedia.CategoryIDArray != null && frmMedia.UserEmail != null;
+                if(isValidInput == false || publishYear < 0) return new JsonResult(new { Message = "Fail valid" });
+                Media media = new Media
+                {
+                    MediaID = frmMedia.MediaID,
+                    Title = frmMedia.Title,
+                    BannerURL = frmMedia.BannerURL,
+                    Language = frmMedia.Language,
+                    Description = frmMedia.Description,
+                    FilmType = frmMedia.FilmType,
+                    Director = frmMedia.Director,
+                    Cast = frmMedia.Cast,
+                    Duration = frmMedia.Duration,
+                    PublishYear = (int)publishYear
+                };
+                string mediaID = editorService.UpdateMedia(media);
+                if(mediaID == null) return new JsonResult(new { Message = "Fail media null" });
+                for (int i = 0; i < frmMedia.CategoryIDArray.Length; i++)
+                {
+                    bool isAddCategory = editorService.AddMediaCategory(mediaID, frmMedia.CategoryIDArray[i]);
+                    if (isAddCategory == false) return new JsonResult(new { Message = "Fail category" });
+                }
+                bool isAddMediaRequest = editorService.AddMediaRequest(frmMedia.UserEmail, mediaID, "update media", "media", mediaID);
+                if(isAddMediaRequest == false) return new JsonResult(new { Message = "Fail add medire quest" });
+                return new JsonResult(new { Message = "Success" });
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("EditMedia: " + e.Message);
+                return new JsonResult(new { Message = "Fail. " + e.Message});
+            }
+        }
         [Route("GetMediaByID/{mediaID}")]
         public IActionResult GetMediaByID([FromServices] ISubscribedUserService subscribedUserService, string mediaID)
         {
@@ -546,7 +604,7 @@ namespace Nextflip.APIControllers
             return new JsonResult(new { Message = message, CategoryErr = categoryIdErr, NameErr = nameErr });
         }
 
-        public class JSeasonForm
+        public class SeasonForm
         {
             public string SeasonID { get; set; }
             public string Title { get; set; }
@@ -558,7 +616,7 @@ namespace Nextflip.APIControllers
         }
         [Route("AddSeason")]
         [HttpPost]
-        public IActionResult AddSeason([FromServices] IEditorService editorService, [FromBody] JSeasonForm frmSeason)
+        public IActionResult AddSeason([FromServices] IEditorService editorService, [FromBody] SeasonForm frmSeason)
         {
             try
             {
@@ -604,7 +662,7 @@ namespace Nextflip.APIControllers
         }
         [Route("EditSeason")]
         [HttpPost]
-        public IActionResult EditSeason([FromServices] IEditorService editorService, [FromBody] JSeasonForm frmSeason)
+        public IActionResult EditSeason([FromServices] IEditorService editorService, [FromBody] SeasonForm frmSeason)
         {
             try
             {
@@ -635,7 +693,7 @@ namespace Nextflip.APIControllers
             }
         }
 
-        public class JEpisodeForm
+        public class EpisodeForm
         {
             public string EpisodeID { get; set; }
             public string Title { get; set; }
@@ -649,7 +707,7 @@ namespace Nextflip.APIControllers
 
         [Route("AddEpisode")]
         [HttpPost]
-        public IActionResult AddEpisode([FromServices] IEditorService editorService, [FromBody] JEpisodeForm frmEpisode)
+        public IActionResult AddEpisode([FromServices] IEditorService editorService, [FromBody] EpisodeForm frmEpisode)
         {
             try
             {
@@ -699,7 +757,7 @@ namespace Nextflip.APIControllers
         }
         [Route("EditEpisode")]
         [HttpPost]
-        public IActionResult EditEpisode([FromServices] IEditorService editorService, [FromBody] JEpisodeForm frmEpisode)
+        public IActionResult EditEpisode([FromServices] IEditorService editorService, [FromBody] EpisodeForm frmEpisode)
         {
             try
             {

@@ -28,9 +28,9 @@ namespace Nextflip.Services.Interfaces
         IEnumerable<MediaEditRequest> GetPendingMediasFilterStatus(string status, int RowsOnPage, int RequestPage);
         bool ApproveChangeMedia(string mediaID);
         bool DisapproveChangeMedia(string mediaID);
-        IEnumerable<MediaEditRequest> GetMediaRequest(string status, string type, int RowsOnPage, int RequestPage);
+        IEnumerable<MediaEditRequest> GetMediaRequest(string status, string type, string sortBy, int RowsOnPage, int RequestPage);
         int NumberOfMediaRequest(string status, string type);
-        IEnumerable<MediaEditRequest> SearchingMediaRequest(string searchValue, string status, string type, int RowsOnPage, int RequestPage);
+        IEnumerable<MediaEditRequest> SearchingMediaRequest(string searchValue, string status, string sortBy, string type, int RowsOnPage, int RequestPage);
         int NumberOfMediaRequestSearching(string searchValue, string status, string type);
         Media GetMediaByID(string mediaID);
         MediaEditRequest GetMediaEditRequestByID(int requestID);

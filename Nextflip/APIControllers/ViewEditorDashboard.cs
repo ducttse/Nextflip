@@ -489,12 +489,11 @@ namespace Nextflip.APIControllers
         {
             try
             {
-                uint publishYear;
-                uint.TryParse(frmMedia.PublishYear, out publishYear);
-                bool isValidInput =   frmMedia.MediaID != null && frmMedia.Title != "" && frmMedia.BannerURL != ""
+                
+                bool isValidInput = frmMedia.MediaID != null && frmMedia.Title != "" && frmMedia.BannerURL != ""
                                     && frmMedia.Language != "" && frmMedia.Description != "" && frmMedia.FilmType != "" && frmMedia.Director != ""
                                     && frmMedia.Cast != "" && frmMedia.Duration != "" && frmMedia.CategoryIDArray != null && frmMedia.UserEmail != null;
-                if(isValidInput == false || publishYear < 0) return new JsonResult(new { Message = "Fail valid" });
+                if(isValidInput == false ) return new JsonResult(new { Message = "Fail valid" });
                 Media media = new Media
                 {
                     MediaID = frmMedia.MediaID,
@@ -505,8 +504,7 @@ namespace Nextflip.APIControllers
                     FilmType = frmMedia.FilmType,
                     Director = frmMedia.Director,
                     Cast = frmMedia.Cast,
-                    Duration = frmMedia.Duration,
-                    PublishYear = (int)publishYear
+                    Duration = frmMedia.Duration
                 };
                 string mediaID = editorService.UpdateMedia(media);
                 if(mediaID == null) return new JsonResult(new { Message = "Fail media null" });
@@ -516,7 +514,7 @@ namespace Nextflip.APIControllers
                     if (isAddCategory == false) return new JsonResult(new { Message = "Fail category" });
                 }
                 bool isAddMediaRequest = editorService.AddMediaRequest(frmMedia.UserEmail, mediaID, "update media", "media", mediaID);
-                if(isAddMediaRequest == false) return new JsonResult(new { Message = "Fail add medire quest" });
+                if(isAddMediaRequest == false) return new JsonResult(new { Message = "Fa" });
                 return new JsonResult(new { Message = "Success" });
             }
             catch (Exception e)

@@ -343,6 +343,7 @@ namespace Nextflip.APIControllers
                 {
                     requestChange = editorService.RequestChangeSubtitleStatus(request.ID, request.Status);
                 }
+                if (request.Note.Trim() == "") request.Note = "Request change status";
                 addMediaRequest = editorService.AddMediaRequest(request.UserEmail, mediaByChildID.MediaID, request.Note, request.Type, request.ID);
 
                 if (!requestChange || !addMediaRequest) return new JsonResult(messageFail);
@@ -440,7 +441,8 @@ namespace Nextflip.APIControllers
                 string mediaID = editorService.AddMedia(request.Title, request.FilmType, request.Director,
                     request.Cast, request.PublishYear, request.Duration, request.BannerURL, request.Language, request.Description);
                 if (mediaID == null) return new JsonResult(messageFail);
-                bool addMediaRequest = editorService.AddMediaRequest(request.UserEmail, mediaID, "", "media", mediaID);
+                if (request.Note.Trim() == "") request.Note = "Request add media";
+                bool addMediaRequest = editorService.AddMediaRequest(request.UserEmail, mediaID, request.Note, "media", mediaID);
                 if (!addMediaRequest) return new JsonResult(messageFail);
                 for (int i = 0; i < request.CategoryIDArray.Length; i++) 
                 {

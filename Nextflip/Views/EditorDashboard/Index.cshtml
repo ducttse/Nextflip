@@ -128,23 +128,6 @@
         </div>
     </div>
 </div>
-<!-- Add modal -->
-<div class="modal fade" id="modalAddForm" tabindex="-1" aria-labelledby="Form_UserID" aria-hidden="true">
-    <div class="modal-dialog modal-fullscreen">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="Form_Label">Add New Media</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-bg-danger" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="submit_btn">Submit</button>
-            </div>
-        </div>
-    </div>
-</div>
 <script src="~/js/Pagination.js"></script>
 <script src="~/js/Slide-Bar.js"></script>
 <script src="~/js/Search-Component.js"></script>
@@ -159,7 +142,7 @@
     let button1 = `<a href="/EditorDashboard/Index" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
                         Media manager
                       </a>`;
-    let button2 = `<a href="#" onclick="return showForm();" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
+    let button2 = `<a href="/EditorDashboard/ViewAddNewMedia" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
                         Add new media
                       </a>`;
     let button3 = `<a href="/EditorDashboard/ViewEditRequest"  onclick="return showForm();" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
@@ -168,7 +151,4 @@
     appendButton(button3);
     appendButton(button2);
     appendButton(button1);
-    setRoleName("Media Editor");
-    setName("Lê Đức")
-    addSetStatusEvent();
 </script>

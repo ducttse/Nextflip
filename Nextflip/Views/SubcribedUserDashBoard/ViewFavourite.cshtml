@@ -1,19 +1,20 @@
 ﻿@{
-    ViewBag.Title = "Home";
+    ViewBag.Title = "Get Media";
     Layout = "_UserDashboardLayout";
 }
-@section styles{
-    <link rel="Stylesheet" href="@Href("~/css/User-Dashboard.css")" />
-    <link rel="Stylesheet" href="@Href("~/css/Media-Details.css")" />
+@section Styles {
+    <link href="@Url.Content("~/css/Search-Media.css")" rel="stylesheet" type="text/css" />
     <link rel="Stylesheet" href="@Href("~/css/Header.css")" />
+    <link rel="Stylesheet" href="@Href("~/css/Media-Details.css")" />
 }
-<div id="wrapper">
+<div id="media_holder" class="col-11 mx-auto mt-3">
 </div>
 <div class="modal fade" id="modalDetail" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
             <div class="modal-body bg-dark">
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close">
+                </button>
                 <div class="wrapper row col-12 mx-auto text-light">
                 <div class="row bg-dark">
                     <div id="img_holder" class="col-6">
@@ -39,7 +40,7 @@
                     <div class="d-flex flex-row mb-3">
                         <div id="description" class="options me-4 p-1 chosen" onclick="chooseOptions('description', this)">
                             <p class="p-2 h4 text-warning">
-                                Description
+                            Description
                             </p>
                         </div>
                         <div id="season" class="options me-4 p-1" onclick="chooseOptions('season', this)">
@@ -54,10 +55,11 @@
         </div>
     </div>
 </div>
-<script src="~/js/User-Dashboard.js"></script>
 <script src="~/js/Search-In-Header.js"></script>
 <script src="~/js/Media-Details.js"></script>
 <script src="~/js/Favourite-Media.js"></script>
+<script src="~/js/View-Media.js"></script>
 <script>
+    requestFavourite();
     setGoToSearchEvent();
 </script>

@@ -13,12 +13,12 @@
      <script> search('@ViewBag.SearchValue'); </script>
     }
 }
-<div id="result_holder" class="col-10 mx-auto mt-3">
+<div id="result_holder" class="col-11 mx-auto mt-3">
 </div>
 <div class="modal fade" id="modalDetail" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-fullscreen">
         <div class="modal-content">
-            <div class="modal-body" style="background-color: #000">
+            <div class="modal-body bg-dark">
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close">
                 </button>
                 <div class="wrapper row col-12 mx-auto text-light">
@@ -31,9 +31,16 @@
                         </div>
                     </div>
                 </div>
-                <div class="row bg-dark py-2">
-                    <button class="ms-3 btn btn-danger col-1">Play</button>
-                    <button class="ms-2 btn btn-secondary col-2">Add to favourite</button>
+                <div class="row bg-dark py-2 offset-1">
+                    <button class="ms-3 btn btn-danger col-1 d-flex justify-content-center">
+                        <i class="fas fa-play pt-1 pe-2"></i>Play
+                    </button>
+                    <button class="ms-2 btn btn-secondary col-2 d-flex justify-content-center" id="add_btn" onclick="addToFavourite()">
+                        <i class="fas fa-heart pt-1 pe-2"></i>Add to favourite
+                        </button>
+                    <button class="ms-2 btn btn-secondary col-2 d-flex justify-content-center" id="remove_btn" onclick="removeFavourite()">
+                        <i class="fas fa-times pt-1 pe-2"></i>Remove favourite
+                    </button>
                 </div>
                 <div class="row mt-3 bg-dark" style="background-color: #3b3f42">
                     <div class="d-flex flex-row mb-3">
@@ -56,7 +63,7 @@
 </div>
 <script src="~/js/Search-In-Header.js"></script>
 <script src="~/js/Media-Details.js"></script>
-<script src="~/js/Profile.js"></script>
+<script src="~/js/Favourite-Media.js"></script>
 <script>
-    setSearchEvent();
+    setSearchEvent('@ViewBag.SearchValue');
 </script>

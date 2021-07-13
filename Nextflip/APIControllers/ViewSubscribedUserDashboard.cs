@@ -77,6 +77,56 @@ namespace Nextflip.APIControllers
                 return new JsonResult("error occur");
             }
         }
+
+        [Route("GetMedias/{limit=10}")]
+        public IActionResult GetMedias([FromServices] ISubscribedUserService subscribedUserService, int limit)
+        {
+            try
+            {
+                var newest = new {
+                    Name = "newest",
+                    ID = 0,
+                    Data = subscribedUserService.GetNewestMedias(limit)
+                };
+                var action = new
+                {
+                    Name = "action",
+                    ID = 1,
+                    Data = subscribedUserService.GetMediasByCategoryID(1,limit)
+                };
+                var adventure = new
+                {
+                    Name = "adventure",
+                    ID = 2,
+                    Data = subscribedUserService.GetMediasByCategoryID(2, limit)
+                };
+                var comedy = new
+                {
+                    Name = "comedy",
+                    ID = 3,
+                    Data = subscribedUserService.GetMediasByCategoryID(3, limit)
+                };
+                var romance = new
+                {
+                    Name = "romance",
+                    ID = 4,
+                    Data = subscribedUserService.GetMediasByCategoryID(4, limit)
+                };
+                var horror = new
+                {
+                    Name = "horror",
+                    ID = 5,
+                    Data = subscribedUserService.GetMediasByCategoryID(5, limit)
+                };
+                return new JsonResult(new Object[] { newest, action ,adventure, comedy, romance, horror});
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetMedias: " + ex.Message);
+                return new JsonResult("error occur");
+            }
+        }
+
         public partial class Favorite
         {
             public string UserID { get; set; }

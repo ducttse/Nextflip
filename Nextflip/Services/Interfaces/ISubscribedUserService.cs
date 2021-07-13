@@ -33,5 +33,6 @@ namespace Nextflip.Services.Interfaces
         void AddMediaToFavoriteList(string userID, string mediaID);
         void RemoveMediaFromFavoriteList(string userID, string mediaID);
         bool IsFavoriteMedia(string userID, string mediaID);
+        IEnumerable<Media> GetNewestMedias(int limit);
     }
 }

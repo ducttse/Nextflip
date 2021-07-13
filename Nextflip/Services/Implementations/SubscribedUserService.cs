@@ -79,10 +79,9 @@ namespace Nextflip.Services.Implementations
         public IEnumerable<Media> GetMediasByCategoryID(int categoryID, int limit )
         {
             var medias = new List<Media>();
-            IList<string> mediaIDs = _mediaCategoryDAO.GetMediaIDs(categoryID);
-            for(int i = 0; i< limit; i++)
-            {
-                string mediaID = mediaIDs[i];
+            IList<string> mediaIDs = _mediaCategoryDAO.GetMediaIDs(categoryID,limit);
+            foreach (var mediaID in mediaIDs)
+            { 
                 Media media = _mediaDAO.GetMediaByID(mediaID);
                 medias.Add(media);
             }
@@ -158,7 +157,7 @@ namespace Nextflip.Services.Implementations
                 throw new Exception(ex.Message);
             }
         }
-
+        public IEnumerable<Media> GetNewestMedias(int limit) => _mediaDAO.GetNewestMedias(limit);
     }
 }
 

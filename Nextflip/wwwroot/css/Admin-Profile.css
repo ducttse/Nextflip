@@ -1,0 +1,18 @@
+﻿.w-85{
+    width: 85% !important;
+}
+.w-65{
+    width: 65% !important;
+}
+.profle_wrapper{
+    background-color: #fff;
+    color: #171717;
+    min-height: 100vh;
+}
+.profile_background{
+    background-color: #fff;
+    height: 100vh;
+}
+#imgAndName_holder{
+    cursor: pointer;
+}

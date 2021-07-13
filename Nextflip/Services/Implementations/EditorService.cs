@@ -1,4 +1,5 @@
-﻿using Nextflip.Models.episode;
+﻿using Nextflip.Models.category;
+using Nextflip.Models.episode;
 using Nextflip.Models.media;
 using Nextflip.Models.mediaCategory;
 using Nextflip.Models.mediaEditRequest;
@@ -19,9 +20,10 @@ namespace Nextflip.Services.Implementations
         private readonly IEpisodeDAO _episodeDAO;
         private readonly ISeasonDAO _seasonDAO;
         private readonly ISubtitleDAO _subtitleDAO;
+        private readonly ICategoryDAO _categoryDAO;
         private readonly IMediaCategoryDAO _mediaCategoryDAO;
         public EditorService(IMediaEditRequestDAO mediaEditRequestDAO, IMediaDAO mediaDAO, IEpisodeDAO episodeDAO, ISeasonDAO seasonDAO, 
-            ISubtitleDAO subtitleDAO, IMediaCategoryDAO mediaCategoryDAO)
+            ISubtitleDAO subtitleDAO, IMediaCategoryDAO mediaCategoryDAO, ICategoryDAO categoryDAO)
         {
             _mediaEditRequestDAO = mediaEditRequestDAO;
             _mediaDAO = mediaDAO;
@@ -29,6 +31,7 @@ namespace Nextflip.Services.Implementations
             _seasonDAO = seasonDAO;
             _subtitleDAO = subtitleDAO;
             _mediaCategoryDAO = mediaCategoryDAO;
+            _categoryDAO = categoryDAO;
         }
         public IEnumerable<Media> GetMediasByTitle(string searchValue, int RowsOnPage, int RequestPage) => _mediaDAO.GetMediasByTitle(searchValue, RowsOnPage, RequestPage);
         public int NumberOfMediasBySearching(string searchValue) => _mediaDAO.NumberOfMediasBySearching(searchValue);
@@ -84,6 +87,9 @@ namespace Nextflip.Services.Implementations
         public string AddMedia(string Title, string FilmType, string Director, string Cast, int? PublishYear,
             string Duration, string BannerURL, string Language, string Description)
             => _mediaDAO.AddMedia(Title, FilmType, Director, Cast, PublishYear, Duration, BannerURL, Language, Description);
+        //category
+        public bool AddCategory(Category category) => _categoryDAO.AddCategory(category);
+        public Category GetCategoryById(int categoryID) => _categoryDAO.GetCategoryByID(categoryID);
         public bool AddMediaCategory(string mediaID, int categoryID) => _mediaCategoryDAO.AddMediaCategory(mediaID, categoryID);
     }
 }

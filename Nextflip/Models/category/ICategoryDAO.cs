@@ -10,5 +10,6 @@ namespace Nextflip.Models.category
         IEnumerable<Category> GetCategories();
         Category GetCategoryByID(int categoryID);
         Category GetCategoryByName(string categoryName);
+        bool AddCategory(Category category);
     }
 }

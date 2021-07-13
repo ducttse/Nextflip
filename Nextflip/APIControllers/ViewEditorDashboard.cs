@@ -455,5 +455,62 @@ namespace Nextflip.APIControllers
                 return new JsonResult(result);
             }
         }
+
+        public partial class JsonCategory
+        {
+            public string CategoryID { get; set; }
+            public string Name { get; set; }
+        }
+        [Route("AddCategory")]
+        [HttpPost]
+        public IActionResult AddCategory([FromServices] IEditorService editorService,
+                                        [FromBody] JsonCategory _jCategory)
+        {
+            string categoryIdErr = "";
+            string message = "Fail";
+            string nameErr = "";
+            try
+            {
+                bool isValid = true;
+                uint categoryID;
+                bool isValidCategoryId = uint.TryParse(_jCategory.CategoryID, out categoryID);
+                if(isValidCategoryId == true)
+                {
+                    Category _category = editorService.GetCategoryById((int)categoryID);
+                    if(_category != null)
+                    {
+                        categoryIdErr = "CategoryID is existed";
+                        isValid = false;
+                    }
+                }
+                else
+                {
+                    categoryIdErr = "CategoryID is Invalid";
+                    isValid = false;
+                }
+                if (_jCategory.Name.Equals(""))
+                {
+                    nameErr = "Name must not be empty";
+                    isValid = false;
+                }
+                if (isValid == true)
+                {
+                    var category = new Category
+                    {
+                        CategoryID = (int)categoryID,
+                        Name = _jCategory.Name,
+                    };
+                    bool result = editorService.AddCategory(category);
+                    if (result == true) message = "Success";
+                }
+                else message = "Fail";
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("CreateStaff: " + ex.Message);
+                message = "Fail" + ex.Message;
+            }
+            return new JsonResult(new { Message = message , CategoryErr = categoryIdErr, NameErr = nameErr});
+        }
     }
 }

@@ -1043,7 +1043,8 @@ namespace Nextflip.Models.media
                 command.CommandType = CommandType.StoredProcedure;
                 connection.Open();
                 command.CommandText = "updateMedia";
-                command.Parameters.AddWithValue("@mediaID_InOutput", media.MediaID);
+                command.Parameters.AddWithValue("@mediaID_InOutput", media.MediaID).Direction
+                    = ParameterDirection.InputOutput; 
                 command.Parameters.AddWithValue("@title_Input", media.Title);
                 command.Parameters.AddWithValue("@filmType_Input", media.FilmType);
                 command.Parameters.AddWithValue("@director_Input", media.Director);
@@ -1053,8 +1054,6 @@ namespace Nextflip.Models.media
                 command.Parameters.AddWithValue("@bannerURL_Input", media.BannerURL);
                 command.Parameters.AddWithValue("@language_Input", media.Language);
                 command.Parameters.AddWithValue("@description_Input", media.Description);
-                command.Parameters.Add("@mediaID_InOutput", MySqlDbType.String).Direction
-                    = ParameterDirection.Output;
                 command.ExecuteNonQuery();
                 mediaID = (string)command.Parameters["@mediaID_InOutput"].Value;
                 connection.Close();

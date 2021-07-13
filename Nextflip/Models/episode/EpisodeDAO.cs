@@ -257,13 +257,12 @@ namespace Nextflip.Models.episode
                 command.CommandType = CommandType.StoredProcedure;
                 connection.Open();
                 command.CommandText = "updateEpisode";
-                command.Parameters.AddWithValue("@episodeID_InOutput", episode.EpisodeID);
+                command.Parameters.AddWithValue("@episodeID_InOutput", episode.EpisodeID).Direction
+                    = ParameterDirection.InputOutput; ;
                 command.Parameters.AddWithValue("@title_Input", episode.Title);
                 command.Parameters.AddWithValue("@thumbnailURL_Input", episode.ThumbnailURL);
                 command.Parameters.AddWithValue("@episodeNum_Input", episode.Number);
                 command.Parameters.AddWithValue("@episodeURL_Input", episode.EpisodeURL);
-                command.Parameters.Add("@episodeID_InOutput", MySqlDbType.String).Direction
-                    = ParameterDirection.Output;
                 command.ExecuteNonQuery();
                 episodeID = (string)command.Parameters["@episodeID_InOutput"].Value;
                 connection.Close();

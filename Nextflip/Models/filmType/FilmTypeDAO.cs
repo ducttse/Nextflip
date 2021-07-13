@@ -1,27 +1,25 @@
-﻿    using System;
+﻿using MySql.Data.MySqlClient;
+using Nextflip.utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Data;
-using MySql.Data.MySqlClient;
-using Nextflip.utils;
 
-namespace Nextflip.Models.category
+namespace Nextflip.Models.filmType
 {
-    public class CategoryDAO: ICategoryDAO
-    { 
-
-        public IEnumerable<Category> GetCategories()
+    public class FilmTypeDAO : IFilmTypeDAO
+    {
+        public IEnumerable<FilmType> GetFilmTypes()
         {
             try
             {
-                var categories = new List<Category>();
+                var filmTypes = new List<FilmType>();
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select categoryID, name " +
-                                "From category " +
-                                "Order By name ";
+                    string Sql = "Select typeID, type " +
+                                "From filmType " +
+                                "Order By type ";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
 
@@ -29,74 +27,72 @@ namespace Nextflip.Models.category
                         {
                             while (reader.Read())
                             {
-                                categories.Add(new Category
+                                filmTypes.Add(new FilmType
                                 {
-                                    CategoryID = reader.GetInt32(0),
-                                    Name = reader.GetString(1),
+                                    Type = reader.GetString("type")
                                 });
                             }
                         }
                     }
                     connection.Close();
                 }
-                return categories;
+                return filmTypes;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
 
-        public Category GetCategoryByID(int categoryID)
+        public FilmType GetFilmTypeByID(int typeID)
         {
             try
             {
-                Category category = null;
+                FilmType filmType = null;
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select categoryID, name " +
-                                "From category " +
-                                "Where categoryID = @categoryID ";
+                    string Sql = "Select typeID, type " +
+                                "From filmType " +
+                                "Where typeID = @typeID ";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        command.Parameters.AddWithValue("@categoryID", categoryID);
+                        command.Parameters.AddWithValue("@typeID", typeID);
                         using (var reader = command.ExecuteReader())
                         {
                             if (reader.Read())
                             {
-                                category = new Category
+                                filmType = new FilmType
                                 {
-                                    CategoryID = reader.GetInt32(0),
-                                    Name = reader.GetString(1),
+                                    Type = reader.GetString("type")
                                 };
                             }
                         }
                     }
                     connection.Close();
                 }
-                return category;
+                return filmType;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
         }
-        public bool UpdateCategory(int categoryID, string newCategoryName)
+        public bool UpdateFilmType(int typeID, string filmType)
         {
             try
             {
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
-                    string sql = "Update category " +
-                                "Set name = @categoryName " +
-                                "Where categoryID = @categoryID ";
+                    string sql = "Update filmType " +
+                                "Set type = @filmType " +
+                                "Where typeID = @typeID ";
                     connection.Open();
                     using (var command = new MySqlCommand(sql, connection))
                     {
 
-                        command.Parameters.AddWithValue("@categoryName", newCategoryName);
-                        command.Parameters.AddWithValue("@categoryID", categoryID);
+                        command.Parameters.AddWithValue("@filmType", filmType);
+                        command.Parameters.AddWithValue("@typeID", typeID);
 
                         int result = command.ExecuteNonQuery();
                         if (result == 1) return true;
@@ -110,25 +106,25 @@ namespace Nextflip.Models.category
             return false;
         }
 
-        public bool CreateNewCategory(string categoryName)
+        public bool CreateNewFilmType(string filmTypeName)
         {
             try
             {
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
-                    string sql = "Insert into category (name) " +
-                                "Value(@categoryName)";
+                    string sql = "Insert into filmType (type) " +
+                                "Value(@filmTypeName)";
                     connection.Open();
                     using (var command = new MySqlCommand(sql, connection))
                     {
-                        command.Parameters.AddWithValue("@categoryName", categoryName);
+                        command.Parameters.AddWithValue("@filmTypeName", filmTypeName);
 
                         int result = command.ExecuteNonQuery();
                         if (result == 1) return true;
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }

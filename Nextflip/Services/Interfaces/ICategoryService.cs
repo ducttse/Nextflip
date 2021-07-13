@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Nextflip.Models.category
+namespace Nextflip.Services.Interfaces
 {
-    public interface ICategoryDAO
+    public interface ICategoryService
     {
-        IEnumerable<Category> GetCategories();
-        Category GetCategoryByID(int categoryID);
         public bool UpdateCategory(int categoryID, string newCategoryName);
         public bool CreateNewCategory(string categoryName);
     }

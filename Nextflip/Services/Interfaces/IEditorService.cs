@@ -1,4 +1,5 @@
-﻿using Nextflip.Models.media;
+﻿using Nextflip.Models.category;
+using Nextflip.Models.media;
 using Nextflip.Models.mediaEditRequest;
 using System;
 using System.Collections.Generic;
@@ -40,5 +41,10 @@ namespace Nextflip.Services.Interfaces
         int NumberOfRequestMediaFilterStatus(string userEmail, string Status);
         IEnumerable<MediaEditRequest> SearchingRequestMediaFilterStatus(string searchValue, string userEmail, string Status, int RowsOnPage, int RequestPage);
         int NumberOfSearchingRequestMediaFilterStatus(string searchValue, string userEmail, string Status);
+        string AddMedia(string Title, string FilmType, string Director, string Cast, int? PublishYear,
+            string Duration, string BannerURL, string Language, string Description);
+        // category
+        bool AddCategory(Category category);
+        Category GetCategoryById(int categoryID);
     }
 }

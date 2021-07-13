@@ -1,0 +1,104 @@
+﻿#item1,
+#item2,
+#item3 {
+  cursor: pointer;
+}
+.card-footer .choose_btn {
+  opacity: 0.7;
+}
+.card-footer .choose_btn:hover {
+  opacity: 0.9;
+}
+.text-decoration-line-through {
+  opacity: 0.6;
+}
+#item1 {
+  background: #ff4b1f; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #ff9068,
+    #ff4b1f
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #ff9068,
+    #ff4b1f
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+#item2 {
+  background: #e53935; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #e35d5b,
+    #e53935
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #e35d5b,
+    #e53935
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+#item3 {
+  background: #d1913c; /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to right,
+    #ffd194,
+    #d1913c
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to right,
+    #ffd194,
+    #d1913c
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.ribbon {
+  position: absolute;
+  right: -5px;
+  top: -5px;
+  z-index: 1;
+  overflow: hidden;
+  width: 75px;
+  height: 75px;
+  text-align: right;
+}
+.ribbon span {
+  font-size: 10px;
+  font-weight: bold;
+  color: #fff;
+  text-transform: uppercase;
+  text-align: center;
+  line-height: 20px;
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  width: 100px;
+  display: block;
+  background: #79a70a;
+  background: linear-gradient(#f70505 0%, #8f0808 100%);
+  box-shadow: 0 3px 10px -5px rgba(0, 0, 0, 1);
+  position: absolute;
+  top: 19px;
+  right: -21px;
+}
+.ribbon span::before {
+  content: "";
+  position: absolute;
+  left: 0px;
+  top: 100%;
+  z-index: -1;
+  border-left: 3px solid #8f0808;
+  border-right: 3px solid transparent;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #8f0808;
+}
+.ribbon span::after {
+  content: "";
+  position: absolute;
+  right: 0px;
+  top: 100%;
+  z-index: -1;
+  border-left: 3px solid transparent;
+  border-right: 3px solid #8f0808;
+  border-bottom: 3px solid transparent;
+  border-top: 3px solid #8f0808;
+}

@@ -2,7 +2,6 @@
 let currentIndex;
 
 function appendButton(button) {
-    console.log("append");
     document.getElementById("topic_List").querySelector(".text-muted").insertAdjacentHTML("afterend", button);
 }
 

@@ -59,7 +59,7 @@ async function SignInToBackEnd(profile) {
             Email: profile.getEmail()
         })
     };
-    await fetch("/api/Login/LoginAccount", initObject)
+    await fetch("/api/Login/LoginByGmail", initObject)
         .then(res => res.json())
         .then(json => {
             if (json.message == "New Account") {

@@ -281,12 +281,11 @@ namespace Nextflip.Models.season
                 command.CommandType = CommandType.StoredProcedure;
                 connection.Open();
                 command.CommandText = "updateSeason";
-                command.Parameters.AddWithValue("@seasonID_InOutput", season.SeasonID);
+                command.Parameters.AddWithValue("@seasonID_InOutput", season.SeasonID).Direction
+                     = ParameterDirection.InputOutput;
                 command.Parameters.AddWithValue("@title_Input", season.Title);
                 command.Parameters.AddWithValue("@thumbnailURL_Input", season.ThumbnailURL);
                 command.Parameters.AddWithValue("@seasonNum_Input", season.Number);
-                command.Parameters.Add("@seasonID_InOutput", MySqlDbType.String).Direction
-                    = ParameterDirection.Output;
                 command.ExecuteNonQuery();
                 seasonID = (string)command.Parameters["@seasonID_InOutput"].Value;
                 connection.Close();

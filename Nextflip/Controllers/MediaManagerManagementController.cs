@@ -12,5 +12,10 @@ namespace Nextflip.Controllers
         {
             return View();
         }
+        public IActionResult DetailPreview(string id)
+        {
+            ViewBag.CategoryID = id;
+            return View();
+        }
     }
 }

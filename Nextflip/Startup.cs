@@ -109,8 +109,9 @@ namespace Nextflip
                 .AddCookie(options => {
                 options.AccessDeniedPath = "/Common/AccessDenied";
                 options.LoginPath = "/Login/Index";
-            });
-
+                options.EventsType = typeof(CookieUtil);
+                });
+            services.AddScoped<CookieUtil>();
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("user manager", policyBuilder =>

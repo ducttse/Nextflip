@@ -1,4 +1,5 @@
-﻿using Nextflip.Models.subscription;
+﻿using Nextflip.APIControllers;
+using Nextflip.Models.subscription;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,5 +13,6 @@ namespace Nextflip.Services.Interfaces
 
         Subscription GetSubsciptionByUserID(string userID);
         public bool PurchaseSubscription(string userID, int interval);
+        bool PurchaseSubscription(SubscriptionManagement.ExtensionForm extensionForm);
     }
 }

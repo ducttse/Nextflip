@@ -284,6 +284,8 @@ namespace Nextflip.APIControllers
             try
             {
                 if (request.SortBy.Trim() == "") request.SortBy = "asc";
+                if (request.Type.Trim() == "") request.Type = "all";
+                if (request.Status.Trim() == "") request.Status = "all";
                 IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.GetMediaRequest(request.Status.Trim().ToLower(), 
                     request.Type.Trim().ToLower(), request.SortBy.Trim().ToLower(), request.RowsOnPage, request.RequestPage);
                 int count = mediaManagerManagementService.NumberOfMediaRequest(request.Status.Trim().ToLower(), request.Type.Trim().ToLower());
@@ -317,6 +319,8 @@ namespace Nextflip.APIControllers
                 };
                 if (request.SearchValue.Trim() == "") return new JsonResult(message);
                 if (request.SortBy.Trim() == "") request.SortBy = "asc";
+                if (request.Type.Trim() == "") request.Type = "all";
+                if (request.Status.Trim() == "") request.Status = "all";
                 IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.SearchingMediaRequest(request.SearchValue.Trim(), 
                     request.Status.Trim().ToLower(), request.SortBy, request.Type.Trim().ToLower(), request.RowsOnPage, request.RequestPage);
                 int count = mediaManagerManagementService.NumberOfMediaRequestSearching(request.SearchValue.Trim(), request.Status.Trim().ToLower(), request.Type.Trim().ToLower());

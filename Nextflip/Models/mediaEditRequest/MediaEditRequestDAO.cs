@@ -504,14 +504,28 @@ namespace Nextflip.Models.mediaEditRequest
                     string Sql = null;
                     if (type.Equals("all") && status.Equals("all"))
                     {
-                        Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
+                        if (sortBy.Trim().ToLower().Equals("desc"))
+                            Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
+                              "From mediaEditRequest R, media M " +
+                              "Where R.mediaID = M.mediaID " +
+                              "ORDER BY R.requestID desc " +
+                              "LIMIT @offset, @limit";
+                        else
+                            Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
                               "From mediaEditRequest R, media M " +
                               "Where R.mediaID = M.mediaID " +
                               "ORDER BY R.requestID asc " +
                               "LIMIT @offset, @limit";
                     } else if (type.Equals("all") && !status.Equals("all"))
                     {
-                        Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
+                        if (sortBy.Trim().ToLower().Equals("desc"))
+                            Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
+                              "From mediaEditRequest R, media M " +
+                                "Where R.status = @status and R.mediaID = M.mediaID " +
+                                "ORDER BY R.requestID desc " +
+                              "LIMIT @offset, @limit";
+                        else
+                            Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
                               "From mediaEditRequest R, media M " +
                                 "Where R.status = @status and R.mediaID = M.mediaID " +
                                 "ORDER BY R.requestID asc " +
@@ -519,14 +533,28 @@ namespace Nextflip.Models.mediaEditRequest
                     }
                     else if (!type.Equals("all") && status.Equals("all"))
                     {
-                        Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
+                        if (sortBy.Trim().ToLower().Equals("desc"))
+                            Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
+                              "From mediaEditRequest R, media M " +
+                            "Where R.type = @type and R.mediaID = M.mediaID " +
+                            "ORDER BY R.requestID desc " +
+                              "LIMIT @offset, @limit";
+                        else
+                            Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
                               "From mediaEditRequest R, media M " +
                             "Where R.type = @type and R.mediaID = M.mediaID " +
                             "ORDER BY R.requestID asc " +
                               "LIMIT @offset, @limit";
                     } else
                     {
-                        Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
+                        if (sortBy.Trim().ToLower().Equals("desc"))
+                            Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
+                              "From mediaEditRequest R, media M " +
+                            "Where R.status = @status and R.type = @type and R.mediaID = M.mediaID " +
+                            "ORDER BY R.requestID desc " +
+                              "LIMIT @offset, @limit";
+                        else
+                            Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
                               "From mediaEditRequest R, media M " +
                             "Where R.status = @status and R.type = @type and R.mediaID = M.mediaID " +
                             "ORDER BY R.requestID asc " +
@@ -562,7 +590,6 @@ namespace Nextflip.Models.mediaEditRequest
             {
                 throw new Exception(ex.Message);
             }
-            if (sortBy.Trim().ToLower().Equals("desc")) return requests.OrderByDescending(o => o.requestID);
             return requests;
         }
 
@@ -624,6 +651,13 @@ namespace Nextflip.Models.mediaEditRequest
                     string Sql = null;
                     if (type.Equals("all") && status.Equals("all"))
                     {
+                        if (sortBy.Trim().ToLower().Equals("desc"))
+                            Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
+                                "From mediaEditRequest R, media M " +
+                               "Where R.userEmail LIKE @userEmail " +
+                               "ORDER BY requestID desc " +
+                              "LIMIT @offset, @limit";
+                        else
                         Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
                                 "From mediaEditRequest R, media M " +
                                "Where R.userEmail LIKE @userEmail " +
@@ -632,7 +666,14 @@ namespace Nextflip.Models.mediaEditRequest
                     }
                     else if (type.Equals("all") && !status.Equals("all"))
                     {
-                        Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
+                        if (sortBy.Trim().ToLower().Equals("desc"))
+                            Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
+                            "From mediaEditRequest R, media M " +
+                            "Where R.userEmail LIKE @userEmail and R.status = @status and R.MediaID = M.mediaID " +
+                            "ORDER BY requestID desc " +
+                              "LIMIT @offset, @limit";
+                        else
+                            Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
                             "From mediaEditRequest R, media M " +
                             "Where R.userEmail LIKE @userEmail and R.status = @status and R.MediaID = M.mediaID " +
                             "ORDER BY requestID asc " +
@@ -640,7 +681,14 @@ namespace Nextflip.Models.mediaEditRequest
                     }
                     else if (!type.Equals("all") && status.Equals("all"))
                     {
-                        Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
+                        if (sortBy.Trim().ToLower().Equals("desc"))
+                            Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
+                            "From mediaEditRequest R, media M " +
+                            "Where R.userEmail LIKE @userEmail and R.type = @type " +
+                            "ORDER BY requestID desc " +
+                              "LIMIT @offset, @limit";
+                        else
+                            Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
                             "From mediaEditRequest R, media M " +
                             "Where R.userEmail LIKE @userEmail and R.type = @type " +
                             "ORDER BY requestID asc " +
@@ -648,7 +696,14 @@ namespace Nextflip.Models.mediaEditRequest
                     }
                     else
                     {
-                        Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
+                        if (sortBy.Trim().ToLower().Equals("desc"))
+                            Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
+                            "From mediaEditRequest R, media M " +
+                            "Where R.userEmail LIKE @userEmail and R.status = @status and R.type = @type and R.mediaID = M.mediaID " +
+                            "ORDER BY requestID desc " +
+                              "LIMIT @offset, @limit";
+                        else
+                            Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
                             "From mediaEditRequest R, media M " +
                             "Where R.userEmail LIKE @userEmail and R.status = @status and R.type = @type and R.mediaID = M.mediaID " +
                             "ORDER BY requestID asc " +
@@ -685,7 +740,6 @@ namespace Nextflip.Models.mediaEditRequest
             {
                 throw new Exception(ex.Message);
             }
-            if (sortBy.Trim().ToLower().Equals("desc")) return requests.OrderByDescending(o => o.requestID);
             return requests;
         }
 

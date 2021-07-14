@@ -12,9 +12,11 @@ namespace Nextflip.Controllers
         {
             return View();
         }
-        public IActionResult DetailPreview(string id)
+        [HttpGet("/MediaManagerManagement/DetailPreview/{id}/{requestid}")]
+        public IActionResult DetailPreview(string id, string requestid)
         {
             ViewBag.CategoryID = id;
+            ViewBag.RequestID = requestid;
             return View();
         }
     }

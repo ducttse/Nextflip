@@ -101,7 +101,7 @@ namespace Nextflip.APIControllers
         */
 
         [Route("ApproveRequest")]
-        public JsonResult ApproveRequest([FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromForm] Request request)
+        public JsonResult ApproveRequest([FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromBody] Request request)
         {
             try
             {
@@ -142,7 +142,7 @@ namespace Nextflip.APIControllers
 
         [Route("DisapproveRequest")]
         public async Task<IActionResult> DisapproveRequest([FromServices] IMediaManagerManagementService mediaManagerManagementService,
-                                        [FromServices] ISendMailService sendMailService, [FromForm] Request request)
+                                        [FromServices] ISendMailService sendMailService, [FromBody] Request request)
         {
             try
             {

@@ -59,13 +59,4 @@
 </div>
 <script src="~/js/Preview.js"></script>
 <script src="~/js/Slide-Bar.js"></script>
-<script src="~/js/Media-Details.js"></script>
-<script>
-    //Neu conflict thi lay cai nay
-    AppendDetails('@ViewBag.CategoryID');
-    setRequestMediaID('@ViewBag.RequestID');
-    let button = `<a id="back_btn" href="/MediaManagerManagement/Index" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
-                    Media Manager
-                  </a>`;
-    appendButton(button);
-</script>
+<script>console.log(`@{ViewBag.CategoryID}`);</script>

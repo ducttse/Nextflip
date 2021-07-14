@@ -492,7 +492,7 @@ namespace Nextflip.Models.mediaEditRequest
             }
         }
 
-        public IEnumerable<MediaEditRequest> GetMediaRequest(string status, string type, int RowsOnPage, int RequestPage)
+        public IEnumerable<MediaEditRequest> GetMediaRequest(string status, string type, string sortBy, int RowsOnPage, int RequestPage)
         {
             var requests = new List<MediaEditRequest>();
             int offset = ((int)(RequestPage - 1)) * RowsOnPage;
@@ -507,26 +507,30 @@ namespace Nextflip.Models.mediaEditRequest
                         Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
                               "From mediaEditRequest R, media M " +
                               "Where R.mediaID = M.mediaID " +
-                            "LIMIT @offset, @limit";
+                              "ORDER BY R.requestID asc " +
+                              "LIMIT @offset, @limit";
                     } else if (type.Equals("all") && !status.Equals("all"))
                     {
                         Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
                               "From mediaEditRequest R, media M " +
                                 "Where R.status = @status and R.mediaID = M.mediaID " +
-                                "LIMIT @offset, @limit";
+                                "ORDER BY R.requestID asc " +
+                              "LIMIT @offset, @limit";
                     }
                     else if (!type.Equals("all") && status.Equals("all"))
                     {
                         Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
                               "From mediaEditRequest R, media M " +
                             "Where R.type = @type and R.mediaID = M.mediaID " +
-                            "LIMIT @offset, @limit";
+                            "ORDER BY R.requestID asc " +
+                              "LIMIT @offset, @limit";
                     } else
                     {
                         Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
                               "From mediaEditRequest R, media M " +
                             "Where R.status = @status and R.type = @type and R.mediaID = M.mediaID " +
-                            "LIMIT @offset, @limit";
+                            "ORDER BY R.requestID asc " +
+                              "LIMIT @offset, @limit";
                     }
                     using (var command = new MySqlCommand(Sql, connection))
                     {
@@ -558,6 +562,7 @@ namespace Nextflip.Models.mediaEditRequest
             {
                 throw new Exception(ex.Message);
             }
+            if (sortBy.Trim().ToLower().Equals("desc")) return requests.OrderByDescending(o => o.requestID);
             return requests;
         }
 
@@ -607,7 +612,7 @@ namespace Nextflip.Models.mediaEditRequest
             }
             return count;
         }
-        public IEnumerable<MediaEditRequest> SearchingMediaRequest(string searchValue, string status, string type, int RowsOnPage, int RequestPage)
+        public IEnumerable<MediaEditRequest> SearchingMediaRequest(string searchValue, string status, string sortBy, string type, int RowsOnPage, int RequestPage)
         {
             var requests = new List<MediaEditRequest>();
             int offset = ((int)(RequestPage - 1)) * RowsOnPage;
@@ -622,28 +627,32 @@ namespace Nextflip.Models.mediaEditRequest
                         Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
                                 "From mediaEditRequest R, media M " +
                                "Where R.userEmail LIKE @userEmail " +
-                               "LIMIT @offset, @limit";
+                               "ORDER BY requestID asc " +
+                              "LIMIT @offset, @limit";
                     }
                     else if (type.Equals("all") && !status.Equals("all"))
                     {
                         Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
                             "From mediaEditRequest R, media M " +
                             "Where R.userEmail LIKE @userEmail and R.status = @status and R.MediaID = M.mediaID " +
-                            "LIMIT @offset, @limit";
+                            "ORDER BY requestID asc " +
+                              "LIMIT @offset, @limit";
                     }
                     else if (!type.Equals("all") && status.Equals("all"))
                     {
                         Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
                             "From mediaEditRequest R, media M " +
                             "Where R.userEmail LIKE @userEmail and R.type = @type " +
-                            "LIMIT @offset, @limit";
+                            "ORDER BY requestID asc " +
+                              "LIMIT @offset, @limit";
                     }
                     else
                     {
                         Sql = "Select R.requestID, R.userEmail, R.mediaID, R.status, R.note, R.type, R.ID, M.title " +
                             "From mediaEditRequest R, media M " +
                             "Where R.userEmail LIKE @userEmail and R.status = @status and R.type = @type and R.mediaID = M.mediaID " +
-                            "LIMIT @offset, @limit";
+                            "ORDER BY requestID asc " +
+                              "LIMIT @offset, @limit";
                     }
                     using (var command = new MySqlCommand(Sql, connection))
                     {
@@ -676,6 +685,7 @@ namespace Nextflip.Models.mediaEditRequest
             {
                 throw new Exception(ex.Message);
             }
+            if (sortBy.Trim().ToLower().Equals("desc")) return requests.OrderByDescending(o => o.requestID);
             return requests;
         }
 

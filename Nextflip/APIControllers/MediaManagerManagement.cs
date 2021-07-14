@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Nextflip.Models.episode;
 using Nextflip.Models.media;
 using Nextflip.Models.mediaEditRequest;
 using Nextflip.Services.Interfaces;
@@ -208,6 +209,8 @@ namespace Nextflip.APIControllers
         {
             public int RequestID { get; set; }
             public string MediaID { get; set; }
+            public string EpisodeID { get; set; }
+            public string SortBy { get; set; }
             public string note { get; set; }
             public string SearchValue { get; set; }
             public string Status { get; set; }
@@ -280,7 +283,9 @@ namespace Nextflip.APIControllers
         {
             try
             {
-                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.GetMediaRequest(request.Status.Trim().ToLower(), request.Type.Trim().ToLower(), request.RowsOnPage, request.RequestPage);
+                if (request.SortBy.Trim() == "") request.SortBy = "asc";
+                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.GetMediaRequest(request.Status.Trim().ToLower(), 
+                    request.Type.Trim().ToLower(), request.SortBy.Trim().ToLower(), request.RowsOnPage, request.RequestPage);
                 int count = mediaManagerManagementService.NumberOfMediaRequest(request.Status.Trim().ToLower(), request.Type.Trim().ToLower());
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
@@ -311,7 +316,9 @@ namespace Nextflip.APIControllers
                     message = "Empty searchValue"
                 };
                 if (request.SearchValue.Trim() == "") return new JsonResult(message);
-                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.SearchingMediaRequest(request.SearchValue.Trim(), request.Status.Trim().ToLower(), request.Type.Trim().ToLower(), request.RowsOnPage, request.RequestPage);
+                if (request.SortBy.Trim() == "") request.SortBy = "asc";
+                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.SearchingMediaRequest(request.SearchValue.Trim(), 
+                    request.Status.Trim().ToLower(), request.SortBy, request.Type.Trim().ToLower(), request.RowsOnPage, request.RequestPage);
                 int count = mediaManagerManagementService.NumberOfMediaRequestSearching(request.SearchValue.Trim(), request.Status.Trim().ToLower(), request.Type.Trim().ToLower());
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
@@ -348,6 +355,29 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetMediaByID: " + ex.Message);
+                return new JsonResult(new
+                {
+                    message = ex.Message
+                });
+            }
+        }
+
+        [Route("GetEpisodeByID")]
+        public JsonResult GetEpisodeByID([FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromBody] Request request)
+        {
+            try
+            {
+                Episode episode = mediaManagerManagementService.GetEpisodeByID(request.EpisodeID);
+                var result = new
+                {
+                    Message = "success",
+                    Data = episode
+                };
+                return (new JsonResult(result));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetEpisodeByID: " + ex.Message);
                 return new JsonResult(new
                 {
                     message = ex.Message

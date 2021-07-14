@@ -467,6 +467,82 @@ namespace Nextflip.APIControllers
                 return new JsonResult(result);
             }
         }
+        public class MediaForm
+        {
+            public string MediaID { get; set; }
+            public string Status { get; set; }
+            public string Title { get; set; }
+            public string FilmType { get; set; }
+            public string Director { get; set; }
+            public string Cast { get; set; }
+            public string PublishYear { get; set; }
+            public string Duration { get; set; }
+            public string BannerURL { get; set; }
+            public string Language { get; set; }
+            public string Description { get; set; }
+            public int[] CategoryIDArray { get; set; }
+            public string UserEmail { get; set; }
+        }
+        [HttpPost]
+        [Route("EditMedia")]
+        public IActionResult EditMedia([FromServices] IEditorService editorService, [FromBody] MediaForm frmMedia)
+        {
+            try
+            {
+                
+                bool isValidInput = frmMedia.MediaID != null && frmMedia.Title != "" && frmMedia.BannerURL != ""
+                                    && frmMedia.Language != "" && frmMedia.Description != "" && frmMedia.FilmType != "" && frmMedia.Director != ""
+                                    && frmMedia.Cast != "" && frmMedia.Duration != "" && frmMedia.CategoryIDArray != null && frmMedia.UserEmail != null;
+                if(isValidInput == false ) return new JsonResult(new { Message = "Fail valid" });
+                Media media = new Media
+                {
+                    MediaID = frmMedia.MediaID,
+                    Title = frmMedia.Title,
+                    BannerURL = frmMedia.BannerURL,
+                    Language = frmMedia.Language,
+                    Description = frmMedia.Description,
+                    FilmType = frmMedia.FilmType,
+                    Director = frmMedia.Director,
+                    Cast = frmMedia.Cast,
+                    Duration = frmMedia.Duration
+                };
+                string mediaID = editorService.UpdateMedia(media);
+                if(mediaID == null) return new JsonResult(new { Message = "Fail media null" });
+                for (int i = 0; i < frmMedia.CategoryIDArray.Length; i++)
+                {
+                    bool isAddCategory = editorService.AddMediaCategory(mediaID, frmMedia.CategoryIDArray[i]);
+                    if (isAddCategory == false) return new JsonResult(new { Message = "Fail category" });
+                }
+                bool isAddMediaRequest = editorService.AddMediaRequest(frmMedia.UserEmail, mediaID, "update media", "media", mediaID);
+                if(isAddMediaRequest == false) return new JsonResult(new { Message = "Fa" });
+                return new JsonResult(new { Message = "Success" });
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("EditMedia: " + e.Message);
+                return new JsonResult(new { Message = "Fail. " + e.Message});
+            }
+        }
+        [Route("GetMediaByID/{mediaID}")]
+        public IActionResult GetMediaByID([FromServices] ISubscribedUserService subscribedUserService, string mediaID)
+        {
+            try
+            {
+                Media media = subscribedUserService.GetMediaByID(mediaID);
+                IEnumerable<Category> categories = subscribedUserService.GetCategoriesByMediaID(mediaID);
+                var mediaDetail = new
+                {
+                    Media = media,
+                    Category = categories
+                };
+                return new JsonResult(mediaDetail);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetMediaByID: " + ex.Message);
+                return new JsonResult("error occur");
+            }
+        }
 
         public partial class JsonCategory
         {
@@ -526,7 +602,7 @@ namespace Nextflip.APIControllers
             return new JsonResult(new { Message = message, CategoryErr = categoryIdErr, NameErr = nameErr });
         }
 
-        public class JSeasonForm
+        public class SeasonForm
         {
             public string SeasonID { get; set; }
             public string Title { get; set; }
@@ -538,7 +614,7 @@ namespace Nextflip.APIControllers
         }
         [Route("AddSeason")]
         [HttpPost]
-        public IActionResult AddSeason([FromServices] IEditorService editorService, [FromBody] JSeasonForm frmSeason)
+        public IActionResult AddSeason([FromServices] IEditorService editorService, [FromBody] SeasonForm frmSeason)
         {
             try
             {
@@ -568,8 +644,54 @@ namespace Nextflip.APIControllers
                 }) ;
             }
         }
+        [Route("GetSeasonByID/{seasonID}")]
+        public IActionResult GetSeasonByID([FromServices] ISubscribedUserService subscribedUserService, string seasonID)
+        {
+            try
+            {
+                Season season = subscribedUserService.GetSeasonByID(seasonID);
+                return new JsonResult(season);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetSeasonByID: " + ex.Message);
+                return new JsonResult("error occur");
+            }
+        }
+        [Route("EditSeason")]
+        [HttpPost]
+        public IActionResult EditSeason([FromServices] IEditorService editorService, [FromBody] SeasonForm frmSeason)
+        {
+            try
+            {
+                int number;
+                bool isValidInfo = int.TryParse(frmSeason.Number, out number) && frmSeason.SeasonID != null && frmSeason.MediaID != null && frmSeason.Title.Trim() != string.Empty
+                                    && frmSeason.ThumbnailURL.Trim() != string.Empty && frmSeason.UserEmail != null;
+                if (isValidInfo == false) return new JsonResult(new { Message = "Fail" });
+                Season season = new Season
+                {
+                    SeasonID = frmSeason.SeasonID,
+                    Title = frmSeason.Title,
+                    ThumbnailURL = frmSeason.ThumbnailURL,
+                    Number = number
+                };
+                string seasonID = editorService.UpdateSeason(season);
+                if (seasonID == null) return new JsonResult(new { Message = "Fail" });
+                bool addMediaRequest = editorService.AddMediaRequest(frmSeason.UserEmail, frmSeason.MediaID, "update the season", "season", seasonID);
+                if (addMediaRequest == false) return new JsonResult(new { Message = "Fail" });
+                return new JsonResult(new { Message = "Success"});
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("EditSeason: " + e.Message);
+                return new JsonResult(new
+                {
+                    Message = "Fail." + e.Message
+                });
+            }
+        }
 
-        public class JEpisodeForm
+        public class EpisodeForm
         {
             public string EpisodeID { get; set; }
             public string Title { get; set; }
@@ -583,7 +705,7 @@ namespace Nextflip.APIControllers
 
         [Route("AddEpisode")]
         [HttpPost]
-        public IActionResult AddEpisode([FromServices] IEditorService editorService, [FromBody] JEpisodeForm frmEpisode)
+        public IActionResult AddEpisode([FromServices] IEditorService editorService, [FromBody] EpisodeForm frmEpisode)
         {
             try
             {
@@ -611,6 +733,56 @@ namespace Nextflip.APIControllers
             catch (Exception e)
             {
                 _logger.LogInformation("Episode: " + e.Message);
+                return new JsonResult(new
+                {
+                    Message = "Fail." + e.Message
+                });
+            }
+        }
+        [Route("GetEpisodeByID/{episodeID}")]
+        public IActionResult GetEpisodeByID([FromServices] ISubscribedUserService subscribedUserService, string episodeID)
+        {
+            try
+            {
+                Episode episode = subscribedUserService.GetEpisodeByID(episodeID);
+                return new JsonResult(episode);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetEpisodeByID: " + ex.Message);
+                return new JsonResult("error occur");
+            }
+        }
+        [Route("EditEpisode")]
+        [HttpPost]
+        public IActionResult EditEpisode([FromServices] IEditorService editorService, [FromBody] EpisodeForm frmEpisode)
+        {
+            try
+            {
+                int number;
+                bool isValidInfo = int.TryParse(frmEpisode.Number, out number) && frmEpisode.EpisodeID != null && frmEpisode.Title.Trim() != string.Empty
+                                    && frmEpisode.ThumbnailURL.Trim() != string.Empty && frmEpisode.EpisodeURL.Trim() != string.Empty && frmEpisode.UserEmail != null;
+                if (isValidInfo == false) return new JsonResult(new { Message = "Fail" });
+                Episode episode = new Episode
+                {
+                    EpisodeID = frmEpisode.EpisodeID,
+                    Title = frmEpisode.Title,
+                    ThumbnailURL = frmEpisode.ThumbnailURL,
+                    EpisodeURL = frmEpisode.EpisodeURL,
+                    Number = number
+                };
+                string episodeID = editorService.UpdateEpisode(episode);
+                if (episodeID == null) return new JsonResult(new { Message = "Fail" });
+                string type = "episode";
+                Media media = editorService.GetMediaByChildID(episodeID, type);
+                if (media == null) return new JsonResult(new { Message = "Fail" });
+                bool addMediaRequest = editorService.AddMediaRequest(frmEpisode.UserEmail, media.MediaID, "update episode", type, episodeID);
+                if (addMediaRequest == false) return new JsonResult(new { Message = "Fail" });
+                return new JsonResult(new { Message = "Success", EpisodeID = episodeID });
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("EditEpisode: " + e.Message);
                 return new JsonResult(new
                 {
                     Message = "Fail." + e.Message

@@ -15,7 +15,7 @@ namespace Nextflip.Controllers
         [HttpGet("/MediaManagerManagement/DetailPreview/{id}/{requestid}")]
         public IActionResult DetailPreview(string id, string requestid)
         {
-            ViewBag.CategoryID = id;
+            ViewBag.MediaID = id;
             ViewBag.RequestID = requestid;
             return View();
         }

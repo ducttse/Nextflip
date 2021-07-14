@@ -2,9 +2,10 @@
 let requestParam = {
   SearchValue: "",
   Status: "All",
-  Type: "media",
+  Type: "All",
   RowsOnPage: 6,
-  RequestPage: 1
+  RequestPage: 1,
+  SortBy: "desc"
 };
 let isFiltered = false;
 let isSearched = false;

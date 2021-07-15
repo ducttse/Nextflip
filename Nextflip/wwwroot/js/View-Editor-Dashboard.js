@@ -63,18 +63,15 @@ function renderMedia(media, index) {
       <tr>
           <td>${index + 1}</td>
           <td>${media.title}</td>
-          <td class="text-center">${media.language}</td>
           <td class="text-center">
             <div>
                 <input class="status_btn" type="checkbox" mediaID="${media.mediaID}" value="${media.status}" ${media.status === "Enabled" ? "checked" : ""}  />
             </div>
           </td>
           <td  class="text-center">
-              <a class="text-decoration-none" 
-              onclick="return showEditForm();"
-              href="#">
-                  Edit
-              </a>
+            <div class="btn btn-secondary" onclick="showAddSeasonForm('${media.mediaID}');">Add new season</div>
+            <div class="btn btn-secondary" onclick="getSeasons('${media.mediaID}');">Add new episode</div>
+            <div class="btn btn-secondary" onclick="return showEditForm();">Edit</div>
           </td>
       </tr>`;
 }

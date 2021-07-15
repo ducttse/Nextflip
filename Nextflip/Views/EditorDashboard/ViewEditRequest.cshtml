@@ -19,7 +19,7 @@
                     <option value="Disapproved">Disapproved</option>
                 </select> 
             </div>
-        </div>
+        </div> 
         <div id="notFound" class="hide"> 
         </div>
         <div id="table_holder" class="border rounded-bottom pb-0 mb-2">
@@ -45,19 +45,17 @@
                         <option value="18">18</option>
                     </select>
                 </div>
-                <div id="pagination" class="col-8 d-flex justify-content-end pe-5">
-                </div>
-            <div>
+                <div id="pagination" class="col-8 d-flex justify-content-end pe-5"></div>
+            </div>
         </div>
-        <div id="pagination" class="d-flex justify-content-center"></div>
     </div>
 </div>
+
 <script src="~/js/Pagination.js"></script>
 <script src="~/js/Slide-Bar.js"></script>
 <script src="~/js/Search-Component.js"></script>
 <script src="~/js/Editor-View-Edit-Request.js"></script>
 <script> 
-    requestRequestData();
     appendSearch("Search media's name", "");
     setEnterEvent();
     let button1 = `<a href="/EditorDashboard/Index" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
@@ -69,3 +67,8 @@
     appendButton(button2);
     appendButton(button1);
 </script> 
+@section script {
+    <script>
+    requestRequestData();
+    </script>
+}

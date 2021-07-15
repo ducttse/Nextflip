@@ -44,10 +44,9 @@
                 <thead class="table-secondary">
                     <tr>
                         <th class="col">#</th>
-                        <th class="col text-center">Media name</th>        
-                        <th class="col text-center">Language</th>
+                        <th class="col">Media name</th>
                         <th class="col text-center">Status</th>
-                        <th class="col text-center">Edit</th>
+                        <th class="col text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody id="dataWapper"></tbody>
@@ -135,7 +134,7 @@
         </div>
     </div>
 </div>
-<!-- Add modal -->
+<!-- Add  media modal -->
 <div class="modal fade" id="modalAddForm" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered modal-fullscreen">
         <div class="modal-content">
@@ -219,26 +218,129 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="modal_message" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
+<!-- Add season  modal -->
+<div class="modal fade" id="modalAddSeasonForm" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
-          <div class="modal-body">
-            <div class="row text-center" id="modifile_message">
+            <div class="modal-header">
+                <h3 class="modal-title">Add new season</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-          </div>
+            <div class="modal-body">
+                <div class="mb-3 row">
+                    <label for="titleSeason" class="required col-sm-3 col-form-label text-end">Title</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="titleSeason" onkeyup="onInput(this)" />
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="bannerSeason" class="required col-sm-3 col-form-label text-end">Banner</label>
+                    <div class="col-sm-7">
+                        <input type="file" class="form-control" id="bannerSeason" onchange="getFile(this)" />
+                        <div class="invalid-feedback">
+                        </div>    
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="numberSeason" class="required col-sm-3 col-form-label text-end">Number</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control w-50" id="numberSeason" onkeyup="onInput(this)" />
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-bg-danger" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="submit_btn" onclick="requestAddNewSeason()">Submit</button>
+            </div>
         </div>
     </div>
 </div>
-
-<script src="~/js/Pagination.js"></script>
-<script src="~/js/Slide-Bar.js"></script>
-<script src="~/js/Search-Component.js"></script>
-<script src="~/js/View-Editor-Dashboard.js"></script>
-<script src="~/js/Edit-Media.js"></script>
-<script src="~/js/Add-New-Media.js"></script>
-<script src="~/js/Change-Media-Status.js"></script>
-<script src="~/js/File-Uploader.js"></script>
-<script> 
+<!-- Add episode modal -->
+<div class="modal fade" id="modalAddEpisodeForm" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add new episode</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3 row">
+                    <label for="titleSeason" class="required col-sm-3 col-form-label text-end">Episode</label>
+                    <div class="col-sm-6">
+                        <select class="form-select" id="seasonEpisode" aria-label="">
+                        </select>
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="titleEpisode" class="required col-sm-3 col-form-label text-end">Title</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="titleEpisode" onkeyup="onInput(this)" />
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="bannerEpisode" class="required col-sm-3 col-form-label text-end">Banner</label>
+                    <div class="col-sm-7">
+                        <input type="file" class="form-control" id="bannerEpisode" onchange="getFile(this)" />
+                        <div class="invalid-feedback">
+                        </div>    
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="videoEpisode" class="required col-sm-3 col-form-label text-end">Video</label>
+                    <div class="col-sm-7">
+                        <input type="file" class="form-control" id="videoEpisode" onchange="getFile(this)" />
+                        <div class="invalid-feedback">
+                        </div>    
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="numberEpisode" class="required col-sm-3 col-form-label text-end">Number</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control w-50" id="numberEpisode" onkeyup="onInput(this)" />
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-bg-danger" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="submit_btn" onclick="requestAddNewEpisode()">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- No season modal -->
+<div class="modal fade" id="NoSeasonModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p  class="text-center">This media dont have any season</p>
+                <div class="d-flex justify-content-center">
+                    <button class="btn btn-primary"  data-bs-dismiss="modal" aria-label="Close">Close</button>
+                <div>
+            </div>
+        </div>
+    </div>
+</div>
+    <script src="~/js/Pagination.js"></script>
+    <script src="~/js/Slide-Bar.js"></script>
+    <script src="~/js/Search-Component.js"></script>
+    <script src="~/js/View-Editor-Dashboard.js"></script>
+    <script src="~/js/Edit-Media.js"></script>
+    <script src="~/js/Add-New-Media.js"></script>
+    <script src="~/js/Add-New-Season.js"></script>
+    <script src="~/js/Add-New-Episode.js"></script>
+    <script src="~/js/Change-Media-Status.js"></script>
+    <script src="~/js/File-Uploader.js"></script>
+    <script> 
     requestMediaData();
     appendSearch("Search media's name", "");
     setEnterEvent();
@@ -250,4 +352,4 @@
                     </a>`;
     appendButton(button2);
     appendButton(button1);
-</script>
+    </script>

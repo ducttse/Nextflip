@@ -32,15 +32,91 @@ function refreshToken() {
 }
 let file;
 function getFile(obj) {
-    file = obj.files[ 0 ];
+    let parent = obj.parentNode;
+    let feedback = parent.querySelector(".invalid-feedback");
+    parent.classList.add("was-validated");
+    if (obj.files[ 0 ] == null) {
+        feedback.textContent = "This field can not empty";
+        obj.setCustomValidity("empty");
+    }
+    else {
+        parent.classList.remove("was-validated");
+        feedback.textContent = "";
+        obj.setCustomValidity("");
+        file = obj.files[ 0 ];
+    }
 }
 async function requestUploadBanner() {
     if (file == null) {
-        return;
+        return "";
     }
     let stamp = Date.now();
     let responseURL;
     let url = `https://storage.googleapis.com/upload/storage/v1/b/next-flip/o?uploadType=media&name=Image/1280 x 720 banner/${stamp}`;
+    await fetch(url, {
+        body: file,
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+        method: "POST"
+    })
+        .then(res => res.json())
+        .then(json => {
+            responseURL = "https://storage.googleapis.com/" + json.bucket + "/" + json.name
+        })
+        .catch(err => console.log(err));
+    return responseURL;
+}
+
+async function requestUploadSeasonBanner() {
+    if (file == null) {
+        return "";
+    }
+    let stamp = Date.now();
+    let responseURL;
+    let url = `https://storage.googleapis.com/upload/storage/v1/b/next-flip/o?uploadType=media&name=Image/Season Img/${stamp}`;
+    await fetch(url, {
+        body: file,
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+        method: "POST"
+    })
+        .then(res => res.json())
+        .then(json => {
+            responseURL = "https://storage.googleapis.com/" + json.bucket + "/" + json.name
+        })
+        .catch(err => console.log(err));
+    return responseURL;
+}
+
+async function requestUploadEpisodeThumbnail(seasonID, episodeNumber) {
+    if (file == null) {
+        return "";
+    }
+    let responseURL;
+    let url = `https://storage.googleapis.com/upload/storage/v1/b/next-flip/o?uploadType=media&name=Image/Thumbnail Img/${seasonID}/${episodeNumber}`;
+    await fetch(url, {
+        body: file,
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+        method: "POST"
+    })
+        .then(res => res.json())
+        .then(json => {
+            responseURL = "https://storage.googleapis.com/" + json.bucket + "/" + json.name
+        })
+        .catch(err => console.log(err));
+    return responseURL;
+}
+
+async function requestUploadVideo(seasonID, episodeNumber) {
+    if (file == null) {
+        return "";
+    }
+    let responseURL;
+    let url = `https://storage.googleapis.com/upload/storage/v1/b/next-flip/o?uploadType=media&name=Media/${seasonID}/${episodeNumber}`;
     await fetch(url, {
         body: file,
         headers: {

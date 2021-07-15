@@ -7,29 +7,13 @@
 }
 <div class="col-10">
     <div class="wrapper row col-12 mx-auto text-dark">
-        <div class="row">
-            <div id="img_holder" class="col-6">
-            </div>
-            <div class="col-6 mt-4">
-                <div flex="d-flex">
-                    <p class="feild col-3 d-inline fs-5">Title:</p>
-                    <p class="fs-4 lh-1" id="detail_title"></p>
-                </div>
-                <div class="overflow-auto" id="detail_table">
-                </div>
-                <div class="row">
-                    <div class="d-flex flex-row mb-3">
-                        <div id="description" class="options me-4 mt-3 chosen">
-                            <p class="h4">
-                                Description
-                            </p>
-                        </div>
-                    </div>
-                    <div id="option_detail"></div>
-                </div>
-            </div>
+        <div class="d-flex justify-content-start mt-2" id="content_holder">
+          
         </div>
         <div class="d-flex justify-content-center mt-5">
+          <p id="note"></p>
+        </div>
+        <div class="d-flex justify-content-center mt-2">
             <div class="btn btn-primary me-3" onclick="requestApprove()">
                 Aprrove
             </div>
@@ -59,11 +43,8 @@
 </div>
 <script src="~/js/Preview.js"></script>
 <script src="~/js/Slide-Bar.js"></script>
-<script src="~/js/Media-Details.js"></script>
-<script>
-    //Neu conflict thi lay cai nay
-    AppendDetails('@ViewBag.CategoryID');
-    setRequestMediaID('@ViewBag.RequestID');
+<script>  
+    getRequestDetail("@ViewBag.Type", "@ViewBag.MediaID", "@ViewBag.RequestID");
     let button = `<a id="back_btn" href="/MediaManagerManagement/Index" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
                     Media Manager
                   </a>`;

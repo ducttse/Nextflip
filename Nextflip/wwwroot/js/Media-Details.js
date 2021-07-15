@@ -3,26 +3,20 @@ function renderBanner() {
   return `<img class="img-fluid"
     src="${mediaData.media.bannerURL}"
     alt="${mediaData.media.mediaID}"
-    height="500"
-    width="500"
+    height="600"
+    width="600"
     />
     `;
 }
 
 function renderDetail(title, content) {
-  return location.pathname.split("/")[ 1 ] == "SubcribedUserDashBoard"
-    ? (`<div flex="row">
+  return `<div flex="row">
         <p class="feild text-white-50 col-3 d-inline fs-5">${title}:</p>
         <p class="col-9 d-inline fs-5" style="word-wrap: break-word">
           ${content == null ? "" : content}
           </p>
-        </div>`)
-    : (`<div flex="row">
-        <p class="feild col-3 d-inline fs-5">${title}:</p>
-        <p class="col-9 d-inline fs-5" style="word-wrap: break-word">
-          ${content == null ? "" : content}
-        </p>
-      </div>`)
+        </div>`;
+
 }
 
 function renderArrayDetail(title, arrContent) {
@@ -33,20 +27,12 @@ function renderArrayDetail(title, arrContent) {
     }
     content = content.slice(0, content.length - 2)
   }
-  if (location.pathname.split("/")[ 1 ] == "SubcribedUserDashBoard") {
-    return `<div flex="row">
+  return `<div flex="row">
             <p class="feild text-white-50 col-3 d-inline fs-5">${title}:</p>
             <p class="col-9 d-inline fs-5" style="word-wrap: break-word">
             ${arrContent == null ? "" : content}
             </p>
           </div>`;
-  }
-  return `<div flex="row">
-            <p class="feild col-3 d-inline fs-5">${title}:</p>
-            <p class="col-9 d-inline fs-5" style="word-wrap: break-word">
-            ${arrContent == null ? "" : content}
-            </p>
-          </div>`
 }
 
 function ShowInfor() {

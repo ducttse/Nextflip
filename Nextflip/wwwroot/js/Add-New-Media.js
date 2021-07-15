@@ -44,7 +44,6 @@ function debounce(func, timeout = 300) {
         timer = setTimeout(() => { func.apply(this, args); }, timeout);
     };
 }
-
 const onInput = debounce((obj) => {
     let parent = obj.parentNode;
     let feedback = parent.querySelector(".invalid-feedback");

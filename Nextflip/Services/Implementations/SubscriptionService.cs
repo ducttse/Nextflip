@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Nextflip.APIControllers;
 
 namespace Nextflip.Services.Implementations
 {
@@ -18,5 +19,9 @@ namespace Nextflip.Services.Implementations
 
         public bool UpdateExpiredDate(Subscription subsciption) => _subscriptionDAO.UpdateExpiredDate(subsciption);
         public bool PurchaseSubscription(string userID, int interval) => _subscriptionDAO.PurchaseSubscription(userID, interval);
+        public bool PurchaseSubscription(SubscriptionManagement.ExtensionForm extensionForm)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

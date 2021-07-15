@@ -8,8 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Nextflip.APIControllers
 {
@@ -23,10 +26,30 @@ namespace Nextflip.APIControllers
             _logger = logger;
         }
 
+        private async Task<bool> SignIn(Account account)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, account.userID),
+                new Claim(ClaimTypes.Role, account.roleName),
+            };
+            var claimsIdentity = new ClaimsIdentity(
+                claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var authProperties = new AuthenticationProperties
+            {
+                AllowRefresh = true,
+                IsPersistent = true
+            };
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity),
+                authProperties);
+            return true;
+        } 
 
         [Route("LoginAccount")]
         [HttpPost]
-        public IActionResult LoginAccount([FromServices] IAccountService accountService, [FromBody] LoginForm form)
+        public async Task<IActionResult> LoginAccount([FromServices] IAccountService accountService, [FromBody] LoginForm form)
         {
             try
             {
@@ -39,6 +62,7 @@ namespace Nextflip.APIControllers
                 else if (account.roleName.Equals("media editor")) url = "/EditorDashboard/Index";
                 else if (account.roleName.Equals("user manager")) url = "/UserManagerManagement/Index";
                 else if (account.roleName.Equals("media manager")) url = "/MediaManagerManagement/Index";
+                var x = await SignIn(account);
                 return new JsonResult(new { Message = true , URL = url, UserID = account.userID});
             }
             catch (Exception ex)
@@ -67,7 +91,7 @@ namespace Nextflip.APIControllers
 
         [Route("LoginByGmail")]
         [HttpPost]
-        public IActionResult LoginByGmail([FromServices] IAccountService accountService, [FromBody] LoginForm form)
+        public async Task<IActionResult> LoginByGmail([FromServices] IAccountService accountService, [FromBody] LoginForm form)
         {
             string url = null;
             try
@@ -80,7 +104,7 @@ namespace Nextflip.APIControllers
                 else if (account.roleName.Equals("media editor")) url = "/EditorDashboard/Index";
                 else if (account.roleName.Equals("user manager")) url = "/UserManagerManagement/Index";
                 else if (account.roleName.Equals("media manager")) url = "/MediaManagerManagement/Index";
-
+                var x = await SignIn(account);
                 return new JsonResult(new { Message = true , URL = url, UserID = account.userID});
             }
             catch (Exception ex)

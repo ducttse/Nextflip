@@ -24,6 +24,7 @@ namespace Nextflip.APIControllers
         [HttpPost]
         public IActionResult Register([FromServices] IAccountService accountService, [FromBody]AccountRegisterForm form)
         {
+            string defaultPictureURL = "https://storage.googleapis.com/next-flip/User%20Profile%20Image/Default";
             bool isValid = true;
             RegisterError error = new RegisterError();
             try
@@ -56,7 +57,7 @@ namespace Nextflip.APIControllers
                     error.DateOfBirthError = "Date of birth is Invalid";
                 }
                 if (!isValid) return new JsonResult(error);
-                string result = accountService.RegisterAccount(form.UserEmail.ToLower(), form.Password, form.Fullname.Trim(), date, form.PictureURL);
+                string result = accountService.RegisterAccount(form.UserEmail.ToLower(), form.Password, form.Fullname.Trim(), date, defaultPictureURL);
                 if (result == null) return new JsonResult(new { Message = "An Error Occurred ! Please try again" });
                 return new JsonResult(new { Message = result });
             }

@@ -18,7 +18,8 @@
         .then(json => {
             console.log(json);
             if (json.message == true) {
-                console.log("login success");
+                localStorage.setItem("ID", json.userID)
+                localStorage.setItem("URL", json.url)
                 window.location.replace(json.url);
             }
             else {
@@ -86,4 +87,3 @@ function signOut() {
     console.log(auth2);
     auth2.signOut().then();
 }
-// signOut();

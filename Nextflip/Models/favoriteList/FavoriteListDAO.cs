@@ -14,9 +14,9 @@ namespace Nextflip.Models.favoriteList
         
         public FavoriteList GetFavoriteList(string userID)
         {
+            FavoriteList favoriteList = null;
             try
             {
-                FavoriteList favoriteList = null;
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
@@ -40,12 +40,12 @@ namespace Nextflip.Models.favoriteList
                     }
                     connection.Close();
                 }
-                return favoriteList;
             }
             catch(Exception ex)
             {
                 throw new Exception(ex.Message);
             }
+            return favoriteList;
         }
         public void AddNewFavoriteList(string userID)
         {

@@ -7,20 +7,17 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace Nextflip.Controllers
 {
-    [Authorize(Policy = "media editor")]
-
-    public class EditorDashboardController : Controller
+    [Authorize(Policy = "subscribed user")]
+    public class NotificationController : Controller
     {
         public IActionResult Index()
         {
             return View();
         }
-        public IActionResult ViewEditRequest()
+
+        public IActionResult GetDetailOfNotification(int notificationID)
         {
-            return View();
-        }
-        public IActionResult ViewAddNewMedia()
-        {
+            ViewBag.NotificationID = notificationID;
             return View();
         }
     }

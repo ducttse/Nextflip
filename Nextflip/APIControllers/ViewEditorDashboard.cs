@@ -94,8 +94,9 @@ namespace Nextflip.APIControllers
                     message = "Empty searchValue"
                 };
                 if (request.SearchValue.Trim() == "") return new JsonResult(message);
-                IEnumerable<Media> medias = editorService.GetMediasByTitleFilterCategory(request.SearchValue.Trim(), request.CategoryName, request.RowsOnPage, request.RequestPage);
-                int count = editorService.NumberOfMediasBySearchingFilterCategory(request.SearchValue.Trim(), request.CategoryName);
+                string CategoryName = editorService.GetCategoryById(request.CategoryID).Name;
+                IEnumerable<Media> medias = editorService.GetMediasByTitleFilterCategory(request.SearchValue.Trim(), CategoryName, request.RowsOnPage, request.RequestPage);
+                int count = editorService.NumberOfMediasBySearchingFilterCategory(request.SearchValue.Trim(), CategoryName);
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {
@@ -123,8 +124,9 @@ namespace Nextflip.APIControllers
                     message = "Empty searchValue"
                 };
                 if (request.SearchValue.Trim() == "") return new JsonResult(message);
-                IEnumerable<Media> medias = editorService.GetMediasByTitleFilterCategory_Status(request.SearchValue.Trim(), request.CategoryName, request.Status, request.RowsOnPage, request.RequestPage);
-                int count = editorService.NumberOfMediasBySearchingFilterCategory_Status(request.SearchValue.Trim(), request.CategoryName, request.Status);
+                string CategoryName = editorService.GetCategoryById(request.CategoryID).Name;
+                IEnumerable<Media> medias = editorService.GetMediasByTitleFilterCategory_Status(request.SearchValue.Trim(), CategoryName, request.Status, request.RowsOnPage, request.RequestPage);
+                int count = editorService.NumberOfMediasBySearchingFilterCategory_Status(request.SearchValue.Trim(), CategoryName, request.Status);
                 double totalPage = (int)(double)count / (double)request.RowsOnPage;
                 var result = new
                 {
@@ -149,8 +151,9 @@ namespace Nextflip.APIControllers
         {
             try
             {
-                IEnumerable<Media> medias = editorService.GetMediaFilterCategory(request.CategoryName, request.RowsOnPage, request.RequestPage);
-                int count = editorService.NumberOfMediasFilterCategory(request.CategoryName);
+                string CategoryName = editorService.GetCategoryById(request.CategoryID).Name;
+                IEnumerable<Media> medias = editorService.GetMediaFilterCategory(CategoryName, request.RowsOnPage, request.RequestPage);
+                int count = editorService.NumberOfMediasFilterCategory(CategoryName);
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {
@@ -174,12 +177,13 @@ namespace Nextflip.APIControllers
         {
             try
             {
-                IEnumerable<Media> medias = editorService.ViewMediasFilterCategory_Status(request.CategoryName, request.Status, request.RowsOnPage, request.RequestPage);
-                int count = editorService.NumberOfMediasFilterCategory_Status(request.CategoryName, request.Status);
+                string CategoryName = editorService.GetCategoryById(request.CategoryID).Name;
+                IEnumerable<Media> medias = editorService.ViewMediasFilterCategory_Status(CategoryName, request.Status, request.RowsOnPage, request.RequestPage);
+                int count = editorService.NumberOfMediasFilterCategory_Status(CategoryName, request.Status);
                 double totalPage = (int)(double)count / (double)request.RowsOnPage;
                 var result = new
                 {
-                    TotalPage = Math.Ceiling(totalPage),
+                    TotalPage = (int)Math.Ceiling(totalPage),
                     Data = medias
                 };
                 return (new JsonResult(result));

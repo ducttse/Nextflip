@@ -65,7 +65,7 @@ namespace Nextflip.Models.filmType
                             {
                                 filmType = new FilmType
                                 {
-                                    TypeID - reader.GetInt32("typeID");
+                                    TypeID = reader.GetInt32("typeID"),
                                     Type = reader.GetString("type")
                                 };
                             }

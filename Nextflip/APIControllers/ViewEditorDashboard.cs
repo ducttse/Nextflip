@@ -48,7 +48,7 @@ namespace Nextflip.APIControllers
             public string BannerURL { get; set; }
             public string Language { get; set; }
             public string Description { get; set; }
-            public int[] CategoryIDArray { get; set; }
+            public string[] CategoryIDArray { get; set; }
 
         }
 
@@ -440,15 +440,16 @@ namespace Nextflip.APIControllers
                 if (request.Title.Trim() == "" || request.Description.Trim() == "" ||
                     request.BannerURL.Trim() == "" || request.CategoryIDArray == null)
                     return new JsonResult(messageFail);
+                int[] myInts = Array.ConvertAll(request.CategoryIDArray, s => int.Parse(s));
                 string mediaID = editorService.AddMedia(request.Title, request.FilmType, request.Director,
                     request.Cast, request.PublishYear, request.Duration, request.BannerURL, request.Language, request.Description);
                 if (mediaID == null) return new JsonResult(messageFail);
                 if (request.Note.Trim() == "") request.Note = "Request add media";
                 bool addMediaRequest = editorService.AddMediaRequest(request.UserEmail, mediaID, request.Note, "media", mediaID);
                 if (!addMediaRequest) return new JsonResult(messageFail);
-                for (int i = 0; i < request.CategoryIDArray.Length; i++)
+                for (int i = 0; i < myInts.Length; i++)
                 {
-                    bool addMediaCategory = editorService.AddMediaCategory(mediaID, request.CategoryIDArray[i]);
+                    bool addMediaCategory = editorService.AddMediaCategory(mediaID, myInts[i]);
                     if (!addMediaCategory) return new JsonResult(messageFail);
                 }
                 var message = new

@@ -2,6 +2,7 @@
 using Nextflip.utils;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 
 namespace Nextflip.Models.account
@@ -135,8 +136,10 @@ namespace Nextflip.Models.account
                     string Sql = "disableAccount";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        command.Parameters.AddWithValue("note", note);
+                        command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("userID", userID);
+                        command.Parameters.AddWithValue("note", note);
+
                         int rowEffects = command.ExecuteNonQuery();
                         if (rowEffects > 0)
                         {
@@ -625,7 +628,8 @@ namespace Nextflip.Models.account
                                     userEmail = reader.GetString("userEmail"),
                                     roleName = reader.GetString("roleName"),
                                     fullname = reader.GetString("fullname"),
-                                    status = reader.GetString("status")
+                                    status = reader.GetString("status"),
+                                    note = reader.GetString("note")
                                 };
                             }
                         }
@@ -645,13 +649,14 @@ namespace Nextflip.Models.account
             bool result = false;
             try
             {
-                if (GetDetailOfAccount(userID).status.Equals("Active")) return false;
-                if (GetDetailOfInactiveAccount(userID).note == null || GetDetailOfInactiveAccount(userID).note.Trim().Equals("")) return false;
+                Account userAccount = GetDetailOfInactiveAccount(userID);
+                if (userAccount.status.Equals("Active")) return false;
+                if (userAccount.note == null || userAccount.note.Trim().Equals("")) return false;
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
                     string Sql = "UPDATE account " +
-                        "SET status= 'Active', note=null " +
+                        "SET status = 'Active', note='' " +
                         "WHERE userID = @userID";
                     using (var command = new MySqlCommand(Sql, connection))
                     {

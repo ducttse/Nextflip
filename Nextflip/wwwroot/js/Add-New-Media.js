@@ -26,8 +26,12 @@ function requestCategories() {
         let checkboxs = json.map(category => {
             return renderCategoryCheckBox(category);
         }).join("");
-        document.getElementById("category_filter").insertAdjacentHTML("afterbegin", checkboxs);
         document.getElementById("CB_holder").insertAdjacentHTML("afterbegin", checkboxs);
+        let options = json.map(category => {
+            console.log(category);
+            return `<option value="${category.categoryID}">${category.name}</option>`
+        }).join("");
+        document.getElementById("category_filter").insertAdjacentHTML("beforeend", options);
     })
 }
 
@@ -81,6 +85,7 @@ const onInput = debounce((obj) => {
 
 async function setInputValue() {
     requestAddNewMediaObj.UserEmail = getProfile().userEmail;
+    requestAddNewMediaObj.FilmType = document.getElementById("filmType").value;
     requestAddNewMediaObj.CategoryIDArray = getChosenCategory();
     requestAddNewMediaObj.Title = document.getElementById("title").value;
     requestAddNewMediaObj.Cast = document.getElementById("cast").value;
@@ -88,6 +93,7 @@ async function setInputValue() {
     requestAddNewMediaObj.Duration = document.getElementById("duration").value;
     requestAddNewMediaObj.Language = document.getElementById("language").value;
     requestAddNewMediaObj.Description = document.getElementById("description").value;
+    requestAddNewMediaObj.Director = document.getElementById("director").value;
     requestAddNewMediaObj.BannerURL = await requestUploadBanner();
 }
 
@@ -113,8 +119,8 @@ function validateInputAddMedia() {
 }
 
 
-function requestAddMedia() {
-    setInputValue();
+async function requestAddMedia() {
+    await setInputValue();
     let reqHeader = new Headers();
     reqHeader.append("Content-Type", "text/json");
     reqHeader.append("Accept", "application/json, text/plain, */*");
@@ -150,6 +156,7 @@ function resetRequestAddNewMediaObj() {
     requestAddNewMediaObj.Language = ""
     requestAddNewMediaObj.Description = ""
     requestAddNewMediaObj.BannerURL = ""
+    requestAddNewMediaObj.Director = ""
     let title = document.getElementById("title");
     let cast = document.getElementById("cast");
     let publicYear = document.getElementById("publicYear");
@@ -157,6 +164,7 @@ function resetRequestAddNewMediaObj() {
     let language = document.getElementById("language");
     let description = document.getElementById("description");
     let Banner = document.getElementById("banner");
+    let director = document.getElementById("director");
     title.value = "";
     cast.value = "";
     publicYear.value = "";
@@ -164,6 +172,7 @@ function resetRequestAddNewMediaObj() {
     language.value = "";
     description.value = "";
     Banner.value = "";
+    director.value = "";
     document.getElementById("empty_checkbox").classList.remove("d-none");
     title.parentNode.classList.remove("was-validated");
     description.parentNode.classList.remove("was-validated");

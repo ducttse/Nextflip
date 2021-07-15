@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Nextflip.Models.paymentPlan;
 
 namespace Nextflip.APIControllers
 {
@@ -90,6 +91,24 @@ namespace Nextflip.APIControllers
             public int PaymentPlanId { get; set; }
 
             public DateTime IssueTime { get; set; }
+        }
+
+        [Route("GetPaymentPlan")]
+        [HttpGet]
+        public IActionResult GetPaymentPlan([FromServices] IPaymentPlanService paymentPlanService)
+        {
+            try
+            {
+                IList<PaymentPlan> result = paymentPlanService.GetPaymentPlan();
+                return new JsonResult(result);
+            }
+            catch (Exception exception)
+            {
+                {
+                    _logger.LogInformation("Subscription/GetPaymentPlan: " + exception.Message);
+                    return new JsonResult(null);
+                }
+            }
         }
     }
 }

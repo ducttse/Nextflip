@@ -122,18 +122,21 @@ namespace Nextflip.Models.account
             bool result = false;
             try
             {
-                if (GetDetailOfAccount(userID).status.Equals("Inactive")) return false;
+                Account userAccount = GetDetailOfAccount(userID);
+                if (userAccount.status.Equals("Inactive")) return false;
                 if (note == null || note.Trim().Equals("")) return false;
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "UPDATE account " +
+                    /*string Sql = "UPDATE account " +
                         "SET status= 'Inactive', note=@note " +
                         "WHERE userID = @userID";
+                    */
+                    string Sql = "disableAccount";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        command.Parameters.AddWithValue("@note", note);
-                        command.Parameters.AddWithValue("@userID", userID);
+                        command.Parameters.AddWithValue("note", note);
+                        command.Parameters.AddWithValue("userID", userID);
                         int rowEffects = command.ExecuteNonQuery();
                         if (rowEffects > 0)
                         {

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Threading.Tasks;
+using Nextflip.APIControllers;
 
 namespace Nextflip.Models.media
 {
@@ -1097,6 +1098,42 @@ namespace Nextflip.Models.media
                 throw new Exception(ex.Message);
             }
             return mediaID;
+        }
+
+        public string AddMedia(Media mediaInfo)
+        {
+            string result = null;
+            try
+            {
+                using MySqlConnection connection = new MySqlConnection(DbUtil.ConnectionString);
+                using MySqlCommand command = new MySqlCommand();
+                command.Connection = connection;
+                command.CommandType = CommandType.StoredProcedure;
+                connection.Open();
+                AddMediaExecute();
+                void AddMediaExecute()
+                {
+                    command.CommandText = "createMedia";
+                    command.Parameters.AddWithValue("@title_Input", mediaInfo.Title);
+                    command.Parameters.AddWithValue("@filmType_Input", mediaInfo.FilmType);
+                    command.Parameters.AddWithValue("@director_Input", mediaInfo.Director);
+                    command.Parameters.AddWithValue("@cast_Input", mediaInfo.Cast);
+                    command.Parameters.AddWithValue("@publishYear_Input", mediaInfo.PublishYear);
+                    command.Parameters.AddWithValue("@duration_Input", mediaInfo.Duration);
+                    command.Parameters.AddWithValue("@bannerURL_Input", mediaInfo.BannerURL);
+                    command.Parameters.AddWithValue("@language_Input", mediaInfo.Language);
+                    command.Parameters.AddWithValue("@description_Input", mediaInfo.Description);
+                    command.Parameters.Add("@mediaID_Output", MySqlDbType.String).Direction
+                        = ParameterDirection.Output;
+                    command.ExecuteNonQuery();
+                    result = (string) command.Parameters["@mediaID_Output"].Value;
+                }
+            }
+            catch (Exception exception)
+            {
+                throw new Exception("Fail. " + exception.Message);
+            }
+            return result;
         }
     }
 }

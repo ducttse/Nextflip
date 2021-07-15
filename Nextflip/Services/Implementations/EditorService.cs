@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Nextflip.APIControllers;
 
 namespace Nextflip.Services.Implementations
 {
@@ -100,6 +101,25 @@ namespace Nextflip.Services.Implementations
         public string AddEpisode(Episode episode) => _episodeDAO.AddEpisode(episode);
 
         public string UpdateEpisode(Episode episode) => _episodeDAO.UpdateEpisode(episode);
-
+        public string AddNewMedia(ViewEditorDashboard.PrototypeMediaForm mediaForm)
+        {
+            string newMediaID = null;
+            newMediaID = _mediaDAO.AddMedia(mediaForm.MediaInfo);
+            if (newMediaID != null)
+            {
+                foreach (ViewEditorDashboard.PrototypeSeasonForm seasonForm in mediaForm.Seasons)
+                {
+                    string newSeasonID = _seasonDAO.AddSeason(seasonForm.SeasonInfo);
+                    if (newSeasonID != null)
+                    {
+                        foreach (Episode episode in seasonForm.Episodes)
+                        {
+                            string newEpisodeID = _episodeDAO.AddEpisode(episode);
+                        }
+                    }
+                }
+            }
+            return newMediaID;
+        }
     }
 }

@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Nextflip.APIControllers;
 
 namespace Nextflip.Services.Interfaces
 {
@@ -56,5 +57,6 @@ namespace Nextflip.Services.Interfaces
         //episode
         string AddEpisode(Episode episode);
         string UpdateEpisode(Episode episode);
+        string AddNewMedia(ViewEditorDashboard.PrototypeMediaForm mediaForm);
     }
 }

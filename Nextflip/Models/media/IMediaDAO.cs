@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Nextflip.APIControllers;
 
 namespace Nextflip.Models.media
 {
@@ -40,5 +41,6 @@ namespace Nextflip.Models.media
         string AddMedia(string Title, string FilmType, string Director, string Cast, int? PublishYear, 
             string Duration, string BannerURL, string Language, string Description);
         string UpdateMedia(Media media);
+        string AddMedia(Media mediaInfo);
     }
 }

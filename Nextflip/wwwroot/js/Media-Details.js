@@ -2,17 +2,21 @@ let mediaData;
 function renderBanner() {
   return `<img class="img-fluid"
     src="${mediaData.media.bannerURL}"
-    alt="${mediaData.media.mediaID}"/>
+    alt="${mediaData.media.mediaID}"
+    height="600"
+    width="600"
+    />
     `;
 }
 
 function renderDetail(title, content) {
   return `<div flex="row">
-            <p class="feild text-white-50 col-3 d-inline fs-5">${title}:</p>
-            <p class="col-9 d-inline fs-5" style="word-wrap: break-word">
-            ${content == null ? "" : content}
-            </p>
-          </div>`
+        <p class="feild text-white-50 col-3 d-inline fs-5">${title}:</p>
+        <p class="col-9 d-inline fs-5" style="word-wrap: break-word">
+          ${content == null ? "" : content}
+          </p>
+        </div>`;
+
 }
 
 function renderArrayDetail(title, arrContent) {
@@ -28,7 +32,7 @@ function renderArrayDetail(title, arrContent) {
             <p class="col-9 d-inline fs-5" style="word-wrap: break-word">
             ${arrContent == null ? "" : content}
             </p>
-          </div>`
+          </div>`;
 }
 
 function ShowInfor() {
@@ -101,7 +105,12 @@ function appendToDetailWrapper() {
   document.getElementById("img_holder").insertAdjacentHTML("afterbegin", renderBanner());
   document.getElementById("detail_title").insertAdjacentHTML("afterbegin", mediaData.media.title)
   document.getElementById("detail_table").insertAdjacentHTML("afterbegin", ShowInfor());
-  chooseOptions('description');
+  if (location.pathname.split("/")[ 1 ] == "SubcribedUserDashBoard") {
+    chooseOptions('description');
+  }
+  else {
+    document.getElementById("option_detail").insertAdjacentHTML("afterbegin", `<p class="ps-2">${mediaData.media.description}</p>`);
+  }
 }
 
 function clearWrapper() {
@@ -136,12 +145,16 @@ const processChange = debounce(() => {
       clearWrapper();
       mediaData = json;
       appendToDetailWrapper();
-      showDetail();
+      if (location.pathname.split("/")[ 1 ] == "SubcribedUserDashBoard") {
+        showDetail();
+      }
     });
 });
 
 async function AppendDetails(id) {
   mediaID = id;
-  isFavouriteMedia(id)
+  if (location.pathname.split("/")[ 1 ] == "SubcribedUserDashBoard") {
+    isFavouriteMedia(id)
+  }
   processChange();
 }

@@ -1,0 +1,52 @@
+﻿@{
+    ViewBag.Title = "Preview";
+    Layout = "_CustomLayout";
+}
+@section Styles {
+  <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
+}
+<div class="col-10">
+    <div class="wrapper row col-12 mx-auto text-dark">
+        <div class="d-flex justify-content-start mt-2" id="content_holder">
+          
+        </div>
+        <div class="d-flex justify-content-center mt-5">
+          <p id="note"></p>
+        </div>
+        <div class="d-flex justify-content-center mt-2">
+            <div class="btn btn-primary me-3" onclick="requestApprove('@ViewBag.RequestID')">
+                Aprrove
+            </div>
+            <div class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#noteModal">
+                Disapprove
+            </div>
+        </div>
+    </div>
+</div>
+<!-- modal -->
+<div class="modal" id="noteModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="d-flex justify-content-between">
+            <p class="h3">Leave a note for this activity</p>
+            <p class="h2"></p>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div>
+            <textarea class="form-control" rows="15" cols="90" id="note_input"></textarea>
+            <button class="btn btn-primary" onclick="requestDisapprove('@ViewBag.RequestID')">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="~/js/Preview.js"></script>
+<script src="~/js/Slide-Bar.js"></script>
+<script>  
+    getRequestDetail("@ViewBag.Type", "@ViewBag.MediaID", "@ViewBag.RequestID");
+    let button = `<a id="back_btn" href="/MediaManagerManagement/Index" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
+                    Media Manager
+                  </a>`;
+    appendButton(button);
+</script>

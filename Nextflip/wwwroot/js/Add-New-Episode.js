@@ -31,7 +31,9 @@ async function setResetRequestAddNewEpisodeObj() {
     requestAddNewEpisodeObj.Number = document.getElementById("numberEpisode").value;
     requestAddNewEpisodeObj.UserEmail = getProfile().userEmail;
     if (requestAddNewEpisodeObj.title.length > 0 && requestAddNewEpisodeObj.Number.length > 0) {
+        getFile(document.getElementById("bannerEpisode"));
         requestAddNewEpisodeObj.ThumbnailURL = await requestUploadEpisodeThumbnail(requestAddNewEpisodeObj.seasonID, requestAddNewEpisodeObj.Number);
+        getFile(document.getElementById("videoEpisode"));
         requestAddNewEpisodeObj.episodeURL = await requestUploadVideo(requestAddNewEpisodeObj.seasonID, requestAddNewEpisodeObj.Number);
     }
     return new Promise(resolve => resolve("resolve"));

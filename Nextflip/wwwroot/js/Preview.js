@@ -1,6 +1,4 @@
-﻿let requestMediaID;
-
-async function getRequestObjID(id) {
+﻿async function getRequestObjID(id) {
     let result = "";
     await fetch(`/api/MediaManagerManagement/GetMediaEditRequestByID/${id}`)
         .then(res => res.json())
@@ -82,7 +80,6 @@ function getSeasonDetail(seasonID) {
     fetch(`/api/ViewMediaDetails/GetSeasonByID/${seasonID}`)
         .then(res => res.json())
         .then(json => {
-            console.log(json);
             document.getElementById("content_holder").insertAdjacentHTML("afterbegin", renderSeason(json));
         })
 }
@@ -91,16 +88,11 @@ function getEpisodeDetail(episodeID) {
     fetch(`/api/ViewMediaDetails/GetEpisodeByID/${episodeID}`)
         .then(res => res.json())
         .then(json => {
-            console.log(json);
             document.getElementById("content_holder").insertAdjacentHTML("afterbegin", renderSeason(json));
         })
 }
 
-function setRequestMediaID(id) {
-    requestMediaID = id
-}
-
-function requestApprove() {
+function requestApprove(id) {
     let reqHeader = new Headers();
     reqHeader.append("Content-Type", "text/json");
     reqHeader.append("Accept", "application/json, text/plain, */*");
@@ -108,7 +100,7 @@ function requestApprove() {
         method: "POST",
         headers: reqHeader,
         body: JSON.stringify({
-            RequestID: requestMediaID
+            RequestID: id
         })
     };
     fetch("/api/MediaManagerManagement/ApproveRequest/", initObject)
@@ -123,7 +115,7 @@ function requestApprove() {
         })
 }
 
-function requestDisapprove() {
+function requestDisapprove(id) {
     let reqHeader = new Headers();
     reqHeader.append("Content-Type", "text/json");
     reqHeader.append("Accept", "application/json, text/plain, */*");
@@ -131,7 +123,7 @@ function requestDisapprove() {
         method: "POST",
         headers: reqHeader,
         body: JSON.stringify({
-            RequestID: requestMediaID,
+            RequestID: id,
             Note: document.getElementById("note_input").value
         })
     };

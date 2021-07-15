@@ -46,7 +46,6 @@ namespace Nextflip.Services.Interfaces
         string AddMedia(string Title, string FilmType, string Director, string Cast, int? PublishYear,
             string Duration, string BannerURL, string Language, string Description);
         // category
-        bool AddCategory(Category category);
         Category GetCategoryById(int categoryID);
         bool AddMediaCategory(string mediaID, int categoryID);
         //add media

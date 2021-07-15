@@ -87,8 +87,7 @@ namespace Nextflip.Services.Implementations
         public string AddMedia(string Title, string FilmType, string Director, string Cast, int? PublishYear,
             string Duration, string BannerURL, string Language, string Description)
             => _mediaDAO.AddMedia(Title, FilmType, Director, Cast, PublishYear, Duration, BannerURL, Language, Description);
-        //category
-        public bool AddCategory(Category category) => _categoryDAO.AddCategory(category);
+
         public Category GetCategoryById(int categoryID) => _categoryDAO.GetCategoryByID(categoryID);
         public bool AddMediaCategory(string mediaID, int categoryID) => _mediaCategoryDAO.AddMediaCategory(mediaID, categoryID);
         public string UpdateMedia(Media media) => _mediaDAO.UpdateMedia(media);

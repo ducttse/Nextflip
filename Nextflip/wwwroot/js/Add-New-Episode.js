@@ -101,7 +101,7 @@ async function requestAddNewEpisode() {
         .then(res => res.json())
         .then(json => {
             if (json.message == "Success") {
-                hideModalWithName("modalAddEpisodeForm");
+                document.querySelector("#modalAddEpisodeForm .btn-close").click()
                 changeContent("Add success", true);
                 messageModal.show();
             }

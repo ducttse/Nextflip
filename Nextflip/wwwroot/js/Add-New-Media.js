@@ -46,7 +46,7 @@ function requestMediaType() {
 
 function validateCheckBoxValue() {
     console.log("run");
-    if (document.querySelectorAll(`.category[type="checkbox"]:checked`).length == 0) {
+    if (document.querySelectorAll(`#modalAddForm .category[type="checkbox"]:checked`).length == 0) {
         document.getElementById("empty_checkbox").classList.remove("d-none");
     }
     else {
@@ -133,7 +133,7 @@ async function requestAddMedia() {
         .then(res => res.json())
         .then(json => {
             if (json.message == "success") {
-                hideModalWithName("modalAddForm");
+                document.querySelector("#modalAddForm .btn-close").click()
                 changeContent("Add success", true);
                 messageModal.show();
             }

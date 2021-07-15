@@ -60,9 +60,9 @@ async function requestAddNewSeason() {
     };
     fetch("/api/ViewEditorDashboard/AddSeason", initObject)
         .then(res => res.json())
-        .then(json => {
+        .then((json) => {
             if (json.message == "Success") {
-                hideModalWithName("modalAddSeasonForm");
+                document.querySelector("#modalAddSeasonForm .btn-close").click()
                 changeContent("Add success", true);
                 messageModal.show();
             }

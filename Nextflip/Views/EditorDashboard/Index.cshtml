@@ -59,7 +59,7 @@
                 </div>
                 <div id="pagination" class="col-8 d-flex justify-content-end pe-5">
                 </div>
-            <div>
+            </div>
         </div>
         <div id="pagination" class="d-flex justify-content-center"></div>
     </div>
@@ -113,14 +113,86 @@
     </div>
 <!-- Edit modal -->
 <div class="modal fade" id="modalEditForm" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="Form_Label">Edit Media</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                
+                <div>
+                    <div class="mb-3 row">
+                        <label for="title_Edit" class="required col-sm-1 col-form-label">Title</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="title_Edit" onkeyup="onInput(this)" />
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="category" class="required col-sm-1 col-form-label">Category</label>
+                        <div class="col-sm-10" id="CB_holder_Edit">
+                            <p class="d-none" id="empty_checkbox" style="color: #dc3545;margin-top: .25rem; font-size: .875em;">Must choose at least one</p>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="filmType_Edit" class="required col-sm-1 col-form-label">Film type</label>
+                        <div class="col-sm-3">
+                            <select class="form-select" class="form-control" id="filmType_Edit">
+                            </select>
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="cast_Edit" class="col-sm-1 col-form-label">Cast</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="cast_Edit">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="director_Edit" class="col-sm-1 col-form-label">Director</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="director_Edit">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="publicYear_Edit" class="col-sm-1 col-form-label">Publish year</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" id="publicYear_Edit">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="duration_Edit" class="col-sm-1 col-form-label">Duration</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" id="duration_Edit">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="language_Edit" class="col-sm-1 col-form-label">Language</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" id="language_Edit">
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="description_Edit" class="required col-sm-1 col-form-label">Description</label>
+                        <div class="col-sm-10">
+                            <textarea type="text" class="form-control" id="description_Edit" onkeyup="onInput(this)"></textarea>
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="banner_Edit" class="required col-sm-1 col-form-label">Banner</label>
+                        <div class="col-sm-4">
+                            <input type="file" class="form-control" id="banner_Edit" onchange="getFile(this)">
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-bg-danger" data-bs-dismiss="modal">Cancel</button>
@@ -139,78 +211,78 @@
             </div>
             <div class="modal-body">
                 <div>
-        <div class="mb-3 row">
-            <label for="title" class="required col-sm-1 col-form-label">Title</label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control" id="title" onkeyup="onInput(this)" />
-                <div class="invalid-feedback">
+                    <div class="mb-3 row">
+                        <label for="title" class="required col-sm-1 col-form-label">Title</label>
+                        <div class="col-sm-4">
+                            <input type="text" class="form-control" id="title" onkeyup="onInput(this)" />
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="category" class="required col-sm-1 col-form-label">Category</label>
+                        <div class="col-sm-10" id="CB_holder">
+                            <p class="d-none" id="empty_checkbox" style="color: #dc3545;margin-top: .25rem; font-size: .875em;">Must choose at least one</p>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="filmType" class="required col-sm-1 col-form-label">Film type</label>
+                        <div class="col-sm-3">
+                            <select class="form-select" class="form-control" id="filmType">
+                            </select>
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="cast" class="col-sm-1 col-form-label">Cast</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="cast">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="director" class="col-sm-1 col-form-label">Director</label>
+                        <div class="col-sm-3">
+                            <input type="text" class="form-control" id="director">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="publicYear" class="col-sm-1 col-form-label">Publish year</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" id="publicYear">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="duration" class="col-sm-1 col-form-label">Duration</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" id="duration">
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="language" class="col-sm-1 col-form-label">Language</label>
+                        <div class="col-sm-2">
+                            <input type="text" class="form-control" id="language">
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="description" class="required col-sm-1 col-form-label">Description</label>
+                        <div class="col-sm-10">
+                            <textarea type="text" class="form-control" id="description" onkeyup="onInput(this)"></textarea>
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3 row">
+                        <label for="banner" class="required col-sm-1 col-form-label">Banner</label>
+                        <div class="col-sm-4">
+                            <input type="file" class="form-control" id="banner" onchange="getFile(this)">
+                            <div class="invalid-feedback">
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        <div class="mb-3 row">
-            <label for="category" class="required col-sm-1 col-form-label">Category</label>
-            <div class="col-sm-10" id="CB_holder">
-                <p class="d-none" id="empty_checkbox" style="color: #dc3545;margin-top: .25rem; font-size: .875em;">Must choose at least one</p>
-            </div>
-        </div>
-        <div class="mb-3 row">
-            <label for="filmType" class="required col-sm-1 col-form-label">Film type</label>
-            <div class="col-sm-3">
-                <select class="form-select" class="form-control" id="filmType">
-                </select>
-                <div class="invalid-feedback">
-                </div>
-            </div>
-        </div>
-        <div class="mb-3 row">
-            <label for="cast" class="col-sm-1 col-form-label">Cast</label>
-            <div class="col-sm-3">
-                <input type="text" class="form-control" id="cast">
-            </div>
-        </div>
-        <div class="mb-3 row">
-            <label for="director" class="col-sm-1 col-form-label">Director</label>
-            <div class="col-sm-3">
-                <input type="text" class="form-control" id="director">
-            </div>
-        </div>
-        <div class="mb-3 row">
-            <label for="publicYear" class="col-sm-1 col-form-label">Publish year</label>
-            <div class="col-sm-2">
-                <input type="text" class="form-control" id="publicYear">
-            </div>
-        </div>
-        <div class="mb-3 row">
-            <label for="duration" class="col-sm-1 col-form-label">Duration</label>
-            <div class="col-sm-2">
-                <input type="text" class="form-control" id="duration">
-            </div>
-        </div>
-        <div class="mb-3 row">
-            <label for="language" class="col-sm-1 col-form-label">Language</label>
-            <div class="col-sm-2">
-                <input type="text" class="form-control" id="language">
-                <div class="invalid-feedback">
-                </div>
-            </div>
-        </div>
-        <div class="mb-3 row">
-            <label for="description" class="required col-sm-1 col-form-label">Description</label>
-            <div class="col-sm-10">
-                <textarea type="text" class="form-control" id="description" onkeyup="onInput(this)"></textarea>
-                <div class="invalid-feedback">
-                </div>
-            </div>
-        </div>
-        <div class="mb-3 row">
-            <label for="banner" class="required col-sm-1 col-form-label">Banner</label>
-            <div class="col-sm-4">
-                <input type="file" class="form-control" id="banner" onchange="getFile(this)">
-                <div class="invalid-feedback">
-                </div>
-            </div>
-        </div>
-    </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-bg-danger" data-bs-dismiss="modal">Cancel</button>

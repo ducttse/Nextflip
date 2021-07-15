@@ -101,8 +101,9 @@ async function requestAddNewEpisode() {
         .then(res => res.json())
         .then(json => {
             if (json.message == "Success") {
-                console.log("success");
-                resetRequestAddNewEpisodeObj();
+                hideModalWithName("modalAddEpisodeForm");
+                changeContent("Add success", true);
+                messageModal.show();
             }
             else {
                 validateAddEpisodeFormInput();

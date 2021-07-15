@@ -23,6 +23,13 @@ function hideModal() {
     currentModal.hide();
 }
 
+function hideModalWithName(name) {
+    var myModal = new bootstrap.Modal(document.getElementById(name), {
+        keyboard: false
+    })
+    myModal.hide();
+}
+
 function showModal(modalName) {
     var myModal = new bootstrap.Modal(document.getElementById(modalName), {
         keyboard: false

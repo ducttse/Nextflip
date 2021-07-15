@@ -71,6 +71,36 @@ namespace Nextflip.APIControllers
             }
         }
 
+        [Route("GetSeasonByID/{seasonID}")]
+        public IActionResult GetSeasonByID([FromServices] ISubscribedUserService subscribedUserService, string seasonID)
+        {
+            try
+            {
+                Season season = subscribedUserService.GetSeasonByID(seasonID);
+                return new JsonResult(season);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetSeasonByID: " + ex.Message);
+                return new JsonResult("error occur" + ex.Message);
+            }
+        }
+
+        [Route("GetEpisodeByID/{episodeID}")]
+        public IActionResult GetEpisodeByID([FromServices] ISubscribedUserService subscribedUserService, string episodeID)
+        {
+            try
+            {
+                Episode episode = subscribedUserService.GetEpisodeByID(episodeID);
+                return new JsonResult(episode);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetEpisodeByID: " + ex.Message);
+                return new JsonResult("error occur" + ex.Message);
+            }
+        }
+
         [Route("GetEpisodesOfSeason/{seasonID}")]
         public IActionResult GetEpisodesOfSeason([FromServices] ISubscribedUserService subscribedUserService, string seasonID)
         {

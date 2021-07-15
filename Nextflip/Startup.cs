@@ -34,6 +34,7 @@ using Nextflip.Models.supportTicket;
 using Nextflip.Models.role;
 using Microsoft.AspNetCore.Http;
 using Nextflip.Models.subscription;
+using Nextflip.Models.filmType;
 
 namespace Nextflip
 {
@@ -66,6 +67,7 @@ namespace Nextflip
             services.AddTransient<IRoleDAO, RoleDAO>();
             services.AddTransient<IRoleService, RoleService>();
             services.AddTransient<ISubscriptionDAO, SubscriptionDAO>();
+            services.AddTransient<IFilmTypeDAO, FilmTypeDAO>();
             services.AddControllersWithViews();
             services.AddControllers().AddNewtonsoftJson();
             services.AddTransient<IAccountDAO, AccountDAO>();
@@ -76,7 +78,8 @@ namespace Nextflip
             services.AddTransient<IEditorService, EditorService>();
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<ISubscriptionService, SubscriptionService>();
-
+            services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IFilmTypeService, FilmTypeService>();
 
             ///get connection string
             DbUtil.ConnectionString = Configuration.GetConnectionString("MySql");

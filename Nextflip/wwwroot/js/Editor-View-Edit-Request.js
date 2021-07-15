@@ -116,7 +116,9 @@ function setSelectedStatus(obj) {
     else requestRequestDataAndResetPage();
 }
 
-function requestRequestDataOnly() {
+async function requestRequestDataOnly() {
+    await loadAccount();
+    requestParam.UserEmail = getProfile().userEmail;
     let reqHeader = new Headers();
     reqHeader.append("Content-Type", "text/json");
     reqHeader.append("Accept", "application/json, text/plain, */*");

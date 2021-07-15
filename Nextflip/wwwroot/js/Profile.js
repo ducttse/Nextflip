@@ -9,6 +9,9 @@ function loadToHeader() {
 }
 
 async function loadAccount() {
+    if (Profile != null) {
+        return;
+    }
     let ID = localStorage.getItem("ID");
     let reqHeader = new Headers();
     reqHeader.append("Content-Type", "text/json");
@@ -57,7 +60,6 @@ const profileRegex = new RegExp("^\/Profile\/[\w\d\s]*$");
 
 const ProfileRoute = [];
 
-
 loadAccount().then(() => {
     if (document.getElementById("header") != null) {
         loadToHeader();
@@ -74,47 +76,44 @@ loadAccount().then(() => {
                 case "UserManagerManagement":
                     role = "User Manager";
                     let button1 = `<a href="/UserManagerManagement/Index" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100">
-                            Manage user account
-                      </a>`;
-                    let button2 = `<a href="#" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
-                            Create new staff
+                                Manage user account
                           </a>`;
+                    let button2 = `<a href="#" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
+                                Create new staff
+                              </a>`;
                     appendButton(button1);
                     appendButton(button2);
                     break;
                 case "MediaManagerManagement":
                     role = "Media Manager";
                     let button3 = `<a id="back_btn" href="/MediaManagerManagement/Index" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
-                        Media Manager
-                      </a>`;
+                            Media Manager
+                          </a>`;
                     appendButton(button3);
                     break;
                 case "EditorDashboard":
                     role = "Media Editor";
                     let button4 = `<a href="/EditorDashboard/Index" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
-                            Media manager
-                          </a>`;
-                    let button5 = `<a href="#" onclick="return showForm();" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
-                            Add new media
-                          </a>`;
-                    let button6 = `<a href="/EditorDashboard/ViewEditRequest"  onclick="return showForm();" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
-                            View edit request
-                        </a>`;
+                                Media manager
+                              </a>`;
+                    let button5 = `<a href="/EditorDashboard/ViewEditRequest"  onclick="return showForm();" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
+                                View edit request
+                            </a>`;
                     appendButton(button4);
                     appendButton(button5);
-                    appendButton(button6);
                     break;
                 case "SupporterDashboard":
                     role = "Ticket Supporter";
-                    let button7 = `<a id="back_btn" href="/SupporterDashboard/Index" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
-                        Support Ticket
-                      </a>`;
-                    appendButton(button7);
+                    let button6 = `<a id="back_btn" href="/SupporterDashboard/Index" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
+                            Support Ticket
+                          </a>`;
+                    appendButton(button6);
                     break;
             }
         }
         setRoleName(role);
         setName(Profile.fullname);
-        setImg(Profile.pictureURL);
+        setImg(Profile.pictureURL + `?time=${Date.now()}`);
     }
 })
+

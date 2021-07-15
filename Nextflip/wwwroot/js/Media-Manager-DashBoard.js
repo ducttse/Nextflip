@@ -2,14 +2,14 @@
 let requestParam = {
   SearchValue: "",
   Status: "All",
-  Type: "media",
+  Type: "All",
   RowsOnPage: 6,
-  RequestPage: 1
+  RequestPage: 1,
+  SortBy: "desc"
 };
 let isFiltered = false;
 let isSearched = false;
 function setRequestPage(num) {
-  console.log(num)
   requestParam.RequestPage = num;
   return requestEditRequestDataOnly();
 }
@@ -77,7 +77,7 @@ function renderRequest(request, index) {
         <td>${index + 1}</td> 
         <td>${request.userEmail}</td>
         <td>${shortText}</td>
-        <td><a class="text-decoration-none" href="#${request.mediaID}">Preview</a></td>
+        <td class="text-center"><a class="text-decoration-none" href="/MediaManagerManagement/DetailPreview/${request.mediaID}/${request.requestID}">Preview</a></td>
     </tr>`;
   }
   return `
@@ -86,7 +86,7 @@ function renderRequest(request, index) {
           <td>${request.userEmail}</td>
           <td>${shortText}</td>
           <td class="text-center"><p class="ticket_status ${bgcolor} rounded text-center text-light text-center px-2 py-1">${request.status}</p></td>
-          <td><a class="text-decoration-none" href="#${request.mediaID}">Preview</a></td>
+          <td class="text-center"><a class="text-decoration-none" href="/MediaManagerManagement/DetailPreview/${request.type}/${request.mediaID}/${request.requestID}">Preview</a></td>
       </tr>`;
 }
 

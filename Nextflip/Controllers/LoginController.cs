@@ -8,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Nextflip.Controllers
 {
@@ -24,10 +26,12 @@ namespace Nextflip.Controllers
             return View();
         }
 
-        public IActionResult Logout()
+        public async Task<IActionResult> Logout()
         {
             HttpContext.Session.Clear();
             HomeController homeController = new HomeController();
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
             return RedirectToAction("Index", homeController);
         }
     }

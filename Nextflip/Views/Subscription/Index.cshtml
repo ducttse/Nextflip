@@ -1,5 +1,56 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewBag.Title = "Subscription plan";
+    Layout = "_UserDashboardLayout";
 }
+@section styles{
+    <link rel="Stylesheet" href="@Href("~/css/User-Dashboard.css")" />
+    <link rel="Stylesheet" href="@Href("~/css/Media-Details.css")" />
+    <link rel="Stylesheet" href="@Href("~/css/Header.css")" />
+    <link rel="Stylesheet" href="@Href("~/css/Subscription.css")" />
+}
+<p class="fs-1 text-center">Membership pricing</p>
+<div class="mt-5 pt-3">
+<div class="d-flex justify-content-center">
+  <div id="item1" class="col-4 card text-white bg-primary mb-3 me-3" style="max-width: 18rem;">
+    <div class="card-body d-flex flex-column justify-content-between">
+      <p class="card-title text-center h5">1 month</p>
+      <p class="card-text text-center fs-1">4.99$</p>
+    </div>
+    <div class="card-footer d-flex flex-column">
+      <div class="choose_btn btn btn-light align-self-center shadow">
+        Choose
+      </div>
+    </div>  
+  </div>
+  <div id="item2" class="col-4 card text-white bg-primary mb-3 me-3" style="max-width: 18rem;">
+    <div class="card-body d-flex flex-column justify-content-between">
+      <p class="card-title text-center h5">3 months</p>
+      <p class="card-text text-center fs-3 text-decoration-line-through text-light mb-0">14.99$</p>
+      <p class="card-text text-center fs-1">12.49$</p>
+    </div>
+    <div class="card-footer d-flex flex-column">
+      <div class="choose_btn btn btn-light align-self-center shadow">
+        Choose
+      </div>
+    </div>  
+  </div>
+  <div id="item3" class="col-4 card text-white bg-primary mb-3 me-3" style="max-width: 18rem;">
+    <div class="card-body d-flex flex-column justify-content-between">
+      <p class="card-title text-center h5">6 months</p>
+      <p class="card-text text-center fs-3 text-decoration-line-through text-light mb-0">29.99$</p>
+      <p class="card-text text-center fs-1">21.99$</p>
+    </div>
+    <div class="ribbon"><span>Best seller</span></div>
+    <div class="card-footer d-flex flex-column">
+      <div class="choose_btn btn btn-light align-self-center shadow">
+        Choose
+      </div>
+    </div>  
+  </div>
+</div>
+</div>
+<script src="~/js/Search-In-Header.js"></script>
+<script src="~/js/Media-Details.js"></script>
+<script>
+    setGoToSearchEvent();
+</script>

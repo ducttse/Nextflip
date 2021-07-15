@@ -83,6 +83,33 @@ namespace Nextflip.Models.category
             }
         }
 
+        public bool UpdateCategory(int categoryID, string newCategoryName)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    string sql = "Update category " +
+                                "Set name = @categoryName " +
+                                "Where categoryID = @categoryID ";
+                    connection.Open();
+                    using (var command = new MySqlCommand(sql, connection))
+                    {
+
+                        command.Parameters.AddWithValue("@categoryName", newCategoryName);
+                        command.Parameters.AddWithValue("@categoryID", categoryID);
+
+                        int result = command.ExecuteNonQuery();
+                        if (result == 1) return true;
+                    }
+                }
+              }
+              catch (Exception ex){
+                throw new Exception(ex.Message);
+              }
+            return false;
+        }
+        
         public Category GetCategoryByName(string categoryName)
         {
             try
@@ -117,37 +144,33 @@ namespace Nextflip.Models.category
             {
                 throw new Exception(ex.Message);
             }
-        }
+          }
 
-        public bool AddCategory(Category category)
+
+        public bool CreateNewCategory(string categoryName)
         {
-            bool isAdded = false;
             try
             {
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
+                    string sql = "Insert into category (name) " +
+                                "Value(@categoryName)";
                     connection.Open();
-                    string Sql = "Insert into category(categoryID, name) " +
-                                "values(@categoryID, @name) ";
-                    using (var command = new MySqlCommand(Sql, connection))
+                    using (var command = new MySqlCommand(sql, connection))
                     {
-                        command.Parameters.AddWithValue("@categoryID", category.CategoryID);
-                        command.Parameters.AddWithValue("@name", category.Name);
-                        int rowAffect = command.ExecuteNonQuery();
-                        if(rowAffect == 1)
-                        {
-                            isAdded = true;
-                        }
+                        command.Parameters.AddWithValue("@categoryName", categoryName);
+
+                        int result = command.ExecuteNonQuery();
+                        if (result == 1) return true;
                     }
-                    connection.Close();
                 }
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 throw new Exception(ex.Message);
             }
+            return false;
 
-            return isAdded;
         }
     }
 }

@@ -444,8 +444,7 @@ namespace Nextflip.APIControllers
                 string mediaID = editorService.AddMedia(request.Title, request.FilmType, request.Director,
                     request.Cast, request.PublishYear, request.Duration, request.BannerURL, request.Language, request.Description);
                 if (mediaID == null) return new JsonResult(messageFail);
-                if (request.Note.Trim() == "") request.Note = "Request add media";
-                bool addMediaRequest = editorService.AddMediaRequest(request.UserEmail, mediaID, request.Note, "media", mediaID);
+                bool addMediaRequest = editorService.AddMediaRequest(request.UserEmail, mediaID, "Request add media", "media", mediaID);
                 if (!addMediaRequest) return new JsonResult(messageFail);
                 for (int i = 0; i < myInts.Length; i++)
                 {

@@ -35,6 +35,7 @@ using Nextflip.Models.role;
 using Microsoft.AspNetCore.Http;
 using Nextflip.Models.paymentPlan;
 using Nextflip.Models.subscription;
+using Nextflip.Models.filmType;
 
 namespace Nextflip
 {
@@ -61,6 +62,7 @@ namespace Nextflip
             services.AddTransient<ISeasonDAO, SeasonDAO>();
             services.AddTransient<ISubtitleDAO, SubtitleDAO>();
             services.AddTransient<INotificationDAO, NotificationDAO>();
+            services.AddTransient<IFilmTypeDAO, FilmTypeDAO>();
 
             services.AddTransient<IMediaService, MediaService>();
             services.AddTransient<INotificationService, NotificationService>();
@@ -77,6 +79,7 @@ namespace Nextflip
             services.AddTransient<IEditorService, EditorService>();
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<ISubscriptionService, SubscriptionService>();
+            services.AddTransient<IFilmTypeService, FilmTypeService>();
 
 
             ///get connection string

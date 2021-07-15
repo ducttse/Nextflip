@@ -38,19 +38,8 @@ function resetRequestAddNewSeasonObj() {
     file.parentNode.classList.remove("was-validated");
 }
 
-function checkEmpty(obj) {
-    let parent = obj.parentNode;
-    let feedback = parent.querySelector(".invalid-feedback");
-    parent.classList.add("was-validated");
-    if (obj.value.trim().length == 0) {
-        feedback.textContent = "This field can not empty";
-        obj.setCustomValidity("empty");
-    }
-    else {
-        parent.classList.remove("was-validated");
-        feedback.textContent = "";
-        obj.setCustomValidity("");
-    }
+function validateCheckBox() {
+    document.getElementById("")
 }
 
 async function validateInput() {
@@ -71,10 +60,11 @@ async function requestAddNewSeason() {
     };
     fetch("/api/ViewEditorDashboard/AddSeason", initObject)
         .then(res => res.json())
-        .then(json => {
+        .then((json) => {
             if (json.message == "Success") {
-                console.log("success");
-                resetRequestAddNewSeasonObj();
+                document.querySelector("#modalAddSeasonForm .btn-close").click()
+                changeContent("Add success", true);
+                messageModal.show();
             }
             else {
                 validateInput();

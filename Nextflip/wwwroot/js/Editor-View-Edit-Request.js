@@ -1,7 +1,7 @@
 ﻿let Data;
 let requestParam = {
     SearchValue: "",
-    UserEmail: "vlxx.com@gmail.com",
+    UserEmail: "",
     Status: "All",
     RowsOnPage: 12,
     RequestPage: 1

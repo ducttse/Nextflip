@@ -11,5 +11,6 @@ namespace Nextflip.Models.category
         Category GetCategoryByID(int categoryID);
         public bool UpdateCategory(int categoryID, string newCategoryName);
         public bool CreateNewCategory(string categoryName);
+        Category GetCategoryByName(string categoryName);
     }
 }

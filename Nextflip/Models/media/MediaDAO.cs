@@ -67,6 +67,7 @@ namespace Nextflip.Models.media
                     string Sql = "Select mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media " +
                                 "Where MATCH (title)  AGAINST (@searchValue in natural language mode) " +
+                                "and (status = 'Enabled' or status = 'Disabled') " +
                                 "ORDER BY status DESC " +
                                 "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
@@ -112,7 +113,8 @@ namespace Nextflip.Models.media
                 connection.Open();
                 string Sql = "Select COUNT(mediaID) " +
                                 "From media " +
-                                "Where MATCH (title)  AGAINST (@searchValue in natural language mode)";
+                                "Where MATCH (title)  AGAINST (@searchValue in natural language mode) " +
+                                "and (status = 'Enabled' or status = 'Disabled')";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     command.Parameters.AddWithValue("@searchValue", searchValue);
@@ -141,6 +143,7 @@ namespace Nextflip.Models.media
                     string Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media M, mediaCategory MC, category C " +
                                 "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName " +
+                                "and (status = 'Enabled' or status = 'Disabled') " +
                                 "ORDER BY status DESC " +
                                 "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
@@ -186,7 +189,8 @@ namespace Nextflip.Models.media
                 connection.Open();
                 string Sql = "Select COUNT(M.mediaID) " +
                                 "From media M, mediaCategory MC, category C " +
-                                "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName ";
+                                "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName " +
+                                "and (status = 'Enabled' or status = 'Disabled') ";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     command.Parameters.AddWithValue("@CategoryName", CategoryName);
@@ -260,6 +264,7 @@ namespace Nextflip.Models.media
                     string Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media M, mediaCategory MC, category C " +
                                 "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoyName and M.status = @Status " +
+                                "and (status = 'Enabled' or status = 'Disabled') " +
                                 "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
@@ -305,7 +310,8 @@ namespace Nextflip.Models.media
                 connection.Open();
                 string Sql = "Select COUNT(M.mediaID) " +
                                 "From media M, mediaCategory MC, category C " +
-                                "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoyName and M.status = @Status ";
+                                "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoyName and M.status = @Status " +
+                                "and (status = 'Enabled' or status = 'Disabled') ";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     command.Parameters.AddWithValue("@CategoyName", CategoyName);
@@ -336,6 +342,7 @@ namespace Nextflip.Models.media
                                 "From media M, mediaCategory MC, category C " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
                                 "and M.mediaID = MC.mediaID and MC.categoryID=C.categoryID and C.name = @CategoryName " +
+                                "and (status = 'Enabled' or status = 'Disabled') " +
                                 "ORDER BY status DESC " +
                                 "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
@@ -383,7 +390,8 @@ namespace Nextflip.Models.media
                 string Sql = "Select COUNT(M.mediaID) " +
                                 "From media M, mediaCategory MC, category C " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
-                                "and M.mediaID = MC.mediaID and MC.categoryID=C.categoryID and C.name = @CategoryName";
+                                "and M.mediaID = MC.mediaID and MC.categoryID=C.categoryID and C.name = @CategoryName " +
+                                "and (status = 'Enabled' or status = 'Disabled') ";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     command.Parameters.AddWithValue("@SearchValue", SearchValue);
@@ -414,6 +422,7 @@ namespace Nextflip.Models.media
                                 "From media M, mediaCategory MC, category C " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
                                 "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status " +
+                                "and (status = 'Enabled' or status = 'Disabled') " +
                                 "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
@@ -461,7 +470,8 @@ namespace Nextflip.Models.media
                 string Sql = "Select COUNT(M.mediaID) " +
                                 "From media M, mediaCategory MC, category C " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
-                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status ";
+                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status " +
+                                "and (status = 'Enabled' or status = 'Disabled') ";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     command.Parameters.AddWithValue("@SearchValue", SearchValue);
@@ -523,69 +533,70 @@ namespace Nextflip.Models.media
             {
                 string SqlUpdate = null;
                 string SqlDelete = null;
-                string ID_preview = ID + "_preview";
-                string ID_Enabled = ID + "_Enabled";
-                string ID_Disabled = ID + "_Disabled";
                 string NewTitle = null;
+                string mediaID = ID.Split('_')[0];
+                Media media = new Media();
+                MySqlCommand command1;
+                MySqlCommand command2;
+                int rowEffects1 = 0;
+                int rowEffects2 = 0;
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    Media media_preview = GetMediaByID(ID_preview);
-                    Media media_Enabled = GetMediaByID(ID_Enabled);
-                    Media media_Disabled = GetMediaByID(ID_Disabled);
-                    if (media_preview != null) { 
-                        SqlUpdate = "Update media " +
-                            "Set title = @title, filmType = @filmType, director = @director, cast = @cast, " +
-                            "publishYear = @publishYear, duration = @duration, bannerURL = @bannerURL, language = @language, description = @description " +
-                            "Where mediaID = @ID";
-                        SqlDelete = "Delete from media " +
-                            "Where mediaID = @ID_preview";
-                        NewTitle = media_preview.Title.Split('_')[0];
-                    }
-                    if (media_Enabled != null)
+                    if (mediaID.Equals(ID))
                     {
                         SqlUpdate = "Update media " +
                             "Set status = 'Enabled' " +
-                            "Where mediaID = @ID";
+                            "Where mediaID = @mediaID";
+                    } else {
+                        if (ID.Split('_')[1].Trim().ToLower().Equals("preview")) {
+                            SqlUpdate = "Update media " +
+                                "Set title = @title, filmType = @filmType, director = @director, cast = @cast, " +
+                                "publishYear = @publishYear, duration = @duration, bannerURL = @bannerURL, language = @language, description = @description " +
+                                "Where mediaID = @mediaID";
+                            media = GetMediaByID(ID);
+                            NewTitle = media.Title.Split('_')[0];
+                        }
+                        if (ID.Split('_')[1].Trim().ToLower().Equals("enabled"))
+                        {
+                            SqlUpdate = "Update media " +
+                                "Set status = 'Enabled' " +
+                                "Where mediaID = @mediaID";
+                        }
+                        if (ID.Split('_')[1].Trim().ToLower().Equals("disabled"))
+                        {
+                            SqlUpdate = "Update media " +
+                                "Set status = 'Disabled' " +
+                                "Where mediaID = @mediaID";
+                        }
                         SqlDelete = "Delete from media " +
-                            "Where mediaID = @ID_Enabled";
-                    } 
-                    if (media_Disabled != null)
-                    {
-                        SqlUpdate = "Update media " +
-                            "Set status = 'Disabled' " +
                             "Where mediaID = @ID";
-                        SqlDelete = "Delete from media " +
-                            "Where mediaID = @ID_Disabled";
+                        command2 = new MySqlCommand(SqlDelete, connection);
+                        command2.Parameters.AddWithValue("@ID", ID);
+                        rowEffects2 = command2.ExecuteNonQuery();
                     }
-                    MySqlCommand command1 = new MySqlCommand(SqlUpdate, connection);
-                    MySqlCommand command2 = new MySqlCommand(SqlDelete, connection);
-                    command1.Parameters.AddWithValue("@ID", ID);
-                    if (media_preview != null)
-                    {
-                        command1.Parameters.AddWithValue("@title", NewTitle);
-                        command1.Parameters.AddWithValue("@filmType", media_preview.FilmType);
-                        command1.Parameters.AddWithValue("@director", media_preview.Director);
-                        command1.Parameters.AddWithValue("@cast", media_preview.Cast);
-                        command1.Parameters.AddWithValue("@publishYear", media_preview.PublishYear);
-                        command1.Parameters.AddWithValue("@duration", media_preview.Duration);
-                        command1.Parameters.AddWithValue("@bannerURL", media_preview.BannerURL);
-                        command1.Parameters.AddWithValue("@language", media_preview.Language);
-                        command1.Parameters.AddWithValue("@description", media_preview.Description);
-
-                        command2.Parameters.AddWithValue("@ID_preview", ID_preview);
+                    command1 = new MySqlCommand(SqlUpdate, connection);
+                    command1.Parameters.AddWithValue("@mediaID", mediaID);
+                    if (!mediaID.Equals(ID)) {
+                        if (ID.Split('_')[1].Trim().ToLower().Equals("preview"))
+                        {
+                            command1.Parameters.AddWithValue("@title", NewTitle);
+                            command1.Parameters.AddWithValue("@filmType", media.FilmType);
+                            command1.Parameters.AddWithValue("@director", media.Director);
+                            command1.Parameters.AddWithValue("@cast", media.Cast);
+                            command1.Parameters.AddWithValue("@publishYear", media.PublishYear);
+                            command1.Parameters.AddWithValue("@duration", media.Duration);
+                            command1.Parameters.AddWithValue("@bannerURL", media.BannerURL);
+                            command1.Parameters.AddWithValue("@language", media.Language);
+                            command1.Parameters.AddWithValue("@description", media.Description);
+                        }
                     }
-                    if (media_Enabled != null)
-                    {
-                        command2.Parameters.AddWithValue("@ID_Enabled", ID_Enabled);
-                    }
-                    if (media_Disabled != null)
-                    {
-                        command2.Parameters.AddWithValue("@ID_Disabled", ID_Disabled);
-                    } 
-                    int rowEffects1 = command1.ExecuteNonQuery();
-                    int rowEffects2 = command2.ExecuteNonQuery();
+                    rowEffects1 = command1.ExecuteNonQuery();
                     if (rowEffects1 > 0 && rowEffects2 > 0)
+                    {
+                        result = true;
+                    }
+                    if (rowEffects1 > 0 && mediaID.Equals(ID))
                     {
                         result = true;
                     }
@@ -598,51 +609,38 @@ namespace Nextflip.Models.media
             }
             return result;
         }
+
         public bool DisapproveChangeMedia(string ID)
         {
             var result = false;
+            int rowDeleteMDEffects = 0;
+            string SqlMedia;
             try
             {
-                string SqlDelete = null;
-                string ID_preview = ID + "_preview";
-                string ID_Enabled = ID + "_Enabled";
-                string ID_Disabled = ID + "_Disabled";
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    Media media_preview = GetMediaByID(ID_preview);
-                    Media media_Enabled = GetMediaByID(ID_Enabled);
-                    Media media_Disabled = GetMediaByID(ID_Disabled);
-                    if (media_preview != null)
+                    if (ID.Split('_')[0].Equals(ID))
                     {
-                        SqlDelete = "Delete from media " +
-                            "Where mediaID = @ID_preview";
-                    }
-                    if (media_Enabled != null)
-                    {
-                        SqlDelete = "Delete from media " +
-                            "Where mediaID = @ID_Enabled";
-                    }
-                    if (media_Disabled != null)
-                    {
-                        SqlDelete = "Delete from media " +
-                            "Where mediaID = @ID_Disabled";
-                    }
-                    MySqlCommand command = new MySqlCommand(SqlDelete, connection);
-                    if (media_preview != null)
-                    {
-                        command.Parameters.AddWithValue("@ID_preview", ID_preview);
-                    }
-                    if (media_Enabled != null)
-                    {
-                        command.Parameters.AddWithValue("@ID_Enabled", ID_Enabled);
-                    }
-                    if (media_Disabled != null)
-                    {
-                        command.Parameters.AddWithValue("@ID_Disabled", ID_Disabled);
-                    }
+                        string SqlDeleteMediaCategory = "Delete from mediaCategory " +
+                            "Where mediaID = @ID";
+                        MySqlCommand commandDeleteMD = new MySqlCommand(SqlDeleteMediaCategory, connection);
+                        commandDeleteMD.Parameters.AddWithValue("@ID", ID);
+                        rowDeleteMDEffects = commandDeleteMD.ExecuteNonQuery();
+                        SqlMedia = "Update media " +
+                                "Set status = 'Disabled' " +
+                                "Where mediaID = @ID";
+                    } else
+                    SqlMedia ="Delete from media " +
+                            "Where mediaID = @ID";
+                    MySqlCommand command = new MySqlCommand(SqlMedia, connection);
+                    command.Parameters.AddWithValue("@ID", ID);
                     int rowEffects = command.ExecuteNonQuery();
-                    if (rowEffects > 0)
+                    if (rowDeleteMDEffects > 0 && rowEffects > 0 && ID.Split('_')[0].Equals(ID))
+                    {
+                        result = true;
+                    }
+                    if (rowEffects > 0 && !ID.Split('_')[0].Equals(ID))
                     {
                         result = true;
                     }
@@ -667,6 +665,7 @@ namespace Nextflip.Models.media
                     connection.Open();
                     string Sql = "Select mediaID, status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media " +
+                                "Where status = 'Enabled' or status = 'Disabled' " +
                                 "ORDER BY status DESC " +
                                 "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
@@ -711,7 +710,8 @@ namespace Nextflip.Models.media
             {
                 connection.Open();
                 string Sql = "Select COUNT(mediaID) " +
-                                "From media";
+                                "From media " +
+                                "Where status = 'Enabled' or status = 'Disabled' ";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     using (var reader = command.ExecuteReader())
@@ -738,7 +738,7 @@ namespace Nextflip.Models.media
                     connection.Open();
                     string Sql = "Select mediaID, status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media " +
-                                "Where status = @status " +
+                                "Where status = @status and (status = 'Enabled' or status = 'Disabled') " +
                                 "ORDER BY status DESC " +
                                 "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
@@ -785,7 +785,7 @@ namespace Nextflip.Models.media
                 connection.Open();
                 string Sql = "Select COUNT(mediaID) " +
                                 "From media " +
-                                "Where status = @status";
+                                "Where status = @status and (status = 'Enabled' or status = 'Disabled') ";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     command.Parameters.AddWithValue("@status", Status);
@@ -814,6 +814,7 @@ namespace Nextflip.Models.media
                     string Sql = "Select mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media " +
                                 "Where MATCH (title)  AGAINST (@searchValue in natural language mode) and status = @Status " +
+                                "and (status = 'Enabled' or status = 'Disabled') " +
                                 "ORDER BY status DESC " +
                                 "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
@@ -861,7 +862,8 @@ namespace Nextflip.Models.media
                 connection.Open();
                 string Sql = "Select COUNT(mediaID) " +
                                 "From media " +
-                                "Where MATCH (title)  AGAINST (@searchValue in natural language mode) and status = @Status";
+                                "Where MATCH (title)  AGAINST (@searchValue in natural language mode) and status = @Status " +
+                                "and (status = 'Enabled' or status = 'Disabled') ";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     command.Parameters.AddWithValue("@searchValue", searchValue);
@@ -879,13 +881,14 @@ namespace Nextflip.Models.media
             return count;
         }
 
-        public bool RequestChangeMediaStatus(string mediaID, string newStatus)
+        public bool RequestChangeMediaStatus(string ID, string newStatus)
         {
             var result = false;
             try
             {
+                string mediaID = ID.Split('_')[0];
                 Media media = GetMediaByID(mediaID);
-                media.MediaID = media.MediaID + "_" + newStatus;
+                if (media.Status.Trim().Equals("Pending")) return false;
                 string title_preview = media.Title + "_preview";
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
@@ -894,7 +897,7 @@ namespace Nextflip.Models.media
                         "VALUES (@mediaID_preview, 'Pending', @title, @filmType, @director, @cast, @publishYear, @duration, @bannerURL, @language, @description) ";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        command.Parameters.AddWithValue("@mediaID_preview", media.MediaID);
+                        command.Parameters.AddWithValue("@mediaID_preview", ID);
                         command.Parameters.AddWithValue("@title", title_preview);
                         command.Parameters.AddWithValue("@filmType", media.FilmType);
                         command.Parameters.AddWithValue("@director", media.Director);
@@ -915,9 +918,185 @@ namespace Nextflip.Models.media
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                throw new Exception("fail. This media is requesting to change status");
             }
             return result;
+        }
+        public Media GetMediaByChildID(string childID, string type)
+        {
+            try
+            {
+                Media media = null;
+                string Sql = null;
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    if (type.Trim().Equals("media"))
+                        Sql = "Select M.mediaID, M.status, M.title, M.filmType, M.director, M.cast, M.publishYear, M.duration, M.bannerURL, M.language, M.description " +
+                                "From media M " +
+                                "Where M.mediaID = @childID";
+                    if (type.Trim().Equals("season"))
+                        Sql = "Select M.mediaID, M.status, M.title, M.filmType, M.director, M.cast, M.publishYear, M.duration, M.bannerURL, M.language, M.description " +
+                                "From media M, season S " +
+                                "Where M.mediaID = S.mediaID and S.seasonID = @childID";
+                    else if (type.Trim().Equals("episode"))
+                        Sql = "Select M.mediaID, M.status, M.title, M.filmType, M.director, M.cast, M.publishYear, M.duration, M.bannerURL, M.language, M.description " + "From media M, season S, episode E " +
+                                "Where M.mediaID = S.mediaID and S.seasonID = E.seasonID and E.episodeID = @childID";
+                    else if (type.Trim().Equals("subtitle"))
+                        Sql = "Select M.mediaID, M.status, M.title, M.filmType, M.director, M.cast, M.publishYear, M.duration, M.bannerURL, M.language, M.description " + "From media M, season S, episode E, subtitle ST " +
+                                "Where M.mediaID = S.mediaID and S.seasonID = E.seasonID and E.episodeID = ST.episodeID and ST.subtitleID = @childID";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@childID", childID);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                media = new Media
+                                {
+                                    MediaID = reader.GetString(0),
+                                    Status = reader.GetString(1),
+                                    Title = reader.GetString(2),
+                                    FilmType = reader.IsDBNull(3) ? null : reader.GetString(3),
+                                    Director = reader.IsDBNull(4) ? null : reader.GetString(4),
+                                    Cast = reader.IsDBNull(5) ? null : reader.GetString(5),
+                                    PublishYear = reader.IsDBNull(6) ? null : reader.GetInt32(6),
+                                    Duration = reader.IsDBNull(7) ? null : reader.GetString(7),
+                                    BannerURL = reader.GetString(8),
+                                    Language = reader.GetString(9),
+                                    Description = reader.GetString(10)
+                                };
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+                return media;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public IEnumerable<Media> GetNewestMedias(int limit )
+        {
+            try
+            {
+                string status = "Enabled";
+                var medias = new List<Media>();
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
+                                "From media " +
+                                "Where status = @status " +
+                                "Order By mediaID desc " +
+                                "Limit @limit";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@status", status);
+                        command.Parameters.AddWithValue("@limit", limit);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                medias.Add(new Media
+                                {
+                                    MediaID = reader.GetString(0),
+                                    Status = reader.GetString(1),
+                                    Title = reader.GetString(2),
+                                    FilmType = reader.IsDBNull(3) ? null : reader.GetString(3),
+                                    Director = reader.IsDBNull(4) ? null : reader.GetString(4),
+                                    Cast = reader.IsDBNull(5) ? null : reader.GetString(5),
+                                    PublishYear = reader.IsDBNull(6) ? null : reader.GetInt32(6),
+                                    Duration = reader.IsDBNull(7) ? null : reader.GetString(7),
+                                    BannerURL = reader.GetString(8),
+                                    Language = reader.GetString(9),
+                                    Description = reader.GetString(10)
+                                });
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+                return medias;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+
+        public string AddMedia(string Title, string FilmType, string Director, string Cast, int? PublishYear, string Duration, string BannerURL, string Language, string Description)
+        {
+            string result = null;
+            try
+            {
+                MySqlConnection connection = new MySqlConnection(DbUtil.ConnectionString);
+                MySqlCommand command = new MySqlCommand();
+                command.Connection = connection;
+                command.CommandType = CommandType.StoredProcedure;
+                connection.Open();
+                AddMediaExecute();
+                void AddMediaExecute()
+                {
+                    command.CommandText = "createMedia"; 
+                    command.Parameters.AddWithValue("@title_Input", Title);
+                    command.Parameters.AddWithValue("@filmType_Input", FilmType);
+                    command.Parameters.AddWithValue("@director_Input", Director);
+                    command.Parameters.AddWithValue("@cast_Input", Cast);
+                    command.Parameters.AddWithValue("@publishYear_Input", PublishYear);
+                    command.Parameters.AddWithValue("@duration_Input", Duration);
+                    command.Parameters.AddWithValue("@bannerURL_Input", BannerURL);
+                    command.Parameters.AddWithValue("@language_Input", Language);
+                    command.Parameters.AddWithValue("@description_Input", Description);
+                    command.Parameters.Add("@mediaID_Output", MySqlDbType.String).Direction
+                        = ParameterDirection.Output;
+                    command.ExecuteNonQuery();
+                    result = (string)command.Parameters["@mediaID_Output"].Value;
+                }
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Fail. " + ex.Message);
+            }
+            return result;
+        }
+
+        public string UpdateMedia(Media media)
+        {
+            string mediaID = null;
+            try
+            {
+                var connection = new MySqlConnection(DbUtil.ConnectionString);
+                var command = new MySqlCommand();
+                command.Connection = connection;
+                command.CommandType = CommandType.StoredProcedure;
+                connection.Open();
+                command.CommandText = "updateMedia";
+                command.Parameters.AddWithValue("@mediaID_InOutput", media.MediaID).Direction
+                    = ParameterDirection.InputOutput; 
+                command.Parameters.AddWithValue("@title_Input", media.Title);
+                command.Parameters.AddWithValue("@filmType_Input", media.FilmType);
+                command.Parameters.AddWithValue("@director_Input", media.Director);
+                command.Parameters.AddWithValue("@cast_Input", media.Cast);
+                command.Parameters.AddWithValue("@publishYear_Input", media.PublishYear);
+                command.Parameters.AddWithValue("@duration_Input", media.Duration);
+                command.Parameters.AddWithValue("@bannerURL_Input", media.BannerURL);
+                command.Parameters.AddWithValue("@language_Input", media.Language);
+                command.Parameters.AddWithValue("@description_Input", media.Description);
+                command.ExecuteNonQuery();
+                mediaID = (string)command.Parameters["@mediaID_InOutput"].Value;
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return mediaID;
         }
     }
 }

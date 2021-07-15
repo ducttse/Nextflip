@@ -1,5 +1,5 @@
 body {
-  background-color: #000;
+  background-color: #171717;
   color: white;
 }
 .title {
@@ -12,4 +12,18 @@ body {
 .imageHolder > img {
   max-width: 100%;
   height: 100%;
+}
+.imageHolder div{
+  overflow: hidden;
+}
+
+.imageHolder img{
+  z-index: 1;
+    display: block;
+    transition: transform .4s;
+}
+
+.imageHolder:hover img{
+  transform: scale(1.2);
+  transform-origin: 50% 50%;
 }

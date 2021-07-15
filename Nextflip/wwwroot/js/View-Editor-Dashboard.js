@@ -64,7 +64,11 @@ function renderMedia(media, index) {
           <td>${index + 1}</td>
           <td>${media.title}</td>
           <td class="text-center">${media.language}</td>
-          <td class="text-center">${media.status}</td>
+          <td class="text-center">
+            <div>
+                <input class="status_btn" type="checkbox" mediaID="${media.mediaID}" value="${media.status}" ${media.status === "Enabled" ? "checked" : ""}  />
+            </div>
+          </td>
           <td  class="text-center">
               <a class="text-decoration-none" 
               onclick="return showEditForm();"
@@ -96,9 +100,20 @@ function appendMediaToWrapper() {
     }
     dataWapper.insertAdjacentHTML("afterbegin", ticketArray);
     appendCurrentArray();
+    addSetStatusEvent();
 }
 
 setAppendToDataWrapper(appendMediaToWrapper);
+
+function setRowsPerPage(obj) {
+    requestParam.RowsOnPage = obj.value;
+    setRequestPage(requestParam.RequestPage)
+        .then(res => res.json())
+        .then(json => {
+            Data = json;
+            appendMediaToWrapper();
+        })
+}
 
 function setSelectedCategory(obj) {
     requestParam.CategoryName = obj.value;

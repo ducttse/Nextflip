@@ -1,5 +1,5 @@
 ﻿let requestResetData = {
-    UserID: "00000000000000000000",
+    UserID: "",
     Password: "",
     ConfirmPassword: ""
 }
@@ -52,7 +52,7 @@ function checkRePassword() {
 }
 
 function requestResetPassword() {
-    console.log(requestResetData);
+    requestResetData.UserID = getProfile().userID;
     let reqHeader = new Headers();
     reqHeader.append("Content-Type", "text/json");
     reqHeader.append("Accept", "application/json, text/plain, */*");
@@ -65,7 +65,10 @@ function requestResetPassword() {
         .then(res => res.json())
         .then(json => {
             if (json.message == true) {
-                window.location.replace("/Profie/Index")
+                if (localStorage.getItem("URL").split("/")[ 1 ] == "SubcribedUserDashBoard") {
+                    window.location.replace("/Profile/Index");
+                }
+                else window.location.replace("/Profile/AdminProfile")
             }
             else {
                 document.getElementById("change_password_modal").querySelector("alert").classList.remove("d-none");

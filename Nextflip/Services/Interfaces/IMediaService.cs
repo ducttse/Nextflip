@@ -1,4 +1,5 @@
-﻿using Nextflip.Models.media;
+﻿using Nextflip.APIControllers;
+using Nextflip.Models.media;
 using System.Collections.Generic;
 
 namespace Nextflip.Services.Interfaces
@@ -21,7 +22,7 @@ namespace Nextflip.Services.Interfaces
         int NumberOfMediasFilterCategory_Status(string CategoryName, string Status);
 
         IEnumerable<Media> GetFavoriteMediasByUserID(string userID);
-        IEnumerable<Media> GetMediasByCategoryID(int categoryID);
+        IEnumerable<Media> GetMediasByCategoryID(int categoryID, int limit);
 
         bool RequestDisableMedia(string mediaID);
     }

@@ -57,14 +57,21 @@ namespace Nextflip.Services.Implementations
         public Media GetMediaByID(string mediaID) => _mediaDAO.GetMediaByID(mediaID);
 
         public IEnumerable<Media> GetMediasByTitle(string searchValue) => _mediaDAO.GetMediasByTitle(searchValue);
-        public IEnumerable<Media> GetFavoriteMediasByUserID(string userID)
+        public IEnumerable<Media> GetFavoriteMediasByUserID(string userID, int limit , int page)
         {
             var favoriteMedias = new List<Media>();
             FavoriteList favoriteList = _favoriteListDAO.GetFavoriteList(userID);
             IList<string> favoriteMediaIDs = _mediaFavoriteDAO.GetMediaIDs(favoriteList.FavoriteListID);
-            foreach (string mediaID in favoriteMediaIDs)
+            int end = limit * (page + 1);
+            end = favoriteMediaIDs.Count > end ? end : favoriteMediaIDs.Count;
+            int start = limit * (page -1);
+            for (int i= start; i < end ; i++)
             {
-                favoriteMedias.Add(_mediaDAO.GetMediaByID(mediaID));
+                Media media = _mediaDAO.GetMediaByID(favoriteMediaIDs[i]);
+                if(media.Status.Equals("Enabled"))
+                {
+                    favoriteMedias.Add(media);
+                }
             }
             return favoriteMedias;
         }
@@ -72,10 +79,9 @@ namespace Nextflip.Services.Implementations
         public IEnumerable<Media> GetMediasByCategoryID(int categoryID, int limit )
         {
             var medias = new List<Media>();
-            IList<string> mediaIDs = _mediaCategoryDAO.GetMediaIDs(categoryID);
-            for(int i = 0; i< limit; i++)
-            {
-                string mediaID = mediaIDs[i];
+            IList<string> mediaIDs = _mediaCategoryDAO.GetMediaIDs(categoryID,limit);
+            foreach (var mediaID in mediaIDs)
+            { 
                 Media media = _mediaDAO.GetMediaByID(mediaID);
                 medias.Add(media);
             }
@@ -92,7 +98,66 @@ namespace Nextflip.Services.Implementations
         //subtitle
         public Subtitle GetSubtitleByID(string subtitleID) => _subtitleDAO.GetSubtitleByID(subtitleID);
         public IEnumerable<Subtitle> GetSubtitlesByEpisodeID(string episodeID) => _subtitleDAO.GetSubtitlesByEpisodeID(episodeID);
-        
+        // favorite list
+        public void AddMediaToFavoriteList(string userID, string mediaID)
+        {
+            try
+            {
+                FavoriteList favoriteList = _favoriteListDAO.GetFavoriteList(userID);
+                if (favoriteList == null) _favoriteListDAO.AddNewFavoriteList(userID);
+                favoriteList = _favoriteListDAO.GetFavoriteList(userID);
+                MediaFavorite mediaFavorite = new MediaFavorite { MediaID = mediaID, FavoriteListID = favoriteList.FavoriteListID };
+                _mediaFavoriteDAO.AddMediaToFavorite(mediaFavorite);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public void RemoveMediaFromFavoriteList(string userID, string mediaID) 
+        {
+            try
+            {
+                FavoriteList favoriteList = _favoriteListDAO.GetFavoriteList(userID);
+                if (favoriteList != null)
+                {
+                    MediaFavorite mediaFavorite = new MediaFavorite { MediaID = mediaID, FavoriteListID = favoriteList.FavoriteListID };
+                    _mediaFavoriteDAO.RemoveMediaFromFavorite(mediaFavorite);
+                }
+                else
+                {
+                    throw new Exception("Favorite List does not exist");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public bool IsFavoriteMedia(string userID, string mediaID)
+        {
+            try
+            {
+                FavoriteList favoriteList = _favoriteListDAO.GetFavoriteList(userID);
+                if (favoriteList != null)
+                {
+                    MediaFavorite mediaFavorite = new MediaFavorite
+                    {
+                        FavoriteListID = favoriteList.FavoriteListID,
+                        MediaID = mediaID
+                    };
+                    bool isFavoriteMedia = _mediaFavoriteDAO.IsMediaFavoriteExisted(mediaFavorite);
+                    return isFavoriteMedia;
+                }
+                return false;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public IEnumerable<Media> GetNewestMedias(int limit) => _mediaDAO.GetNewestMedias(limit);
     }
 }
 

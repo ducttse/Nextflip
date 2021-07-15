@@ -85,9 +85,9 @@ namespace Nextflip.APIControllers
         }
         public partial class ExtensionForm
         {
-            public string UserID { get; set; }
+            public string UserId { get; set; }
             public int ExtensionDays { get; set; }
-            public double Money { get; set; }
+            public int PaymentPlanId { get; set; }
 
             public DateTime IssueTime { get; set; }
         }

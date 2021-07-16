@@ -4,6 +4,14 @@ let SeasonInfo = {
     Title: "",
     ThumbnailURL: "",
     Number: "",
+}
+
+let Season = {
+    SeasonInfo: {
+        Title: "",
+        ThumbnailURL: "",
+        Number: "",
+    },
     Episodes: []
 }
 
@@ -85,14 +93,16 @@ async function setMediaInfo() {
 
 async function setSeason() {
     let Season = {
-        Title: "",
-        ThumbnailURL: "",
-        Number: "",
+        SeasonInfo: {
+            Title: "",
+            ThumbnailURL: "",
+            Number: "",
+        },
         Episodes: []
     }
-    Season.Title = document.getElementById("titleSeason").value;
-    Season.ThumbnailURL = await requestUploadBanner();
-    Season.Number = document.getElementById("numberSeason").value;
+    Season.SeasonInfo.Title = document.getElementById("titleSeason").value;
+    Season.SeasonInfo.ThumbnailURL = await requestUploadBanner();
+    Season.SeasonInfo.Number = document.getElementById("numberSeason").value;
     Media.Seasons.push(Season);
     document.getElementById("season_container").insertAdjacentHTML("beforeend", renderSeason(Season, Media.Seasons.length - 1));
     document.querySelector("#modalAddSeasonForm .btn-close").click();
@@ -129,8 +139,8 @@ function setModalAddEpisode(number) {
 
 function renderSeason(item, num) {
     return `
-        <div  class="d-flex" id="season_${item.Number}">
-            <p class="me-4 mb-0 align-self-center">${item.Title}</p>
+        <div  class="d-flex" id="season_${item.SeasonInfo.Number}">
+            <p class="me-4 mb-0 align-self-center">${item.SeasonInfo.Title}</p>
             <div class="btn btn-primary" onclick="setModalAddEpisode('${num}')" data-bs-toggle="modal" data-bs-target="#modalAddEpisodeForm">Add new episode</div>
         </div>
     `

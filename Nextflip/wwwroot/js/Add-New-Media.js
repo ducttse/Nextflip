@@ -180,7 +180,8 @@ function requestMediaType() {
     })
 }
 
-function requestAddNewMedia() {
+async function requestAddNewMedia() {
+    await setMediaInfo();
     if (validateInputAddMedia() == 0) {
         return;
     }
@@ -200,14 +201,15 @@ function requestAddNewMedia() {
 }
 
 function validateCheckBoxValue() {
-    if (document.querySelectorAll(`#modalAddForm .category[type="checkbox"]:checked`).length == 0) {
+    /*if (document.querySelectorAll(`#modalAddForm .category[type="checkbox"]:checked`).length == 0) {
         document.getElementById("empty_checkbox").classList.remove("d-none");
         return false;
     }
     else {
         document.getElementById("empty_checkbox").classList.add("d-none");
         return true;
-    }
+    }*/
+    return true;
 }
 
 function validateNumberInput(obj) {

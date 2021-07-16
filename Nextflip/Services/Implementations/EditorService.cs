@@ -107,14 +107,18 @@ namespace Nextflip.Services.Implementations
             newMediaID = _mediaDAO.AddMedia(mediaForm.MediaInfo);
             if (newMediaID != null)
             {
+                mediaForm.MediaInfo.MediaID = newMediaID;
                 foreach (ViewEditorDashboard.PrototypeSeasonForm seasonForm in mediaForm.Seasons)
                 {
+                    seasonForm.SeasonInfo.MediaID = newMediaID;
                     string newSeasonID = _seasonDAO.AddSeason(seasonForm.SeasonInfo);
                     if (newSeasonID != null)
                     {
                         foreach (Episode episode in seasonForm.Episodes)
                         {
+                            episode.SeasonID = newSeasonID;
                             string newEpisodeID = _episodeDAO.AddEpisode(episode);
+                            episode.EpisodeID = newEpisodeID;
                         }
                     }
                 }

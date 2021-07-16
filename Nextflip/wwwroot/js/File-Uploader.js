@@ -90,12 +90,13 @@ async function requestUploadSeasonBanner() {
     return responseURL;
 }
 
-async function requestUploadEpisodeThumbnail(seasonID, episodeNumber) {
+async function requestUploadEpisodeThumbnail(seasonNumber, episodeNumber) {
     if (file == null) {
         return "";
     }
     let responseURL;
-    let url = `https://storage.googleapis.com/upload/storage/v1/b/next-flip/o?uploadType=media&name=Image/Thumbnail Img/${seasonID}/${episodeNumber}`;
+    let stamp = Date.now();
+    let url = `https://storage.googleapis.com/upload/storage/v1/b/next-flip/o?uploadType=media&name=Image/Thumbnail Img/${stamp}/${seasonNumber}/${episodeNumber}`;
     await fetch(url, {
         body: file,
         headers: {
@@ -111,12 +112,13 @@ async function requestUploadEpisodeThumbnail(seasonID, episodeNumber) {
     return responseURL;
 }
 
-async function requestUploadVideo(seasonID, episodeNumber) {
+async function requestUploadVideo(seasonNumber, episodeNumber) {
     if (file == null) {
         return "";
     }
+    let stamp = Date.now();
     let responseURL;
-    let url = `https://storage.googleapis.com/upload/storage/v1/b/next-flip/o?uploadType=media&name=Media/${seasonID}/${episodeNumber}`;
+    let url = `https://storage.googleapis.com/upload/storage/v1/b/next-flip/o?uploadType=media&name=Media/${stamp}/${seasonNumber}/${episodeNumber}`;
     await fetch(url, {
         body: file,
         headers: {

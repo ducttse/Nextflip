@@ -1,5 +1,13 @@
-﻿let requestAddNewMediaObj = {
-    UserEmail: "",
+﻿
+
+let SeasonInfo = {
+    Title: "",
+    ThumbnailURL: "",
+    Number: "",
+    Episodes: []
+}
+
+let MediaInfo = {
     Title: "",
     FilmType: "",
     Director: "",
@@ -9,49 +17,13 @@
     BannerURL: "",
     Language: "",
     Description: "",
-    CategoryIDArray: 1
+    CategoryIDArray: []
 }
 
-function renderCategoryCheckBox(category) {
-    return `
-        <div class="form-check form-check-inline">
-            <input class="form-check-input category" type="checkbox" id="inlineCheckbox1" value="${category.categoryID}">
-            <label class="form-check-label text-capitalize" for="inlineCheckbox1">${category.name}</label>
-        </div>
-    `;
-}
 
-function requestCategories() {
-    fetch(`/api/ViewSubscribedUserDashboard/GetCategories`).then(res => res.json()).then(json => {
-        let checkboxs = json.map(category => {
-            return renderCategoryCheckBox(category);
-        }).join("");
-        document.getElementById("CB_holder").insertAdjacentHTML("afterbegin", checkboxs);
-        let options = json.map(category => {
-            console.log(category);
-            return `<option value="${category.categoryID}">${category.name}</option>`
-        }).join("");
-        document.getElementById("category_filter").insertAdjacentHTML("beforeend", options);
-    })
-}
-
-function requestMediaType() {
-    fetch(`/api/FilmTypeManagement/GetAllFilmTypes`).then(res => res.json()).then(json => {
-        let selectEl = json.map(option => {
-            return `<option value="${option.type}">${option.type}</option>`
-        }).join("");
-        document.getElementById("filmType").insertAdjacentHTML("afterbegin", selectEl);
-    })
-}
-
-function validateCheckBoxValue() {
-    console.log("run");
-    if (document.querySelectorAll(`#modalAddForm .category[type="checkbox"]:checked`).length == 0) {
-        document.getElementById("empty_checkbox").classList.remove("d-none");
-    }
-    else {
-        document.getElementById("empty_checkbox").classList.add("d-none");
-    }
+let Media = {
+    MediaInfo: MediaInfo,
+    Seasons: []
 }
 
 function getChosenCategory() {
@@ -83,20 +55,6 @@ const onInput = debounce((obj) => {
     }
 });
 
-async function setInputValue() {
-    requestAddNewMediaObj.UserEmail = getProfile().userEmail;
-    requestAddNewMediaObj.FilmType = document.getElementById("filmType").value;
-    requestAddNewMediaObj.CategoryIDArray = getChosenCategory();
-    requestAddNewMediaObj.Title = document.getElementById("title").value;
-    requestAddNewMediaObj.Cast = document.getElementById("cast").value;
-    requestAddNewMediaObj.PublishYear = document.getElementById("publicYear").value;
-    requestAddNewMediaObj.Duration = document.getElementById("duration").value;
-    requestAddNewMediaObj.Language = document.getElementById("language").value;
-    requestAddNewMediaObj.Description = document.getElementById("description").value;
-    requestAddNewMediaObj.Director = document.getElementById("director").value;
-    requestAddNewMediaObj.BannerURL = await requestUploadBanner();
-}
-
 function checkEmpty(obj) {
     let parent = obj.parentNode;
     let feedback = parent.querySelector(".invalid-feedback");
@@ -112,74 +70,144 @@ function checkEmpty(obj) {
     }
 }
 
-function validateInputAddMedia() {
-    checkEmpty(document.getElementById("title"));
-    checkEmpty(document.getElementById("description"));
-    getFile(document.getElementById("banner"));
+async function setMediaInfo() {
+    MediaInfo.Title = document.getElementById("title").value;
+    MediaInfo.FilmType = document.getElementById("filmType").value;
+    MediaInfo.Director = document.getElementById("director").value;
+    MediaInfo.Cast = document.getElementById("cast").value;
+    MediaInfo.PublishYear = document.getElementById("publicYear").value;
+    MediaInfo.Duration = document.getElementById("duration").value;
+    MediaInfo.BannerURL = await requestUploadBanner();
+    MediaInfo.Language = document.getElementById("language").value;
+    MediaInfo.Description = document.getElementById("description").value;
+    MediaInfo.CategoryIDArray = getChosenCategory();
 }
 
+async function setSeason() {
+    let Season = {
+        Title: "",
+        ThumbnailURL: "",
+        Number: "",
+        Episodes: []
+    }
+    Season.Title = document.getElementById("titleSeason").value;
+    Season.ThumbnailURL = await requestUploadBanner();
+    Season.Number = document.getElementById("numberSeason").value;
+    Media.Seasons.push(Season);
+    document.getElementById("season_container").insertAdjacentHTML("beforeend", renderSeason(Season, Media.Seasons.length - 1));
+    document.querySelector("#modalAddSeasonForm .btn-close").click();
+}
 
-async function requestAddMedia() {
-    await setInputValue();
+async function setEpisode(obj) {
+    let index = parseInt(obj.getAttribute("index"));
+    let Episode = {
+        Title: "",
+        ThumbnailURL: "",
+        EpisodeURL: "",
+        Number: "",
+    }
+    Episode.Title = document.getElementById("titleEpisode").value;
+    Episode.Number = document.getElementById("numberEpisode").value;
+    Episode.ThumbnailURL = await requestUploadEpisodeThumbnail(Media.Seasons[ index ].Title, Episode.Title);
+    Episode.EpisodeURL = await requestUploadVideo(Media.Seasons[ index ].Title, Episode.Title);
+    Media.Seasons[ index ].Episodes.push(Episode);
+    document.getElementById("season_container").insertAdjacentHTML("beforeend", renderEpisode(Episode));
+    document.querySelector("#modalAddEpisodeForm .btn-close").click();
+}
+
+function renderEpisode(episode) {
+    return `
+    <div class="ps-3 mt-2" id="episode_${episode.Number}">
+        <p class="mb-1">Episode: ${episode.Title}</p>
+    </div>
+    `
+}
+
+function setModalAddEpisode(number) {
+    document.getElementById("episode_submit_btn").setAttribute("index", number);
+}
+
+function renderSeason(item, num) {
+    return `
+        <div  class="d-flex" id="season_${item.Number}">
+            <p class="me-4 mb-0 align-self-center">${item.Title}</p>
+            <div class="btn btn-primary" onclick="setModalAddEpisode('${num}')" data-bs-toggle="modal" data-bs-target="#modalAddEpisodeForm">Add new episode</div>
+        </div>
+    `
+}
+
+function renderCategoryCheckBox(category) {
+    return `
+        <div class="form-check form-check-inline">
+            <input class="form-check-input category" type="checkbox" id="inlineCheckbox1" value="${category.categoryID}">
+            <label class="form-check-label text-capitalize" for="inlineCheckbox1">${category.name}</label>
+        </div>
+    `;
+}
+
+function requestCategories() {
+    fetch(`/api/ViewSubscribedUserDashboard/GetCategories`).then(res => res.json()).then(json => {
+        let checkboxs = json.map(category => {
+            return renderCategoryCheckBox(category);
+        }).join("");
+        document.getElementById("CB_holder").insertAdjacentHTML("afterbegin", checkboxs);
+    })
+}
+
+function requestMediaType() {
+    fetch(`/api/FilmTypeManagement/GetAllFilmTypes`).then(res => res.json()).then(json => {
+        let selectEl = json.map(option => {
+            return `<option value="${option.type}">${option.type}</option>`
+        }).join("");
+        document.getElementById("filmType").insertAdjacentHTML("afterbegin", selectEl);
+    })
+}
+
+function requestAddNewMedia() {
     let reqHeader = new Headers();
     reqHeader.append("Content-Type", "text/json");
     reqHeader.append("Accept", "application/json, text/plain, */*");
     let initObject = {
         method: "POST",
         headers: reqHeader,
-        body: JSON.stringify(requestAddNewMediaObj)
+        body: JSON.stringify(Media)
     };
-    fetch("/api/ViewEditorDashboard/AddMedia", initObject)
+    fetch("/api/ViewEditorDashboard/AddNewMedia", initObject)
         .then(res => res.json())
         .then(json => {
-            if (json.message == "success") {
-                document.querySelector("#modalAddForm .btn-close").click()
-                changeContent("Add success", true);
-                messageModal.show();
-            }
-            else {
-                validateCheckBoxValue();
-                validateInputAddMedia();
-            }
+            console.log(json);
         })
+}
+
+function validateCheckBoxValue() {
+    console.log("run");
+    if (document.querySelectorAll(`#modalAddForm .category[type="checkbox"]:checked`).length == 0) {
+        document.getElementById("empty_checkbox").classList.remove("d-none");
+    }
+    else {
+        document.getElementById("empty_checkbox").classList.add("d-none");
+    }
+}
+
+function validateInputAddMedia() {
+    checkEmpty(document.getElementById("title"));
+    checkEmpty(document.getElementById("description"));
+    getFile(document.getElementById("banner"));
 }
 
 requestCategories();
 requestMediaType();
 
-function resetRequestAddNewMediaObj() {
-    requestAddNewMediaObj.CategoryIDArray = "";
-    requestAddNewMediaObj.Title = "";
-    requestAddNewMediaObj.Cast = ""
-    requestAddNewMediaObj.PublishYear = ""
-    requestAddNewMediaObj.Duration = ""
-    requestAddNewMediaObj.Language = ""
-    requestAddNewMediaObj.Description = ""
-    requestAddNewMediaObj.BannerURL = ""
-    requestAddNewMediaObj.Director = ""
-    let title = document.getElementById("title");
-    let cast = document.getElementById("cast");
-    let publicYear = document.getElementById("publicYear");
-    let duration = document.getElementById("duration");
-    let language = document.getElementById("language");
-    let description = document.getElementById("description");
-    let Banner = document.getElementById("banner");
-    let director = document.getElementById("director");
-    title.value = "";
-    cast.value = "";
-    publicYear.value = "";
-    duration.value = "";
-    language.value = "";
-    description.value = "";
-    Banner.value = "";
-    director.value = "";
-    document.getElementById("empty_checkbox").classList.remove("d-none");
-    title.parentNode.classList.remove("was-validated");
-    description.parentNode.classList.remove("was-validated");
-    Banner.parentNode.classList.remove("was-validated");
+document.getElementById("modalAddSeasonForm").addEventListener("hidden.bs.modal", () => {
+    document.getElementById("titleSeason").value = "";
+    document.getElementById("bannerSeason").value = "";
+    document.getElementById("numberSeason").value = "";
 
-}
+})
 
-document.getElementById("modalAddForm").addEventListener("hidden.bs.modal", () => {
-    resetRequestAddNewMediaObj();
+document.getElementById("modalAddEpisodeForm").addEventListener("hidden.bs.modal", () => {
+    document.getElementById("titleEpisode").value = "";
+    document.getElementById("bannerEpisode").value = "";
+    document.getElementById("videoEpisode").value = "";
+    document.getElementById("numberEpisode").value = "";
 })

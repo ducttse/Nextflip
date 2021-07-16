@@ -69,8 +69,6 @@ function renderMedia(media, index) {
             </div>
           </td>
           <td  class="text-center">
-            <div class="btn btn-secondary" onclick="showAddSeasonForm('${media.mediaID}');">Add new season</div>
-            <div class="btn btn-secondary" onclick="getSeasons('${media.mediaID}');">Add new episode</div>
             <div class="btn btn-secondary" onclick="return showEditForm();">Edit</div>
           </td>
       </tr>`;

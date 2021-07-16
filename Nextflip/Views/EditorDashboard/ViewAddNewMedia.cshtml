@@ -4,7 +4,7 @@
 }
 @section Styles {
     <link href="@Url.Content("~/css/User-Manager.css")" rel="stylesheet" type="text/css" />
-    <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css"
+    <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/css/Form.css")" rel="stylesheet" type="text/css" />
 }
 <div class="col-10">
@@ -62,14 +62,12 @@
                 <label for="language" class="col-sm-2 text-end col-form-label">Language</label>
                 <div class="col-sm-2">
                     <input type="text" class="form-control" id="language">
-                    <div class="invalid-feedback">
-                    </div>
                 </div>
             </div>
             <div class="mb-3 row">
                 <label for="description" class="required col-sm-2 text-end col-form-label">Description</label>
                 <div class="col-sm-10">
-                    <textarea type="text" rows="6" cols="40" class="form-control" id="description" onkeyup="onInput(this)"></textarea>
+                    <textarea style="resize: none;" type="text" rows="6" cols="40" class="form-control" id="description" onkeyup="onInput(this)"></textarea>
                     <div class="invalid-feedback">
                     </div>
                 </div>
@@ -83,17 +81,20 @@
                 </div>
             </div>
             <div class="mb-3 row">
-                <p class="col-sm-2 text-end col-form-label">Season:</p>
+                <p class="col-sm-2 text-end col-form-label"></p>
                 <div class="col-sm-8" id="season_container">
                 </div>
             </div>
             <div class="offset-1">
-                <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#modalAddSeasonForm">Add new season</button>
+                <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#modalAddSeasonForm">Add new season</button>
             </div>
             <div class="col-12 d-flex justify-content-end">
                 <button class="btn btn-primary" type="button" onclick="requestAddNewMedia()">Submit</button>
             </div>
         </div>
+    </div>
+    <div class="spinner-border text-primary position-fixed top-50 start-50 d-none" id="spinner" style="z-index:10000;pointer-events: none; cursor: default;" role="status">
+        <span class="visually-hidden">Uploading...</span>
     </div>
 </div>
 <!-- Add season  modal -->
@@ -181,27 +182,23 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-bg-danger" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="episode_submit_btn"  index="" onclick="setEpisode(this)">Submit</button>
+                <button type="button" class="btn btn-primary" id="episode_submit_btn" index="" onclick="setEpisode(this)">Submit</button>
             </div>
         </div>
     </div>
 </div>
-    @section script {
-        <script src="~/js/Slide-Bar.js"></script>
-        <script src="~/js/File-Uploader.js"></script>
-        <script src="~/js/Add-New-Media.js"></script>
-        <script>
-            let button1 = `<a href="/EditorDashboard/Index" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
-                                Media manager
-                              </a>`;
-            let button2 = `<a href="/EditorDashboard/ViewAddNewMedia" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
-                                Add new media
-                              </a>`;
-            let button3 = `<a href="/EditorDashboard/ViewEditRequest"  onclick="return showForm();" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
-                                View edit request
-                            </a>`;
-            appendButton(button3);
-            appendButton(button2);
-            appendButton(button1);
-        </script>
-    }
+@section script {
+    <script src="~/js/Slide-Bar.js"></script>
+    <script src="~/js/File-Uploader.js"></script>
+    <script src="~/js/Add-New-Media.js"></script>
+    <script>
+        let button1 = `<a href="/EditorDashboard/Index" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
+                                    Media manager
+                                  </a>`;
+        let button2 = `<a href="/EditorDashboard/ViewEditRequest"  onclick="return showForm();" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
+                                    View edit request
+                                </a>`;
+        appendButton(button2);
+        appendButton(button1);
+    </script>
+}

@@ -38,12 +38,14 @@ function getFile(obj) {
     if (obj.files[ 0 ] == null) {
         feedback.textContent = "This field can not empty";
         obj.setCustomValidity("empty");
+        return false;
     }
     else {
         parent.classList.remove("was-validated");
         feedback.textContent = "";
         obj.setCustomValidity("");
         file = obj.files[ 0 ];
+        return true;
     }
 }
 async function requestUploadBanner() {

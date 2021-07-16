@@ -118,8 +118,8 @@ async function setEpisode(obj) {
     }
     Episode.Title = document.getElementById("titleEpisode").value;
     Episode.Number = document.getElementById("numberEpisode").value;
-    Episode.ThumbnailURL = await requestUploadEpisodeThumbnail(Media.Seasons[ index ].SeasonInfo.Title, Episode.Title);
-    Episode.EpisodeURL = await requestUploadVideo(Media.Seasons[ index ].SeasonInfo.Title, Episode.Title);
+    Episode.ThumbnailURL = await requestUploadEpisodeThumbnail(Media.Seasons[ index ].SeasonInfo.Number, Episode.Number);
+    Episode.EpisodeURL = await requestUploadVideo(Media.Seasons[ index ].SeasonInfo.Number, Episode.Number);
     Media.Seasons[ index ].Episodes.push(Episode);
     document.getElementById("season_container").insertAdjacentHTML("beforeend", renderEpisode(Episode));
     document.querySelector("#modalAddEpisodeForm .btn-close").click();

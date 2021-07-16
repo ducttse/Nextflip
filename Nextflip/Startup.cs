@@ -113,13 +113,14 @@ namespace Nextflip
                 options.Cookie.IsEssential = true;
             });
 
+            //cooki author
+            services.AddScoped<CookieUtil>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => {
                 options.AccessDeniedPath = "/Common/AccessDenied";
                 options.LoginPath = "/Login/Index";
                 options.EventsType = typeof(CookieUtil);
                 });
-            services.AddScoped<CookieUtil>();
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("user manager", policyBuilder =>

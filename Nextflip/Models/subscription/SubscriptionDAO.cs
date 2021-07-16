@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
@@ -132,6 +133,41 @@ namespace Nextflip.Models.subscription
             {
                 throw new Exception(exception.Message);
             }
+        }
+
+        public DateTime GetExpiredDate(string userID)
+        {
+            DateTime result = DateTime.MinValue;
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    Debug.WriteLine(userID);
+                    string Sql = @"SELECT max(endDate) FROM subscription " +
+                                 "WHERE userID = @userID AND status = 'approved'";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userID", userID);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                            //    result = reader.GetDateTime("endDate");
+                                if (!reader.IsDBNull(0))
+                                {
+                                    result = reader.GetDateTime(0);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                throw new Exception(exception.Message);
+            }
+            return result;
         }
     }
 }

@@ -57,9 +57,9 @@ namespace Nextflip.APIControllers
                     error.DateOfBirthError = "Date of birth is Invalid";
                 }
                 if (!isValid) return new JsonResult(error);
-                string result = accountService.RegisterAccount(form.UserEmail.ToLower(), form.Password, form.Fullname.Trim(), date, defaultPictureURL);
-                if (result == null) return new JsonResult(new { Message = "An Error Occurred ! Please try again" });
-                return new JsonResult(new { Message = result });
+                bool result = accountService.RegisterAccount(form.UserEmail.ToLower(), form.Password, form.Fullname.Trim(), date, defaultPictureURL);
+                if (!result) return new JsonResult(new { Message = "An Error Occurred ! Please try again" });
+                return new JsonResult(new { Message = "Success" });
             }
             catch(Exception ex)
             {

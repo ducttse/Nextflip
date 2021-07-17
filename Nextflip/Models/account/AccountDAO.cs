@@ -838,11 +838,11 @@ namespace Nextflip.Models.account
                 throw new Exception(ex.Message);
             }
         }
-        public string RegisterAnAccount(string userEmail, string password, string fullname, DateTime dateOfBirth, string pictureURL)
+        public bool RegisterAnAccount(string userEmail, string password, string fullname, DateTime dateOfBirth, string pictureURL)
         {
             string roleName = "subscribed user";
             string status = "Active";
-            if (pictureURL == null) pictureURL = "";
+            if (pictureURL == null) pictureURL = "https://storage.googleapis.com/next-flip/User%20Profile%20Image/Default";
             try
             {
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
@@ -863,7 +863,8 @@ namespace Nextflip.Models.account
                         command.Parameters.AddWithValue("@status", status);
                         command.Parameters.AddWithValue("@pictureURL", pictureURL);
                         int result = command.ExecuteNonQuery();
-                        if (result > 0) return "Success";
+                        connection.Close();
+                        if (result == 1) return true;
                     }
                 }
             }
@@ -871,7 +872,7 @@ namespace Nextflip.Models.account
             {
                 throw new Exception(ex.Message);
             }
-            return null;
+            return false;
         }
         public bool ChangeProfile(string userID, string fullname, DateTime dateOfBirth, string pictureURL)
         {

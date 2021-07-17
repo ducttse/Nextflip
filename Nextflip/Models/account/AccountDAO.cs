@@ -780,7 +780,7 @@ namespace Nextflip.Models.account
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select fullname, userEmail, dateOfBirth, roleName, pictureURL, wallet " +
+                    string Sql = "Select fullname, userEmail, dateOfBirth, roleName, pictureURL " +
                                     "From account " +
                                     "Where userID = @userID";
                     using (var command = new MySqlCommand(Sql, connection))
@@ -798,7 +798,6 @@ namespace Nextflip.Models.account
                                     dateOfBirth = reader.GetDateTime("dateOfBirth"),
                                     roleName = reader.GetString("roleName"),
                                     pictureURL =  reader.IsDBNull(reader.GetOrdinal("pictureURL")) ? null : reader.GetString("pictureURL"),
-                                    wallet = reader.GetDouble("wallet")
                                 };
                             }
                         }
@@ -842,7 +841,7 @@ namespace Nextflip.Models.account
         {
             string roleName = "subscribed user";
             string status = "Active";
-            if (pictureURL == null) pictureURL = "https://storage.googleapis.com/next-flip/User%20Profile%20Image/Default";
+            if (pictureURL == null) pictureURL = "";
             try
             {
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
@@ -863,8 +862,7 @@ namespace Nextflip.Models.account
                         command.Parameters.AddWithValue("@status", status);
                         command.Parameters.AddWithValue("@pictureURL", pictureURL);
                         int result = command.ExecuteNonQuery();
-                        connection.Close();
-                        if (result == 1) return true;
+                        if (result > 0) return true;
                     }
                 }
             }

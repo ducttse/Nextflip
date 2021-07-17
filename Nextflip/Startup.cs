@@ -99,16 +99,26 @@ namespace Nextflip
             services.AddTransient<ISupportTicketService, SupportTicketService>();
             services.AddTransient<ISupportTopicService, SupportTopicService>();
 
+            //add session
+            services.AddDistributedMemoryCache();
+
             //add payment plan
             services.AddTransient<IPaymentPlanService, PaymentPlanService>();
             services.AddTransient<IPaymentPlanDAO, PaymentPlanDAO>();
+
+            services.AddSession(options =>
+            {
+                options.IdleTimeout = TimeSpan.FromSeconds(10);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true;
+            });
 
             //cooki author
             services.AddScoped<CookieUtil>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => {
                 options.AccessDeniedPath = "/Common/AccessDenied";
-                options.LoginPath = "/Account/Login";
+                options.LoginPath = "/Login/Index";
                 options.EventsType = typeof(CookieUtil);
                 });
             services.AddAuthorization(options =>
@@ -168,12 +178,31 @@ namespace Nextflip
 
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller}/{action}/{id?}");
+                    pattern: "{controller=Account}/{action=Login}/{id?}");
+
+                endpoints.MapGet("/testmail", async context =>
+                {
+
+                    // Lấy dịch vụ sendmailservice
+                    var sendmailservice = context.RequestServices.GetService<ISendMailService>();
+
+                    MailContent content = new MailContent
+                    {
+                        To = "technical.nextflipcompany@gmail.com",
+                        Subject = "Kiểm tra thử",
+                        Body = "Test"
+                    };
+
+                    await sendmailservice.SendMail(content);
+                    await context.Response.WriteAsync("Send mail");
+                });
+
             });
 
         }

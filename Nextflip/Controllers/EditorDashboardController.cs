@@ -23,5 +23,9 @@ namespace Nextflip.Controllers
         {
             return View();
         }
+        public IActionResult ViewEditMedia()
+        {
+            return View();
+        }
     }
 }

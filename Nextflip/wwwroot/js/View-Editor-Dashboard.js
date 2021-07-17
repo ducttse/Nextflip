@@ -32,6 +32,9 @@ function ShowNotFound() {
     else if (isFiltered) {
         error = `<p class="fs-6">There is no <b>${requestParam.Status}</b> media for this category</p>`
     }
+    else if (requestParam.CategoryName != "all") {
+        error = `<p class="fs-6">There is no media for this category</p>`
+    }
     else { error = `<p class="fs-6">There is no result for <b>${requestParam.SearchValue}</b></p>` }
     let notFound = document.getElementById("notFound");
     if (notFound.innerHTML != "") {
@@ -69,7 +72,7 @@ function renderMedia(media, index) {
             </div>
           </td>
           <td  class="text-center">
-            <div class="btn btn-secondary" onclick="return showEditForm();">Edit</div>
+            <a class="btn btn-secondary" href="/EditorDashboard/ViewEditMedia/${media.mediaID}">Edit</a>
           </td>
       </tr>`;
 }
@@ -115,22 +118,22 @@ function setSelectedCategory(obj) {
     if (isSearched) {
         searchAndResetPage(requestParam.SearchValue);
     }
-    else if (isFiltered) {
+    else if (isFiltered && obj.value == "all") {
         requestWithFilterAndResetPage();
     }
-    else requestMediaDataAndResetPage();
+    else requestMediaData();
 }
 
 function setSelectedStatus(obj) {
     requestParam.Status = obj.value;
-    if (requestParam.Status != "All") {
-        isFiltered = true;
-    }
-    else isFiltered = false;
+    isFiltered = requestParam.Status != "All" ? true : false;
     if (isSearched) {
         searchAndResetPage(requestParam.SearchValue);
     }
-    else requestWithFilterAndResetPage();
+    else if (isFiltered) {
+        requestWithFilterAndResetPage();
+    }
+    else requestMediaData();
 }
 
 function requestMediaDataOnly() {
@@ -152,9 +155,15 @@ function requestMediaData() {
     requestMediaDataOnly()
         .then(res => res.json())
         .then(json => {
-            console.log(json);
             Data = json;
-            appendMediaToWrapper();
+            if (json.totalPage == 0) {
+                ShowNotFound();
+            }
+            else {
+                HideNotFound();
+                Data = json;
+                appendMediaToWrapper();
+            }
         })
 }
 
@@ -183,6 +192,7 @@ function requestWithFilter() {
     requestWithFilterOnly()
         .then(res => res.json())
         .then(json => {
+            isFiltered = true;
             if (json.totalPage == 0) {
                 ShowNotFound();
             }
@@ -280,3 +290,13 @@ function resetFilter() {
     isFiltered = false;
     requestParam.Status = "";
 }
+
+function requestCategories() {
+    fetch(`/api/ViewSubscribedUserDashboard/GetCategories`).then(res => res.json()).then(json => {
+        let checkboxs = json.map(category => {
+            return `<option value="${category.name}">${category.name}</option>`;
+        }).join("");
+        document.getElementById("category_filter").insertAdjacentHTML("beforeend", checkboxs);
+    })
+}
+requestCategories();

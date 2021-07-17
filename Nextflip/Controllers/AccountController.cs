@@ -19,7 +19,6 @@ namespace Nextflip.Controllers
             HttpContext.Session.Clear();
             HomeController homeController = new HomeController();
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-
             return RedirectToAction("Index", homeController);
         }
 

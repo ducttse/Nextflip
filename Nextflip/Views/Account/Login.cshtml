@@ -1,0 +1,58 @@
+﻿@{
+    ViewBag.Title = "Login";
+    Layout = "_AuthenticationLayout";
+}
+@section styles{
+    <link rel="Stylesheet" href="@Href("~/css/Login.css")" />
+}
+@section meta{
+    <meta name="google-signin-client_id" content="753240362122-b5jcp3ipgeuo2alsicq580puevmjgp91.apps.googleusercontent.com">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+}
+<div id="wrapper" class="d-flex align-items-center" style="background-color: #171717">
+    <a class="navbar-brand fw-normal ps-5 position-absolute top-0 start-0 fs-2" style="color: red" href="#">NextFlip</a>
+    <div class="col-6 col-xxl-7">
+        <p class="fs-1 text-center  text-light">Welcome back</p>
+    </div>
+    <div id="login_wrapper" class="col-5 col-xxl-4 px-5 py-3 rounded align-self-center text-light" style="background-color: #202020">
+        <div class="col-8 mx-auto">
+            <p class="h1 text-center">Login<p>
+        </div>
+        <div class="mb-3 row mx-auto">
+            <label for="email" class="col-2 col-form-label">Email</label>
+            <div class="col-9 offset-1">
+                <input type="text" class="form-control  bg-dark text-light border-secondary" id="email"/>
+            </div>
+            <div class="invalid-feedback">
+                Please choose a username.
+            </div>
+        </div>
+        <div class="mb-3 row mx-auto">
+            <label for="password" class="col-2 col-form-label">Password</label>
+            <div class="col-9 offset-1">
+                <input type="password" class="form-control bg-dark text-light border-secondary" id="password"/>
+            </div>
+        </div>
+        <div class="alert alert-danger d-none" role="alert">
+            Invalid email or password
+        </div>
+        <div class="row">
+            <button class="mx-auto col-xl-4 col-xxl-4 btn btn-danger" onclick="requestLogin()">Login</button>
+        </div>
+        <div class=" mt-3 mb-4 d-flex justify-content-center">
+            <div class="g-signin2" data-width="170" data-height="40" data-onsuccess="onSignIn"></div>
+        </div>
+        <p id="emailHelp" class="form-text text-center">Dont have an ancount? <a href="/Register/Index" class="text-decoration-none">Register here</a></p>
+        <p class="text-center"><a class="text-decoration-none" href="/lmao">Forgot password?</a></p>
+    </div>
+</div>
+<script src="~/js/Authenticate/Login.js"></script>
+<script>
+        gapi.load('auth2', function () {
+        auth2 = gapi.auth2.init({
+            client_id: '753240362122-b5jcp3ipgeuo2alsicq580puevmjgp91.apps.googleusercontent.com',
+            cookiepolicy: 'single_host_origin',
+            ux_mode: 'redirect',
+            redirect_uri: 'https://localhost:44341/SubcribedUserDashBoard/'
+        });
+</script>

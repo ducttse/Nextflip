@@ -14,14 +14,12 @@ namespace Nextflip.Controllers
 
         public IActionResult Register() => View();
 
+
         public async Task<IActionResult> Logout()
         {
-            HttpContext.Session.Clear();
-            HomeController homeController = new HomeController();
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index", homeController);
+            return RedirectToAction("Login", "Account");
         }
-
 
     }
 }

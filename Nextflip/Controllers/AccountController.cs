@@ -16,7 +16,6 @@ namespace Nextflip.Controllers
 
         public async Task<IActionResult> Logout()
         {
-            HttpContext.Session.Clear();
             HomeController homeController = new HomeController();
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 

@@ -732,5 +732,38 @@ namespace Nextflip.APIControllers
                 });
             }
         }
+
+        [Route("AddNewMedia")]
+        [HttpPost]
+        public IActionResult AddNewMedia([FromServices] IEditorService editorService, [FromBody] PrototypeMediaForm mediaForm)
+        {
+            try
+            {
+                var newMediaID = editorService.AddNewMedia(mediaForm);
+                return new JsonResult(new {
+                    Message = "Success", MediaID = newMediaID
+                });
+            }
+            catch (Exception exception)
+            {
+                _logger.LogInformation("EditEpisode: " + exception.Message);
+                return new JsonResult(new
+                {
+                    Message = "Fail." + exception.Message
+                });
+            }
+        }
+
+        public class PrototypeSeasonForm
+        {
+            public Season SeasonInfo { set; get; }
+            public IList<Episode> Episodes { get; set; }
+        }
+
+        public class PrototypeMediaForm {
+            public Media MediaInfo { get; set; }
+            public IList<PrototypeSeasonForm> Seasons { get; set; }
+        }
+        
     }
 }

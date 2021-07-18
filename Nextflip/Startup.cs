@@ -33,6 +33,7 @@ using Nextflip.Models.supportTopic;
 using Nextflip.Models.supportTicket;
 using Nextflip.Models.role;
 using Microsoft.AspNetCore.Http;
+using Nextflip.Models.paymentPlan;
 using Nextflip.Models.subscription;
 using Nextflip.Models.filmType;
 
@@ -61,13 +62,13 @@ namespace Nextflip
             services.AddTransient<ISeasonDAO, SeasonDAO>();
             services.AddTransient<ISubtitleDAO, SubtitleDAO>();
             services.AddTransient<INotificationDAO, NotificationDAO>();
+            services.AddTransient<IFilmTypeDAO, FilmTypeDAO>();
 
             services.AddTransient<IMediaService, MediaService>();
             services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient<IRoleDAO, RoleDAO>();
             services.AddTransient<IRoleService, RoleService>();
             services.AddTransient<ISubscriptionDAO, SubscriptionDAO>();
-            services.AddTransient<IFilmTypeDAO, FilmTypeDAO>();
             services.AddControllersWithViews();
             services.AddControllers().AddNewtonsoftJson();
             services.AddTransient<IAccountDAO, AccountDAO>();
@@ -78,8 +79,8 @@ namespace Nextflip
             services.AddTransient<IEditorService, EditorService>();
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<ISubscriptionService, SubscriptionService>();
-            services.AddTransient<ICategoryService, CategoryService>();
             services.AddTransient<IFilmTypeService, FilmTypeService>();
+
 
             ///get connection string
             DbUtil.ConnectionString = Configuration.GetConnectionString("MySql");
@@ -101,6 +102,10 @@ namespace Nextflip
             //add session
             services.AddDistributedMemoryCache();
 
+            //add payment plan
+            services.AddTransient<IPaymentPlanService, PaymentPlanService>();
+            services.AddTransient<IPaymentPlanDAO, PaymentPlanDAO>();
+
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromSeconds(10);
@@ -108,13 +113,14 @@ namespace Nextflip
                 options.Cookie.IsEssential = true;
             });
 
+            //cooki author
+            services.AddScoped<CookieUtil>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => {
                 options.AccessDeniedPath = "/Common/AccessDenied";
                 options.LoginPath = "/Login/Index";
                 options.EventsType = typeof(CookieUtil);
                 });
-            services.AddScoped<CookieUtil>();
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("user manager", policyBuilder =>
@@ -178,7 +184,7 @@ namespace Nextflip
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller}/{action}/{id?}");
+                    pattern: "{controller=Account}/{action=Login}/{id?}");
 
                 endpoints.MapGet("/testmail", async context =>
                 {

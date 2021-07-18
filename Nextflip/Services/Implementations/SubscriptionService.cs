@@ -21,7 +21,8 @@ namespace Nextflip.Services.Implementations
         public bool PurchaseSubscription(string userID, int interval) => _subscriptionDAO.PurchaseSubscription(userID, interval);
         public bool PurchaseSubscription(SubscriptionManagement.ExtensionForm extensionForm)
         {
-            throw new NotImplementedException();
+            return _subscriptionDAO.PurchaseSubscription(extensionForm.UserId, extensionForm.IssueTime,
+                extensionForm.ExtensionDays, extensionForm.PaymentPlanId);
         }
     }
 }

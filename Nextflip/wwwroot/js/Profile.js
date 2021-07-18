@@ -28,7 +28,8 @@ async function loadAccount() {
     await fetch("/api/ProfileManagement/GetProfile", initObject)
         .then(res => res.json())
         .then(json => {
-            Profile = { ...json, userID: ID }
+            let dob = json.dateOfBirth.split("-").reverse().join("-");
+            Profile = { ...json, dateOfBirth: dob, userID: ID }
         })
     return new Promise(resolve => { resolve("resolved") })
 }
@@ -47,7 +48,7 @@ function appendUserProfileToWrapper() {
     document.getElementById("imgAndName_holder").insertAdjacentHTML("afterbegin", renderProfile());
     document.getElementById("email").innerHTML = Profile.userEmail;
     document.getElementById("dob").innerHTML = Profile.dateOfBirth;
-    if (localStorage.getItem("URL") == "SubcribedUserDashBoard") {
+    if (localStorage.getItem("URL") == "/SubcribedUserDashBoard/Index") {
         if (Profile.subscriptionEndDate == null) {
             document.getElementById("exp_date").innerHTML = "N/A"
         }

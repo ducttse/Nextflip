@@ -30,7 +30,7 @@ namespace Nextflip.Models.account
         Account GetAccountByID(string userID);
         bool IsExistedEmail(string email);
         public bool ChangeProfile(string userID, string fullname, DateTime dateOfBirth, string pictureURL);
-        public string RegisterAnAccount(string userEmail, string password, string fullname, DateTime dateOfBirth, string pictureURL);
+        public bool RegisterAnAccount(string userEmail, string password, string fullname, DateTime dateOfBirth, string pictureURL);
         public Account Login(string email, string password);
         bool IsSubscribedUser(string userID);
         public bool ChangePassword(string userID, string password);

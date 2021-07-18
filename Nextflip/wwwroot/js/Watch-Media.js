@@ -52,7 +52,7 @@ function renderEpisode(mediaID, episode) {
 }
 
 function getMeidaList(mediaID, seasonID) {
-  fetch(`https://localhost:44341/api/ViewMediaDetails/GetEpisodesOfSeason/${seasonID}`)
+  fetch(`/api/ViewMediaDetails/GetEpisodesOfSeason/${seasonID}`)
     .then(res => res.json())
     .then(json => {
       var seasons = json.map(episode => {

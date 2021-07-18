@@ -8,7 +8,7 @@
     <link href="@Url.Content("~/css/Form.css")" rel="stylesheet" type="text/css" />
 }
 <div class="col-10">
-    <p class="fs-2 text-secondary ps-2">Add new media</p>
+    <p class="fs-2 text-secondary ps-2">Edit media</p>
     <div class="modal-body bg-light">
         <div>
             <div class="mb-3 row">
@@ -91,7 +91,7 @@
                 <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#modalAddSeasonForm">Add new season</button>
             </div>
             <div class="col-12 d-flex justify-content-end">
-                <button class="btn btn-primary" type="button" onclick="addNewMedia()">Submit</button>
+                <button class="btn btn-primary" type="button" onclick="requestAddNewMedia()">Submit</button>
             </div>
         </div>
     </div>
@@ -124,6 +124,14 @@
                         </div>
                     </div>
                 </div>
+                <div class="mb-3 row">
+                    <label for="numberSeason" class="required col-sm-3 col-form-label text-end">Number</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control w-50" id="numberSeason" onkeyup="onInput(this)" />
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-bg-danger" data-bs-dismiss="modal">Cancel</button>
@@ -145,6 +153,14 @@
                     <label for="titleEpisode" class="required col-sm-3 col-form-label text-end">Title</label>
                     <div class="col-sm-6">
                         <input type="text" class="form-control" id="titleEpisode" onkeyup="onInput(this)" />
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="numberEpisode" class="required col-sm-3 col-form-label text-end">Number</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control w-50" id="numberEpisode" onkeyup="onInput(this)" />
                         <div class="invalid-feedback">
                         </div>
                     </div>

@@ -11,5 +11,6 @@ namespace Nextflip.Models.subscription
 
         Subscription GetSubsciptionByUserID(string userID);
         public bool PurchaseSubscription(string userID, int interval);
+        bool PurchaseSubscription(string extensionFormUserId, DateTime extensionFormIssueTime, int extensionFormExtensionDays, int extensionFormPaymentPlanId);
     }
 }

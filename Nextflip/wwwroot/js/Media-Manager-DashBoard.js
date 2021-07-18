@@ -85,7 +85,7 @@ function renderRequest(request, index) {
           <td>${index + 1}</td> 
           <td>${request.userEmail}</td>
           <td>${shortText}</td>
-          <td class="text-center"><p class="ticket_status ${bgcolor} rounded text-center text-light text-center px-2 py-1">${request.status}</p></td>
+          <td class="text-center"><p class="ticket_status ${bgcolor} rounded text-center text-light text-center px-2 py-1 mb-0">${request.status}</p></td>
           <td class="text-center"><a class="text-decoration-none" href="/MediaManagerManagement/DetailPreview/${request.type}/${request.mediaID}/${request.requestID}">Preview</a></td>
       </tr>`;
 }

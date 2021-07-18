@@ -87,7 +87,7 @@ function Run() {
     .then((mediasArr) => {
       let el = mediasArr.map((media) => {
         return renderLisrHolder(media);
-      })
+      }).join("")
       appendToWrapper(el);
     });
 }

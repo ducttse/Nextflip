@@ -35,8 +35,6 @@ namespace Nextflip.Models.account
         bool IsSubscribedUser(string userID);
         public bool ChangePassword(string userID, string password);
         public Account CheckGoogleLogin(string googleID);
-        public bool CheckWallet(string userID, double money);
-        public bool PurchaseSubscription(string userID, double money);
     }
 
 }

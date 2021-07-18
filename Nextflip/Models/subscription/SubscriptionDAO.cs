@@ -50,7 +50,7 @@ namespace Nextflip.Models.subscription
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select SubscriptionID, Status, StartDate, EndDate " +
+                    string Sql = "Select SubscriptionID, Status, StartDate, EndDate " + 
                                 "From subscription " +
                                 "Where userID = @userID AND Status = 'Active' ";
                     using (var command = new MySqlCommand(Sql, connection))

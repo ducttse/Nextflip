@@ -64,6 +64,7 @@ namespace Nextflip
             services.AddTransient<INotificationDAO, NotificationDAO>();
             services.AddTransient<IFilmTypeDAO, FilmTypeDAO>();
 
+
             services.AddTransient<IMediaService, MediaService>();
             services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient<IRoleDAO, RoleDAO>();
@@ -80,6 +81,7 @@ namespace Nextflip
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<ISubscriptionService, SubscriptionService>();
             services.AddTransient<IFilmTypeService, FilmTypeService>();
+            services.AddTransient<ICategoryService, CategoryService>();
 
 
             ///get connection string

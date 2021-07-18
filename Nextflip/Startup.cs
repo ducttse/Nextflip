@@ -108,14 +108,7 @@ namespace Nextflip
             services.AddTransient<IPaymentPlanService, PaymentPlanService>();
             services.AddTransient<IPaymentPlanDAO, PaymentPlanDAO>();
 
-            services.AddSession(options =>
-            {
-                options.IdleTimeout = TimeSpan.FromSeconds(10);
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
-            });
-
-            //cooki author
+            //cookie author
             services.AddScoped<CookieUtil>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => {
@@ -180,7 +173,6 @@ namespace Nextflip
 
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {

@@ -52,7 +52,8 @@ namespace Nextflip.Models.subscription
                     connection.Open();
                     string Sql = "Select SubscriptionID, Status, StartDate, EndDate " +
                                 "From subscription " +
-                                "Where userID = @userID AND Status = 'Active' ";
+                                "WHERE userID = @userID AND  endDate = " +
+                                "( Select Max(endDate) from Nextflip.subscription where userID = @userID AND status = 'approved');";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@userID", userID);
@@ -62,11 +63,11 @@ namespace Nextflip.Models.subscription
                             {
                                 subsciption = new Subscription
                                 {
-                                    SubscriptionID = reader.GetString(0),
+                                    SubscriptionID = reader.GetString("SubscriptionID"),
                                     UserID = userID,
-                                    Status = reader.GetString(1),
-                                    StartDate = reader.GetDateTime(2),
-                                    EndDate = reader.GetDateTime(3)
+                                    Status = reader.GetString("Status"),
+                                    StartDate = reader.GetDateTime("StartDate"),
+                                    EndDate = reader.GetDateTime("EndDate")
                                 };
                             }
                         }

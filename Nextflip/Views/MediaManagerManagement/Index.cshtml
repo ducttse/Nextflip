@@ -3,8 +3,8 @@
     Layout = "_CustomLayout";
 }
 @section Styles {
-  <link href="@Url.Content("~/css/Media-Manager.css")" rel="stylesheet" type="text/css" />
-  <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/css/Media-Manager.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
 }
 <div class="ui_wrapper col-10" style="background-color: #fff">
     <div class="table_container p-2 ps-3 w-100 mx-auto rounded" style="background-color: #ffffff">
@@ -32,17 +32,17 @@
                     <option value="Season">Season</option>
                     <option value="Episode">Episode</option>
                     <option value="Subtitle">Subtitle</option>
-                </select> 
+                </select>
             </div>
         </div>
-        <div id="notFound" class="hide"> 
+        <div id="notFound" class="hide">
         </div>
         <div id="table_holder" class="border rounded-bottom pb-0 mb-2">
             <table class="table table-borderless table-striped table-responsive mb-0 table-hover w-100">
                 <thead class="table-secondary">
                     <tr>
                         <th id="no" class="col">#</th>
-                        <th id="mail" class="col">Editor mail</th>        
+                        <th id="mail" class="col">Editor mail</th>
                         <th id="content" class="col">Content</th>
                         <th id="status" class="col text-center" style="width: 150px;">Status</th>
                         <th id="preview" class="col text-center">Preview</th>
@@ -65,10 +65,13 @@
                 </div>
                 <div id="pagination" class="col-7 d-flex justify-content-end pe-5">
                 </div>
-            <div>
+                <div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
 <script src="~/js/Pagination.js"></script>
 <script src="~/js/Slide-Bar.js"></script>
 <script src="~/js/Search-Component.js"></script>
@@ -78,7 +81,7 @@
     appendSearch("Search editor's email", "");
     setEnterEvent();
     let button = `<a id="back_btn" href="/MediaManagerManagement/Index" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
-                    Media Manager
-                  </a>`;
+                            Media Manager
+                          </a>`;
     appendButton(button);
 </script>

@@ -3,16 +3,79 @@
     Layout = "_CustomLayout";
 }
 @section Styles {
-  <link href="@Url.Content("~/css/Media-Manager.css")" rel="stylesheet" type="text/css" />
-  <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/css/Media-Manager.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
+    <style>
+        table {
+            width: 100%;
+        }
+        thead, tbody, tr, td, th {
+            display: block;
+        }
+        tbody td {
+          float: left;
+        }
+         thead tr th {
+                float: left;
+                background-color: #f39c12;
+                border-color: #e67e22;
+            }
+    </style>
 }
-<div  class="col-10">
+
+<div class="col-10 d-flex">
+    <div class="col-6">
+        <div>
+            <p class="h3 mb-1 mt-3 text-muted">Category</p>
+            <div class="d-flex justify-content-start">
+                <div class="btn btn-primary btn-sm mt-1">Add new category</div>
+            </div>
+        </div>
+        <div class="w-50">
+            <table class="table">
+                <thead class="w-100">
+                    <tr>
+                        <th scope="col" class="col-3 bg-light">#</th>
+                        <th scope="col" class="col-6 bg-light">Category</th>
+                        <th scope="col" class="col-3 bg-light">Edit</th>
+                    </tr>
+                </thead>
+                <tbody id="dataContainer" style="height:60vh; overflow-y:auto; width: 100%;">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-6">
+        <div>
+            <p class="h3 mb-1 mt-3 text-muted">Media type</p>
+            <div class="d-flex justify-content-start">
+                <div class="btn btn-primary btn-sm mt-1">Add new media type</div>
+            </div>
+        </div>
+        <div class="w-50">
+            <table class="table">
+                <thead class="w-100">
+                    <tr>
+                        <th scope="col" class="col-3 bg-light">#</th>
+                        <th scope="col" class="col-6 bg-light">Media type</th>
+                        <th scope="col" class="col-3 bg-light">Edit</th>
+                    </tr>
+                </thead>
+                <tbody id="mediaTypeDataContainer" style="height:60vh; overflow-y:auto; width: 100%;">
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
+
 <script src="~/js/Pagination.js"></script>
 <script src="~/js/Slide-Bar.js"></script>
 <script src="~/js/Search-Component.js"></script>
 <script src="~/js/Media-Manager-DashBoard.js"></script>
+<script src="~/js/Category-Type-Manager.js"></script>
 <script>
+    requestCategories();
+    requestMediaTypes();
     let button = `<a id="back_btn" href="/MediaManagerManagement/Index" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
                     Media Manager
                   </a>`;

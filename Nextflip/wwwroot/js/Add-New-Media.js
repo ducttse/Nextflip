@@ -28,8 +28,7 @@ function requestCategories() {
         }).join("");
         document.getElementById("CB_holder").insertAdjacentHTML("afterbegin", checkboxs);
         let options = json.map(category => {
-            console.log(category);
-            return `<option value="${category.categoryID}">${category.name}</option>`
+            return `<option value="${category.name}">${category.name}</option>`
         }).join("");
         document.getElementById("category_filter").insertAdjacentHTML("beforeend", options);
     })
@@ -45,7 +44,6 @@ function requestMediaType() {
 }
 
 function validateCheckBoxValue() {
-    console.log("run");
     if (document.querySelectorAll(`#modalAddForm .category[type="checkbox"]:checked`).length == 0) {
         document.getElementById("empty_checkbox").classList.remove("d-none");
     }

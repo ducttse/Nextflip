@@ -2,7 +2,7 @@
 let requestParam = {
     RowsOnPage: 12,
     RequestPage: 1,
-    CategoryName: "all",
+    CategoryID: "all",
     SearchValue: "",
     Status: ""
 };

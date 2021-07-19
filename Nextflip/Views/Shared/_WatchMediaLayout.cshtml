@@ -22,6 +22,7 @@
     <div>
         @RenderBody()
     </div>
+    <partial name="/Views/SharedComponents/Footer.cshtml" />
     <!-- videojs script ///////////-->
     <script src="https://vjs.zencdn.net/7.11.4/video.min.js"></script>
 
@@ -30,9 +31,9 @@
             integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
             crossorigin="anonymous"></script>
     <script>
-        setTimeout(function(){
-            document.body.className="";
-        },1000);
+        setTimeout(function () {
+            document.body.className = "";
+        }, 1000);
     </script>
     <script src="~/js/Profile.js"></script>
 </body>

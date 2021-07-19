@@ -14,15 +14,15 @@
         </div>
         <div id="email_container" class="ps-5 mb-3 row d-flex justify">
             <label class="col-form-label col-4" for="email">Email</label>
-            <div class="col-7">    
-                <input class="form-control bg-dark text-light border-secondary " type="text" name="email" id="email" onkeyup="processChange(this)" required placeholder="example@xyz.com"/>
+            <div class="col-7">
+                <input class="form-control bg-dark text-light border-secondary " type="text" name="email" id="email" onkeyup="processChange(this)" required placeholder="example@xyz.com" />
                 <div class="invalid-feedback">
                 </div>
             </div>
         </div>
         <div id="password_container" class="ps-5 mb-3 row d-flex justify">
             <label class="col-form-label col-4" for="password">Password</label>
-            <div class="col-6"> 
+            <div class="col-6">
                 <input class="form-control bg-dark text-light border-secondary " type="password" name="password" id="password" onkeyup="onInputPassword()" required />
                 <div class="invalid-feedback">
                 </div>
@@ -30,30 +30,30 @@
         </div>
         <div id="repassword_container" class="ps-5 mb-3 row d-flex justify">
             <label class="col-form-label col-4 pe-0" for="confirmPassword">Confirm Password</label>
-            <div class="col-6">    
-                <input class="form-control bg-dark text-light border-secondary " type="password" name="confirmPassword" id="confirmPassword" onkeyup="onInputRePassword()" required/>
+            <div class="col-6">
+                <input class="form-control bg-dark text-light border-secondary " type="password" name="confirmPassword" id="confirmPassword" onkeyup="onInputRePassword()" required />
                 <div class="invalid-feedback">
                 </div>
             </div>
         </div>
         <div id="dob_container" class="ps-5 mb-3 row d-flex justify">
             <label class="col-form-label col-4" for="dob">Date of birth</label>
-            <div class="col-6 d-flex">    
-                <input class="form-control bg-dark text-light border-secondary w-75 pe-2" type="text" name="dob" id="dob" required placeholder="01-01-2000"/>
+            <div class="col-6 d-flex">
+                <input class="form-control bg-dark text-light border-secondary w-75 pe-2" type="text" name="dob" id="dob" required placeholder="01-01-2000" />
                 <span class="input-group-text border-0" id="dob_icon">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-calendar-fill" viewBox="0 0 16 16">
-                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V5h16V4H0V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5z"/>
+                        <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V5h16V4H0V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5z" />
                     </svg>
                 </span>
             </div>
             <div class="invalid-feedback">
-            Wrong date!
+                Wrong date!
             </div>
         </div>
         <div id="name_container" class="ps-5 mb-3 row d-flex justify">
             <label class="col-form-label col-4" for="fullname">Full Name</label>
-            <div class="col-6">    
-                <input class="form-control bg-dark text-light border-secondary " type="text" name="fullname" id="fullname" onkeyup="onInputNanme()" required placeholder="Nguyen Van A"/>
+            <div class="col-6">
+                <input class="form-control bg-dark text-light border-secondary " type="text" name="fullname" id="fullname" onkeyup="onInputNanme()" required placeholder="Nguyen Van A" />
                 <div class="invalid-feedback">
                 </div>
             </div>
@@ -66,13 +66,13 @@
 </div>
 <script src="~/js/Authenticate/Register.js"></script>
 <script>
-    $( function() {
-        $( "#dob" ).datepicker({
+    $(function () {
+        $("#dob").datepicker({
             dateFormat: 'dd-mm-yy'
         });
 
-        $("#dob_icon").click(function(){
-            $( "#dob" ).datepicker("show");
+        $("#dob_icon").click(function () {
+            $("#dob").datepicker("show");
         });
         console.log("alo");
     });

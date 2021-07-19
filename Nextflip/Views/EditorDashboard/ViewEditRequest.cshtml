@@ -7,7 +7,7 @@
     <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
 }
 <div class="ui_wrapper col-10" style="background-color: #fff">
-    <div class="table_container p-2 w-100 mx-auto rounded" style="background-color: #ffffff"> 
+    <div class="table_container p-2 w-100 mx-auto rounded" style="background-color: #ffffff">
         <div class="btn-group w-100 px-3 pt-3 pb-2 border rounded-top">
             <div id="search_wrapper" class="col-6"></div>
             <div class="col-3 offset-3 offset-1 d-flex justify-content-end">
@@ -17,17 +17,17 @@
                     <option value="Pending">Pending</option>
                     <option value="Approved">Approved</option>
                     <option value="Disapproved">Disapproved</option>
-                </select> 
+                </select>
             </div>
-        </div> 
-        <div id="notFound" class="hide"> 
+        </div>
+        <div id="notFound" class="hide">
         </div>
         <div id="table_holder" class="border rounded-bottom pb-0 mb-2">
             <table class="table table-striped table-responsive table-borderless mb-0 table-hover w-100 shadow">
                 <thead class="table-secondary">
                     <tr>
                         <th class="col">#</th>
-                        <th class="col">Media name</th>        
+                        <th class="col">Media name</th>
                         <th class="col">Note</th>
                         <th class="col">Status</th>
                     </tr>
@@ -36,7 +36,7 @@
             </table>
             <div class="d-flex align-items-center table-secondary">
                 <p class="col-2 my-auto form-text text-center" id="page_notification"></p>
-                <p  class="col-1 me-2 my-auto form-text text-end">Rows per page</p>
+                <p class="col-1 me-2 my-auto form-text text-end">Rows per page</p>
                 <div class="col-1">
                     <select class="form-select form-select-sm w-75" onchange="setRowsPerPage(this)">
                         <option value="12" selected>12</option>
@@ -55,7 +55,7 @@
 <script src="~/js/Slide-Bar.js"></script>
 <script src="~/js/Search-Component.js"></script>
 <script src="~/js/Editor-View-Edit-Request.js"></script>
-<script> 
+<script>
     appendSearch("Search media's name", "");
     setEnterEvent();
     let button1 = `<a href="/EditorDashboard/Index" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
@@ -66,9 +66,9 @@
                     </a>`;
     appendButton(button2);
     appendButton(button1);
-</script> 
+</script>
 @section script {
     <script>
-    requestRequestData();
+        requestRequestData();
     </script>
 }

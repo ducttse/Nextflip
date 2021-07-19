@@ -415,5 +415,22 @@ namespace Nextflip.APIControllers
             }
         }
 
+        [Route("GetDetailedMedia/{mediaID}")]
+        [HttpGet]
+        public JsonResult GetDetailedMedia([FromServices] IMediaManagerManagementService mediaManagerManagementService, string mediaID)
+        {
+            try
+            {
+                ViewEditorDashboard.PrototypeMediaForm detailedMedia =
+                    mediaManagerManagementService.GetDetailedMediaByMediaId(mediaID);
+                return new JsonResult(detailedMedia);
+            }
+            catch (Exception exception)
+            {
+                _logger.LogInformation("Get Detailed Media by media ID: " + exception.Message);
+                return new JsonResult(new {message = "operation failed"});
+            }
+        }
+
     }
 }

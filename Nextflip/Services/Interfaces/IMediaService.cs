@@ -25,5 +25,6 @@ namespace Nextflip.Services.Interfaces
         IEnumerable<Media> GetMediasByCategoryID(int categoryID, int limit);
 
         bool RequestDisableMedia(string mediaID);
+        string CloneMedia(string id);
     }
 }

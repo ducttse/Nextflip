@@ -757,12 +757,18 @@ namespace Nextflip.APIControllers
         public class PrototypeSeasonForm
         {
             public Season SeasonInfo { set; get; }
-            public IList<Episode> Episodes { get; set; }
+            public IEnumerable<Episode> Episodes { get; set; }
+
+            public PrototypeSeasonForm(Season seasonInfo, IEnumerable<Episode> episodes)
+            {
+                SeasonInfo = seasonInfo;
+                Episodes = episodes;
+            }
         }
 
         public class PrototypeMediaForm {
             public Media MediaInfo { get; set; }
-            public IList<PrototypeSeasonForm> Seasons { get; set; }
+            public IEnumerable<PrototypeSeasonForm> Seasons { get; set; }
         }
         
     }

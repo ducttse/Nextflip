@@ -300,5 +300,24 @@ namespace Nextflip.Models.episode
             }
             return episodeID;
         }
+
+        public string AddEpisode_Transact(MySqlConnection connection, Episode episode)
+        {
+            string episodeID = null;
+            MySqlCommand command = new MySqlCommand();
+            command.Connection = connection;
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "createEpisode";
+            command.Parameters.AddWithValue("@seasonID_Input", episode.SeasonID);
+            command.Parameters.AddWithValue("@title_Input", episode.Title);
+            command.Parameters.AddWithValue("@thumbnailURL_Input", episode.ThumbnailURL);
+            command.Parameters.AddWithValue("@episodeNum_Input", episode.Number);
+            command.Parameters.AddWithValue("@episodeURL_Input", episode.EpisodeURL);
+            command.Parameters.Add("@episodeID_Output", MySqlDbType.String).Direction
+                = ParameterDirection.Output;
+            command.ExecuteNonQuery();
+            episodeID = (string)command.Parameters["@episodeID_Output"].Value;
+            return episodeID;
+        }
     }
 }

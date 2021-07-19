@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Nextflip.APIControllers;
 using Nextflip.Models.episode;
 using Nextflip.Models.season;
 using Nextflip.Models.subtitle;
@@ -70,6 +71,9 @@ namespace Nextflip.Services.Implementations
         public bool DisapproveChangeSubtitle(string subtitleID) => _subtitleDAO.DisapproveChangeSubtitle(subtitleID);
         public Season GetSeasonByID(string seasonID) => _seasonDAO.GetSeasonByID(seasonID);
         public Episode GetEpisodeByID(string episodeID) => _episodeDAO.GetEpisodeByID(episodeID);
-
+        public ViewEditorDashboard.PrototypeMediaForm GetDetailedMediaByMediaId(string mediaId)
+        {
+            return _mediaDao.GetDetailedMedia(mediaId);
+        }
     }
 }

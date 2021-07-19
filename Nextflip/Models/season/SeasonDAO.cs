@@ -298,5 +298,23 @@ namespace Nextflip.Models.season
         }
 
 
+        public string AddSeason_Transact(MySqlConnection connection, Season season)
+        {
+            string seasonID = null;
+            MySqlCommand command = new MySqlCommand();
+            command.CommandText = "createSeason";
+            command.Connection = connection;
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "createSeason";
+            command.Parameters.AddWithValue("@mediaID_Input", season.MediaID);
+            command.Parameters.AddWithValue("@title_Input", season.Title);
+            command.Parameters.AddWithValue("@thumbnailURL_Input", season.ThumbnailURL);
+            command.Parameters.AddWithValue("@seasonNum_Input", season.Number);
+            command.Parameters.Add("@seasonID_Output", MySqlDbType.String).Direction
+                = ParameterDirection.Output;
+            command.ExecuteNonQuery();
+            seasonID = (string)command.Parameters["@seasonID_Output"].Value;
+            return seasonID;
+        }
     }
 }

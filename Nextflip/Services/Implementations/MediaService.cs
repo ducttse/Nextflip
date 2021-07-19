@@ -75,6 +75,5 @@ namespace Nextflip.Services.Implementations
 
         public bool RequestDisableMedia(string mediaID) => _mediaDAO.RequestDisableMedia(mediaID);
 
-       
+        public string CloneMedia(string mediaID) => _mediaDAO.CloneMedia(mediaID);
     }
-}

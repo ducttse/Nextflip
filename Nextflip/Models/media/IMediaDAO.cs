@@ -42,5 +42,8 @@ namespace Nextflip.Models.media
             string Duration, string BannerURL, string Language, string Description);
         string UpdateMedia(Media media);
         string AddMedia(Media mediaInfo);
+        string AddNewMedia(ViewEditorDashboard.PrototypeMediaForm mediaForm);
+        ViewEditorDashboard.PrototypeMediaForm GetDetailedMedia(string mediaId);
+        public string CloneMedia(string mediaID);
     }
 }

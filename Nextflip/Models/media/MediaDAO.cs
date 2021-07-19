@@ -1,10 +1,14 @@
 ﻿using MySql.Data.MySqlClient;
 using Nextflip.utils;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 using Nextflip.APIControllers;
+using Nextflip.Models.episode;
+using Nextflip.Models.season;
 
 namespace Nextflip.Models.media
 {
@@ -1134,6 +1138,136 @@ namespace Nextflip.Models.media
                 throw new Exception("Fail. " + exception.Message);
             }
             return result;
+        }
+
+        public string AddNewMedia(ViewEditorDashboard.PrototypeMediaForm mediaForm)
+        {
+            string newMediaID = null;
+            using MySqlConnection connection = new MySqlConnection(DbUtil.ConnectionString);
+            connection.Open();
+            var transaction = connection.BeginTransaction();
+            try
+            {
+                newMediaID = AddMedia_Transact(connection, mediaForm.MediaInfo);
+                if (newMediaID != null)
+                {
+                    mediaForm.MediaInfo.MediaID = newMediaID;
+                    foreach (ViewEditorDashboard.PrototypeSeasonForm seasonForm in mediaForm.Seasons)
+                    {
+                        seasonForm.SeasonInfo.MediaID = newMediaID;
+                        string newSeasonID = new SeasonDAO().AddSeason_Transact(connection, seasonForm.SeasonInfo);
+                        if (newSeasonID != null)
+                        {
+                            foreach (Episode episode in seasonForm.Episodes)
+                            {
+                                episode.SeasonID = newSeasonID;
+                                string newEpisodeID = new EpisodeDAO().AddEpisode_Transact(connection, episode);
+                                episode.EpisodeID = newEpisodeID;
+                            }
+                        }
+                    }
+                    transaction.Commit();
+                }
+                else
+                {
+                    throw new Exception("Null media ID found");
+                }
+            }
+            catch (Exception exception)
+            {
+                //try rollback
+                try
+                {
+                    transaction.Rollback();
+                }
+                catch (Exception rollbackException)
+                {
+                    throw new Exception("Add new media failed, attempt to rollback also failed " + rollbackException.Message);
+                }
+                throw new Exception("Add new media failed " + exception.Message);
+
+            }
+            return newMediaID;
+        }
+
+        public ViewEditorDashboard.PrototypeMediaForm GetDetailedMedia(string mediaId)
+        {
+            ViewEditorDashboard.PrototypeMediaForm media = new ViewEditorDashboard.PrototypeMediaForm();
+            media.MediaInfo = GetMediaByID(mediaId);
+            var seasonForms = new List<ViewEditorDashboard.PrototypeSeasonForm>();
+            IEnumerable<Season> seasons = new SeasonDAO().GetSeasonsByMediaID(mediaId);
+            //construct prototype season
+            foreach(var season in seasons)
+            {
+                IEnumerable<Episode> episodes = new EpisodeDAO().GetEpisodesBySeasonID(season.SeasonID).OrderBy(episode => episode.Number);
+                var prototypeSeason = new ViewEditorDashboard.PrototypeSeasonForm(season, episodes);
+                seasonForms.Add(prototypeSeason);
+            }
+            media.Seasons = seasonForms.OrderBy(pSeason => pSeason.SeasonInfo.Number).ToList();
+            return media;
+        }
+
+        private string AddMedia_Transact(MySqlConnection connection, Media mediaInfo)
+        {
+            string result = null;
+            using MySqlCommand command = new MySqlCommand();
+            command.Connection = connection;
+            command.CommandType = CommandType.StoredProcedure;
+            AddMediaExecute(); 
+            void AddMediaExecute()
+            {
+                command.CommandText = "createMedia";
+                command.Parameters.AddWithValue("@title_Input", mediaInfo.Title);
+                command.Parameters.AddWithValue("@filmType_Input", mediaInfo.FilmType);
+                command.Parameters.AddWithValue("@director_Input", mediaInfo.Director);
+                command.Parameters.AddWithValue("@cast_Input", mediaInfo.Cast);
+                command.Parameters.AddWithValue("@publishYear_Input", mediaInfo.PublishYear);
+                command.Parameters.AddWithValue("@duration_Input", mediaInfo.Duration);
+                command.Parameters.AddWithValue("@bannerURL_Input", mediaInfo.BannerURL);
+                command.Parameters.AddWithValue("@language_Input", mediaInfo.Language);
+                command.Parameters.AddWithValue("@description_Input", mediaInfo.Description);
+                command.Parameters.Add("@mediaID_Output", MySqlDbType.String).Direction
+                    = ParameterDirection.Output;
+                command.ExecuteNonQuery();
+                result = (string)command.Parameters["@mediaID_Output"].Value;
+            }
+            return result;
+        }
+        public string CloneMedia(string mediaID)
+        {
+            string cloneMediaID = null;
+            using MySqlConnection connection = new MySqlConnection(DbUtil.ConnectionString);
+            connection.Open();
+            try
+            {
+                using var command = connection.CreateCommand();
+                command.CommandText = "select mediaID into cloneMediaID_Output " +
+                    "from media " +
+                    "where status != 'removed' and concat(title, '_preview') in " +
+                    "(select title from media where media.mediaID = @mediaID) ";
+                command.Parameters.AddWithValue("@mediaID", mediaID);
+                using (var reader = command.ExecuteReader())
+                {
+                    if (reader.Read() && reader.IsDBNull(0) is false)
+                    {
+                        //clone media already existed in database
+                        cloneMediaID = reader.GetString(0);
+                    }
+                }
+                //clone media not exist
+                if (cloneMediaID is null)
+                {
+                    ViewEditorDashboard.PrototypeMediaForm detailCloneMedia = GetDetailedMedia(mediaID);
+                    detailCloneMedia.MediaInfo.Title += "_preview";
+                    cloneMediaID = AddNewMedia(detailCloneMedia);
+                }
+            }
+            catch (Exception exception)
+            {
+                throw new Exception("Fail. " + exception.Message);
+            }
+            return cloneMediaID;
+
         }
     }
 }

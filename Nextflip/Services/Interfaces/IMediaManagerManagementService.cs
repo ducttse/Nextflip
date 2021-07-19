@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Nextflip.APIControllers;
 
 
 namespace Nextflip.Services.Interfaces
@@ -42,5 +43,6 @@ namespace Nextflip.Services.Interfaces
         bool DisapproveChangeSubtitle(string ID);
         Season GetSeasonByID(string seasonID);
         Episode GetEpisodeByID(string episodeID);
+        ViewEditorDashboard.PrototypeMediaForm GetDetailedMediaByMediaId(string mediaId);
     }
 }

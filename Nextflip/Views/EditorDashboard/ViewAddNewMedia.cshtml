@@ -88,7 +88,7 @@
                 </div>
             </div>
             <div class="offset-1">
-                <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#modalAddSeasonForm">Add new season</button>
+                <button class="btn btn-primary btn-sm" type="button" onclick="setSeasonNumber()" data-bs-toggle="modal" data-bs-target="#modalAddSeasonForm">Add new season</button>
             </div>
             <div class="col-12 d-flex justify-content-end">
                 <button class="btn btn-primary" type="button" onclick="addNewMedia()">Submit</button>
@@ -117,6 +117,14 @@
                     </div>
                 </div>
                 <div class="mb-3 row">
+                    <label for="numberSeason" class="col-sm-3 col-form-label text-end">Number</label>
+                    <div class="col-sm-6">
+                        <p class="mb-0 pt-1" id="numberSeason"></p>
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 row">
                     <label for="bannerSeason" class="required col-sm-3 col-form-label text-end">Banner</label>
                     <div class="col-sm-7">
                         <input type="file" class="form-control" id="bannerSeason" onchange="getFile(this)" />
@@ -127,7 +135,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-bg-danger" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="submit_btn" onclick="setSeason()">Submit</button>
+                <button type="button" class="btn btn-primary" id="submit_btn" onclick="addSeason()">Submit</button>
             </div>
         </div>
     </div>
@@ -145,6 +153,14 @@
                     <label for="titleEpisode" class="required col-sm-3 col-form-label text-end">Title</label>
                     <div class="col-sm-6">
                         <input type="text" class="form-control" id="titleEpisode" onkeyup="onInput(this)" />
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="numberSeason" class="col-sm-3 col-form-label text-end">Number</label>
+                    <div class="col-sm-6">
+                        <p class="mb-0 pt-1" id="numberEpisode"></p>
                         <div class="invalid-feedback">
                         </div>
                     </div>
@@ -168,12 +184,24 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-bg-danger" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="episode_submit_btn" index="" onclick="setEpisode(this)">Submit</button>
+                <button type="button" class="btn btn-primary" id="episode_submit_btn" index="" onclick="addEpisode(this)">Submit</button>
             </div>
         </div>
     </div>
 </div>
-<div>
+<!-- Confirm modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-body d-flex flex-column">
+                <p class="text-center fs-4">Are you sure to delete this</p>
+                <div class="d-flex justify-content-center">
+                    <button class="btn btn-secondary me-2" id="hide_confirm" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-danger" id="confirm_btn" onclick="deleteItem(this)">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 @section script {
     <script src="~/js/Slide-Bar.js"></script>
@@ -181,11 +209,11 @@
     <script src="~/js/Add-New-Media.js"></script>
     <script>
         let button1 = `<a href="/EditorDashboard/Index" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
-                                        Media manager
-                                      </a>`;
+                                                Media manager
+                                              </a>`;
         let button2 = `<a href="/EditorDashboard/ViewEditRequest"  onclick="return showForm();" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
-                                        View edit request
-                                    </a>`;
+                                                View edit request
+                                            </a>`;
         appendButton(button2);
         appendButton(button1);
     </script>

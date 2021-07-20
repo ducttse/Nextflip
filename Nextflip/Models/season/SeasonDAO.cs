@@ -310,6 +310,7 @@ namespace Nextflip.Models.season
             command.Parameters.AddWithValue("@title_Input", season.Title);
             command.Parameters.AddWithValue("@thumbnailURL_Input", season.ThumbnailURL);
             command.Parameters.AddWithValue("@seasonNum_Input", season.Number);
+            command.Parameters.AddWithValue("@status_Input", season.Status);
             command.Parameters.Add("@seasonID_Output", MySqlDbType.String).Direction
                 = ParameterDirection.Output;
             command.ExecuteNonQuery();

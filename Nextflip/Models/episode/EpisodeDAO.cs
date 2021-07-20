@@ -313,6 +313,7 @@ namespace Nextflip.Models.episode
             command.Parameters.AddWithValue("@thumbnailURL_Input", episode.ThumbnailURL);
             command.Parameters.AddWithValue("@episodeNum_Input", episode.Number);
             command.Parameters.AddWithValue("@episodeURL_Input", episode.EpisodeURL);
+            command.Parameters.AddWithValue("@status_Input", episode.Status);
             command.Parameters.Add("@episodeID_Output", MySqlDbType.String).Direction
                 = ParameterDirection.Output;
             command.ExecuteNonQuery();

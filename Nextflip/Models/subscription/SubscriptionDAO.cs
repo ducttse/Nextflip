@@ -147,7 +147,7 @@ namespace Nextflip.Models.subscription
                     connection.Open();
                     Debug.WriteLine(userID);
                     string Sql = @"SELECT max(endDate) FROM subscription " +
-                                 "WHERE userID = @userID AND status = 'Approved' ";
+                                 "WHERE userID = @userID AND status = 'Approved'";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@userID", userID);

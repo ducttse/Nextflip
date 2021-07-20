@@ -284,9 +284,8 @@ namespace Nextflip.APIControllers
         {
             try
             {
-                //if (request.SortBy.Trim() == "") request.SortBy = "asc";
                 if (request.Status.Trim() == "") request.Status = "all";
-                if (request.CategoryName.Trim() == "") request.Status = "all";
+                if (request.CategoryName.Trim() == "") request.CategoryName = "all";
                 IEnumerable<Media> mediaList = mediaManagerManagementService.ViewMediasFilterCategory_Status(request.CategoryName.Trim().ToLower(),
                     request.Status.Trim(), request.RowsOnPage, request.RequestPage);
                 int count = mediaManagerManagementService.NumberOfMediasFilterCategory_Status(request.CategoryName.Trim().ToLower(), request.Status.Trim());
@@ -320,6 +319,7 @@ namespace Nextflip.APIControllers
                 };
                 if (request.SearchValue.Trim() == "") return new JsonResult(message);
                 if (request.Status.Trim() == "") request.Status = "all";
+                if (request.CategoryName.Trim() == "") request.CategoryName = "all";
                 IEnumerable<Media> mediaList = mediaManagerManagementService.GetMediasByTitleFilterCategory_Status(request.SearchValue.Trim().ToLower(),
                     request.CategoryName.Trim().ToLower(), request.Status.Trim(), request.RowsOnPage, request.RequestPage);
                 int count = mediaManagerManagementService.NumberOfMediasBySearchingFilterCategory_Status(request.SearchValue.Trim().ToLower(),

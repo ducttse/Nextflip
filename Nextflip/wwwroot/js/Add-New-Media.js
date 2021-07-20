@@ -73,7 +73,7 @@ async function setMediaInfo() {
     MediaInfo.BannerURL = await requestUploadBanner();
     MediaInfo.Language = document.getElementById("language").value;
     MediaInfo.Description = document.getElementById("description").value;
-    // Media.CategoryIDs = await getChosenCategory();
+    Media.CategoryIDs = getChosenCategory();
     return new Promise(resolve => resolve("resolved"));
 }
 

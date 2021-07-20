@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Nextflip.APIControllers;
 using Nextflip.Models.episode;
+using Nextflip.Models.mediaCategory;
 using Nextflip.Models.season;
 
 namespace Nextflip.Models.media
@@ -1194,6 +1195,7 @@ namespace Nextflip.Models.media
         {
             ViewEditorDashboard.PrototypeMediaForm media = new ViewEditorDashboard.PrototypeMediaForm();
             media.MediaInfo = GetMediaByID(mediaId);
+            media.CategoryIDs = new MediaCategoryDAO().GetCategoryIDs(mediaId);
             var seasonForms = new List<ViewEditorDashboard.PrototypeSeasonForm>();
             IEnumerable<Season> seasons = new SeasonDAO().GetSeasonsByMediaID(mediaId);
             //construct prototype season

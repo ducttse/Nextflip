@@ -20,7 +20,7 @@ namespace Nextflip.Models.mediaCategory
                     connection.Open();
                     string Sql = "Select categoryID " +
                                 "From mediaCategory " +
-                                "Where mediaID =@mediaID";
+                                "Where mediaID = @mediaID";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@mediaID", mediaID);
@@ -105,6 +105,24 @@ namespace Nextflip.Models.mediaCategory
                 throw new Exception("Add mediaCategory fail");
             }
             return result;
+        }
+
+        public void AddCatogies_Transact(MySqlConnection connection, string mediaID, IEnumerable<int> categoriesIDList)
+        {
+
+            var command = new MySqlCommand();
+            command.CommandText = "DELETE FROM mediaCategory WHERE @mediaID = mediaID";
+            command.Parameters.AddWithValue("@mediaID", mediaID);
+            command.ExecuteNonQuery();
+            foreach (var categoryID in categoriesIDList)
+            {
+                command.Connection = connection;
+                command.CommandText = "INSERT INTO mediaCategory (mediaID, categoryID) " +
+                        "VALUES (@mediaID, @categoryID)";
+                command.Parameters.AddWithValue("@mediaID", mediaID);
+                command.Parameters.AddWithValue("@categoryID", categoryID);
+                command.ExecuteNonQuery();
+            }
         }
     }
 }

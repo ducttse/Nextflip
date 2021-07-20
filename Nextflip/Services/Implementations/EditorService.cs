@@ -2,7 +2,6 @@
 using Nextflip.Models.episode;
 using Nextflip.Models.media;
 using Nextflip.Models.mediaCategory;
-using Nextflip.Models.mediaEditRequest;
 using Nextflip.Models.season;
 using Nextflip.Models.subtitle;
 using Nextflip.Services.Interfaces;
@@ -17,16 +16,14 @@ namespace Nextflip.Services.Implementations
     public class EditorService : IEditorService
     {
         private readonly IMediaDAO _mediaDAO;
-        private readonly IMediaEditRequestDAO _mediaEditRequestDAO;
         private readonly IEpisodeDAO _episodeDAO;
         private readonly ISeasonDAO _seasonDAO;
         private readonly ISubtitleDAO _subtitleDAO;
         private readonly ICategoryDAO _categoryDAO;
         private readonly IMediaCategoryDAO _mediaCategoryDAO;
-        public EditorService(IMediaEditRequestDAO mediaEditRequestDAO, IMediaDAO mediaDAO, IEpisodeDAO episodeDAO, ISeasonDAO seasonDAO, 
+        public EditorService(IMediaDAO mediaDAO, IEpisodeDAO episodeDAO, ISeasonDAO seasonDAO, 
             ISubtitleDAO subtitleDAO, IMediaCategoryDAO mediaCategoryDAO, ICategoryDAO categoryDAO)
         {
-            _mediaEditRequestDAO = mediaEditRequestDAO;
             _mediaDAO = mediaDAO;
             _episodeDAO = episodeDAO;
             _seasonDAO = seasonDAO;
@@ -56,8 +53,6 @@ namespace Nextflip.Services.Implementations
 
         public bool RequestDisableMedia(string mediaID) => _mediaDAO.RequestDisableMedia(mediaID);
         public Media GetMediaByID(string mediaID) => _mediaDAO.GetMediaByID(mediaID);
-        public bool AddMediaRequest(string userEmail, string mediaID, string note, string type, string ID)
-                => _mediaEditRequestDAO.AddMediaRequest(userEmail, mediaID, note, type, ID);
         public IEnumerable<Media> GetAllMedia(int RowsOnPage, int RequestPage) => _mediaDAO.GetAllMedia(RowsOnPage, RequestPage);
         public int NumberOfMedias() => _mediaDAO.NumberOfMedias();
         public IEnumerable<Media> GetAllMediaFilterStatus(string Status, int RowsOnPage, int RequestPage)
@@ -77,14 +72,6 @@ namespace Nextflip.Services.Implementations
             => _seasonDAO.RequestChangeSeasonStatus(seasonID, newStatus);
         public bool RequestChangeSubtitleStatus(string subtitleID, string newStatus)
             => _subtitleDAO.RequestChangeSubtitleStatus(subtitleID, newStatus);
-        public IEnumerable<MediaEditRequest> GetRequestMediaFilterStatus(string userEmail, string Status, int RowsOnPage, int RequestPage)
-                        => _mediaEditRequestDAO.GetRequestMediaFilterStatus(userEmail, Status, RowsOnPage, RequestPage);
-        public int NumberOfRequestMediaFilterStatus(string userEmail, string Status) 
-            => _mediaEditRequestDAO.NumberOfRequestMediaFilterStatus(userEmail, Status);
-        public IEnumerable<MediaEditRequest> SearchingRequestMediaFilterStatus(string searchValue, string userEmail, string Status, int RowsOnPage, int RequestPage)
-                => _mediaEditRequestDAO.SearchingRequestMediaFilterStatus(searchValue, userEmail, Status, RowsOnPage, RequestPage);
-        public int NumberOfSearchingRequestMediaFilterStatus(string searchValue, string userEmail, string Status) 
-            => _mediaEditRequestDAO.NumberOfSearchingRequestMediaFilterStatus(searchValue, userEmail, Status);
         public string AddMedia(string Title, string FilmType, string Director, string Cast, int? PublishYear,
             string Duration, string BannerURL, string Language, string Description)
             => _mediaDAO.AddMedia(Title, FilmType, Director, Cast, PublishYear, Duration, BannerURL, Language, Description);

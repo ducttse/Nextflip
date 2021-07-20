@@ -1153,6 +1153,7 @@ namespace Nextflip.Models.media
                 if (newMediaID != null)
                 {
                     mediaForm.MediaInfo.MediaID = newMediaID;
+                    new MediaCategoryDAO().AddCategories_Transact(connection, mediaForm.MediaInfo.MediaID, mediaForm.CategoryIDs);
                     foreach (ViewEditorDashboard.PrototypeSeasonForm seasonForm in mediaForm.Seasons)
                     {
                         seasonForm.SeasonInfo.MediaID = newMediaID;
@@ -1291,6 +1292,8 @@ namespace Nextflip.Models.media
                         throw new Exception("Update media information failed");
                     }
                 }
+                //re-add categories
+                new MediaCategoryDAO().AddCategories_Transact(connection, mediaForm.MediaInfo.MediaID, mediaForm.CategoryIDs);
                 ///remove all old information
                 foreach (var oldSeasonForm in oldMedia.Seasons)
                 {

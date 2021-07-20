@@ -28,7 +28,7 @@ namespace Nextflip.Models.subscription
                         command.Parameters.AddWithValue("@endDate", subsciption.EndDate);
                         command.Parameters.AddWithValue("@userID", subsciption.UserID);
                         int rowAffect = command.ExecuteNonQuery();
-                        if(rowAffect >0)
+                        if (rowAffect > 0)
                         {
                             isUpdated = true;
                         }
@@ -36,7 +36,7 @@ namespace Nextflip.Models.subscription
                 }
                 return isUpdated;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -53,11 +53,11 @@ namespace Nextflip.Models.subscription
                     string Sql = "Select SubscriptionID, Status, StartDate, EndDate " +
                                 "From subscription " +
                                 "WHERE userID = @userID AND  endDate = " +
-                                "( Select Max(endDate) from Nextflip.subscription where userID = @userID AND status = 'approved');";
+                                "( Select Max(endDate) from subscription where userID = @userID AND status = 'Approved');";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@userID", userID);
-                        using(var reader = command.ExecuteReader())
+                        using (var reader = command.ExecuteReader())
                         {
                             if (reader.Read())
                             {
@@ -75,7 +75,7 @@ namespace Nextflip.Models.subscription
                 }
                 return subsciption;
             }
-            catch ( Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
@@ -146,7 +146,7 @@ namespace Nextflip.Models.subscription
                     connection.Open();
                     Debug.WriteLine(userID);
                     string Sql = @"SELECT max(endDate) FROM subscription " +
-                                 "WHERE userID = @userID AND status = 'approved'";
+                                 "WHERE userID = @userID AND status = 'Approved'";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@userID", userID);
@@ -154,7 +154,7 @@ namespace Nextflip.Models.subscription
                         {
                             if (reader.Read())
                             {
-                            //    result = reader.GetDateTime("endDate");
+                                //    result = reader.GetDateTime("endDate");
                                 if (!reader.IsDBNull(0))
                                 {
                                     result = reader.GetDateTime(0);
@@ -169,6 +169,130 @@ namespace Nextflip.Models.subscription
                 throw new Exception(exception.Message);
             }
             return result;
+        }
+
+        public IEnumerable<object> GetSubscriptions(int rows, int page, string status )
+        {
+            try
+            {
+                int limit = 2 * rows;
+                int offset = rows * (page - 1);
+                var subscriptions = new List<object>();
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select SubscriptionID, S.userID,A.userEmail, S.Status, StartDate, EndDate, issueDate, paymentPlanID " +
+                                "From subscription as S Inner Join account as A on S.userID = A.userID " +
+                                "Where S.status Like @status " +
+                                "Order By EndDate desc " +
+                                "Limit @limit " +
+                                "Offset @offset";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@status", status);
+                        command.Parameters.AddWithValue("@limit", limit);
+                        command.Parameters.AddWithValue("@offset", offset);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var subscription = new 
+                                {
+                                    SubscriptionID = reader.GetString("SubscriptionID"),
+                                    UserID = reader.GetString("userID"),
+                                    UserEmail = reader.GetString("userEmail"),
+                                    Status = reader.GetString("Status"),
+                                    StartDate = reader.GetDateTime("StartDate"),
+                                    EndDate = reader.GetDateTime("EndDate"),
+                                    IssueDate = reader.GetDateTime("issueDate"),
+                                    PaymentPlanID = reader.GetInt32("paymentPlanID")
+                                };
+                                subscriptions.Add(subscription);
+                            }
+                        }
+                    }
+                }
+                return subscriptions;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public IEnumerable<object> GetSubscriptionsByUserEmail(string userEmail, int rows, int page,string status)
+        {
+            try
+            {
+                int limit = 2 * rows;
+                int offset = rows * (page - 1);
+                var subscriptions = new List<object>();
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select SubscriptionID, S.userID, A.userEmail, S.Status, StartDate, EndDate, issueDate, paymentPlanID " +
+                                "From subscription as S Inner Join account as A on S.userID = A.userID " +
+                                "Where A.userEmail Like @userEmail And S.status Like @status " +
+                                "Order By EndDate desc " +
+                                "Limit @limit " +
+                                "Offset @offset";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userEmail", $"%{userEmail}%");
+                        command.Parameters.AddWithValue("@status", status);
+                        command.Parameters.AddWithValue("@limit", limit);
+                        command.Parameters.AddWithValue("@offset", offset);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var subscription = new 
+                                {
+                                    SubscriptionID = reader.GetString("SubscriptionID"),
+                                    UserID = reader.GetString("userID"),
+                                    UserEmail = reader.GetString("userEmail"),
+                                    Status = reader.GetString("Status"),
+                                    StartDate = reader.GetDateTime("StartDate"),
+                                    EndDate = reader.GetDateTime("EndDate"),
+                                    IssueDate = reader.GetDateTime("issueDate"),
+                                    PaymentPlanID = reader.GetInt32("paymentPlanID")
+                                };
+                                subscriptions.Add(subscription);
+                            }
+                        }
+                    }
+                }
+                return subscriptions;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        public bool RefundSubscription(string subscriptionID)
+        {
+            try
+            {
+                var isUpdate = false;
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Update subscription " +
+                                "Set status = @status " +
+                                "Where subscriptionID = @subscriptionID";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@status", "Refund");
+                        command.Parameters.AddWithValue("@subscriptionID", subscriptionID);
+                        int rowAffect = command.ExecuteNonQuery();
+                        isUpdate = rowAffect > 0;
+                    }
+                }
+                return isUpdate;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

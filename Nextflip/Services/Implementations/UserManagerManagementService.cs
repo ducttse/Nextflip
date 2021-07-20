@@ -51,5 +51,9 @@ namespace Nextflip.Services.Implementations
         public bool UpdateStaffInfo(Account account) => _accountDao.UpdateStaffInfo(account);
         public Subscription GetSubsciptionByUserID(string userID) => _subscription.GetSubsciptionByUserID(userID);
         public bool IsSubscribedUser(string userID) => _accountDao.IsSubscribedUser(userID);
+
+        public IEnumerable<object> GetSubscriptions(int rows, int page, string status) => _subscription.GetSubscriptions(rows,page,status);
+        public IEnumerable<object> GetSubscriptionsByUserEmail(string userEmail, int rows, int page, string status) => _subscription.GetSubscriptionsByUserEmail(userEmail,rows,page,status);
+        public bool RefundSubscription(string subscriptionID) => _subscription.RefundSubscription(subscriptionID);
     }
 }

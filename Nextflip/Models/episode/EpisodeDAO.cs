@@ -236,6 +236,32 @@ namespace Nextflip.Models.episode
             return episodeID;
         }
 
+        public bool CheckStatusEpisode(string seasonID)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string sql = "Select exists (select status from episode where seasonID = @seasonID AND status != 'Approved' AND status != 'Removed')";
+                    using (var command = new MySqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@seasonID", seasonID);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read()) return reader.GetBoolean(0);
+                        }
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return false;
+
+        }
+
         public string AddEpisode_Transact(MySqlConnection connection, Episode episode)
         {
             string episodeID = null;
@@ -265,5 +291,7 @@ namespace Nextflip.Models.episode
             command.Parameters.AddWithValue("@episodeID", episodeId);
             return command.ExecuteNonQuery();
         }
+
+
     }
 }

@@ -14,5 +14,6 @@ namespace Nextflip.Models.episode
         bool RequestChangeEpisodeStatus(string episodeID, string newStatus);
         string AddEpisode(Episode episode);
         string UpdateEpisode(Episode episode);
+        public bool CheckStatusEpisode(string seasonID);
     }
 }

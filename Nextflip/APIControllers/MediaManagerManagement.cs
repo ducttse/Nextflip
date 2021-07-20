@@ -41,9 +41,11 @@ namespace Nextflip.APIControllers
                 switch (request.Type.ToLower())
                 {
                     case "media":
+                        if (mediaManagerManagementService.CheckStatusSeason(request.RequestID)) return new JsonResult(new { Message = "All seasons in media - " + request.RequestID + " have not approved yet !" });
                         isValid = mediaManagerManagementService.ApproveChangeMedia(request.RequestID);
                         break;
                     case "season":
+                        if (mediaManagerManagementService.CheckStatusEpisode(request.RequestID)) return new JsonResult(new { Message = "All episodes in season -" + request.RequestID + " have not approved yet !" });
                         isValid = mediaManagerManagementService.ApproveChangeSeason(request.RequestID);
                         break;
                     case "episode":

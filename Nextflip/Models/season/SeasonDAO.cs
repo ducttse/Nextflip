@@ -262,5 +262,31 @@ namespace Nextflip.Models.season
             command.Parameters.AddWithValue("@seasonID", seasonId);
             return command.ExecuteNonQuery();
         }
+
+        public bool CheckStatusSeason(string mediaID)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string sql = "Select exists (select status from season where mediaID = @mediaID AND status != 'Approved' AND status != 'Removed')";
+                    using (var command = new MySqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@mediaID", mediaID);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read()) return reader.GetBoolean(0);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return false;
+
+        }
     }
 }

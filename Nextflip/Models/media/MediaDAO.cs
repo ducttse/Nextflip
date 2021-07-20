@@ -258,7 +258,7 @@ namespace Nextflip.Models.media
             }
         }
 
-        public IEnumerable<Media> ViewMediasFilterCategory_Status(string CategoyName, string Status, int RowsOnPage, int RequestPage)
+        public IEnumerable<Media> ViewMediasFilterCategory_Status(string CategoryName, string Status, int RowsOnPage, int RequestPage)
         {
             try
             {
@@ -267,15 +267,39 @@ namespace Nextflip.Models.media
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
+                    string Sql;
+                    if (CategoryName.Equals("all") && Status.Equals("all"))
+                    {
+                        Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media M, mediaCategory MC, category C " +
-                                "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoyName and M.status = @Status " +
-                                "and (status = 'Enabled' or status = 'Disabled') " +
+                                "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID " +
                                 "LIMIT @offset, @limit";
+                    }
+                    else if (CategoryName.Equals("all") && !Status.Equals("all"))
+                    {
+                        Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
+                                "From media M, mediaCategory MC, category C " +
+                                "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and M.status = @Status " +
+                                "LIMIT @offset, @limit";
+                    }
+                    else if (!CategoryName.Equals("all") && Status.Equals("all"))
+                    {
+                        Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
+                                "From media M, mediaCategory MC, category C " +
+                                "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName " +
+                                "LIMIT @offset, @limit";
+                    }
+                    else
+                    {
+                        Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
+                                "From media M, mediaCategory MC, category C " +
+                                "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status " +
+                                "LIMIT @offset, @limit";
+                    }
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        command.Parameters.AddWithValue("@CategoyName", CategoyName);
-                        command.Parameters.AddWithValue("@Status", Status);
+                        if (!CategoryName.Equals("all")) command.Parameters.AddWithValue("@CategoryName", CategoryName);
+                        if (!Status.Equals("all")) command.Parameters.AddWithValue("@Status", Status);
                         command.Parameters.AddWithValue("@offset", offset);
                         command.Parameters.AddWithValue("@limit", RowsOnPage);
                         using (var reader = command.ExecuteReader())
@@ -308,20 +332,41 @@ namespace Nextflip.Models.media
                 throw new Exception(ex.Message);
             }
         }
-        public int NumberOfMediasFilterCategory_Status(string CategoyName, string Status)
+        public int NumberOfMediasFilterCategory_Status(string CategoryName, string Status)
         {
             int count = 0;
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = "Select COUNT(M.mediaID) " +
-                                "From media M, mediaCategory MC, category C " +
-                                "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoyName and M.status = @Status " +
-                                "and (status = 'Enabled' or status = 'Disabled') ";
+                string Sql;
+                if (CategoryName.Equals("all") && Status.Equals("all"))
+                {
+                    Sql = "Select COUNT(M.mediaID) " +
+                          "From media M, mediaCategory MC, category C " +
+                          "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID";
+                }
+                else if (CategoryName.Equals("all") && !Status.Equals("all"))
+                {
+                    Sql = "Select COUNT(M.mediaID) " +
+                          "From media M, mediaCategory MC, category C " +
+                          "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and  M.status = @Status ";
+                }
+                else if (!CategoryName.Equals("all") && Status.Equals("all"))
+                {
+                    Sql = "Select COUNT(M.mediaID) " +
+                          "From media M, mediaCategory MC, category C " +
+                          "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName";
+                }
+                else
+                {
+                    Sql = "Select COUNT(M.mediaID) " +
+                          "From media M, mediaCategory MC, category C " +
+                          "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status ";
+                }
                 using (var command = new MySqlCommand(Sql, connection))
                 {
-                    command.Parameters.AddWithValue("@CategoyName", CategoyName);
-                    command.Parameters.AddWithValue("@Status", Status);
+                    if (!CategoryName.Equals("all")) command.Parameters.AddWithValue("@CategoryName", CategoryName);
+                    if (!Status.Equals("all")) command.Parameters.AddWithValue("@Status", Status);
                     using (var reader = command.ExecuteReader())
                     {
                         if (reader.Read())
@@ -424,17 +469,44 @@ namespace Nextflip.Models.media
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
+                    string Sql;
+                    if (CategoryName.Equals("all") && Status.Equals("all"))
+                    {
+                        Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
+                                "From media M, mediaCategory MC, category C " +
+                                "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
+                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID " +
+                                "LIMIT @offset, @limit";
+                    }
+                    else if (CategoryName.Equals("all") && !Status.Equals("all"))
+                    {
+                        Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
+                                "From media M, mediaCategory MC, category C " +
+                                "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
+                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and M.status = @Status " +
+                                "LIMIT @offset, @limit";
+                    }
+                    else if (!CategoryName.Equals("all") && Status.Equals("all"))
+                    {
+                        Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
+                                "From media M, mediaCategory MC, category C " +
+                                "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
+                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName " +
+                                "LIMIT @offset, @limit";
+                    }
+                    else
+                    {
+                        Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media M, mediaCategory MC, category C " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
                                 "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status " +
-                                "and (status = 'Enabled' or status = 'Disabled') " +
                                 "LIMIT @offset, @limit";
+                    }
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@searchValue", SearchValue);
-                        command.Parameters.AddWithValue("@CategoryName", CategoryName);
-                        command.Parameters.AddWithValue("@Status", Status);
+                        if (!CategoryName.Equals("all")) command.Parameters.AddWithValue("@CategoryName", CategoryName);
+                        if (!Status.Equals("all")) command.Parameters.AddWithValue("@Status", Status);
                         command.Parameters.AddWithValue("@offset", offset);
                         command.Parameters.AddWithValue("@limit", RowsOnPage);
                         using (var reader = command.ExecuteReader())
@@ -473,16 +545,40 @@ namespace Nextflip.Models.media
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = "Select COUNT(M.mediaID) " +
+                string Sql;
+                if (CategoryName.Equals("all") && Status.Equals("all"))
+                {
+                    Sql = "Select COUNT(M.mediaID) " +
                                 "From media M, mediaCategory MC, category C " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
-                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status " +
-                                "and (status = 'Enabled' or status = 'Disabled') ";
+                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID";
+                }
+                else if (CategoryName.Equals("all") && !Status.Equals("all"))
+                {
+                    Sql = "Select COUNT(M.mediaID) " +
+                                "From media M, mediaCategory MC, category C " +
+                                "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
+                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and M.status = @Status ";
+                }
+                else if (!CategoryName.Equals("all") && Status.Equals("all"))
+                {
+                    Sql = "Select COUNT(M.mediaID) " +
+                                "From media M, mediaCategory MC, category C " +
+                                "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
+                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName";
+                }
+                else
+                {
+                    Sql = "Select COUNT(M.mediaID) " +
+                                "From media M, mediaCategory MC, category C " +
+                                "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
+                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status ";
+                }
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     command.Parameters.AddWithValue("@SearchValue", SearchValue);
-                    command.Parameters.AddWithValue("@CategoryName", CategoryName);
-                    command.Parameters.AddWithValue("@Status", Status);
+                    if (!CategoryName.Equals("all")) command.Parameters.AddWithValue("@CategoryName", CategoryName);
+                    if (!Status.Equals("all")) command.Parameters.AddWithValue("@Status", Status);
                     using (var reader = command.ExecuteReader())
                     {
                         if (reader.Read())

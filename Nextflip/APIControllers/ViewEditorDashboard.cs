@@ -426,6 +426,72 @@ namespace Nextflip.APIControllers
         //    }
         //}
 
+        //Get
+        [HttpPost]
+        [Route("GetMedia")]
+        public JsonResult GetMedia([FromServices] IEditorService editorService,
+                                [FromBody] Request request)
+        {
+            try
+            {
+                if (request.Status.Trim() == "") request.Status = "all";
+                if (request.CategoryName.Trim() == "") request.CategoryName = "all";
+                IEnumerable<Media> mediaList = editorService.ViewMediasFilterCategory_Status(request.CategoryName.Trim().ToLower(),
+                    request.Status.Trim(), request.RowsOnPage, request.RequestPage);
+                int count = editorService.NumberOfMediasFilterCategory_Status(request.CategoryName.Trim().ToLower(), request.Status.Trim());
+                double totalPage = (double)count / (double)request.RowsOnPage;
+                var result = new
+                {
+                    TotalPage = (int)Math.Ceiling(totalPage),
+                    Data = mediaList
+                };
+                return (new JsonResult(result));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetMediaRequest: " + ex.Message);
+                return new JsonResult(new
+                {
+                    message = ex.Message
+                });
+            }
+        }
+
+        //Search
+        [Route("SearchingMedia")]
+        public JsonResult SearchingMedia([FromServices] IEditorService editorService, [FromBody] Request request)
+        {
+            try
+            {
+                var message = new
+                {
+                    message = "Empty searchValue"
+                };
+                if (request.SearchValue.Trim() == "") return new JsonResult(message);
+                if (request.Status.Trim() == "") request.Status = "all";
+                if (request.CategoryName.Trim() == "") request.CategoryName = "all";
+                IEnumerable<Media> mediaList = editorService.GetMediasByTitleFilterCategory_Status(request.SearchValue.Trim().ToLower(),
+                    request.CategoryName.Trim().ToLower(), request.Status.Trim(), request.RowsOnPage, request.RequestPage);
+                int count = editorService.NumberOfMediasBySearchingFilterCategory_Status(request.SearchValue.Trim().ToLower(),
+                    request.CategoryName.Trim().ToLower(), request.Status.Trim());
+                double totalPage = (double)count / (double)request.RowsOnPage;
+                var result = new
+                {
+                    TotalPage = (int)Math.Ceiling(totalPage),
+                    Data = mediaList
+                };
+                return (new JsonResult(result));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("SearchingMediaRequest: " + ex.Message);
+                return new JsonResult(new
+                {
+                    message = ex.Message
+                });
+            }
+        }
+
         [HttpPost]
         [Route("AddMedia")]
         public IActionResult AddMedia([FromServices] IEditorService editorService, [FromBody] Request request)

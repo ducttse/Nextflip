@@ -111,9 +111,11 @@ namespace Nextflip.Models.mediaCategory
         {
 
             var command = new MySqlCommand();
+            command.Connection = connection;
             command.CommandText = "DELETE FROM mediaCategory WHERE @mediaID = mediaID";
             command.Parameters.AddWithValue("@mediaID", mediaID);
             command.ExecuteNonQuery();
+            command.Parameters.Clear();
             foreach (var categoryID in categoriesIDList)
             {
                 command.Connection = connection;
@@ -122,6 +124,7 @@ namespace Nextflip.Models.mediaCategory
                 command.Parameters.AddWithValue("@mediaID", mediaID);
                 command.Parameters.AddWithValue("@categoryID", categoryID);
                 command.ExecuteNonQuery();
+                command.Parameters.Clear();
             }
         }
     }

@@ -222,7 +222,7 @@ namespace Nextflip.Models.media
                     connection.Open();
                     string Sql = "Select mediaID, status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media " +
-                                "Where mediaID = @mediaID";
+                                "Where mediaID = @mediaID and status != 'removed'";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@mediaID", mediaID);
@@ -1226,6 +1226,7 @@ namespace Nextflip.Models.media
                 command.Parameters.AddWithValue("@bannerURL_Input", mediaInfo.BannerURL);
                 command.Parameters.AddWithValue("@language_Input", mediaInfo.Language);
                 command.Parameters.AddWithValue("@description_Input", mediaInfo.Description);
+                command.Parameters.AddWithValue("@status_Input", mediaInfo.Status);
                 command.Parameters.Add("@mediaID_Output", MySqlDbType.String).Direction
                     = ParameterDirection.Output;
                 command.ExecuteNonQuery();
@@ -1268,6 +1269,118 @@ namespace Nextflip.Models.media
             }
             return cloneMediaID;
 
+        }
+
+        public string EditMedia(ViewEditorDashboard.PrototypeMediaForm mediaForm)
+        {
+            string mediaID = null;
+            var oldMedia = GetDetailedMedia(mediaForm.MediaInfo.MediaID);
+            using MySqlConnection connection = new MySqlConnection(DbUtil.ConnectionString);
+            connection.Open();
+            var transaction = connection.BeginTransaction();
+            try
+            {
+                ///try to update when media information changed
+                if (!oldMedia.MediaInfo.EqualWithoutStatus(mediaForm.MediaInfo))
+                {
+                    int result = UpdateMedia_Transact(connection, mediaForm.MediaInfo);
+                    if (result == 0)
+                    {
+                        throw new Exception("Update media information failed");
+                    }
+                }
+                ///remove all old information
+                foreach (var oldSeasonForm in oldMedia.Seasons)
+                {
+                    foreach (var episode in oldSeasonForm.Episodes)
+                    {
+                        int episodeResult = new EpisodeDAO().RemoveEpisode_Transact(connection, episode.EpisodeID);
+                    }
+                    int seasonResult = new SeasonDAO().RemoveSeason_Transact(connection, oldSeasonForm.SeasonInfo.SeasonID);
+                }
+                ///apply change to dtb
+                foreach (var newSeasonForm in mediaForm.Seasons)
+                {
+                    var oldSeason =
+                        oldMedia.Seasons.First(ss => ss.SeasonInfo.SeasonID == newSeasonForm.SeasonInfo.SeasonID);
+                    ///check if not changed
+                    if (newSeasonForm.SeasonInfo.EqualWithoutStatus(oldSeason.SeasonInfo)) {
+                        if (newSeasonForm.Episodes.Count() == oldSeason.Episodes.Count())
+                        {
+                            bool flag = false;
+                            var list1 = newSeasonForm.Episodes.ToArray();
+                            var list2 = oldSeason.Episodes.ToArray();
+                            for (int i = 0; i < list1.Length; ++i)
+                            {
+                                if (!list1[i].EqualWithoutStatus(list2[i]))
+                                {
+                                    flag = true;
+                                }
+                            }
+                            if (flag == false)
+                            {
+                                newSeasonForm.SeasonInfo.Status = oldSeason.SeasonInfo.Status;
+                            }
+                        }
+                    }
+
+                    string newSeasonID = new SeasonDAO().AddSeason_Transact(connection, newSeasonForm.SeasonInfo);
+                    foreach (var episode in newSeasonForm.Episodes)
+                    {
+                        if (episode.EpisodeID != null && episode.EpisodeID.Trim() != "" && oldSeason != null)
+                        {
+                            var oldEpisode = oldSeason.Episodes.Where(ep => ep.EpisodeID == episode.EpisodeID).First();
+                            if (episode.EqualWithoutStatus(oldEpisode))
+                            {
+                                episode.Status = oldEpisode.Status;
+                            }
+                        }
+                        episode.SeasonID = newSeasonID;
+                        string episodeID = new EpisodeDAO().AddEpisode_Transact(connection, episode);
+                        episode.EpisodeID = episodeID;
+                    }
+                }
+
+            }
+            catch (Exception exception)
+            {
+                //try rollback
+                try
+                {
+                    transaction.Rollback();
+                }
+                catch (Exception rollbackException)
+                {
+                    throw new Exception("Edit media failed, attempt to rollback also failed " + rollbackException.Message);
+                }
+                throw new Exception("Edit media failed " + exception.Message);
+            }
+            return mediaID;
+        }
+
+        private int UpdateMedia_Transact(MySqlConnection connection, Media mediaInfo)
+        {
+            int result = 0;
+            using MySqlCommand command = new MySqlCommand();
+            command.Connection = connection;
+            command.CommandType = CommandType.StoredProcedure;
+            AddMediaExecute();
+            void AddMediaExecute()
+            {
+                command.CommandText = "updateMedia";
+                command.Parameters.AddWithValue("@mediaID_Input", mediaInfo.MediaID);
+                command.Parameters.AddWithValue("@title_Input", mediaInfo.Title);
+                command.Parameters.AddWithValue("@filmType_Input", mediaInfo.FilmType);
+                command.Parameters.AddWithValue("@director_Input", mediaInfo.Director);
+                command.Parameters.AddWithValue("@cast_Input", mediaInfo.Cast);
+                command.Parameters.AddWithValue("@publishYear_Input", mediaInfo.PublishYear);
+                command.Parameters.AddWithValue("@duration_Input", mediaInfo.Duration);
+                command.Parameters.AddWithValue("@bannerURL_Input", mediaInfo.BannerURL);
+                command.Parameters.AddWithValue("@language_Input", mediaInfo.Language);
+                command.Parameters.AddWithValue("@description_Input", mediaInfo.Description);
+                result = command.ExecuteNonQuery();
+            }
+            return result;
         }
     }
 }

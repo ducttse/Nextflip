@@ -45,5 +45,6 @@ namespace Nextflip.Models.media
         string AddNewMedia(ViewEditorDashboard.PrototypeMediaForm mediaForm);
         ViewEditorDashboard.PrototypeMediaForm GetDetailedMedia(string mediaId);
         public string CloneMedia(string mediaID);
+        string EditMedia(ViewEditorDashboard.PrototypeMediaForm mediaForm);
     }
 }

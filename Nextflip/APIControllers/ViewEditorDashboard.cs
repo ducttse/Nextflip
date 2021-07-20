@@ -746,7 +746,7 @@ namespace Nextflip.APIControllers
             }
             catch (Exception exception)
             {
-                _logger.LogInformation("EditEpisode: " + exception.Message);
+                _logger.LogInformation("Add New Media: " + exception.Message);
                 return new JsonResult(new
                 {
                     Message = "Fail." + exception.Message
@@ -770,6 +770,29 @@ namespace Nextflip.APIControllers
             public Media MediaInfo { get; set; }
             public IEnumerable<PrototypeSeasonForm> Seasons { get; set; }
         }
-        
+
+        [Route("EditMedia")]
+        [HttpPost]
+        public IActionResult Edit([FromServices] IEditorService editorService, [FromBody] PrototypeMediaForm mediaForm)
+        {
+            try
+            {
+                var mediaID = editorService.EditMedia(mediaForm);
+                return new JsonResult(new
+                {
+                    Message = "Success",
+                    MediaID = mediaID
+                });
+            }
+            catch (Exception exception)
+            {
+                _logger.LogInformation("Edit Media: " + exception.Message);
+                return new JsonResult(new
+                {
+                    Message = "Fail." + exception.Message
+                });
+            }
+        }
+
     }
 }

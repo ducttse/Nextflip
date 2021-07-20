@@ -18,5 +18,19 @@ namespace Nextflip.Models.media
         public string BannerURL { get; set; }
         public string Language { get; set; }
         public string Description{ get; set; }
+
+        public bool EqualWithoutStatus(Media anotherMedia)
+        {
+            if (anotherMedia is null) return false;
+            return Title == anotherMedia.Title &&
+                   FilmType == anotherMedia.FilmType &&
+                   Director == anotherMedia.Director &&
+                   Cast == anotherMedia.Cast &&
+                   PublishYear == anotherMedia.PublishYear &&
+                   Duration == anotherMedia.Duration &&
+                   BannerURL == anotherMedia.BannerURL &&
+                   Language == anotherMedia.Language &&
+                   Description == anotherMedia.Description;
+        }
     }
 }

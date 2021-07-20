@@ -113,7 +113,7 @@ namespace Nextflip
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => {
                 options.AccessDeniedPath = "/Common/AccessDenied";
-                options.LoginPath = "/Login/Index";
+                options.LoginPath = "/Account/Login";
                 options.EventsType = typeof(CookieUtil);
                 });
             services.AddAuthorization(options =>

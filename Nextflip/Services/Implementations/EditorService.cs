@@ -105,5 +105,10 @@ namespace Nextflip.Services.Implementations
         {
             return _mediaDAO.AddNewMedia(mediaForm);
         }
+
+        public string EditMedia(ViewEditorDashboard.PrototypeMediaForm mediaForm)
+        {
+            return _mediaDAO.EditMedia(mediaForm);
+        }
     }
 }

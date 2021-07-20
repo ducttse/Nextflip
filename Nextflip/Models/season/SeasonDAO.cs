@@ -316,5 +316,15 @@ namespace Nextflip.Models.season
             seasonID = (string)command.Parameters["@seasonID_Output"].Value;
             return seasonID;
         }
+
+        public int RemoveSeason_Transact(MySqlConnection connection, string seasonId)
+        {
+            MySqlCommand command = new MySqlCommand();
+            command.Connection = connection;
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "removeSeason";
+            command.Parameters.AddWithValue("@seasonID", seasonId);
+            return command.ExecuteNonQuery();
+        }
     }
 }

@@ -20,7 +20,7 @@ namespace Nextflip.Models.episode
                     connection.Open();
                     string Sql = "Select episodeID, title, thumbnailURL, status, number, episodeURL " +
                                 "From episode " +
-                                "Where seasonID = @seasonID " +
+                                "Where seasonID = @seasonID and status != 'removed' " +
                                 "Order By number";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
@@ -62,7 +62,7 @@ namespace Nextflip.Models.episode
                     connection.Open();
                     string Sql = "Select title, thumbnailURL, seasonID, status, number, episodeURL " +
                                 "From episode " +
-                                "Where episodeID = @episodeID";
+                                "Where episodeID = @episodeID and status != 'removed'";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@episodeID", episodeID);
@@ -318,6 +318,16 @@ namespace Nextflip.Models.episode
             command.ExecuteNonQuery();
             episodeID = (string)command.Parameters["@episodeID_Output"].Value;
             return episodeID;
+        }
+
+        public int RemoveEpisode_Transact(MySqlConnection connection, string episodeId)
+        {
+            MySqlCommand command = new MySqlCommand();
+            command.Connection = connection;
+            command.CommandType = CommandType.StoredProcedure;
+            command.CommandText = "removeEpisode";
+            command.Parameters.AddWithValue("@episodeID", episodeId);
+            return command.ExecuteNonQuery();
         }
     }
 }

@@ -58,5 +58,6 @@ namespace Nextflip.Services.Interfaces
         string AddEpisode(Episode episode);
         string UpdateEpisode(Episode episode);
         string AddNewMedia(ViewEditorDashboard.PrototypeMediaForm mediaForm);
+        string EditMedia(ViewEditorDashboard.PrototypeMediaForm mediaForm);
     }
 }

@@ -42,8 +42,10 @@ namespace Nextflip.Controllers
         {
             return View();
         }
-        public IActionResult ViewEditMedia()
+        [HttpGet("/EditorDashboard/ViewEditMedia/{id}")]
+        public IActionResult ViewEditMedia(String id)
         {
+            ViewBag.MediaID = id;
             return View();
         }
     }

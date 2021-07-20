@@ -1,34 +1,14 @@
-﻿let Season = {
-    SeasonInfo: {
-        Title: "",
-        ThumbnailURL: "",
-        Number: "",
-    },
-    Episodes: []
-}
-
-let MediaInfo = {
-    Title: "",
-    FilmType: "",
-    Director: "",
-    Cast: "",
-    PublishYear: "",
-    Duration: "",
-    BannerURL: "",
-    Language: "",
-    Description: "",
-    CategoryIDArray: []
-}
-
-let Media = {
-    MediaInfo: MediaInfo,
-    Seasons: []
-}
-
-function getChosenCategory() {
-    return Array.from(document.querySelectorAll('input[type="checkbox"].category'))
-        .filter(cate => cate.checked)
-        .map(cate => cate.value);
+﻿let MediaObj;
+async function getRequestObjID(id) {
+    let result = "";
+    await fetch(`/api/MediaManagerManagement/GetDetailedMedia/${id}`)
+        .then(res => res.json())
+        .then(json => {
+            console.log(json);
+            MediaObj = json;
+            setValue();
+        });
+    return result;
 }
 
 function debounce(func, timeout = 300) {
@@ -39,128 +19,31 @@ function debounce(func, timeout = 300) {
     };
 }
 
-const onInput = debounce((obj) => {
-    let parent = obj.parentNode;
-    let feedback = parent.querySelector(".invalid-feedback");
-    parent.classList.add("was-validated");
-    if (obj.value.trim().length == 0) {
-        feedback.textContent = "This field can not empty";
-        obj.setCustomValidity("empty");
-    }
-    else {
-        parent.classList.remove("was-validated");
-        feedback.textContent = "";
-        obj.setCustomValidity("");
-    }
-});
-
-function checkEmpty(obj) {
-    let parent = obj.parentNode;
-    let feedback = parent.querySelector(".invalid-feedback");
-    parent.classList.add("was-validated");
-    if (obj.value.trim().length == 0) {
-        feedback.textContent = "This field can not empty";
-        obj.setCustomValidity("empty");
-        return false;
-    }
-    else {
-        parent.classList.remove("was-validated");
-        feedback.textContent = "";
-        obj.setCustomValidity("");
-        return true;
-    }
+function setValue() {
+    document.getElementById("title").value = MediaObj.mediaInfo.title;
+    document.getElementById("director").value = MediaObj.mediaInfo.director;
+    document.getElementById("cast").value = MediaObj.mediaInfo.cast;
+    document.getElementById("publicYear").value = MediaObj.mediaInfo.publishYear;
+    document.getElementById("duration").value = MediaObj.mediaInfo.duration;
+    document.getElementById("language").value = MediaObj.mediaInfo.language;
+    document.getElementById("description").value = MediaObj.mediaInfo.description;
+    setChosenCategory();
+    setChosenMediaType();
+    document.getElementById("season_container").innerHTML = MediaObj.seasons.map(
+        (season) => {
+            let episodes = season.episodes.map(episode => {
+                return renderEpisode(episode, '1')
+            }).join("");
+            let seasonRendered = renderSeason(season).concat(episodes);
+            return seasonRendered;
+        }
+    ).join("");
 }
 
-async function setMediaInfo() {
-    MediaInfo.Title = document.getElementById("title").value;
-    MediaInfo.FilmType = document.getElementById("filmType").value;
-    MediaInfo.Director = document.getElementById("director").value;
-    MediaInfo.Cast = document.getElementById("cast").value;
-    MediaInfo.PublishYear = document.getElementById("publicYear").value;
-    MediaInfo.Duration = document.getElementById("duration").value;
-    getFile(document.getElementById("banner"));
-    MediaInfo.BannerURL = await requestUploadBanner();
-    MediaInfo.Language = document.getElementById("language").value;
-    MediaInfo.Description = document.getElementById("description").value;
-    MediaInfo.CategoryIDArray = getChosenCategory();
-    return new Promise(resolve => resolve("resolved"));
-}
-let SeasonNumber = 1;
-let EpisodeNumber = 1;
-function setSeasonNumber(num) {
-    SeasonNumber = num;
-}
-function setEpisodeNumber(num) {
-    EpisodeNumber = num;
-}
-async function setSeason() {
-    if (validateAddNewSeason() == 0) {
-        return;
-    }
-    let Season = {
-        SeasonInfo: {
-            Title: "",
-            ThumbnailURL: "",
-            Number: "",
-        },
-        Episodes: []
-    }
-    document.getElementById("spinner").classList.remove("d-none");
-    Season.SeasonInfo.Title = document.getElementById("titleSeason").value;
-    getFile(document.getElementById("bannerSeason"));
-    Season.SeasonInfo.ThumbnailURL = await requestUploadBanner();
-    Season.SeasonInfo.Number = SeasonNumber;
-    Media.Seasons.push(Season);
-    document.getElementById("season_container").insertAdjacentHTML("beforeend", renderSeason(Season, Media.Seasons.length - 1));
-    document.getElementById("spinner").classList.add("d-none");
-    document.querySelector("#modalAddSeasonForm .btn-close").click();
-    SeasonNumber++;
-}
-
-async function setEpisode(obj) {
-    if (validateAddNewEpisode() == 0) {
-        return;
-    }
-    let index = parseInt(obj.getAttribute("index"));
-    let Episode = {
-        Title: "",
-        ThumbnailURL: "",
-        EpisodeURL: "",
-        Number: "",
-    }
-    document.getElementById("spinner").classList.remove("d-none");
-    Episode.Title = document.getElementById("titleEpisode").value;
-    Episode.Number = EpisodeNumber;
-    getFile(document.getElementById("bannerEpisode"));
-    Episode.ThumbnailURL = await requestUploadEpisodeThumbnail(Media.Seasons[ index ].SeasonInfo.Number, Episode.Number);
-    getFile(document.getElementById("videoEpisode"));
-    Episode.EpisodeURL = await requestUploadVideo(Media.Seasons[ index ].SeasonInfo.Number, Episode.Number);
-    Media.Seasons[ index ].Episodes.push(Episode);
-    document.getElementById("season_container").insertAdjacentHTML("beforeend", renderEpisode(Episode));
-    document.getElementById("spinner").classList.add("d-none");
-    document.querySelector("#modalAddEpisodeForm .btn-close").click();
-    EpisodeNumber++;
-}
-
-function renderEpisode(episode) {
-    return `
-    <div class="ps-3 mt-2" id="episode_${episode.Number}">
-        <p class="mb-1">Episode ${episode.Number}: ${episode.Title}</p>
-    </div>
-    `
-}
-
-function setModalAddEpisode(number) {
-    document.getElementById("episode_submit_btn").setAttribute("index", number);
-}
-
-function renderSeason(item, num) {
-    return `
-        <div class="d-flex" id="season_${item.SeasonInfo.Number}">
-            <p class="me-4 mb-0 align-self-center">Season ${item.SeasonInfo.Number}: ${item.SeasonInfo.Title}</p>
-            <div class="btn btn-primary btn-sm" onclick="setModalAddEpisode('${num}')" data-bs-toggle="modal" data-bs-target="#modalAddEpisodeForm">Add new episode</div>
-        </div>
-    `
+function setChosenCategory() {
+    return Array.from(document.querySelectorAll('input[type="checkbox"].category'))
+        .filter(cate => MediaObj.categoryIDs.includes(parseInt(cate.value)))
+        .map(cate => cate.setAttribute("checked", true));
 }
 
 function renderCategoryCheckBox(category) {
@@ -170,6 +53,10 @@ function renderCategoryCheckBox(category) {
             <label class="form-check-label text-capitalize" for="inlineCheckbox1">${category.name}</label>
         </div>
     `;
+}
+
+function setChosenMediaType() {
+    document.getElementById("filmType").value = MediaObj.mediaInfo.filmType;
 }
 
 function requestCategories() {
@@ -190,79 +77,24 @@ function requestMediaType() {
     })
 }
 
-const addNewMedia = debounce(() => requestAddNewMedia());
-function requestAddNewMedia() {
-    setMediaInfo();
-    if (validateInputAddMedia() == 0) {
-        return;
-    }
-    let reqHeader = new Headers();
-    reqHeader.append("Content-Type", "text/json");
-    reqHeader.append("Accept", "application/json, text/plain, */*");
-    let initObject = {
-        method: "POST",
-        headers: reqHeader,
-        body: JSON.stringify(Media)
-    };
-    fetch("/api/ViewEditorDashboard/AddNewMedia", initObject)
-        .then(res => res.json())
-        .then(json => {
-            if (json.message == "Success") {
-                location.replace("/EditorDashboard/Index")
-            }
-        })
+function renderSeason(item, num) {
+    return `
+        <div class="d-flex" id="season_${item.seasonInfo.number}">
+            <p class="me-4 mb-0 align-self-center">Season ${item.seasonInfo.number}: ${item.seasonInfo.title}</p>
+            <div class="btn btn-primary btn-sm me-2" onclick="setEpisodeNumber('${item.seasonInfo.number}'); setModalAddEpisode('${num}');" data-bs-toggle="modal" data-bs-target="#modalAddEpisodeForm">Add new episode</div>
+            <div class="btn btn-danger btn-sm" onclick="showConfirm('season', '${item.seasonInfo.number}')" data-bs-toggle="modal" data-bs-target="#confirmModal">Delete</div>
+        </div>
+    `
 }
 
-function validateCheckBoxValue() {
-    if (document.querySelectorAll(`.category[type="checkbox"]:checked`).length == 0) {
-        document.getElementById("empty_checkbox").classList.remove("d-none");
-        return false;
-    }
-    else {
-        document.getElementById("empty_checkbox").classList.add("d-none");
-        return true;
-    }
-}
-
-function validateInputAddMedia() {
-    return checkEmpty(document.getElementById("title")) &
-        checkEmpty(document.getElementById("language")) &
-        checkEmpty(document.getElementById("description")) &
-        getFile(document.getElementById("banner")) &
-        validateCheckBoxValue();
-}
-
-function validateAddNewSeason() {
-    return checkEmpty(document.getElementById("titleSeason")) &
-        getFile(document.getElementById("bannerSeason"));
-}
-
-function validateAddNewEpisode() {
-    return checkEmpty(document.getElementById("titleEpisode")) &
-        getFile(document.getElementById("bannerEpisode")) &
-        getFile(document.getElementById("videoEpisode"));
+function renderEpisode(episode, index) {
+    return `
+    <div class="ps-3 mt-2 d-flex" id="episode_${episode.number}">
+        <p class="mb-1 me-4">Episode ${episode.number}: ${episode.title}</p>
+        <div class="btn btn-danger btn-sm" onclick="showConfirm('episode', '${episode.mumber}', '${index}')" data-bs-toggle="modal" data-bs-target="#confirmModal">Delete</div>
+    </div>
+    `
 }
 
 requestCategories();
 requestMediaType();
-
-document.getElementById("modalAddSeasonForm").addEventListener("hidden.bs.modal", () => {
-    let title = document.getElementById("titleSeason");
-    let banner = document.getElementById("bannerSeason");
-    banner.value = "";
-    title.value = "";
-    banner.parentNode.classList.remove("was-validated");
-    title.parentNode.classList.remove("was-validated");
-})
-
-document.getElementById("modalAddEpisodeForm").addEventListener("hidden.bs.modal", () => {
-    let title = document.getElementById("titleEpisode");
-    let banner = document.getElementById("bannerEpisode");
-    let video = document.getElementById("videoEpisode");
-    title.value = "";
-    banner.value = "";
-    video.value = "";
-    title.parentNode.classList.remove("was-validated");
-    banner.parentNode.classList.remove("was-validated");
-    video.parentNode.classList.remove("was-validated");
-})

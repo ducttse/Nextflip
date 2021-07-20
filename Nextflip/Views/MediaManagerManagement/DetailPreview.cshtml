@@ -15,7 +15,7 @@
             </div>
         </div>
         <div class="d-flex justify-content-center mt-2">
-            <button class="btn btn-primary">Publish</button>
+            <button class="btn btn-primary mb-3" onclick="publish()">Publish</button>
         </div>
     </div>
 </div>
@@ -31,7 +31,7 @@
                 </div>
                 <div>
                     <textarea class="form-control" rows="15" cols="90" id="note_input"></textarea>
-                    <button class="btn btn-primary" onclick="">Submit</button>
+                    <button class="btn btn-primary" id="submit_btn" onclick="disapprove(this)">Submit</button>
                 </div>
             </div>
         </div>
@@ -49,6 +49,16 @@
         </div>
     </div>
 </div>
+<!-- flash message -->
+<div class="modal fade" id="modal_flash" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body d-flex flex-column">
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="~/js/Media-Detail-Preview.js"></script>
 <script src="~/js/Slide-Bar.js"></script>
 <script>

@@ -72,8 +72,21 @@ loadAccount().then(() => {
     }
     if (document.getElementById("sideBar") != null) {
         let role;
-        console.log(localStorage.getItem("URL").split("/")[ 1 ]);
-        if (document.getElementById("imgAndName_holder") != null) {
+        switch (localStorage.getItem("URL").split("/")[ 1 ]) {
+            case "UserManagerManagement":
+                role = "User Manager";
+                break;
+            case "MediaManagerManagement":
+                role = "Media Manager";
+                break;
+            case "EditorDashboard":
+                role = "Media Editor";
+                break;
+            case "SupporterDashboard":
+                role = "Ticket Supporter";
+                break;
+        }
+        if (document.getElementById("imgAndName_holder") != null || location.pathname.split("/")[ 2 ] == "AdminProfile") {
             switch (localStorage.getItem("URL").split("/")[ 1 ]) {
                 case "UserManagerManagement":
                     role = "User Manager";

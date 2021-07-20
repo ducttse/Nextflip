@@ -1,13 +1,4 @@
-﻿let Season = {
-    SeasonInfo: {
-        Title: "",
-        ThumbnailURL: "",
-        Number: "",
-    },
-    Episodes: []
-}
-
-let MediaInfo = {
+﻿let MediaInfo = {
     Title: "",
     FilmType: "",
     Director: "",
@@ -85,14 +76,19 @@ async function setMediaInfo() {
     MediaInfo.CategoryIDArray = getChosenCategory();
     return new Promise(resolve => resolve("resolved"));
 }
-let SeasonNumber = 1;
-let EpisodeNumber = 1;
-function setSeasonNumber(num) {
-    SeasonNumber = num;
+
+
+const addSeason = debounce(() => setSeason());
+
+function setSeasonNumber() {
+    document.getElementById("numberSeason").textContent = Media.Seasons.length + 1;
 }
-function setEpisodeNumber(num) {
-    EpisodeNumber = num;
+
+function setEpisodeNumber(index) {
+    let num = parseInt(index) - 1;
+    document.getElementById("numberEpisode").textContent = Media.Seasons[ num ].Episodes.length + 1;
 }
+
 async function setSeason() {
     if (validateAddNewSeason() == 0) {
         return;
@@ -106,16 +102,19 @@ async function setSeason() {
         Episodes: []
     }
     document.getElementById("spinner").classList.remove("d-none");
+    document.getElementById("submit_btn").disabled = true;
     Season.SeasonInfo.Title = document.getElementById("titleSeason").value;
     getFile(document.getElementById("bannerSeason"));
     Season.SeasonInfo.ThumbnailURL = await requestUploadBanner();
-    Season.SeasonInfo.Number = SeasonNumber;
+    Season.SeasonInfo.Number = Media.Seasons.length + 1;
     Media.Seasons.push(Season);
     document.getElementById("season_container").insertAdjacentHTML("beforeend", renderSeason(Season, Media.Seasons.length - 1));
     document.getElementById("spinner").classList.add("d-none");
     document.querySelector("#modalAddSeasonForm .btn-close").click();
-    SeasonNumber++;
+    document.getElementById("submit_btn").disabled = false;
 }
+
+const addEpisode = debounce((obj) => setEpisode(obj));
 
 async function setEpisode(obj) {
     if (validateAddNewEpisode() == 0) {
@@ -129,23 +128,75 @@ async function setEpisode(obj) {
         Number: "",
     }
     document.getElementById("spinner").classList.remove("d-none");
+    document.getElementById("episode_submit_btn").disabled = true;
     Episode.Title = document.getElementById("titleEpisode").value;
+    let EpisodeNumber = Media.Seasons[ index ].Episodes.length + 1;
     Episode.Number = EpisodeNumber;
     getFile(document.getElementById("bannerEpisode"));
     Episode.ThumbnailURL = await requestUploadEpisodeThumbnail(Media.Seasons[ index ].SeasonInfo.Number, Episode.Number);
     getFile(document.getElementById("videoEpisode"));
     Episode.EpisodeURL = await requestUploadVideo(Media.Seasons[ index ].SeasonInfo.Number, Episode.Number);
     Media.Seasons[ index ].Episodes.push(Episode);
-    document.getElementById("season_container").insertAdjacentHTML("beforeend", renderEpisode(Episode));
+    document.getElementById("season_container").insertAdjacentHTML("beforeend", renderEpisode(Episode, index));
     document.getElementById("spinner").classList.add("d-none");
     document.querySelector("#modalAddEpisodeForm .btn-close").click();
-    EpisodeNumber++;
+    document.getElementById("episode_submit_btn").disabled = false;
 }
 
-function renderEpisode(episode) {
+function deleteSeason(number) {
+    Media.Seasons = Media.Seasons.filter(season => season.SeasonInfo.Number != number);
+    document.getElementById(`season_${number}`).parentNode.remove();
+}
+
+function deleteEpisode(number, index) {
+    Media.Seasons[ index ].Episodes = Media.Seasons[ index ].Episodes.filter(episode => episode.Number != number);
+    document.getElementById(`episode_${number}`).remove();
+}
+
+function deleteItem(obj) {
+    let type = obj.getAttribute("type");
+    let number = obj.getAttribute("number");
+    switch (type) {
+        case "episode":
+            deleteEpisode(number, parseInt(obj.getAttribute("seasonIndex")));
+            break;
+        case "season":
+            deleteSeason(number);
+            break;
+    }
+    if (confirmModal == null) {
+        confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'), {
+            keyboard: false
+        })
+    }
+    document.getElementById("hide_confirm").click();
+}
+
+let confirmModal;
+function showConfirm(type, number, index) {
+    if (confirmModal == null) {
+        confirmModal = new bootstrap.Modal(document.getElementById('confirmModal'), {
+            keyboard: false
+        })
+    }
+    let confirmBtn = document.getElementById("confirm_btn");
+    confirmBtn.setAttribute("number", number);
+    switch (type) {
+        case "episode":
+            confirmBtn.setAttribute("type", "episode");
+            confirmBtn.setAttribute("seasonIndex", index);
+            break;
+        case "season":
+            confirmBtn.setAttribute("type", "season");
+            break;
+    }
+}
+
+function renderEpisode(episode, index) {
     return `
-    <div class="ps-3 mt-2" id="episode_${episode.Number}">
-        <p class="mb-1">Episode ${episode.Number}: ${episode.Title}</p>
+    <div class="ps-3 mt-2 d-flex" id="episode_${episode.Number}">
+        <p class="mb-1 me-4">Episode ${episode.Number}: ${episode.Title}</p>
+        <div class="btn btn-danger btn-sm" onclick="showConfirm('episode', '${episode.Number}', '${index}')" data-bs-toggle="modal" data-bs-target="#confirmModal">Delete</div>
     </div>
     `
 }
@@ -158,7 +209,8 @@ function renderSeason(item, num) {
     return `
         <div class="d-flex" id="season_${item.SeasonInfo.Number}">
             <p class="me-4 mb-0 align-self-center">Season ${item.SeasonInfo.Number}: ${item.SeasonInfo.Title}</p>
-            <div class="btn btn-primary btn-sm" onclick="setModalAddEpisode('${num}')" data-bs-toggle="modal" data-bs-target="#modalAddEpisodeForm">Add new episode</div>
+            <div class="btn btn-primary btn-sm me-2" onclick="setEpisodeNumber('${item.SeasonInfo.Number}'); setModalAddEpisode('${num}');" data-bs-toggle="modal" data-bs-target="#modalAddEpisodeForm">Add new episode</div>
+            <div class="btn btn-danger btn-sm" onclick="showConfirm('season', '${item.SeasonInfo.Number}')" data-bs-toggle="modal" data-bs-target="#confirmModal">Delete</div>
         </div>
     `
 }

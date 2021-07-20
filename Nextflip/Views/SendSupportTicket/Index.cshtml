@@ -6,40 +6,40 @@
     <link rel="Stylesheet" href="@Href("~/css/Header.css")" />
 }
 <div class="w-100 pt-4 align-self-center" style="background-color: #171717">
-  <div id="form_cotainer" class="mx-auto col-8 p-3 mb-5 rounded needs-validation text-light" style="background-color: #171717">
+    <div id="form_cotainer" class="mx-auto col-8 p-3 mb-5 rounded needs-validation text-light" style="background-color: #171717">
         <div>
-          <label class="h3 form-label" for="option">Topic</label>
-          <select name="option" id="option" class="form-select form-select-lg mb-3 w-25 bg-dark text-light border-secondary" required>
-            <option value="Account">Account</option>
-            <option value="Media">Media</option>
-            <option value="Subscription">Subscription</option>
-            <option value="Services">Services</option>
-            <option value="Others">Others</option>
-          </select>
+            <label class="h3 form-label" for="option">Topic</label>
+            <select name="option" id="option" class="form-select form-select-lg mb-3 w-25 bg-dark text-light border-secondary" required>
+                <option value="Account">Account</option>
+                <option value="Media">Media</option>
+                <option value="Subscription">Subscription</option>
+                <option value="Services">Services</option>
+                <option value="Others">Others</option>
+            </select>
         </div>
         <div>
-          <label class="h3 form-label" for="content">Content</label>
-          <textarea class="form-control form-control-lg w-100 bg-dark text-light border-secondary" name="content" id="content" rows="10" style="resize: none" required value=""></textarea>
-          <div class="invalid-feedback">
-            This field must not empty
-          </div>
+            <label class="h3 form-label" for="content">Content</label>
+            <textarea class="form-control form-control-lg w-100 bg-dark text-light border-secondary" name="content" id="content" rows="10" style="resize: none" required value=""></textarea>
+            <div class="invalid-feedback">
+                This field must not empty
+            </div>
         </div>
         <div class="d-flex flex-row-reverse w-100 mt-3">
-          <button type="submit" class="btn btn-danger mx-1 btn-lg" onclick="sendTicket()">
-            Submit
-          </button>
+            <button type="submit" class="btn btn-danger mx-1 btn-lg" onclick="sendTicket()">
+                Submit
+            </button>
         </div>
-  </div>
+    </div>
 </div>
 <!-- toast -->
 <div id="message_toast" class="toast hide position-fixed bottom-0 end-0 align-items-center show fs-5" role="alert" aria-live="assertive" aria-atomic="true">
-  <div class="d-flex">
-    <div class="toast-body">
-      <div class="ps-2" id="toast_content">
-      </div>
+    <div class="d-flex">
+        <div class="toast-body">
+            <div class="ps-2" id="toast_content">
+            </div>
+        </div>
+        <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" onclick="hideToast()"></button>
     </div>
-    <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" onclick="hideToast()"></button>
-  </div>
 </div>
 <script src="~/js/SendSupportTicket.js"></script>
 <script>

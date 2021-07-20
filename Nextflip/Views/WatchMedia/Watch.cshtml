@@ -24,7 +24,7 @@
                 </div>
             </div>
         </div>
-        <div class="overflow-auto" id="episode_list" style="max-height: 80%" >
+        <div class="overflow-auto" id="episode_list" style="max-height: 80%">
         </div>
     </div>
     <div class="col-1" style="width: 5%;">
@@ -68,50 +68,50 @@
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close">
                 </button>
                 <div class="wrapper row col-12 mx-auto text-light">
-                <div class="row bg-dark">
-                    <div id="img_holder" class="col-6">
-                    </div>
-                    <div class="col-6">
-                        <p class="h3 lh-1 text-warning" id="detail_title"></p>
-                        <div class="overflow-auto" id="detail_table">
+                    <div class="row bg-dark">
+                        <div id="img_holder" class="col-6">
+                        </div>
+                        <div class="col-6">
+                            <p class="h3 lh-1 text-warning" id="detail_title"></p>
+                            <div class="overflow-auto" id="detail_table">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="row bg-dark py-2 offset-1">
-                    <button class="ms-3 btn btn-danger col-1 d-flex justify-content-center">
-                        <i class="fas fa-play pt-1 pe-2"></i>Play
-                    </button>
-                    <button class="ms-2 btn btn-secondary col-2 d-flex justify-content-center" id="add_btn" onclick="addToFavourite()">
-                        <i class="fas fa-heart pt-1 pe-2"></i>Add to favourite
+                    <div class="row bg-dark py-2 offset-1">
+                        <button class="ms-3 btn btn-danger col-1 d-flex justify-content-center">
+                            <i class="fas fa-play pt-1 pe-2"></i>Play
                         </button>
-                    <button class="ms-2 btn btn-secondary col-2 d-flex justify-content-center" id="remove_btn" onclick="removeFavourite()">
-                        <i class="fas fa-times pt-1 pe-2"></i>Remove favourite
-                    </button>
-                </div>
-                <div class="row mt-3 bg-dark" style="background-color: #3b3f42">
-                    <div class="d-flex flex-row mb-3">
-                        <div id="description" class="options me-4 p-1 chosen" onclick="chooseOptions('description', this)">
-                            <p class="p-2 h4 text-warning">
-                            Description
-                            </p>
-                        </div>
-                        <div id="season" class="options me-4 p-1" onclick="chooseOptions('season', this)">
-                            <p class="p-2 h4 text-warning">
-                                Season
-                            </p>
-                        </div>
+                        <button class="ms-2 btn btn-secondary col-2 d-flex justify-content-center" id="add_btn" onclick="addToFavourite()">
+                            <i class="fas fa-heart pt-1 pe-2"></i>Add to favourite
+                        </button>
+                        <button class="ms-2 btn btn-secondary col-2 d-flex justify-content-center" id="remove_btn" onclick="removeFavourite()">
+                            <i class="fas fa-times pt-1 pe-2"></i>Remove favourite
+                        </button>
                     </div>
-                    <div id="option_detail"></div>
+                    <div class="row mt-3 bg-dark" style="background-color: #3b3f42">
+                        <div class="d-flex flex-row mb-3">
+                            <div id="description" class="options me-4 p-1 chosen" onclick="chooseOptions('description', this)">
+                                <p class="p-2 h4 text-warning">
+                                    Description
+                                </p>
+                            </div>
+                            <div id="season" class="options me-4 p-1" onclick="chooseOptions('season', this)">
+                                <p class="p-2 h4 text-warning">
+                                    Season
+                                </p>
+                            </div>
+                        </div>
+                        <div id="option_detail"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<script src="~/js/Media-Details.js"></script>
-<script src="~/js/Watch-Media.js"></script>
-<script src="~/js/Search-In-Header.js"></script>
-<script src="~/js/Favourite-Media.js"></script>
-<script>
+    <script src="~/js/Media-Details.js"></script>
+    <script src="~/js/Watch-Media.js"></script>
+    <script src="~/js/Search-In-Header.js"></script>
+    <script src="~/js/Favourite-Media.js"></script>
+    <script>
     setGoToSearchEvent();
    Run('@ViewBag.MediaID', '@ViewBag.EpisodeID');
-</script>
+    </script>

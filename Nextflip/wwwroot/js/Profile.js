@@ -29,7 +29,8 @@ async function loadAccount() {
         .then(res => res.json())
         .then(json => {
             let dob = json.dateOfBirth.split("-").reverse().join("-");
-            Profile = { ...json, dateOfBirth: dob, userID: ID }
+            let date = json.subscriptionEndDate.slice(0, 10).split("-").reverse().join("-");
+            Profile = { ...json, dateOfBirth: dob, userID: ID, subscriptionEndDate: date }
         })
     return new Promise(resolve => { resolve("resolved") })
 }
@@ -52,7 +53,7 @@ function appendUserProfileToWrapper() {
         if (Profile.subscriptionEndDate == null) {
             document.getElementById("exp_date").innerHTML = "N/A"
         }
-        else document.getElementById("exp_date").innerHTML = Profile.subscriptionEndDate;
+        else document.getElementById("exp_date").innerHTML = Profile.subscriptionEndDate.slice();
     }
 }
 

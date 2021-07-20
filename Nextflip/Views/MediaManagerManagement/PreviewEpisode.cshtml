@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = "Preview episode";
+    Layout = "_PreviewEpisodeLayout";
+}
+<div class="col-10" style="min-height: 100vh;">
+    <div id="media_holder"  class="col-10 mx-auto p-2">
+    </div>
+</div>
+<script src="~/js/Episode-Prview.js"></script>
+<script>
+    requestEpisode('@ViewBag.MediaID');
+</script>

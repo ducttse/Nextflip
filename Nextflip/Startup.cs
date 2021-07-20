@@ -19,7 +19,6 @@ using Nextflip.utils;
 using Nextflip.Models.account;
 using Nextflip.Services.Implementations;
 using Nextflip.Services.Interfaces;
-using Nextflip.Models.mediaEditRequest;
 using Nextflip.Models.category;
 using Nextflip.Models.episode;
 using Nextflip.Models.favoriteList;
@@ -74,7 +73,6 @@ namespace Nextflip
             services.AddControllers().AddNewtonsoftJson();
             services.AddTransient<IAccountDAO, AccountDAO>();
             services.AddTransient<IUserManagerManagementService, UserManagerManagementService>();
-            services.AddTransient<IMediaEditRequestDAO, MediaEditRequestDAO>();
             services.AddTransient<IMediaManagerManagementService, MediaManagerManagementService>();
             services.AddTransient<ISubscribedUserService, SubscribedUserService>();
             services.AddTransient<IEditorService, EditorService>();

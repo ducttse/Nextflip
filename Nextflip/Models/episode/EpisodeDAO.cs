@@ -98,73 +98,17 @@ namespace Nextflip.Models.episode
             var result = false;
             try
             {
-                string SqlUpdate = null;
-                string SqlDelete = null;
-                MySqlCommand command1;
-                MySqlCommand command2;
-                int rowEffects1 = 0;
-                int rowEffects2 = 0;
-                string episodeID = ID.Split('_')[0];
-                Episode episode = new Episode();
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    if (episodeID.Equals(ID))
+                    string sql = "approveEpisode";
+                    using (var command = new MySqlCommand(sql, connection))
                     {
-                        SqlUpdate = "Update episode " +
-                            "Set status = 'Available' " +
-                            "Where episodeID = @episodeID";
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("episodeID_Input", ID);
+                        int affectedRow = command.ExecuteNonQuery();
+                        if (affectedRow == 1) result = true;
                     }
-                    else
-                    {
-                        if (ID.Split('_')[1].Trim().ToLower().Equals("preview"))
-                        {
-                            SqlUpdate = "Update episode " +
-                                "Set seasonID = @seasonID, title = @title, thumbnailURL = @thumbnailURL, number = @number, episodeURL = @episodeURL " +
-                                "Where episodeID = @episodeID";
-                            episode = GetEpisodeByID(ID);
-                        }
-                        if (ID.Split('_')[1].Trim().ToLower().Equals("available"))
-                        {
-                            SqlUpdate = "Update episode " +
-                                "Set status = 'Available' " +
-                                "Where episodeID = @episodeID";
-                        }
-                        if (ID.Split('_')[1].Trim().ToLower().Equals("unavailable"))
-                        {
-                            SqlUpdate = "Update episode " +
-                                "Set status = 'Unavailable' " +
-                                "Where episodeID = @episodeID";
-                        }
-                        SqlDelete = "Delete from episode " +
-                            "Where episodeID = @ID";
-                        command2 = new MySqlCommand(SqlDelete, connection);
-                        command2.Parameters.AddWithValue("@ID", ID);
-                        rowEffects2 = command2.ExecuteNonQuery();
-                    }
-                    command1 = new MySqlCommand(SqlUpdate, connection);
-                    command1.Parameters.AddWithValue("@episodeID", episodeID);
-                    if (!episodeID.Equals(ID))
-                    {
-                        if (ID.Split('_')[1].Trim().ToLower().Equals("preview"))
-                        {
-                            command1.Parameters.AddWithValue("@title", episode.Title);
-                            command1.Parameters.AddWithValue("@seasonID", episode.SeasonID);
-                            command1.Parameters.AddWithValue("@thumbnailURL", episode.ThumbnailURL);
-                            command1.Parameters.AddWithValue("@number", episode.Number);
-                            command1.Parameters.AddWithValue("@episodeURL", episode.EpisodeURL);
-                        }
-                    }
-                    rowEffects1 = command1.ExecuteNonQuery();
-                    if (rowEffects1 > 0 && rowEffects2 > 0)
-                    {
-                        result = true;
-                    }
-                    if (rowEffects1 > 0 && episodeID.Equals(ID))
-                    {
-                        result = true;
-                    }
-                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -177,28 +121,19 @@ namespace Nextflip.Models.episode
         public bool DisapproveChangeEpisode(string ID)
         {
             var result = false;
-            string SqlEpisode;
             try
             {
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    if (ID.Split('_')[0].Equals(ID))
+                    string sql = "disapproveEpisode";
+                    using (var command = new MySqlCommand(sql, connection))
                     {
-                        SqlEpisode = "Update episode " +
-                            "Set status = 'Unavailable' " +
-                            "Where episodeID = @ID";
-                    } else
-                    SqlEpisode = "Delete from episode " +
-                            "Where episodeID = @ID";
-                    MySqlCommand command = new MySqlCommand(SqlEpisode, connection);
-                    command.Parameters.AddWithValue("@ID", ID);
-                    int rowEffects = command.ExecuteNonQuery();
-                    if (rowEffects > 0)
-                    {
-                        result = true;
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("episodeID_Input", ID);
+                        int affectedRow = command.ExecuteNonQuery();
+                        if (affectedRow == 1) result = true;
                     }
-                    connection.Close();
                 }
             }
             catch (Exception ex)

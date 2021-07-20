@@ -57,6 +57,7 @@ function makeShortNote(text) {
 }
 
 function renderRequest(request, index) {
+  console.log(request.title);
   let bgcolor;
   switch (request.status) {
     case "Disapproved":
@@ -73,13 +74,14 @@ function renderRequest(request, index) {
     return `
     <tr>
         <td>${index + 1}</td> 
+        <td>${request.title}</td>
         <td class="text-center"><a class="text-decoration-none" href="/MediaManagerManagement/DetailPreview/${request.mediaID}/${request.requestID}">Preview</a></td>
     </tr>`;
   }
   return `
       <tr>
           <td>${index + 1}</td> 
-          <td>${title}</td>
+          <td>${request.title}</td>
           <td class="text-center"><p class="ticket_status ${bgcolor} rounded text-center text-light text-center px-2 py-1 mb-0">${request.status}</p></td>
           <td class="text-center"><a class="text-decoration-none" href="/MediaManagerManagement/DetailPreview/${request.type}/${request.mediaID}/${request.requestID}">Preview</a></td>
       </tr>`;
@@ -180,6 +182,7 @@ function requestEditRequestData() {
   requestEditRequestDataOnly()
     .then(res => res.json())
     .then(json => {
+      console.log(json);
       if (json.totalPage == 0) {
         ShowNotFound();
       }

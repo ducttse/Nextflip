@@ -1,7 +1,6 @@
 ﻿let Data;
 let requestParam = {
     SearchValue: "",
-    UserEmail: "",
     Status: "All",
     RowsOnPage: 12,
     RequestPage: 1

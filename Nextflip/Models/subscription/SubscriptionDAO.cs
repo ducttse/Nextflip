@@ -80,6 +80,7 @@ namespace Nextflip.Models.subscription
                 throw new Exception(ex.Message);
             }
         }
+
         public bool PurchaseSubscription(string userID, int interval)
         {
             Random random = new Random();
@@ -89,7 +90,7 @@ namespace Nextflip.Models.subscription
                 {
                     connection.Open();
                     string Sql = "INSERT INTO subscription(subscriptionID, userID, status ,startDate, endDate) "
-                                + "VALUE(@subscriptionID, @userID, 'Active', @startDate, @endDate)";
+                                + "VALUE(@subscriptionID, @userID, 'Active', @startDate, @endDate) ";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@subscriptionID", random.Next(0, 100000));
@@ -170,5 +171,6 @@ namespace Nextflip.Models.subscription
             }
             return result;
         }
+        //fix first character status
     }
 }

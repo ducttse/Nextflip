@@ -537,76 +537,17 @@ namespace Nextflip.Models.media
             var result = false;
             try
             {
-                string SqlUpdate = null;
-                string SqlDelete = null;
-                string NewTitle = null;
-                string mediaID = ID.Split('_')[0];
-                Media media = new Media();
-                MySqlCommand command1;
-                MySqlCommand command2;
-                int rowEffects1 = 0;
-                int rowEffects2 = 0;
-                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+               using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    if (mediaID.Equals(ID))
+                    string sql = "approveMedia";
+                    using (var command = new MySqlCommand(sql, connection))
                     {
-                        SqlUpdate = "Update media " +
-                            "Set status = 'Enabled' " +
-                            "Where mediaID = @mediaID";
-                    } else {
-                        if (ID.Split('_')[1].Trim().ToLower().Equals("preview")) {
-                            SqlUpdate = "Update media " +
-                                "Set title = @title, filmType = @filmType, director = @director, cast = @cast, " +
-                                "publishYear = @publishYear, duration = @duration, bannerURL = @bannerURL, language = @language, description = @description " +
-                                "Where mediaID = @mediaID";
-                            media = GetMediaByID(ID);
-                            NewTitle = media.Title.Split('_')[0];
-                        }
-                        if (ID.Split('_')[1].Trim().ToLower().Equals("enabled"))
-                        {
-                            SqlUpdate = "Update media " +
-                                "Set status = 'Enabled' " +
-                                "Where mediaID = @mediaID";
-                        }
-                        if (ID.Split('_')[1].Trim().ToLower().Equals("disabled"))
-                        {
-                            SqlUpdate = "Update media " +
-                                "Set status = 'Disabled' " +
-                                "Where mediaID = @mediaID";
-                        }
-                        SqlDelete = "Delete from media " +
-                            "Where mediaID = @ID";
-                        command2 = new MySqlCommand(SqlDelete, connection);
-                        command2.Parameters.AddWithValue("@ID", ID);
-                        rowEffects2 = command2.ExecuteNonQuery();
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("mediaID_Input", ID);
+                        int affectedRow = command.ExecuteNonQuery();
+                        if (affectedRow == 1) result = true;
                     }
-                    command1 = new MySqlCommand(SqlUpdate, connection);
-                    command1.Parameters.AddWithValue("@mediaID", mediaID);
-                    if (!mediaID.Equals(ID)) {
-                        if (ID.Split('_')[1].Trim().ToLower().Equals("preview"))
-                        {
-                            command1.Parameters.AddWithValue("@title", NewTitle);
-                            command1.Parameters.AddWithValue("@filmType", media.FilmType);
-                            command1.Parameters.AddWithValue("@director", media.Director);
-                            command1.Parameters.AddWithValue("@cast", media.Cast);
-                            command1.Parameters.AddWithValue("@publishYear", media.PublishYear);
-                            command1.Parameters.AddWithValue("@duration", media.Duration);
-                            command1.Parameters.AddWithValue("@bannerURL", media.BannerURL);
-                            command1.Parameters.AddWithValue("@language", media.Language);
-                            command1.Parameters.AddWithValue("@description", media.Description);
-                        }
-                    }
-                    rowEffects1 = command1.ExecuteNonQuery();
-                    if (rowEffects1 > 0 && rowEffects2 > 0)
-                    {
-                        result = true;
-                    }
-                    if (rowEffects1 > 0 && mediaID.Equals(ID))
-                    {
-                        result = true;
-                    }
-                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -619,38 +560,19 @@ namespace Nextflip.Models.media
         public bool DisapproveChangeMedia(string ID)
         {
             var result = false;
-            int rowDeleteMDEffects = 0;
-            string SqlMedia;
             try
             {
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    if (ID.Split('_')[0].Equals(ID))
+                    string sql = "disapproveMedia";
+                    using (var command = new MySqlCommand(sql, connection))
                     {
-                        string SqlDeleteMediaCategory = "Delete from mediaCategory " +
-                            "Where mediaID = @ID";
-                        MySqlCommand commandDeleteMD = new MySqlCommand(SqlDeleteMediaCategory, connection);
-                        commandDeleteMD.Parameters.AddWithValue("@ID", ID);
-                        rowDeleteMDEffects = commandDeleteMD.ExecuteNonQuery();
-                        SqlMedia = "Update media " +
-                                "Set status = 'Disabled' " +
-                                "Where mediaID = @ID";
-                    } else
-                    SqlMedia ="Delete from media " +
-                            "Where mediaID = @ID";
-                    MySqlCommand command = new MySqlCommand(SqlMedia, connection);
-                    command.Parameters.AddWithValue("@ID", ID);
-                    int rowEffects = command.ExecuteNonQuery();
-                    if (rowDeleteMDEffects > 0 && rowEffects > 0 && ID.Split('_')[0].Equals(ID))
-                    {
-                        result = true;
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("mediaID_Input", ID);
+                        int affectedRow = command.ExecuteNonQuery();
+                        if (affectedRow == 1) result = true;
                     }
-                    if (rowEffects > 0 && !ID.Split('_')[0].Equals(ID))
-                    {
-                        result = true;
-                    }
-                    connection.Close();
                 }
             }
             catch (Exception ex)

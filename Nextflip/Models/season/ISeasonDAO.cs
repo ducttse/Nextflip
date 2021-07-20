@@ -15,5 +15,6 @@ namespace Nextflip.Models.season
         bool RequestChangeSeasonStatus(string seasonID, string newStatus);
         string AddSeason(Season season);
         string UpdateSeason(Season season);
+        public bool CheckStatusSeason(string mediaID);
     }
 }

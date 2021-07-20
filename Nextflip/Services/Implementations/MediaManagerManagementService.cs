@@ -51,5 +51,8 @@ namespace Nextflip.Services.Implementations
 
         public int NumberOfMediasBySearchingFilterCategory_Status(string SearchValue, string CategoryName, string Status)
             => _mediaDao.NumberOfMediasBySearchingFilterCategory_Status(SearchValue, CategoryName, Status);
+
+        public bool CheckStatusEpisode(string seasonID) => _episodeDAO.CheckStatusEpisode(seasonID);
+        public bool CheckStatusSeason(string mediaID) => _seasonDAO.CheckStatusSeason(mediaID);
     }
 }

@@ -2,10 +2,9 @@
 let requestParam = {
   SearchValue: "",
   Status: "All",
-  Type: "All",
+  CategoryName: "All",
   RowsOnPage: 6,
-  RequestPage: 1,
-  SortBy: "desc"
+  RequestPage: 1
 };
 let isFiltered = false;
 let isSearched = false;
@@ -70,21 +69,17 @@ function renderRequest(request, index) {
       bgcolor = "bg-primary";
       break;
   }
-  let shortText = makeShortNote(request.note);
   if (isFiltered) {
     return `
     <tr>
         <td>${index + 1}</td> 
-        <td>${request.userEmail}</td>
-        <td>${shortText}</td>
         <td class="text-center"><a class="text-decoration-none" href="/MediaManagerManagement/DetailPreview/${request.mediaID}/${request.requestID}">Preview</a></td>
     </tr>`;
   }
   return `
       <tr>
           <td>${index + 1}</td> 
-          <td>${request.userEmail}</td>
-          <td>${shortText}</td>
+          <td>${title}</td>
           <td class="text-center"><p class="ticket_status ${bgcolor} rounded text-center text-light text-center px-2 py-1 mb-0">${request.status}</p></td>
           <td class="text-center"><a class="text-decoration-none" href="/MediaManagerManagement/DetailPreview/${request.type}/${request.mediaID}/${request.requestID}">Preview</a></td>
       </tr>`;
@@ -116,7 +111,7 @@ function appendRequestToWrapper() {
 setAppendToDataWrapper(appendRequestToWrapper);
 
 function setSeletedType(obj) {
-  requestParam.Type = obj.value;
+  requestParam.CategoryName = obj.value;
   if (isFiltered) {
     requestWithFilterAndResetPage();
   }

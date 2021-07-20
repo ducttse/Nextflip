@@ -7,13 +7,13 @@
     Duration: "",
     BannerURL: "",
     Language: "",
-    Description: "",
-    CategoryIDArray: []
+    Description: ""
 }
 
 let Media = {
     MediaInfo: MediaInfo,
-    Seasons: []
+    Seasons: [],
+    CategoryIDs: []
 }
 
 function getChosenCategory() {
@@ -73,7 +73,7 @@ async function setMediaInfo() {
     MediaInfo.BannerURL = await requestUploadBanner();
     MediaInfo.Language = document.getElementById("language").value;
     MediaInfo.Description = document.getElementById("description").value;
-    MediaInfo.CategoryIDArray = getChosenCategory();
+    // Media.CategoryIDs = await getChosenCategory();
     return new Promise(resolve => resolve("resolved"));
 }
 
@@ -243,8 +243,8 @@ function requestMediaType() {
 }
 
 const addNewMedia = debounce(() => requestAddNewMedia());
-function requestAddNewMedia() {
-    setMediaInfo();
+async function requestAddNewMedia() {
+    await setMediaInfo();
     if (validateInputAddMedia() == 0) {
         return;
     }

@@ -20,6 +20,12 @@
 
   <ItemGroup>
     <Folder Include="Pages\" />
+    <Folder Include="Views\Home\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Index.html" />
+    <None Include="wwwroot\Access-Deny.html" />
   </ItemGroup>
 
 </Project>

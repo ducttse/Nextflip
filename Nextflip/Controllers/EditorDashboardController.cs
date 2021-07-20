@@ -20,7 +20,7 @@ namespace Nextflip.Controllers
         public IActionResult Edit(string id, [FromServices] IMediaService mediaService)
         {
             var mediaInfo = mediaService.GetMediaByID(id);
-            if (mediaInfo.Status == "published")
+            if (mediaInfo.Status == "Approved")
             {
                 TempData["clone message"] =
                     "You are trying to edit a published media so we create a drafted version of the media. " +

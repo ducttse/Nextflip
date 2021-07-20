@@ -11,7 +11,19 @@ namespace Nextflip.Models.season
         public string Title { get; set; }
         public string ThumbnailURL { get; set; }
         public string MediaID { get; set; }
-        public string Status { get; set; }
+
+        public string Status
+        {
+            get => Status;
+            set
+            {
+                if (value != null && value != "")
+                {
+                    Status = value[0].ToString().ToUpper() + value.Substring(1).ToLower();
+                }
+                else Status = value;
+            }
+        }
         public int Number { get; set; }
 
         public bool EqualWithoutStatus(Season anotherSeason)

@@ -11,7 +11,19 @@ namespace Nextflip.Models.episode
         public string Title { get; set; }
         public string ThumbnailURL { get; set; }
         public string SeasonID { get; set; }
-        public string Status { get; set; }
+
+        public string Status
+        {
+            get => Status;
+            set
+            {
+                if (value != null && value != "")
+                {
+                    Status = value[0].ToString().ToUpper() + value.Substring(1).ToLower();
+                }
+                else Status = value;
+            }
+        }
         public int Number { get; set; }
         public string EpisodeURL { get; set; }
 

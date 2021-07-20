@@ -2,13 +2,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Humanizer;
 
 namespace Nextflip.Models.media
 {
     public class Media
     {
         public string MediaID { get; set; }
-        public string Status { get; set; }
+
+        public string Status
+        {
+            get => Status;
+            set
+            {
+                if (value != null && value != "")
+                {
+                    Status = value[0].ToString().ToUpper() + value.Substring(1).ToLower();
+                }
+                else Status = value;
+            }
+        }
+
         public string Title { get; set; }
         public string FilmType { get; set; }
         public string Director { get; set; }

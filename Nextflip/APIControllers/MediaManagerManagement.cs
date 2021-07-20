@@ -303,31 +303,6 @@ namespace Nextflip.APIControllers
             }
         }
 
-        [Route("GetMediaEditRequestByID/{RequestID}")]
-        public JsonResult GetMediaEditRequestByID([FromServices] IMediaManagerManagementService mediaManagerManagementService, int RequestID)
-        {
-            try
-            {
-                int a;
-                if (!int.TryParse(RequestID.ToString(), out a) || RequestID <= 0) return new JsonResult(new { Message = "fail" });
-                MediaEditRequest EditRequest = mediaManagerManagementService.GetMediaEditRequestByID(RequestID);
-                var result = new
-                {
-                    Message = "success",
-                    Data = EditRequest
-                };
-                if (EditRequest != null) return (new JsonResult(result));
-                else return new JsonResult(new { Message = "fail" });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogInformation("GetMediaEditRequestByID: " + ex.Message);
-                return new JsonResult(new
-                {
-                    message = "fail"
-                });
-            }
-        }
 
         [Route("GetDetailedMedia/{mediaID}")]
         [HttpGet]

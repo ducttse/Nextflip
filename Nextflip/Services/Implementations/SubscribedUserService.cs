@@ -98,12 +98,12 @@ namespace Nextflip.Services.Implementations
         }
         //season
         public Season GetSeasonByID(string seasonID) => _seasonDAO.GetSeasonByID(seasonID);
-        public IEnumerable<Season> GetSeasonsByMediaID(string mediaID) => _seasonDAO.GetSeasonsByMediaID(mediaID);
+        public IEnumerable<Season> GetSeasonsByMediaID(string mediaID,string status ) => _seasonDAO.GetSeasonsByMediaID(mediaID,status);
         //episode
         public Episode GetEpisodeByID(string episodeID) => _episodeDAO.GetEpisodeByID(episodeID);
 
-        IEnumerable<Episode> ISubscribedUserService.GetEpisodesBySeasonID(string seasonID)
-                                            => _episodeDAO.GetEpisodesBySeasonID(seasonID);
+        IEnumerable<Episode> ISubscribedUserService.GetEpisodesBySeasonID(string seasonID,string status)
+                                            => _episodeDAO.GetEpisodesBySeasonID(seasonID, status);
         //subtitle
         public Subtitle GetSubtitleByID(string subtitleID) => _subtitleDAO.GetSubtitleByID(subtitleID);
         public IEnumerable<Subtitle> GetSubtitlesByEpisodeID(string episodeID) => _subtitleDAO.GetSubtitlesByEpisodeID(episodeID);

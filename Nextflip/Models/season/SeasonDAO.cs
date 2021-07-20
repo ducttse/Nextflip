@@ -50,6 +50,48 @@ namespace Nextflip.Models.season
                 throw new Exception(ex.Message);
             }
         }
+        public IEnumerable<Season> GetSeasonsByMediaID(string mediaID,string status)
+        {
+            try
+            {
+                var seasons = new List<Season>();
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select seasonID, title, thumbnailURL, status, number " +
+                                "From season " +
+                                "Where mediaID = @mediaID And Status = @status " +
+                                "Order By number";
+
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@mediaID", mediaID);
+                        command.Parameters.AddWithValue("@status", status);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                seasons.Add(new Season
+                                {
+                                    SeasonID = reader.GetString(0),
+                                    Title = reader.GetString(1),
+                                    ThumbnailURL = reader.GetString(2),
+                                    MediaID = mediaID,
+                                    Status = reader.GetString(3),
+                                    Number = reader.GetInt32(4)
+                                });
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+                return seasons;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
         public Season GetSeasonByID(string seasonID)
         {

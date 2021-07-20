@@ -21,10 +21,10 @@ namespace Nextflip.Services.Interfaces
         IEnumerable<Media> GetMediasByTitle(string title);
         IEnumerable<Media> GetMediasByCategoryID(int categoryID, int limit );
         //season
-        IEnumerable<Season> GetSeasonsByMediaID(string mediaID);
+        IEnumerable<Season> GetSeasonsByMediaID(string mediaID, string status);
         Season GetSeasonByID(string seasonID);
         //episode
-        IEnumerable<Episode> GetEpisodesBySeasonID(string seasonID);
+        IEnumerable<Episode> GetEpisodesBySeasonID(string seasonID, string status);
         Episode GetEpisodeByID(string episodeID);
         //subtitle
         Subtitle GetSubtitleByID(string subtitleID);

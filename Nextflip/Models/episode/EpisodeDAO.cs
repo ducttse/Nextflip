@@ -51,6 +51,48 @@ namespace Nextflip.Models.episode
                 throw new Exception(ex.Message);
             }
         }
+        public IEnumerable<Episode> GetEpisodesBySeasonID(string seasonID,string status)
+        {
+            try
+            {
+                var episodes = new List<Episode>();
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select episodeID, title, thumbnailURL, status, number, episodeURL " +
+                                "From episode " +
+                                "Where seasonID = @seasonID and status = @status " +
+                                "Order By number";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@seasonID", seasonID);
+                        command.Parameters.AddWithValue("@status", status);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                episodes.Add(new Episode
+                                {
+                                    EpisodeID = reader.GetString(0),
+                                    Title = reader.GetString(1),
+                                    ThumbnailURL = reader.GetString(2),
+                                    SeasonID = seasonID,
+                                    Status = reader.GetString(3),
+                                    Number = reader.GetInt32(4),
+                                    EpisodeURL = reader.GetString(5)
+                                });
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+                return episodes;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
         public Episode GetEpisodeByID(string episodeID)
         {

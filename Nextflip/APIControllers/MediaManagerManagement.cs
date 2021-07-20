@@ -16,7 +16,7 @@ namespace Nextflip.APIControllers
     public class MediaManagerManagement : ControllerBase
     {
         private readonly ILogger _logger;
-
+        private const string DEFAULT_ACCOUNT = "technical.nextflipcompany@gmail.com";
         public MediaManagerManagement(ILogger<MediaManagerManagement> logger)
         {
             _logger = logger;
@@ -65,7 +65,7 @@ namespace Nextflip.APIControllers
         }
 
         [Route("DisapproveRequest")]
-        public JsonResult DisapproveRequest([FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromBody] MediaForm request)
+        public async Task<JsonResult> DisapproveRequest([FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromServices] ISendMailService sendMailService, [FromBody] MediaForm request)
         {
             try
             {
@@ -86,6 +86,11 @@ namespace Nextflip.APIControllers
                         break;
                 }
                 if (!isValid) return new JsonResult(new { Message = "Failed" });
+                string toEmail = DEFAULT_ACCOUNT;
+                string body = $"Dear Editor,\n" +
+                                $"Your request about: << " + request.Type + " - " + request.RequestID + " >> is disapproved \n" +
+                                $"Because: {request.Content}";
+                await sendMailService.SendEmailAsync(toEmail, "Disapproval of your request", body);
                 return new JsonResult(new { Message = "Success" });
             }
             catch (Exception ex)

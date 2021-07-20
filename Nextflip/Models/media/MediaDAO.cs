@@ -268,21 +268,21 @@ namespace Nextflip.Models.media
                 {
                     connection.Open();
                     string Sql;
-                    if (CategoryName.Equals("all") && Status.Equals("all"))
+                    if (CategoryName.Trim().ToLower().Equals("all") && Status.Trim().ToLower().Equals("all"))
                     {
                         Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media M, mediaCategory MC, category C " +
                                 "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID " +
                                 "LIMIT @offset, @limit";
                     }
-                    else if (CategoryName.Equals("all") && !Status.Equals("all"))
+                    else if (CategoryName.Trim().ToLower().Equals("all") && !Status.Trim().ToLower().Equals("all"))
                     {
                         Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media M, mediaCategory MC, category C " +
                                 "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and M.status = @Status " +
                                 "LIMIT @offset, @limit";
                     }
-                    else if (!CategoryName.Equals("all") && Status.Equals("all"))
+                    else if (!CategoryName.Trim().ToLower().Equals("all") && Status.Trim().ToLower().Equals("all"))
                     {
                         Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media M, mediaCategory MC, category C " +
@@ -298,8 +298,8 @@ namespace Nextflip.Models.media
                     }
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        if (!CategoryName.Equals("all")) command.Parameters.AddWithValue("@CategoryName", CategoryName);
-                        if (!Status.Equals("all")) command.Parameters.AddWithValue("@Status", Status);
+                        if (!CategoryName.Trim().ToLower().Equals("all")) command.Parameters.AddWithValue("@CategoryName", CategoryName);
+                        if (!Status.Trim().ToLower().Equals("all")) command.Parameters.AddWithValue("@Status", Status);
                         command.Parameters.AddWithValue("@offset", offset);
                         command.Parameters.AddWithValue("@limit", RowsOnPage);
                         using (var reader = command.ExecuteReader())
@@ -339,19 +339,19 @@ namespace Nextflip.Models.media
             {
                 connection.Open();
                 string Sql;
-                if (CategoryName.Equals("all") && Status.Equals("all"))
+                if (CategoryName.Trim().ToLower().Equals("all") && Status.Trim().ToLower().Equals("all"))
                 {
                     Sql = "Select COUNT(M.mediaID) " +
                           "From media M, mediaCategory MC, category C " +
                           "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID";
                 }
-                else if (CategoryName.Equals("all") && !Status.Equals("all"))
+                else if (CategoryName.Trim().ToLower().Equals("all") && !Status.Trim().ToLower().Equals("all"))
                 {
                     Sql = "Select COUNT(M.mediaID) " +
                           "From media M, mediaCategory MC, category C " +
                           "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and  M.status = @Status ";
                 }
-                else if (!CategoryName.Equals("all") && Status.Equals("all"))
+                else if (!CategoryName.Trim().ToLower().Equals("all") && Status.Trim().ToLower().Equals("all"))
                 {
                     Sql = "Select COUNT(M.mediaID) " +
                           "From media M, mediaCategory MC, category C " +
@@ -365,8 +365,8 @@ namespace Nextflip.Models.media
                 }
                 using (var command = new MySqlCommand(Sql, connection))
                 {
-                    if (!CategoryName.Equals("all")) command.Parameters.AddWithValue("@CategoryName", CategoryName);
-                    if (!Status.Equals("all")) command.Parameters.AddWithValue("@Status", Status);
+                    if (!CategoryName.Trim().ToLower().Equals("all")) command.Parameters.AddWithValue("@CategoryName", CategoryName);
+                    if (!Status.Trim().ToLower().Equals("all")) command.Parameters.AddWithValue("@Status", Status);
                     using (var reader = command.ExecuteReader())
                     {
                         if (reader.Read())
@@ -470,7 +470,7 @@ namespace Nextflip.Models.media
                 {
                     connection.Open();
                     string Sql;
-                    if (CategoryName.Equals("all") && Status.Equals("all"))
+                    if (CategoryName.Trim().ToLower().Equals("all") && Status.Trim().ToLower().Equals("all"))
                     {
                         Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media M, mediaCategory MC, category C " +
@@ -478,7 +478,7 @@ namespace Nextflip.Models.media
                                 "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID " +
                                 "LIMIT @offset, @limit";
                     }
-                    else if (CategoryName.Equals("all") && !Status.Equals("all"))
+                    else if (CategoryName.Trim().ToLower().Equals("all") && !Status.Trim().ToLower().Equals("all"))
                     {
                         Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media M, mediaCategory MC, category C " +
@@ -486,7 +486,7 @@ namespace Nextflip.Models.media
                                 "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and M.status = @Status " +
                                 "LIMIT @offset, @limit";
                     }
-                    else if (!CategoryName.Equals("all") && Status.Equals("all"))
+                    else if (!CategoryName.Trim().ToLower().Equals("all") && Status.Trim().ToLower().Equals("all"))
                     {
                         Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media M, mediaCategory MC, category C " +
@@ -505,8 +505,8 @@ namespace Nextflip.Models.media
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@searchValue", SearchValue);
-                        if (!CategoryName.Equals("all")) command.Parameters.AddWithValue("@CategoryName", CategoryName);
-                        if (!Status.Equals("all")) command.Parameters.AddWithValue("@Status", Status);
+                        if (!CategoryName.Trim().ToLower().Equals("all")) command.Parameters.AddWithValue("@CategoryName", CategoryName);
+                        if (!Status.Trim().ToLower().Equals("all")) command.Parameters.AddWithValue("@Status", Status);
                         command.Parameters.AddWithValue("@offset", offset);
                         command.Parameters.AddWithValue("@limit", RowsOnPage);
                         using (var reader = command.ExecuteReader())
@@ -546,21 +546,21 @@ namespace Nextflip.Models.media
             {
                 connection.Open();
                 string Sql;
-                if (CategoryName.Equals("all") && Status.Equals("all"))
+                if (CategoryName.Trim().ToLower().Equals("all") && Status.Trim().ToLower().Equals("all"))
                 {
                     Sql = "Select COUNT(M.mediaID) " +
                                 "From media M, mediaCategory MC, category C " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
                                 "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID";
                 }
-                else if (CategoryName.Equals("all") && !Status.Equals("all"))
+                else if (CategoryName.Trim().ToLower().Equals("all") && !Status.Trim().ToLower().Equals("all"))
                 {
                     Sql = "Select COUNT(M.mediaID) " +
                                 "From media M, mediaCategory MC, category C " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
                                 "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and M.status = @Status ";
                 }
-                else if (!CategoryName.Equals("all") && Status.Equals("all"))
+                else if (!CategoryName.Trim().ToLower().Equals("all") && Status.Trim().ToLower().Equals("all"))
                 {
                     Sql = "Select COUNT(M.mediaID) " +
                                 "From media M, mediaCategory MC, category C " +
@@ -577,8 +577,8 @@ namespace Nextflip.Models.media
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     command.Parameters.AddWithValue("@SearchValue", SearchValue);
-                    if (!CategoryName.Equals("all")) command.Parameters.AddWithValue("@CategoryName", CategoryName);
-                    if (!Status.Equals("all")) command.Parameters.AddWithValue("@Status", Status);
+                    if (!CategoryName.Trim().ToLower().Equals("all")) command.Parameters.AddWithValue("@CategoryName", CategoryName);
+                    if (!Status.Trim().ToLower().Equals("all")) command.Parameters.AddWithValue("@Status", Status);
                     using (var reader = command.ExecuteReader())
                     {
                         if (reader.Read())

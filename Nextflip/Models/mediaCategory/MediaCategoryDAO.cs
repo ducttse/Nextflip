@@ -107,7 +107,7 @@ namespace Nextflip.Models.mediaCategory
             return result;
         }
 
-        public void AddCatogies_Transact(MySqlConnection connection, string mediaID, IEnumerable<int> categoriesIDList)
+        public void AddCategories_Transact(MySqlConnection connection, string mediaID, IEnumerable<int> categoriesIDList)
         {
 
             var command = new MySqlCommand();

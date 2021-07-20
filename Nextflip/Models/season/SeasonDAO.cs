@@ -97,73 +97,17 @@ namespace Nextflip.Models.season
             var result = false;
             try
             {
-                string SqlUpdate = null;
-                string SqlDelete = null;
-
-                MySqlCommand command1;
-                MySqlCommand command2;
-                int rowEffects1 = 0;
-                int rowEffects2 = 0;
-                string seasonID = ID.Split('_')[0];
-                Season season = new Season();
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    if (seasonID.Equals(ID))
+                    string sql = "approveSeason";
+                    using (var command = new MySqlCommand(sql, connection))
                     {
-                        SqlUpdate = "Update season " +
-                            "Set status = 'Available' " +
-                            "Where seasonID = @seasonID";
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("seasonID_Input", ID);
+                        int affectedRow = command.ExecuteNonQuery();
+                        if (affectedRow == 1) result = true;
                     }
-                    else
-                    {
-                        if (ID.Split('_')[1].Trim().ToLower().Equals("preview"))
-                        {
-                            SqlUpdate = "Update season " +
-                                "Set mediaID = @mediaID, title = @title, thumbnailURL = @thumbnailURL, number = @number " +
-                                "Where seasonID = @seasonID";
-                            season = GetSeasonByID(ID);
-                        }
-                        if (ID.Split('_')[1].Trim().ToLower().Equals("available"))
-                        {
-                            SqlUpdate = "Update season " +
-                                "Set status = 'Available' " +
-                                "Where seasonID = @seasonID";
-                        }
-                        if (ID.Split('_')[1].Trim().ToLower().Equals("unavailable"))
-                        {
-                            SqlUpdate = "Update season " +
-                                "Set status = 'Unavailable' " +
-                                "Where seasonID = @seasonID";
-                        }
-                        SqlDelete = "Delete from season " +
-                            "Where seasonID = @ID";
-                        command2 = new MySqlCommand(SqlDelete, connection);
-                        command2.Parameters.AddWithValue("@ID", ID);
-                        rowEffects2 = command2.ExecuteNonQuery();
-                    }
-                    command1 = new MySqlCommand(SqlUpdate, connection);
-                    command1.Parameters.AddWithValue("@seasonID", seasonID);
-                    if (!seasonID.Equals(ID))
-                    {
-                        if (ID.Split('_')[1].Trim().ToLower().Equals("preview"))
-                        {
-                            command1.Parameters.AddWithValue("@title", season.Title);
-                            command1.Parameters.AddWithValue("@mediaID", season.MediaID);
-                            command1.Parameters.AddWithValue("@thumbnailURL", season.ThumbnailURL);
-                            command1.Parameters.AddWithValue("@number", season.Number);
-                        }
-                    }
-                    rowEffects1 = command1.ExecuteNonQuery();
-                    if (rowEffects1 > 0 && rowEffects2 > 0)
-                    {
-                        result = true;
-                    }
-                    if (rowEffects1 > 0 && seasonID.Equals(ID))
-                    {
-                        result = true;
-                    }
-                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -176,28 +120,19 @@ namespace Nextflip.Models.season
         public bool DisapproveChangeSeason(string ID)
         {
             var result = false;
-            string SqlSeason;
             try
             {
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    if (ID.Split('_')[0].Equals(ID))
+                    string sql = "disapproveSeason";
+                    using (var command = new MySqlCommand(sql, connection))
                     {
-                        SqlSeason = "Update season " +
-                            "Set status = 'Unavailable' " +
-                            "Where seasonID = @ID";
-                    } else
-                    SqlSeason = "Delete from season " +
-                            "Where seasonID = @ID";
-                    MySqlCommand command = new MySqlCommand(SqlSeason, connection);
-                    command.Parameters.AddWithValue("@ID", ID);
-                    int rowEffects = command.ExecuteNonQuery();
-                    if (rowEffects > 0)
-                    {
-                        result = true;
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("seasonID_Input", ID);
+                        int affectedRow = command.ExecuteNonQuery();
+                        if (affectedRow == 1) result = true;
                     }
-                    connection.Close();
                 }
             }
             catch (Exception ex)

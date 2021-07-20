@@ -44,5 +44,9 @@ namespace Nextflip.Services.Interfaces
         Season GetSeasonByID(string seasonID);
         Episode GetEpisodeByID(string episodeID);
         ViewEditorDashboard.PrototypeMediaForm GetDetailedMediaByMediaId(string mediaId);
+        IEnumerable<Media> ViewMediasFilterCategory_Status(string CategoryName, string Status, int RowsOnPage, int RequestPage);
+        int NumberOfMediasFilterCategory_Status(string CategoryName, string Status);
+        IEnumerable<Media> GetMediasByTitleFilterCategory_Status(string SearchValue, string CategoryName, string Status, int RowsOnPage, int RequestPage);
+        int NumberOfMediasBySearchingFilterCategory_Status(string SearchValue, string CategoryName, string Status);
     }
 }

@@ -215,6 +215,7 @@ namespace Nextflip.APIControllers
             public string SearchValue { get; set; }
             public string Status { get; set; }
             public string Type { get; set; }
+            public string CategoryName { get; set; }
             public int RowsOnPage { get; set; }
             public int RequestPage { get; set; }
         }
@@ -283,17 +284,17 @@ namespace Nextflip.APIControllers
         {
             try
             {
-                if (request.SortBy.Trim() == "") request.SortBy = "asc";
-                if (request.Type.Trim() == "") request.Type = "all";
+                //if (request.SortBy.Trim() == "") request.SortBy = "asc";
                 if (request.Status.Trim() == "") request.Status = "all";
-                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.GetMediaRequest(request.Status.Trim().ToLower(), 
-                    request.Type.Trim().ToLower(), request.SortBy.Trim().ToLower(), request.RowsOnPage, request.RequestPage);
-                int count = mediaManagerManagementService.NumberOfMediaRequest(request.Status.Trim().ToLower(), request.Type.Trim().ToLower());
+                if (request.CategoryName.Trim() == "") request.Status = "all";
+                IEnumerable<Media> mediaList = mediaManagerManagementService.ViewMediasFilterCategory_Status(request.CategoryName.Trim().ToLower(),
+                    request.Status.Trim(), request.RowsOnPage, request.RequestPage);
+                int count = mediaManagerManagementService.NumberOfMediasFilterCategory_Status(request.CategoryName.Trim().ToLower(), request.Status.Trim());
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {
                     TotalPage = (int)Math.Ceiling(totalPage),
-                    Data = requests
+                    Data = mediaList
                 };
                 return (new JsonResult(result));
             }
@@ -318,17 +319,16 @@ namespace Nextflip.APIControllers
                     message = "Empty searchValue"
                 };
                 if (request.SearchValue.Trim() == "") return new JsonResult(message);
-                if (request.SortBy.Trim() == "") request.SortBy = "asc";
-                if (request.Type.Trim() == "") request.Type = "all";
                 if (request.Status.Trim() == "") request.Status = "all";
-                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.SearchingMediaRequest(request.SearchValue.Trim(), 
-                    request.Status.Trim().ToLower(), request.SortBy, request.Type.Trim().ToLower(), request.RowsOnPage, request.RequestPage);
-                int count = mediaManagerManagementService.NumberOfMediaRequestSearching(request.SearchValue.Trim(), request.Status.Trim().ToLower(), request.Type.Trim().ToLower());
+                IEnumerable<Media> mediaList = mediaManagerManagementService.GetMediasByTitleFilterCategory_Status(request.SearchValue.Trim().ToLower(),
+                    request.CategoryName.Trim().ToLower(), request.Status.Trim(), request.RowsOnPage, request.RequestPage);
+                int count = mediaManagerManagementService.NumberOfMediasBySearchingFilterCategory_Status(request.SearchValue.Trim().ToLower(),
+                    request.CategoryName.Trim().ToLower(), request.Status.Trim());
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {
                     TotalPage = (int)Math.Ceiling(totalPage),
-                    Data = requests
+                    Data = mediaList
                 };
                 return (new JsonResult(result));
             }

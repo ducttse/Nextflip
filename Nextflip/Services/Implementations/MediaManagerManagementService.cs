@@ -75,5 +75,15 @@ namespace Nextflip.Services.Implementations
         {
             return _mediaDao.GetDetailedMedia(mediaId);
         }
+
+        public IEnumerable<Media> ViewMediasFilterCategory_Status(string CategoryName, string Status, int RowsOnPage, int RequestPage)
+            => _mediaDao.ViewMediasFilterCategory_Status(CategoryName, Status, RowsOnPage, RequestPage);
+        public int NumberOfMediasFilterCategory_Status(string CategoryName, string Status)
+            => _mediaDao.NumberOfMediasFilterCategory_Status(CategoryName, Status);
+        public IEnumerable<Media> GetMediasByTitleFilterCategory_Status(string SearchValue, string CategoryName, string Status, int RowsOnPage, int RequestPage)
+             => _mediaDao.GetMediasByTitleFilterCategory_Status(SearchValue, CategoryName, Status, RowsOnPage, RequestPage);
+
+        public int NumberOfMediasBySearchingFilterCategory_Status(string SearchValue, string CategoryName, string Status)
+            => _mediaDao.NumberOfMediasBySearchingFilterCategory_Status(SearchValue, CategoryName, Status);
     }
 }

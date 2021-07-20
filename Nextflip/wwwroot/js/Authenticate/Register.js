@@ -98,7 +98,7 @@ function checkRePassword() {
     }
     else if (repassword.value != password.value) {
         repassword.setCustomValidity("not equal");
-        feedback.textContent = "Cofirm password must match"
+        feedback.textContent = "Confirm password must match"
         container.classList.add("was-validated");
     }
 }
@@ -142,6 +142,7 @@ function requestSignUp() {
     let reqHeader = new Headers();
     reqHeader.append("Content-Type", "text/json");
     reqHeader.append("Accept", "application/json, text/plain, */*");
+    let date = $("#dob").datepicker("option", "dateFormat", "yy-mm-dd").val();
     let initObject = {
         method: "POST",
         headers: reqHeader,
@@ -150,9 +151,10 @@ function requestSignUp() {
             Password: document.getElementById("password").value,
             ConfirmPassword: document.getElementById("confirmPassword").value,
             Fullname: document.getElementById("fullname").value,
-            DateOfBirth: document.getElementById("dob").value
+            DateOfBirth: date
         })
     }
+    $("#dob").datepicker("option", "dateFormat", "dd-mm-yy");
     fetch("/api/RegisterAccount/Register", initObject).then(res => res.json()).then(json => {
         if (json.message != null && json.message == "Success") {
             fetch("/api/Login/LoginAccount", {
@@ -169,6 +171,8 @@ function requestSignUp() {
                 .then(res => res.json())
                 .then(json => {
                     if (json.message == true) {
+                        localStorage.setItem("ID", json.userID)
+                        localStorage.setItem("URL", json.url)
                         window.location.replace(json.url);
                     }
                 })

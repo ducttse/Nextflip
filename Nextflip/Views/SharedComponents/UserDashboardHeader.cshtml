@@ -1,33 +1,43 @@
-<header>
-      <nav class="navbar navbar-expand-lg navbar-dark bg-dark d-flex">
+
+<header id="header">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark d-flex">
         <a class="navbar-brand fw-normal ps-2" style="color: red" href="#">NextFlip</a>
         <div class="d-flex flex-grow-1">
-          <ul class="navbar-nav flex-grow-1">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/SubcribedUserDashBoard/Index">Home</a>
-            </li>
-          </ul>
-          <div class="d-flex pe-3">
-            <div id="searchBtn" class="p-2 text-light">
-              <i class="mx-auto fas fa-search"></i>
+            <ul class="navbar-nav flex-grow-1">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/SubcribedUserDashBoard/Index">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/SubcribedUserDashBoard/ViewFavourite">Favourite</a>
+                </li>
+            </ul>
+            <div class="d-flex pe-3">
+                <div id="searchBtn" class="p-2 text-light">
+                    <i class="mx-auto fas fa-search"></i>
+                </div>
+                <div id="search_holder" class="btn_hide">
+                    <input id="search" type="text" class="form-control" placeholder="Search Media" value="" />
+                </div>
+                <div id="notiButton" class="p-2 text-light me-3">
+                    <i class="fas fa-bell"></i>
+                </div>
+                <div class="dropdown">
+                    <div class="dropdown-toggle col-4 align-self-center text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img style="object-fit: cover" class="rounded-circle" width="40" height="40" id="profile_img" src="" alt="picture" />
+                    </div>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                        <li>
+                            <a class="dropdown-item" href="/Profile/Index">Profile</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="/SendSupportTicket/Index">Send feedback</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="/Account/Logout" onclick="return localStorage.clear()">Logout</a>
+                        </li>
+                    </ul>
+                </div>
             </div>
-            <div id="search_holder" class="btn_hide">
-              <input id="search" type="text" class="form-control" placeholder="Search Media" value=""/>
-            </div>
-            <div id="notiButton" class="p-2 text-light me-3">
-              <i class="fas fa-bell"></i>
-            </div>
-            <div class="dropdown">
-              <div class="dropdown-toggle col-4 align-self-center text-light" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <img style="object-fit: cover" class="rounded-circle" width="40" height="40" id="profile_img"  src="" alt="picture"/>
-              </div>
-              <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="/Profile/Index">Profile</a></li>
-                <li><a class="dropdown-item" href="/SendSupportTicket/Index">Send feedback</a></li>
-                <li><a class="dropdown-item" href="/Login/Logout">Logout</a></li>
-              </ul>
-            </div>
-          </div>
         </div>
-      </nav>
+    </nav>
 </header>

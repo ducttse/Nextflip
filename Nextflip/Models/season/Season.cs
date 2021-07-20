@@ -13,5 +13,14 @@ namespace Nextflip.Models.season
         public string MediaID { get; set; }
         public string Status { get; set; }
         public int Number { get; set; }
+
+        public bool EqualWithoutStatus(Season anotherSeason)
+        {
+            if (anotherSeason == null) return false;
+            return Title == anotherSeason.Title &&
+                   ThumbnailURL == anotherSeason.ThumbnailURL &&
+                   MediaID == anotherSeason.MediaID &&
+                   Number == anotherSeason.Number;
+        }
     }
 }

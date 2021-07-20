@@ -2,14 +2,14 @@
 let requestParam = {
   SearchValue: "",
   Status: "All",
-  Type: "media",
+  Type: "All",
   RowsOnPage: 6,
-  RequestPage: 1
+  RequestPage: 1,
+  SortBy: "desc"
 };
 let isFiltered = false;
 let isSearched = false;
 function setRequestPage(num) {
-  console.log(num)
   requestParam.RequestPage = num;
   return requestEditRequestDataOnly();
 }
@@ -71,13 +71,22 @@ function renderRequest(request, index) {
       break;
   }
   let shortText = makeShortNote(request.note);
+  if (isFiltered) {
+    return `
+    <tr>
+        <td>${index + 1}</td> 
+        <td>${request.userEmail}</td>
+        <td>${shortText}</td>
+        <td class="text-center"><a class="text-decoration-none" href="/MediaManagerManagement/DetailPreview/${request.mediaID}/${request.requestID}">Preview</a></td>
+    </tr>`;
+  }
   return `
       <tr>
           <td>${index + 1}</td> 
           <td>${request.userEmail}</td>
           <td>${shortText}</td>
-          <td class="text-center"><p class="ticket_status ${bgcolor} rounded text-center text-light text-center px-2 py-1">${request.status}</p></td>
-          <td><a class="text-decoration-none" href="#${request.mediaID}">Preview</a></td>
+          <td class="text-center"><p class="ticket_status ${bgcolor} rounded text-center text-light text-center px-2 py-1 mb-0">${request.status}</p></td>
+          <td class="text-center"><a class="text-decoration-none" href="/MediaManagerManagement/DetailPreview/${request.type}/${request.mediaID}/${request.requestID}">Preview</a></td>
       </tr>`;
 }
 
@@ -148,6 +157,7 @@ function setStatus(obj) {
       searchAndResetPage(requestParam.SearchValue);
     }
     else requestEditRequestDataAndResetPage();
+    document.getElementById("status").classList.remove("d-none");
   }
   else {
     isFiltered = true;
@@ -155,6 +165,7 @@ function setStatus(obj) {
       searchAndResetPage(requestParam.SearchValue);
     }
     else requestWithFilterAndResetPage();
+    document.getElementById("status").classList.add("d-none");
   }
 }
 

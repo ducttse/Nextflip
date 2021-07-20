@@ -37,7 +37,7 @@ function renderCarousel(mediaArr, index) {
 }
 
 function renderLisrHolder(listMedia) {
-  let mediaArr = listMedia.mediaArr;
+  let mediaArr = listMedia.data;
   let length = Math.floor(mediaArr.length / 4);
   let renderedCarousels = "";
   for (let i = 0; i < length; i++) {
@@ -45,20 +45,27 @@ function renderLisrHolder(listMedia) {
     renderedCarousels += renderCarousel(subArr, i);
   }
   let button = `
-    <button class="carousel-control-prev" type="button" data-bs-target="#carousel_${listMedia.categoryID}" data-bs-slide="prev">
+    <button class="carousel-control-prev" type="button" data-bs-target="#carousel_${listMedia.name}" data-bs-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Previous</span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carousel_${listMedia.categoryID}" data-bs-slide="next">
+    <button class="carousel-control-next" type="button" data-bs-target="#carousel_${listMedia.name}" data-bs-slide="next">
       <span class="carousel-control-next-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Next</span>
     </button>
   `;
+  let showMoreBtn = "";
+  if (listMedia.name != "newest") {
+    showMoreBtn = `<a class="text-muted fs-6 ms-2 pt-2 text-decoration-none" href="/SubcribedUserDashBoard/ViewByCategory/${listMedia.id}">See More</a>`;
+  }
   return `
-  <div class="mt-5 listHolder">
-    <p class="h3 listTitle">${listMedia.name}</p>
+  <div class="mt-3 listHolder px-2">
+    <div class="d-flex justify-content-start">
+      <p class="h3 listTitle ps-2 text-capitalize">${listMedia.name}</p>
+      ${showMoreBtn}
+    </div>
     <div>
-      <div id="carousel_${listMedia.categoryID}" class="carousel slide h-25" data-bs-ride="carousel">
+      <div id="carousel_${listMedia.name}" class="carousel slide h-25" data-bs-ride="carousel">
         <div class="carousel-inner">
           ${renderedCarousels}
         </div>
@@ -74,27 +81,14 @@ function appendToWrapper(renderedEL) {
     .insertAdjacentHTML("beforeend", renderedEL);
 }
 
-function fetchCategoryID(category) {
-  fetch(
-    `/api/ViewSubscribedUserDashboard/GetMediasByCategoryID/${category.categoryID}`
-  )
-    .then((res) => res.json())
-    .then((json) => {
-      if (json.length < 8) {
-        return;
-      }
-      category.mediaArr = json;
-      appendToWrapper(renderLisrHolder(category));
-    });
-}
-
 function Run() {
-  fetch("/api/ViewSubscribedUserDashboard/GetCategories")
+  fetch("/api/ViewSubscribedUserDashboard/GetMedias")
     .then((res) => res.json())
-    .then((categories) => {
-      categories.forEach((category) => {
-        fetchCategoryID(category);
-      });
+    .then((mediasArr) => {
+      let el = mediasArr.map((media) => {
+        return renderLisrHolder(media);
+      }).join("")
+      appendToWrapper(el);
     });
 }
 

@@ -24,16 +24,19 @@ function appendMedia(data) {
 }
 let currentEpisodeID;
 let currentSeasonID;
-function Run(mediaID, episodeID) {
+async function Run(mediaID, episodeID) {
   currentEpisodeID = episodeID;
-  fetch(`/api/ViewMediaDetails/GetEpisode/${mediaID}/${episodeID}`)
+  let categories;
+  await fetch(`/api/ViewMediaDetails/GetEpisode/${mediaID}/${episodeID}`)
     .then((response) => response.json())
-    .then((json) => {
+    .then(async (json) => {
       currentSeasonID = json.seasonID;
+      categories = json.categories;
       appendMedia(json);
       getMeidaList(mediaID, json.seasonID);
       getSeason(mediaID, json.seasonID);
     })
+  requestSuggestion(categories[ 0 ].categoryID);
 }
 
 function renderEpisode(mediaID, episode) {
@@ -49,7 +52,7 @@ function renderEpisode(mediaID, episode) {
 }
 
 function getMeidaList(mediaID, seasonID) {
-  fetch(`https://localhost:44341/api/ViewMediaDetails/GetEpisodesOfSeason/${seasonID}`)
+  fetch(`/api/ViewMediaDetails/GetEpisodesOfSeason/${seasonID}`)
     .then(res => res.json())
     .then(json => {
       var seasons = json.map(episode => {
@@ -123,6 +126,43 @@ function hide(obj) {
   document.getElementById("btn_show").classList.remove("d-none");
 }
 
-function showSuggestion() {
-
+function rendeMedia(media) {
+  console.log(media);
+  return `
+  <div class="col-4 result mb-2 p-1" onclick="return AppendDetails('${media.mediaID}');">
+      <div class="img_container">
+          <img src="${media.bannerURL}" alt="${media.mediaID}" style="width: 100%; height: 100%; object-fit: cover"/>
+          <div id="title">
+              <p class="link-light p-1 fs-6 ">${media.title}</p>
+          </div>
+      </div>
+  </div>`;
 }
+
+function rendeMediaEL(arr) {
+  console.log(arr);
+  let rendered = arr.map(media => {
+    console.log(media);
+    return rendeMedia(media);
+  }).join("");
+  return `
+      <div class="row">
+          ${rendered}
+      </div>
+  `
+}
+
+function showSuggestion(arr) {
+  let el = rendeMediaEL(arr);
+  document.getElementById("media_holder").insertAdjacentHTML("afterbegin", el);
+}
+
+function requestSuggestion(id) {
+  fetch(`/api/ViewSubscribedUserDashboard/GetMediasByCategoryID/${id}/9`)
+    .then(res => res.json())
+    .then(json => {
+      showSuggestion(json)
+    })
+}
+
+

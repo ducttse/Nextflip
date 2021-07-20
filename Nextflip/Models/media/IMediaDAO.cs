@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Nextflip.APIControllers;
 
 namespace Nextflip.Models.media
 {
@@ -36,5 +37,14 @@ namespace Nextflip.Models.media
         int NumberOfMediasBySearchingFilterStatus(string searchValue, string Status);
         bool RequestChangeMediaStatus(string mediaID, string newStatus);
         Media GetMediaByChildID(string childID, string type);
+        IEnumerable<Media> GetNewestMedias(int limit);
+        string AddMedia(string Title, string FilmType, string Director, string Cast, int? PublishYear, 
+            string Duration, string BannerURL, string Language, string Description);
+        string UpdateMedia(Media media);
+        string AddMedia(Media mediaInfo);
+        string AddNewMedia(ViewEditorDashboard.PrototypeMediaForm mediaForm);
+        ViewEditorDashboard.PrototypeMediaForm GetDetailedMedia(string mediaId);
+        public string CloneMedia(string mediaID);
+        string EditMedia(ViewEditorDashboard.PrototypeMediaForm mediaForm);
     }
 }

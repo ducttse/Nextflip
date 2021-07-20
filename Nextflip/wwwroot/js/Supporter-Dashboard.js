@@ -80,11 +80,36 @@ function renderTicket(ticket, index) {
   }
 
   let shortContent = makeShortContent(ticket.content);
+  let topic;
+  if (ticket.topicName == "All") {
+    topic = "";
+    document.getElementById("topic").classList.add("d-none");
+  }
+  else {
+    topic = `<td class="text-center">${ticket.topicName}</td>`;
+    document.getElementById("topic").classList.remove("d-none");
+  }
+  if (isFiltered) {
+    return `
+    <tr>
+        <td class="text-center">${index + 1}</td>
+        <td>${ticket.userEmail}</td>
+        <td class="text-center">${ticket.createdDate.slice(0, 9)}</td>
+        ${topic}
+        <td>${shortContent}</td>
+        <td>
+            <p class="detail_btn" onclick="showDetail('${ticket.supportTicketID}')">
+            Detail
+            </p>
+        </td>
+    </tr>`;
+  }
   return `
       <tr>
           <td class="text-center">${index + 1}</td>
           <td>${ticket.userEmail}</td>
-          <td class="text-center">${ticket.createdDate}</td>
+          <td class="text-center">${ticket.createdDate.slice(0, 9)}</td>
+          ${topic}
           <td>${shortContent}</td>
           <td><p class="ticket_status ${bgcolor} rounded text-center text-light px-2 py-1">${ticket.status}<p></td>
           <td>
@@ -162,6 +187,8 @@ function setStatus(obj) {
       searchAndResetPage(requestParam.SearchValue);
     }
     else requestTopicDataAndResetPage();
+    //show
+    document.getElementById("status").classList.remove("d-none");
   }
   else {
     isFiltered = true;
@@ -169,6 +196,8 @@ function setStatus(obj) {
       searchAndResetPage(requestParam.SearchValue);
     }
     else requestWithFilterAndResetPage();
+    // Hide column 
+    document.getElementById("status").classList.add("d-none");
   }
 
 }

@@ -1,9 +1,13 @@
-﻿using Nextflip.Models.media;
+﻿using Nextflip.Models.category;
+using Nextflip.Models.episode;
+using Nextflip.Models.media;
 using Nextflip.Models.mediaEditRequest;
+using Nextflip.Models.season;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Nextflip.APIControllers;
 
 namespace Nextflip.Services.Interfaces
 {
@@ -24,7 +28,7 @@ namespace Nextflip.Services.Interfaces
         int NumberOfMediasFilterCategory_Status(string CategoryName, string Status);
         bool RequestDisableMedia(string mediaID);
         Media GetMediaByID(string mediaID);
-        bool AddMediaRequest(string userEmail, string mediaID, string note, string previewLink, string type, string ID);
+        bool AddMediaRequest(string userEmail, string mediaID, string note, string type, string ID);
         IEnumerable<Media> GetAllMedia(int RowsOnPage, int RequestPage);
         int NumberOfMedias();
         IEnumerable<Media> GetAllMediaFilterStatus(string Status, int RowsOnPage, int RequestPage);
@@ -40,5 +44,20 @@ namespace Nextflip.Services.Interfaces
         int NumberOfRequestMediaFilterStatus(string userEmail, string Status);
         IEnumerable<MediaEditRequest> SearchingRequestMediaFilterStatus(string searchValue, string userEmail, string Status, int RowsOnPage, int RequestPage);
         int NumberOfSearchingRequestMediaFilterStatus(string searchValue, string userEmail, string Status);
+        string AddMedia(string Title, string FilmType, string Director, string Cast, int? PublishYear,
+            string Duration, string BannerURL, string Language, string Description);
+        // category
+        Category GetCategoryById(int categoryID);
+        bool AddMediaCategory(string mediaID, int categoryID);
+        //add media
+        string UpdateMedia(Media media);
+        //season
+        string AddSeason(Season season);
+        string UpdateSeason(Season season);
+        //episode
+        string AddEpisode(Episode episode);
+        string UpdateEpisode(Episode episode);
+        string AddNewMedia(ViewEditorDashboard.PrototypeMediaForm mediaForm);
+        string EditMedia(ViewEditorDashboard.PrototypeMediaForm mediaForm);
     }
 }

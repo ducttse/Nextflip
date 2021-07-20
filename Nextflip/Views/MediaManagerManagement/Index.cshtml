@@ -3,8 +3,8 @@
     Layout = "_CustomLayout";
 }
 @section Styles {
-  <link href="@Url.Content("~/css/Media-Manager.css")" rel="stylesheet" type="text/css" />
-  <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/css/Media-Manager.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
 }
 <div class="ui_wrapper col-10" style="background-color: #fff">
     <div class="table_container p-2 ps-3 w-100 mx-auto rounded" style="background-color: #ffffff">
@@ -22,35 +22,35 @@
                 <p class="me-4 p-1" onclick="setStatus(this)" value="Disapproved">Disapproved</p>
             </div>
         </div>
-        <div class="btn-group w-100 px-3 pt-3 pb-2 bg-primary border rounded-top">
+        <div class="btn-group w-100 px-3 pt-3 pb-2s border rounded-top">
             <div id="search_wrapper" class="col-7"></div>
             <div class="d-flex col-3 offset-2">
-                <label class="form-label mt-2 text-light">Type</label>
+                <label class="form-label mt-2 text-dark">Type</label>
                 <select id="type_filter" class="ms-2 form-select h-85 w-75" onchange="setSeletedType(this)">
                     <option value="All">All</option>
                     <option value="Media">Media</option>
                     <option value="Season">Season</option>
                     <option value="Episode">Episode</option>
                     <option value="Subtitle">Subtitle</option>
-                </select> 
+                </select>
             </div>
         </div>
-        <div id="notFound" class="hide"> 
+        <div id="notFound" class="hide">
         </div>
         <div id="table_holder" class="border rounded-bottom pb-0 mb-2">
             <table class="table table-borderless table-striped table-responsive mb-0 table-hover w-100">
                 <thead class="table-secondary">
                     <tr>
                         <th id="no" class="col">#</th>
-                        <th id="mail" class="col text-center">Editor mail</th>        
-                        <th id="content" class="col text-center">Content</th>
-                        <th id="status" class="col text-center">Status</th>
-                        <th id="preview" class="col">Preview</th>
+                        <th id="mail" class="col">Editor mail</th>
+                        <th id="content" class="col">Content</th>
+                        <th id="status" class="col text-center" style="width: 150px;">Status</th>
+                        <th id="preview" class="col text-center">Preview</th>
                     </tr>
                 </thead>
                 <tbody id="requestWrapper"></tbody>
             </table>
-            <div class="d-flex align-items-center" style="background-color: #DDDDDD">
+            <div class="d-flex align-items-center table-secondary">
                 <p class="col-2 my-auto form-text text-center" id="page_notification"></p>
                 <div class="col-2 me-2">
                     <p class="my-auto form-text text-end">Rows per page</p>
@@ -65,10 +65,13 @@
                 </div>
                 <div id="pagination" class="col-7 d-flex justify-content-end pe-5">
                 </div>
-            <div>
+                <div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
 <script src="~/js/Pagination.js"></script>
 <script src="~/js/Slide-Bar.js"></script>
 <script src="~/js/Search-Component.js"></script>
@@ -78,9 +81,7 @@
     appendSearch("Search editor's email", "");
     setEnterEvent();
     let button = `<a id="back_btn" href="/MediaManagerManagement/Index" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
-                    Media Manager
-                  </a>`;
+                                Media Manager
+                              </a>`;
     appendButton(button);
-    setRoleName("Media Manager");
-    setName("Lê Thành Đạt")
 </script>

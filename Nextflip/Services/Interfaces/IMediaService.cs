@@ -17,14 +17,14 @@ namespace Nextflip.Services.Interfaces
 
         Media GetMediaByID(string mediaID);
         IEnumerable<Media> GetMediaFilterCategory(string CategoryName, int RowsOnPage, int RequestPage);
-       // bool AddPreviewMedia(AddMedia.EditMediaModel editMediaModel);
         int NumberOfMediasFilterCategory(string CategoryName);
         IEnumerable<Media> ViewMediasFilterCategory_Status(string CategoryName, string Status, int RowsOnPage, int RequestPage);
         int NumberOfMediasFilterCategory_Status(string CategoryName, string Status);
 
         IEnumerable<Media> GetFavoriteMediasByUserID(string userID);
-        IEnumerable<Media> GetMediasByCategoryID(int categoryID);
+        IEnumerable<Media> GetMediasByCategoryID(int categoryID, int limit);
 
         bool RequestDisableMedia(string mediaID);
+        string CloneMedia(string id);
     }
 }

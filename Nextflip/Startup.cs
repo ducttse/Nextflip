@@ -12,7 +12,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Nextflip.utils;
 using Nextflip.Models.account;
 using Nextflip.Services.Implementations;
@@ -26,11 +28,14 @@ using Nextflip.Models.mediaCategory;
 using Nextflip.Models.mediaFavorite;
 using Nextflip.Models.season;
 using Nextflip.Models.subtitle;
+using Nextflip.Models.notification;
 using Nextflip.Models.supportTopic;
 using Nextflip.Models.supportTicket;
 using Nextflip.Models.role;
 using Microsoft.AspNetCore.Http;
+using Nextflip.Models.paymentPlan;
 using Nextflip.Models.subscription;
+using Nextflip.Models.filmType;
 
 namespace Nextflip
 {
@@ -56,14 +61,15 @@ namespace Nextflip
             services.AddTransient<IMediaFavoriteDAO, MediaFavoriteDAO>();
             services.AddTransient<ISeasonDAO, SeasonDAO>();
             services.AddTransient<ISubtitleDAO, SubtitleDAO>();
+            services.AddTransient<INotificationDAO, NotificationDAO>();
+            services.AddTransient<IFilmTypeDAO, FilmTypeDAO>();
+
+
+            services.AddTransient<IMediaService, MediaService>();
+            services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient<IRoleDAO, RoleDAO>();
             services.AddTransient<IRoleService, RoleService>();
             services.AddTransient<ISubscriptionDAO, SubscriptionDAO>();
-
-
-
-            //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-            //    .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
             services.AddControllers().AddNewtonsoftJson();
             services.AddTransient<IAccountDAO, AccountDAO>();
@@ -74,6 +80,8 @@ namespace Nextflip
             services.AddTransient<IEditorService, EditorService>();
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<ISubscriptionService, SubscriptionService>();
+            services.AddTransient<IFilmTypeService, FilmTypeService>();
+            services.AddTransient<ICategoryService, CategoryService>();
 
 
             ///get connection string
@@ -96,13 +104,52 @@ namespace Nextflip
             //add session
             services.AddDistributedMemoryCache();
 
-            services.AddSession(options =>
-            {
-                options.IdleTimeout = TimeSpan.FromSeconds(10);
-                options.Cookie.HttpOnly = true;
-                options.Cookie.IsEssential = true;
-            });
+            //add payment plan
+            services.AddTransient<IPaymentPlanService, PaymentPlanService>();
+            services.AddTransient<IPaymentPlanDAO, PaymentPlanDAO>();
 
+            //cookie author
+            services.AddScoped<CookieUtil>();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options => {
+                options.AccessDeniedPath = "/Common/AccessDenied";
+                options.LoginPath = "/Account/Login";
+                options.EventsType = typeof(CookieUtil);
+                });
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("user manager", policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser()
+                        .RequireAssertion(context => context.User.HasClaim(ClaimTypes.Role, "user manager"))
+                        .Build();
+                });
+                options.AddPolicy("subscribed user", policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser()
+                        .RequireAssertion(context => context.User.HasClaim(ClaimTypes.Role, "subscribed user"))
+                        .Build();
+                });
+                options.AddPolicy("customer supporter", policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser()
+                        .RequireAssertion(context => context.User.HasClaim(ClaimTypes.Role, "customer supporter"))
+                        .Build();
+                });
+                options.AddPolicy("media editor", policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser()
+                        .RequireAssertion(context => context.User.HasClaim(ClaimTypes.Role, "media editor"))
+                        .Build();
+                });
+                options.AddPolicy("media manager", policyBuilder =>
+                {
+                    policyBuilder.RequireAuthenticatedUser()
+                        .RequireAssertion(context => context.User.HasClaim(ClaimTypes.Role, "media manager"))
+                        .Build();
+                });
+
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -126,13 +173,12 @@ namespace Nextflip
 
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller}/{action}/{id?}");
+                    pattern: "{controller=Account}/{action=Login}/{id?}");
 
                 endpoints.MapGet("/testmail", async context =>
                 {

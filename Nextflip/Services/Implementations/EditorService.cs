@@ -1,5 +1,7 @@
-﻿using Nextflip.Models.episode;
+﻿using Nextflip.Models.category;
+using Nextflip.Models.episode;
 using Nextflip.Models.media;
+using Nextflip.Models.mediaCategory;
 using Nextflip.Models.mediaEditRequest;
 using Nextflip.Models.season;
 using Nextflip.Models.subtitle;
@@ -8,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Nextflip.APIControllers;
 
 namespace Nextflip.Services.Implementations
 {
@@ -18,13 +21,18 @@ namespace Nextflip.Services.Implementations
         private readonly IEpisodeDAO _episodeDAO;
         private readonly ISeasonDAO _seasonDAO;
         private readonly ISubtitleDAO _subtitleDAO;
-        public EditorService(IMediaEditRequestDAO mediaEditRequestDAO, IMediaDAO mediaDAO, IEpisodeDAO episodeDAO, ISeasonDAO seasonDAO, ISubtitleDAO subtitleDAO)
+        private readonly ICategoryDAO _categoryDAO;
+        private readonly IMediaCategoryDAO _mediaCategoryDAO;
+        public EditorService(IMediaEditRequestDAO mediaEditRequestDAO, IMediaDAO mediaDAO, IEpisodeDAO episodeDAO, ISeasonDAO seasonDAO, 
+            ISubtitleDAO subtitleDAO, IMediaCategoryDAO mediaCategoryDAO, ICategoryDAO categoryDAO)
         {
             _mediaEditRequestDAO = mediaEditRequestDAO;
             _mediaDAO = mediaDAO;
             _episodeDAO = episodeDAO;
             _seasonDAO = seasonDAO;
             _subtitleDAO = subtitleDAO;
+            _mediaCategoryDAO = mediaCategoryDAO;
+            _categoryDAO = categoryDAO;
         }
         public IEnumerable<Media> GetMediasByTitle(string searchValue, int RowsOnPage, int RequestPage) => _mediaDAO.GetMediasByTitle(searchValue, RowsOnPage, RequestPage);
         public int NumberOfMediasBySearching(string searchValue) => _mediaDAO.NumberOfMediasBySearching(searchValue);
@@ -48,8 +56,8 @@ namespace Nextflip.Services.Implementations
 
         public bool RequestDisableMedia(string mediaID) => _mediaDAO.RequestDisableMedia(mediaID);
         public Media GetMediaByID(string mediaID) => _mediaDAO.GetMediaByID(mediaID);
-        public bool AddMediaRequest(string userEmail, string mediaID, string note, string previewLink, string type, string ID)
-                => _mediaEditRequestDAO.AddMediaRequest(userEmail, mediaID, note, previewLink, type, ID);
+        public bool AddMediaRequest(string userEmail, string mediaID, string note, string type, string ID)
+                => _mediaEditRequestDAO.AddMediaRequest(userEmail, mediaID, note, type, ID);
         public IEnumerable<Media> GetAllMedia(int RowsOnPage, int RequestPage) => _mediaDAO.GetAllMedia(RowsOnPage, RequestPage);
         public int NumberOfMedias() => _mediaDAO.NumberOfMedias();
         public IEnumerable<Media> GetAllMediaFilterStatus(string Status, int RowsOnPage, int RequestPage)
@@ -77,5 +85,30 @@ namespace Nextflip.Services.Implementations
                 => _mediaEditRequestDAO.SearchingRequestMediaFilterStatus(searchValue, userEmail, Status, RowsOnPage, RequestPage);
         public int NumberOfSearchingRequestMediaFilterStatus(string searchValue, string userEmail, string Status) 
             => _mediaEditRequestDAO.NumberOfSearchingRequestMediaFilterStatus(searchValue, userEmail, Status);
+        public string AddMedia(string Title, string FilmType, string Director, string Cast, int? PublishYear,
+            string Duration, string BannerURL, string Language, string Description)
+            => _mediaDAO.AddMedia(Title, FilmType, Director, Cast, PublishYear, Duration, BannerURL, Language, Description);
+
+        public Category GetCategoryById(int categoryID) => _categoryDAO.GetCategoryByID(categoryID);
+        public bool AddMediaCategory(string mediaID, int categoryID) => _mediaCategoryDAO.AddMediaCategory(mediaID, categoryID);
+        public string UpdateMedia(Media media) => _mediaDAO.UpdateMedia(media);
+
+        public string AddSeason(Season season) => _seasonDAO.AddSeason(season);
+
+        public string UpdateSeason(Season season) => _seasonDAO.UpdateSeason(season);
+
+
+        public string AddEpisode(Episode episode) => _episodeDAO.AddEpisode(episode);
+
+        public string UpdateEpisode(Episode episode) => _episodeDAO.UpdateEpisode(episode);
+        public string AddNewMedia(ViewEditorDashboard.PrototypeMediaForm mediaForm)
+        {
+            return _mediaDAO.AddNewMedia(mediaForm);
+        }
+
+        public string EditMedia(ViewEditorDashboard.PrototypeMediaForm mediaForm)
+        {
+            return _mediaDAO.EditMedia(mediaForm);
+        }
     }
 }

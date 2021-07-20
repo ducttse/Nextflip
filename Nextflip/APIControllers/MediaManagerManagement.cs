@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Nextflip.Models.episode;
 using Nextflip.Models.media;
 using Nextflip.Models.mediaEditRequest;
 using Nextflip.Services.Interfaces;
@@ -101,7 +102,7 @@ namespace Nextflip.APIControllers
         */
 
         [Route("ApproveRequest")]
-        public JsonResult ApproveRequest([FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromForm] Request request)
+        public JsonResult ApproveRequest([FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromBody] Request request)
         {
             try
             {
@@ -141,7 +142,8 @@ namespace Nextflip.APIControllers
         }
 
         [Route("DisapproveRequest")]
-        public JsonResult DisapproveRequest([FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromForm] Request request)
+        public async Task<IActionResult> DisapproveRequest([FromServices] IMediaManagerManagementService mediaManagerManagementService,
+                                        [FromServices] ISendMailService sendMailService, [FromBody] Request request)
         {
             try
             {
@@ -162,6 +164,11 @@ namespace Nextflip.APIControllers
                 else if (editRequest.type.Trim().Equals("subtitle"))
                     disapproveChange = mediaManagerManagementService.DisapproveChangeSubtitle(editRequest.ID);
                 if (!disapproveChange) return new JsonResult(messageFail);
+                string toEmail = editRequest.userEmail;
+                string body = $"Dear,\n" +
+                                $"your request about: << {editRequest.mediaTitle} >> is disapproved \n" +
+                                $"Because: {request.note}";
+                await sendMailService.SendEmailAsync(toEmail, "Notification of your request", body);
                 var message = new
                 {
                     message = "success"
@@ -202,6 +209,8 @@ namespace Nextflip.APIControllers
         {
             public int RequestID { get; set; }
             public string MediaID { get; set; }
+            public string EpisodeID { get; set; }
+            public string SortBy { get; set; }
             public string note { get; set; }
             public string SearchValue { get; set; }
             public string Status { get; set; }
@@ -274,7 +283,11 @@ namespace Nextflip.APIControllers
         {
             try
             {
-                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.GetMediaRequest(request.Status.Trim().ToLower(), request.Type.Trim().ToLower(), request.RowsOnPage, request.RequestPage);
+                if (request.SortBy.Trim() == "") request.SortBy = "asc";
+                if (request.Type.Trim() == "") request.Type = "all";
+                if (request.Status.Trim() == "") request.Status = "all";
+                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.GetMediaRequest(request.Status.Trim().ToLower(), 
+                    request.Type.Trim().ToLower(), request.SortBy.Trim().ToLower(), request.RowsOnPage, request.RequestPage);
                 int count = mediaManagerManagementService.NumberOfMediaRequest(request.Status.Trim().ToLower(), request.Type.Trim().ToLower());
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
@@ -305,7 +318,11 @@ namespace Nextflip.APIControllers
                     message = "Empty searchValue"
                 };
                 if (request.SearchValue.Trim() == "") return new JsonResult(message);
-                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.SearchingMediaRequest(request.SearchValue.Trim(), request.Status.Trim().ToLower(), request.Type.Trim().ToLower(), request.RowsOnPage, request.RequestPage);
+                if (request.SortBy.Trim() == "") request.SortBy = "asc";
+                if (request.Type.Trim() == "") request.Type = "all";
+                if (request.Status.Trim() == "") request.Status = "all";
+                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.SearchingMediaRequest(request.SearchValue.Trim(), 
+                    request.Status.Trim().ToLower(), request.SortBy, request.Type.Trim().ToLower(), request.RowsOnPage, request.RequestPage);
                 int count = mediaManagerManagementService.NumberOfMediaRequestSearching(request.SearchValue.Trim(), request.Status.Trim().ToLower(), request.Type.Trim().ToLower());
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
@@ -346,6 +363,72 @@ namespace Nextflip.APIControllers
                 {
                     message = ex.Message
                 });
+            }
+        }
+
+        [Route("GetEpisodeByID")]
+        public JsonResult GetEpisodeByID([FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromBody] Request request)
+        {
+            try
+            {
+                Episode episode = mediaManagerManagementService.GetEpisodeByID(request.EpisodeID);
+                var result = new
+                {
+                    Message = "success",
+                    Data = episode
+                };
+                return (new JsonResult(result));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetEpisodeByID: " + ex.Message);
+                return new JsonResult(new
+                {
+                    message = ex.Message
+                });
+            }
+        }
+
+        [Route("GetMediaEditRequestByID/{RequestID}")]
+        public JsonResult GetMediaEditRequestByID([FromServices] IMediaManagerManagementService mediaManagerManagementService, int RequestID)
+        {
+            try
+            {
+                int a;
+                if (!int.TryParse(RequestID.ToString(), out a) || RequestID <= 0) return new JsonResult(new { Message = "fail" });
+                MediaEditRequest EditRequest = mediaManagerManagementService.GetMediaEditRequestByID(RequestID);
+                var result = new
+                {
+                    Message = "success",
+                    Data = EditRequest
+                };
+                if (EditRequest != null) return (new JsonResult(result));
+                else return new JsonResult(new { Message = "fail" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetMediaEditRequestByID: " + ex.Message);
+                return new JsonResult(new
+                {
+                    message = "fail"
+                });
+            }
+        }
+
+        [Route("GetDetailedMedia/{mediaID}")]
+        [HttpGet]
+        public JsonResult GetDetailedMedia([FromServices] IMediaManagerManagementService mediaManagerManagementService, string mediaID)
+        {
+            try
+            {
+                ViewEditorDashboard.PrototypeMediaForm detailedMedia =
+                    mediaManagerManagementService.GetDetailedMediaByMediaId(mediaID);
+                return new JsonResult(detailedMedia);
+            }
+            catch (Exception exception)
+            {
+                _logger.LogInformation("Get Detailed Media by media ID: " + exception.Message);
+                return new JsonResult(new {message = "operation failed"});
             }
         }
 

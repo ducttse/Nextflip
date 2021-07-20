@@ -1,0 +1,208 @@
+﻿@{
+    ViewBag.Title = "Media Editor";
+    Layout = "_CustomLayout";
+}
+@section Styles {
+    <link href="@Url.Content("~/css/User-Manager.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/css/Form.css")" rel="stylesheet" type="text/css" />
+}
+<div class="col-10">
+    <p class="fs-2 text-secondary ps-2">Edit media</p>
+    <div class="modal-body bg-light">
+        <div>
+            <div class="mb-3 row">
+                <label for="title" class="col-sm-2 text-end col-form-label">Title</label>
+                <div class="col-sm-4">
+                    <input type="text" class="form-control" id="title" onkeyup="onInput(this)" />
+                    <div class="invalid-feedback">
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="category" class="col-sm-2 text-end col-form-label">Category</label>
+                <div class="col-sm-10" id="CB_holder">
+                    <p class="d-none" id="empty_checkbox" style="color: #dc3545;margin-top: .25rem; font-size: .875em;">Must choose at least one</p>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="filmType" class="col-sm-2 text-end col-form-label">Film type</label>
+                <div class="col-sm-3">
+                    <select class="form-select" class="form-control" id="filmType">
+                    </select>
+                    <div class="invalid-feedback">
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="cast" class="col-sm-2 text-end col-form-label">Cast</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" id="cast">
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="director" class="col-sm-2 text-end col-form-label">Director</label>
+                <div class="col-sm-3">
+                    <input type="text" class="form-control" id="director">
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="publicYear" class="col-sm-2 text-end col-form-label">Publish year</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" id="publicYear">
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="duration" class="col-sm-2 text-end col-form-label">Duration</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" id="duration">
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="language" class="col-sm-2 text-end col-form-label">Language</label>
+                <div class="col-sm-2">
+                    <input type="text" class="form-control" id="language" onkeyup="onInput(this)">
+                    <div class="invalid-feedback">
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="description" class=" col-sm-2 text-end col-form-label">Description</label>
+                <div class="col-sm-10">
+                    <textarea style="resize: none;" type="text" rows="6" cols="40" class="form-control" id="description" onkeyup="onInput(this)"></textarea>
+                    <div class="invalid-feedback">
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="banner" class=" col-sm-2 text-end col-form-label">Banner</label>
+                <div class="col-sm-4">
+                    <input type="file" class="form-control" id="banner" onchange="getFile(this)">
+                    <div class="invalid-feedback">
+                    </div>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <p class="col-sm-2 text-end col-form-label"></p>
+                <div class="col-sm-8" id="season_container">
+                </div>
+            </div>
+            <div class="offset-1">
+                <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#modalAddSeasonForm">Add new season</button>
+            </div>
+            <div class="col-12 d-flex justify-content-end">
+                <button class="btn btn-primary" type="button" onclick="requestAddNewMedia()">Submit</button>
+            </div>
+        </div>
+    </div>
+    <div class="spinner-border text-primary position-fixed top-50 start-50 d-none" id="spinner" style="z-index:10000;pointer-events: none; cursor: default;" role="status">
+        <span class="visually-hidden"></span>
+    </div>
+</div>
+<!-- Add season  modal -->
+<div class="modal fade" id="modalAddSeasonForm" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add new season</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3 row">
+                    <label for="titleSeason" class=" col-sm-3 col-form-label text-end">Title</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="titleSeason" onkeyup="onInput(this)" />
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="bannerSeason" class=" col-sm-3 col-form-label text-end">Banner</label>
+                    <div class="col-sm-7">
+                        <input type="file" class="form-control" id="bannerSeason" onchange="getFile(this)" />
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="numberSeason" class=" col-sm-3 col-form-label text-end">Number</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control w-50" id="numberSeason" onkeyup="onInput(this)" />
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-bg-danger" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="submit_btn" onclick="setSeason()">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Add episode modal -->
+<div class="modal fade" id="modalAddEpisodeForm" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add new episode</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3 row">
+                    <label for="titleEpisode" class=" col-sm-3 col-form-label text-end">Title</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="titleEpisode" onkeyup="onInput(this)" />
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="numberEpisode" class=" col-sm-3 col-form-label text-end">Number</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control w-50" id="numberEpisode" onkeyup="onInput(this)" />
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="bannerEpisode" class=" col-sm-3 col-form-label text-end">Banner</label>
+                    <div class="col-sm-7">
+                        <input type="file" class="form-control" accept="image/png, image/gif, image/jpeg" id="bannerEpisode" onchange="getFile(this)" />
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="videoEpisode" class=" col-sm-3 col-form-label text-end">Video</label>
+                    <div class="col-sm-7">
+                        <input type="file" class="form-control" accept="video/mp4,video/x-m4v,video/*" id="videoEpisode" onchange="getFile(this)" />
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-bg-danger" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="episode_submit_btn" index="" onclick="setEpisode(this)">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+</div>
+@section script {
+    <script src="~/js/Slide-Bar.js"></script>
+    <script src="~/js/File-Uploader.js"></script>
+    <script src="~/js/Edit-Media.js"></script>
+    <script>
+        let button1 = `<a href="/EditorDashboard/Index" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
+                                        Media manager
+                                      </a>`;
+        let button2 = `<a href="/EditorDashboard/ViewEditRequest"  onclick="return showForm();" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
+                                        View edit request
+                                    </a>`;
+        appendButton(button2);
+        appendButton(button1);
+    </script>
+}

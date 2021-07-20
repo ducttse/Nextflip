@@ -1,5 +1,5 @@
 ﻿let ticketContent = {
-  UserEmail: "longpnhse150499@fpt.edu.vn",
+  UserEmail: "",
   TopicName: "",
   Content: ""
 }
@@ -48,14 +48,15 @@ function validateForm() {
   let content = document.getElementById("content");
   let formCotainer = content.parentNode;
   let isContentValidateSuccess = false;
+  formCotainer.classList.add("was-validated");
   if (content.value.trim().length = 0) {
     option.setCustomValidity("empty");
   }
   else {
     option.setCustomValidity("");
     isContentValidateSuccess = true;
+    formCotainer.classList.remove("was-validated");
   }
-  formCotainer.classList.add("was-validated");
   return isContentValidateSuccess;
 }
 
@@ -73,6 +74,7 @@ function sendTicket() {
   if (!validateForm()) {
     return;
   }
+  ticketContent.UserEmail = getProfile().userEmail;
   let selectedTopic = document.getElementById("option");
   let content = document.getElementById("content");
   ticketContent.TopicName = selectedTopic[ selectedTopic.selectedIndex ].value;

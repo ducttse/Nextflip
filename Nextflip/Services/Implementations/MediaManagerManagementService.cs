@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Nextflip.APIControllers;
 using Nextflip.Models.episode;
 using Nextflip.Models.season;
 using Nextflip.Models.subtitle;
@@ -52,12 +53,12 @@ namespace Nextflip.Services.Implementations
 
         public bool ApproveChangeMedia(string mediaID) => _mediaDao.ApproveChangeMedia(mediaID);
         public bool DisapproveChangeMedia(string mediaID) => _mediaDao.DisapproveChangeMedia(mediaID);
-        public IEnumerable<MediaEditRequest> GetMediaRequest(string status, string type, int RowsOnPage, int RequestPage)
-            =>_mediaEditRequestDao.GetMediaRequest(status, type, RowsOnPage, RequestPage);
+        public IEnumerable<MediaEditRequest> GetMediaRequest(string status, string type, string sortBy, int RowsOnPage, int RequestPage)
+            =>_mediaEditRequestDao.GetMediaRequest(status, type, sortBy, RowsOnPage, RequestPage);
         public int NumberOfMediaRequest(string status, string type)
             => _mediaEditRequestDao.NumberOfMediaRequest(status, type);
-        public IEnumerable<MediaEditRequest> SearchingMediaRequest(string searchValue, string status, string type, int RowsOnPage, int RequestPage)
-            => _mediaEditRequestDao.SearchingMediaRequest(searchValue, status, type, RowsOnPage, RequestPage);
+        public IEnumerable<MediaEditRequest> SearchingMediaRequest(string searchValue, string status, string sortBy, string type, int RowsOnPage, int RequestPage)
+            => _mediaEditRequestDao.SearchingMediaRequest(searchValue, status, sortBy, type, RowsOnPage, RequestPage);
         public int NumberOfMediaRequestSearching(string searchValue, string status, string type)
             => _mediaEditRequestDao.NumberOfMediaRequestSearching(searchValue, status, type);
         public Media GetMediaByID(string mediaID) => _mediaDao.GetMediaByID(mediaID);
@@ -70,6 +71,9 @@ namespace Nextflip.Services.Implementations
         public bool DisapproveChangeSubtitle(string subtitleID) => _subtitleDAO.DisapproveChangeSubtitle(subtitleID);
         public Season GetSeasonByID(string seasonID) => _seasonDAO.GetSeasonByID(seasonID);
         public Episode GetEpisodeByID(string episodeID) => _episodeDAO.GetEpisodeByID(episodeID);
-
+        public ViewEditorDashboard.PrototypeMediaForm GetDetailedMediaByMediaId(string mediaId)
+        {
+            return _mediaDao.GetDetailedMedia(mediaId);
+        }
     }
 }

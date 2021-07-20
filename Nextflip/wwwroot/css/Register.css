@@ -5,10 +5,15 @@
 	width: 90% !important;
 }
 #wrapper{
-    height: 100vh;
+    height: 99vh;
     width: 100%;
 }
 form div label::after{
  content: " *";
  color: red;
+}
+#dob_icon{
+    cursor: pointer;
+    color: white;
+    background-color: #202020;
 }

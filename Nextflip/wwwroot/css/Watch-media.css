@@ -60,15 +60,16 @@
 .current .col-8 p{
   color: #ffc107 !important;
 }
+
 .img_container{
   overflow: hidden;
 }
-.episode .image {
+.episode .image, .result img{
   z-index: 1;
   display: block;
   transition: transform .4s;   /* smoother zoom */
 }
-.episode:hover .image {
-  transform: scale(1.3);
+.episode:hover .image, .result:hover img {
+  transform: scale(1.2);
   transform-origin: 50% 50%;
 }

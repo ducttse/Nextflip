@@ -1,7 +1,7 @@
 ﻿let Data;
 let requestParam = {
     SearchValue: "",
-    UserEmail: "vlxx.com@gmail.com",
+    UserEmail: "",
     Status: "All",
     RowsOnPage: 12,
     RequestPage: 1
@@ -116,7 +116,9 @@ function setSelectedStatus(obj) {
     else requestRequestDataAndResetPage();
 }
 
-function requestRequestDataOnly() {
+async function requestRequestDataOnly() {
+    await loadAccount();
+    requestParam.UserEmail = getProfile().userEmail;
     let reqHeader = new Headers();
     reqHeader.append("Content-Type", "text/json");
     reqHeader.append("Accept", "application/json, text/plain, */*");

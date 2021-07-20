@@ -25,7 +25,7 @@ namespace Nextflip.Models.supportTicket
                                                             "Value(@supportTicketID, @userEmail, @topicName, 'Pending', @content);";
                     using (var command = new MySqlCommand(sql, connection))
                     {
-                        command.Parameters.AddWithValue("@supportTicketID", "randomString");  //use proc ???
+                        command.Parameters.AddWithValue("@supportTicketID", new Random().Next());
                         command.Parameters.AddWithValue("@userEmail", userEmail);
                         command.Parameters.AddWithValue("@topicName", topicName);
                         command.Parameters.AddWithValue("@content", content);

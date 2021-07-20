@@ -2,6 +2,7 @@
 using Nextflip.utils;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 
 namespace Nextflip.Models.account
@@ -122,18 +123,23 @@ namespace Nextflip.Models.account
             bool result = false;
             try
             {
-                if (GetDetailOfAccount(userID).status.Equals("Inactive")) return false;
+                Account userAccount = GetDetailOfAccount(userID);
+                if (userAccount.status.Equals("Inactive")) return false;
                 if (note == null || note.Trim().Equals("")) return false;
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "UPDATE account " +
+                    /*string Sql = "UPDATE account " +
                         "SET status= 'Inactive', note=@note " +
                         "WHERE userID = @userID";
+                    */
+                    string Sql = "disableAccount";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        command.Parameters.AddWithValue("@note", note);
-                        command.Parameters.AddWithValue("@userID", userID);
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("userID", userID);
+                        command.Parameters.AddWithValue("note", note);
+
                         int rowEffects = command.ExecuteNonQuery();
                         if (rowEffects > 0)
                         {
@@ -622,7 +628,8 @@ namespace Nextflip.Models.account
                                     userEmail = reader.GetString("userEmail"),
                                     roleName = reader.GetString("roleName"),
                                     fullname = reader.GetString("fullname"),
-                                    status = reader.GetString("status")
+                                    status = reader.GetString("status"),
+                                    note = reader.GetString("note")
                                 };
                             }
                         }
@@ -642,13 +649,14 @@ namespace Nextflip.Models.account
             bool result = false;
             try
             {
-                if (GetDetailOfAccount(userID).status.Equals("Active")) return false;
-                if (GetDetailOfInactiveAccount(userID).note == null || GetDetailOfInactiveAccount(userID).note.Trim().Equals("")) return false;
+                Account userAccount = GetDetailOfInactiveAccount(userID);
+                if (userAccount.status.Equals("Active")) return false;
+                if (userAccount.note == null || userAccount.note.Trim().Equals("")) return false;
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
                     string Sql = "UPDATE account " +
-                        "SET status= 'Active', note=null " +
+                        "SET status = 'Active', note='' " +
                         "WHERE userID = @userID";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
@@ -772,7 +780,7 @@ namespace Nextflip.Models.account
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select fullname, userEmail, dateOfBirth, roleName, pictureURL, wallet " +
+                    string Sql = "Select fullname, userEmail, dateOfBirth, roleName, pictureURL " +
                                     "From account " +
                                     "Where userID = @userID";
                     using (var command = new MySqlCommand(Sql, connection))
@@ -790,7 +798,6 @@ namespace Nextflip.Models.account
                                     dateOfBirth = reader.GetDateTime("dateOfBirth"),
                                     roleName = reader.GetString("roleName"),
                                     pictureURL =  reader.IsDBNull(reader.GetOrdinal("pictureURL")) ? null : reader.GetString("pictureURL"),
-                                    wallet = reader.GetDouble("wallet")
                                 };
                             }
                         }
@@ -868,7 +875,7 @@ namespace Nextflip.Models.account
                 throw new Exception(ex.Message);
             }
         }
-        public string RegisterAnAccount(string userEmail, string password, string fullname, DateTime dateOfBirth, string pictureURL)
+        public bool RegisterAnAccount(string userEmail, string password, string fullname, DateTime dateOfBirth, string pictureURL)
         {
             string roleName = "subscribed user";
             string status = "Active";
@@ -893,7 +900,7 @@ namespace Nextflip.Models.account
                         command.Parameters.AddWithValue("@status", status);
                         command.Parameters.AddWithValue("@pictureURL", pictureURL);
                         int result = command.ExecuteNonQuery();
-                        if (result > 0) return "Success";
+                        if (result > 0) return true;
                     }
                 }
             }
@@ -901,7 +908,7 @@ namespace Nextflip.Models.account
             {
                 throw new Exception(ex.Message);
             }
-            return null;
+            return false;
         }
         public bool ChangeProfile(string userID, string fullname, DateTime dateOfBirth, string pictureURL)
         {

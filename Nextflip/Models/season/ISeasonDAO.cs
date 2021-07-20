@@ -12,5 +12,7 @@ namespace Nextflip.Models.season
         bool ApproveChangeSeason(string ID);
         bool DisapproveChangeSeason(string ID);
         bool RequestChangeSeasonStatus(string seasonID, string newStatus);
+        string AddSeason(Season season);
+        string UpdateSeason(Season season);
     }
 }

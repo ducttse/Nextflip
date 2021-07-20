@@ -82,5 +82,95 @@ namespace Nextflip.Models.category
                 throw new Exception(ex.Message);
             }
         }
+
+        public bool UpdateCategory(int categoryID, string newCategoryName)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    string sql = "Update category " +
+                                "Set name = @categoryName " +
+                                "Where categoryID = @categoryID ";
+                    connection.Open();
+                    using (var command = new MySqlCommand(sql, connection))
+                    {
+
+                        command.Parameters.AddWithValue("@categoryName", newCategoryName);
+                        command.Parameters.AddWithValue("@categoryID", categoryID);
+
+                        int result = command.ExecuteNonQuery();
+                        if (result == 1) return true;
+                    }
+                }
+              }
+              catch (Exception ex){
+                throw new Exception(ex.Message);
+              }
+            return false;
+        }
+        
+        public Category GetCategoryByName(string categoryName)
+        {
+            try
+            {
+                Category category = null;
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select categoryID, name " +
+                                "From category " +
+                                "Where categoryName = @categoryName ";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@categoryName", categoryName);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                category = new Category
+                                {
+                                    CategoryID = reader.GetInt32(0),
+                                    Name = reader.GetString(1),
+                                };
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+                return category;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+          }
+
+
+        public bool CreateNewCategory(string categoryName)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    string sql = "Insert into category (name) " +
+                                "Value(@categoryName)";
+                    connection.Open();
+                    using (var command = new MySqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@categoryName", categoryName);
+
+                        int result = command.ExecuteNonQuery();
+                        if (result == 1) return true;
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return false;
+
+        }
     }
 }

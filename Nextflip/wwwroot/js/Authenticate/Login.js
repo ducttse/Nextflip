@@ -18,7 +18,8 @@
         .then(json => {
             console.log(json);
             if (json.message == true) {
-                console.log("login success");
+                localStorage.setItem("ID", json.userID)
+                localStorage.setItem("URL", json.url)
                 window.location.replace(json.url);
             }
             else {
@@ -26,6 +27,18 @@
                 alert.classList.remove("d-none");
             }
         })
+}
+
+function renderButton() {
+    gapi.signin2.render('my-signin2', {
+        'scope': 'profile email',
+        'width': 240,
+        'height': 50,
+        'longtitle': false,
+        'theme': 'dark',
+        'onsuccess': onSuccess,
+        'onfailure': onFailure
+    });
 }
 
 async function onSignIn(googleUser) {
@@ -59,6 +72,7 @@ async function SignInToBackEnd(profile) {
             }
             else if (json.message == true) {
                 localStorage.setItem("ID", json.userID)
+                localStorage.setItem("URL", json.url)
                 window.location.href = json.url;
             }
             else {
@@ -73,4 +87,3 @@ function signOut() {
     console.log(auth2);
     auth2.signOut().then();
 }
-// signOut();

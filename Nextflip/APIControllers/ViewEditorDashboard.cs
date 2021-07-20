@@ -769,6 +769,8 @@ namespace Nextflip.APIControllers
         public class PrototypeMediaForm {
             public Media MediaInfo { get; set; }
             public IEnumerable<PrototypeSeasonForm> Seasons { get; set; }
+
+            public IEnumerable<int> CategoryIDs { get; set; }
         }
 
         [Route("EditMedia")]

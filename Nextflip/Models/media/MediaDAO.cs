@@ -19,7 +19,7 @@ namespace Nextflip.Models.media
         {
             try
             {
-                string status = "Enabled";
+                string status = "Approved";
                 var medias = new List<Media>();
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
@@ -73,7 +73,7 @@ namespace Nextflip.Models.media
                     string Sql = "Select mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media " +
                                 "Where MATCH (title)  AGAINST (@searchValue in natural language mode) " +
-                                "and (status = 'Enabled' or status = 'Disabled') " +
+                                "and (status = 'Approved' or status = 'Disapproved') " +
                                 "ORDER BY status DESC " +
                                 "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
@@ -120,7 +120,7 @@ namespace Nextflip.Models.media
                 string Sql = "Select COUNT(mediaID) " +
                                 "From media " +
                                 "Where MATCH (title)  AGAINST (@searchValue in natural language mode) " +
-                                "and (status = 'Enabled' or status = 'Disabled')";
+                                "and (status = 'Approved' or status = 'Disapproved')";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     command.Parameters.AddWithValue("@searchValue", searchValue);
@@ -149,7 +149,7 @@ namespace Nextflip.Models.media
                     string Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media M, mediaCategory MC, category C " +
                                 "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName " +
-                                "and (status = 'Enabled' or status = 'Disabled') " +
+                                "and (status = 'Approved' or status = 'Disapproved') " +
                                 "ORDER BY status DESC " +
                                 "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
@@ -196,7 +196,7 @@ namespace Nextflip.Models.media
                 string Sql = "Select COUNT(M.mediaID) " +
                                 "From media M, mediaCategory MC, category C " +
                                 "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName " +
-                                "and (status = 'Enabled' or status = 'Disabled') ";
+                                "and (status = 'Approved' or status = 'Disapproved') ";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     command.Parameters.AddWithValue("@CategoryName", CategoryName);
@@ -393,7 +393,7 @@ namespace Nextflip.Models.media
                                 "From media M, mediaCategory MC, category C " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
                                 "and M.mediaID = MC.mediaID and MC.categoryID=C.categoryID and C.name = @CategoryName " +
-                                "and (status = 'Enabled' or status = 'Disabled') " +
+                                "and (status = 'Approved' or status = 'Disapproved') " +
                                 "ORDER BY status DESC " +
                                 "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
@@ -442,7 +442,7 @@ namespace Nextflip.Models.media
                                 "From media M, mediaCategory MC, category C " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
                                 "and M.mediaID = MC.mediaID and MC.categoryID=C.categoryID and C.name = @CategoryName " +
-                                "and (status = 'Enabled' or status = 'Disabled') ";
+                                "and (status = 'Approved' or status = 'Disapproved') ";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     command.Parameters.AddWithValue("@SearchValue", SearchValue);
@@ -598,7 +598,7 @@ namespace Nextflip.Models.media
             try
             {
                 Media media = GetMediaByID(mediaID);
-                if (media.Status.Equals("Disabled")) return false;
+                if (media.Status.Equals("Disapproved")) return false;
                 media.MediaID = mediaID + "_preview";
                 string title_preview = media.Title + "_preview";
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
@@ -689,7 +689,7 @@ namespace Nextflip.Models.media
                     connection.Open();
                     string Sql = "Select mediaID, status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media " +
-                                "Where status = 'Enabled' or status = 'Disabled' " +
+                                "Where status = 'Approved' or status = 'Disapproved' " +
                                 "ORDER BY status DESC " +
                                 "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
@@ -735,7 +735,7 @@ namespace Nextflip.Models.media
                 connection.Open();
                 string Sql = "Select COUNT(mediaID) " +
                                 "From media " +
-                                "Where status = 'Enabled' or status = 'Disabled' ";
+                                "Where status = 'Approved' or status = 'Disapproved' ";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     using (var reader = command.ExecuteReader())
@@ -762,7 +762,7 @@ namespace Nextflip.Models.media
                     connection.Open();
                     string Sql = "Select mediaID, status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media " +
-                                "Where status = @status and (status = 'Enabled' or status = 'Disabled') " +
+                                "Where status = @status and (status = 'Approved' or status = 'Disapproved') " +
                                 "ORDER BY status DESC " +
                                 "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
@@ -809,7 +809,7 @@ namespace Nextflip.Models.media
                 connection.Open();
                 string Sql = "Select COUNT(mediaID) " +
                                 "From media " +
-                                "Where status = @status and (status = 'Enabled' or status = 'Disabled') ";
+                                "Where status = @status and (status = 'Approved' or status = 'Disapproved') ";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     command.Parameters.AddWithValue("@status", Status);
@@ -838,7 +838,7 @@ namespace Nextflip.Models.media
                     string Sql = "Select mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media " +
                                 "Where MATCH (title)  AGAINST (@searchValue in natural language mode) and status = @Status " +
-                                "and (status = 'Enabled' or status = 'Disabled') " +
+                                "and (status = 'Approved' or status = 'Disapproved') " +
                                 "ORDER BY status DESC " +
                                 "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
@@ -887,7 +887,7 @@ namespace Nextflip.Models.media
                 string Sql = "Select COUNT(mediaID) " +
                                 "From media " +
                                 "Where MATCH (title)  AGAINST (@searchValue in natural language mode) and status = @Status " +
-                                "and (status = 'Enabled' or status = 'Disabled') ";
+                                "and (status = 'Approved' or status = 'Disapproved') ";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
                     command.Parameters.AddWithValue("@searchValue", searchValue);
@@ -1007,7 +1007,7 @@ namespace Nextflip.Models.media
         {
             try
             {
-                string status = "Enabled";
+                string status = "Approved";
                 var medias = new List<Media>();
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
@@ -1015,7 +1015,7 @@ namespace Nextflip.Models.media
                     string Sql = "Select mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media " +
                                 "Where status = @status " +
-                                "Order By mediaID desc " +
+                                "Order By uploadDate desc " +
                                 "Limit @limit";
                     using (var command = new MySqlCommand(Sql, connection))
                     {

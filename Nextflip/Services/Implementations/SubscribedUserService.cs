@@ -69,7 +69,7 @@ namespace Nextflip.Services.Implementations
                     for (int i = start; i < end; i++)
                     {
                         Media media = _mediaDAO.GetMediaByID(favoriteMediaIDs[i]);
-                        if (media.Status.Equals("Enabled"))
+                        if (media.Status.Equals("Approved"))
                         {
                             favoriteMedias.Add(media);
                         }
@@ -89,7 +89,7 @@ namespace Nextflip.Services.Implementations
             foreach (var mediaID in mediaIDs)
             { 
                 Media media = _mediaDAO.GetMediaByID(mediaID);
-                if(media.Status.Equals("Enabled")) medias.Add(media);
+                if(media.Status.Equals("Approved")) medias.Add(media);
             }
             return medias;
         }

@@ -28,14 +28,14 @@ namespace Nextflip.APIControllers
             try
             {
                 Media media = subscribedUserService.GetMediaByID(mediaID);
-                IEnumerable<Season> seasons = subscribedUserService.GetSeasonsByMediaID(mediaID,"Available");
+                IEnumerable<Season> seasons = subscribedUserService.GetSeasonsByMediaID(mediaID,"Approved");
                 IEnumerable<Category> categories = subscribedUserService.GetCategoriesByMediaID(mediaID);
                 var episodesMap = new Dictionary<string, IEnumerable>();
                 if (seasons != null)
                 {
                     foreach (var season in seasons)
                     {
-                        IEnumerable<Episode> episodes = subscribedUserService.GetEpisodesBySeasonID(season.SeasonID,"Available");
+                        IEnumerable<Episode> episodes = subscribedUserService.GetEpisodesBySeasonID(season.SeasonID, "Approved");
                         episodesMap.Add(season.SeasonID, episodes);
                     }
                 }
@@ -60,7 +60,7 @@ namespace Nextflip.APIControllers
         {
             try
             {
-                IEnumerable<Season> seasons = subscribedUserService.GetSeasonsByMediaID(mediaID,"Available");
+                IEnumerable<Season> seasons = subscribedUserService.GetSeasonsByMediaID(mediaID,"Approved");
                 return new JsonResult(seasons);
             }
             catch (Exception ex)
@@ -105,7 +105,7 @@ namespace Nextflip.APIControllers
         {
             try
             {
-                IEnumerable<Episode> episodes = subscribedUserService.GetEpisodesBySeasonID(seasonID, "Available");
+                IEnumerable<Episode> episodes = subscribedUserService.GetEpisodesBySeasonID(seasonID, "Approved");
                 return new JsonResult(episodes);
             }
             catch (Exception ex)

@@ -20,7 +20,7 @@ namespace Nextflip.Models.episode
                     connection.Open();
                     string Sql = "Select episodeID, title, thumbnailURL, status, number, episodeURL " +
                                 "From episode " +
-                                "Where seasonID = @seasonID and status != 'removed' " +
+                                "Where seasonID = @seasonID and status != 'Removed' " +
                                 "Order By number";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
@@ -104,7 +104,7 @@ namespace Nextflip.Models.episode
                     connection.Open();
                     string Sql = "Select title, thumbnailURL, seasonID, status, number, episodeURL " +
                                 "From episode " +
-                                "Where episodeID = @episodeID and status != 'removed'";
+                                "Where episodeID = @episodeID and status != 'Removed'";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@episodeID", episodeID);

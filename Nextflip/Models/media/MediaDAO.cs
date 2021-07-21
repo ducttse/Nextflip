@@ -1015,7 +1015,7 @@ namespace Nextflip.Models.media
                     string Sql = "Select mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media " +
                                 "Where status = @status " +
-                                "Order By mediaID desc " +
+                                "Order By uploadDate desc " +
                                 "Limit @limit";
                     using (var command = new MySqlCommand(Sql, connection))
                     {

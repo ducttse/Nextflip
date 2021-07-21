@@ -14,7 +14,7 @@ namespace Nextflip.Models.episode
 
         public string Status
         {
-            get => Status;
+            /*get => Status;
             set
             {
                 if (value != null && value != "")
@@ -22,7 +22,9 @@ namespace Nextflip.Models.episode
                     Status = value[0].ToString().ToUpper() + value.Substring(1).ToLower();
                 }
                 else Status = value;
-            }
+            }*/
+            get;
+            set;
         }
         public int Number { get; set; }
         public string EpisodeURL { get; set; }

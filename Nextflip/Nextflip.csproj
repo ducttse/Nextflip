@@ -6,6 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="Views\SharedComponents\Access-Deny.html" />
+    <Content Include="Views\SharedComponents\Index.html" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MailKit" Version="2.12.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="5.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.6" />
@@ -21,11 +26,6 @@
   <ItemGroup>
     <Folder Include="Pages\" />
     <Folder Include="Views\Home\" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="wwwroot\Index.html" />
-    <None Include="wwwroot\Access-Deny.html" />
   </ItemGroup>
 
 </Project>

@@ -110,9 +110,9 @@ namespace Nextflip
             services.AddScoped<CookieUtil>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => {
-                options.AccessDeniedPath = "/Access-Deny.html";
-                options.LoginPath = "/Account/Login";
-                options.EventsType = typeof(CookieUtil);
+                    options.AccessDeniedPath = "/Common/AccessDenied";
+                    options.LoginPath = "/Account/Login";
+                    options.EventsType = typeof(CookieUtil);
                 });
             services.AddAuthorization(options =>
             {
@@ -165,10 +165,10 @@ namespace Nextflip
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
-            //app.UseDefaultFiles();
             app.UseStaticFiles();
 
             app.UseRouting();
+
             app.UseAuthentication();
             app.UseAuthorization();
 

@@ -12,7 +12,7 @@ namespace Nextflip.Models.media
 
         public string Status
         {
-            get => Status;
+            /*get => Status;
             set
             {
                 if (value != null && value != "")
@@ -20,7 +20,9 @@ namespace Nextflip.Models.media
                     Status = value[0].ToString().ToUpper() + value.Substring(1).ToLower();
                 }
                 else Status = value;
-            }
+            }*/
+            get;
+            set;
         }
 
         public string Title { get; set; }

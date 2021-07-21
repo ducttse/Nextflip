@@ -1363,7 +1363,7 @@ namespace Nextflip.Models.media
                         episode.EpisodeID = episodeID;
                     }
                 }
-
+                transaction.Commit();
             }
             catch (Exception exception)
             {

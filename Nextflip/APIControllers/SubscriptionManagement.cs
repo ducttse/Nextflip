@@ -20,44 +20,6 @@ namespace Nextflip.APIControllers
             _logger = logger;
         }
 
-
-        [Route("CheckWallet")]
-        [HttpPost]
-        public IActionResult CheckWallet([FromServices] IAccountService accountService, [FromBody] PaymentForm form)
-        {
-            try
-            {
-                bool result = accountService.CheckWallet(form.UserID, form.Money);
-                if(result) return new JsonResult(new { Message = "Valid" });
-                return new JsonResult(new { Message = "Insufficient money in your Wallet" });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogInformation("Subscription/CheckWallet: " + ex.Message);
-                return new JsonResult(new { Message = ex.Message });
-            }
-        }
-
-        [Route("ConfirmPayment")]
-        [HttpPost]
-        public IActionResult ConfirmPayment([FromServices] IAccountService accountService, [FromServices]ISubscriptionService subscriptionService, [FromBody] PaymentForm form)
-        {
-            try
-            {
-                if (accountService.PurchaseSubscription(form.UserID, form.Money))
-                {
-                    bool result = subscriptionService.PurchaseSubscription(form.UserID, form.ExtensionDays);
-                    if (result) return new JsonResult(new { Message = "Purchase Successfully ! Your subscription has been extended !" });
-                }
-                return new JsonResult(new { Message = "Payment Error ! Please try again !" });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogInformation("Subscription/CheckWallet: " + ex.Message);
-                return new JsonResult(new { Message = ex.Message });
-            }
-        }
-
         [Route("ExtendSubscription")]
         [HttpPost]
         public IActionResult ExtendSubscription([FromServices] ISubscriptionService subscriptionService, [FromBody] ExtensionForm extensionForm)

@@ -3,7 +3,6 @@ using Nextflip.Models.episode;
 using Nextflip.Models.media;
 using Nextflip.Models.mediaCategory;
 using Nextflip.Models.season;
-using Nextflip.Models.subtitle;
 using Nextflip.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -18,16 +17,14 @@ namespace Nextflip.Services.Implementations
         private readonly IMediaDAO _mediaDAO;
         private readonly IEpisodeDAO _episodeDAO;
         private readonly ISeasonDAO _seasonDAO;
-        private readonly ISubtitleDAO _subtitleDAO;
         private readonly ICategoryDAO _categoryDAO;
         private readonly IMediaCategoryDAO _mediaCategoryDAO;
         public EditorService(IMediaDAO mediaDAO, IEpisodeDAO episodeDAO, ISeasonDAO seasonDAO, 
-            ISubtitleDAO subtitleDAO, IMediaCategoryDAO mediaCategoryDAO, ICategoryDAO categoryDAO)
+            IMediaCategoryDAO mediaCategoryDAO, ICategoryDAO categoryDAO)
         {
             _mediaDAO = mediaDAO;
             _episodeDAO = episodeDAO;
             _seasonDAO = seasonDAO;
-            _subtitleDAO = subtitleDAO;
             _mediaCategoryDAO = mediaCategoryDAO;
             _categoryDAO = categoryDAO;
         }
@@ -70,8 +67,6 @@ namespace Nextflip.Services.Implementations
             => _mediaDAO.GetMediaByChildID(childID, type);
         public bool RequestChangeSeasonStatus(string seasonID, string newStatus)
             => _seasonDAO.RequestChangeSeasonStatus(seasonID, newStatus);
-        public bool RequestChangeSubtitleStatus(string subtitleID, string newStatus)
-            => _subtitleDAO.RequestChangeSubtitleStatus(subtitleID, newStatus);
         public string AddMedia(string Title, string FilmType, string Director, string Cast, int? PublishYear,
             string Duration, string BannerURL, string Language, string Description)
             => _mediaDAO.AddMedia(Title, FilmType, Director, Cast, PublishYear, Duration, BannerURL, Language, Description);

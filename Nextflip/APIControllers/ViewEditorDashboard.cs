@@ -340,10 +340,6 @@ namespace Nextflip.APIControllers
                 {
                     requestChange = editorService.RequestChangeEpisodeStatus(request.ID, request.Status);
                 }
-                else if (request.Type.Trim().Equals("subtitle"))
-                {
-                    requestChange = editorService.RequestChangeSubtitleStatus(request.ID, request.Status);
-                }
                 if (request.Note.Trim() == "") request.Note = "Request change status";
                 //addMediaRequest = editorService.AddMediaRequest(request.UserEmail, mediaByChildID.MediaID, request.Note, request.Type, request.ID);
 

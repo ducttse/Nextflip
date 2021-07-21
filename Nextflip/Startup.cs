@@ -26,7 +26,6 @@ using Nextflip.Models.media;
 using Nextflip.Models.mediaCategory;
 using Nextflip.Models.mediaFavorite;
 using Nextflip.Models.season;
-using Nextflip.Models.subtitle;
 using Nextflip.Models.notification;
 using Nextflip.Models.supportTopic;
 using Nextflip.Models.supportTicket;
@@ -59,7 +58,6 @@ namespace Nextflip
             services.AddTransient<IMediaCategoryDAO, MediaCategoryDAO>();
             services.AddTransient<IMediaFavoriteDAO, MediaFavoriteDAO>();
             services.AddTransient<ISeasonDAO, SeasonDAO>();
-            services.AddTransient<ISubtitleDAO, SubtitleDAO>();
             services.AddTransient<INotificationDAO, NotificationDAO>();
             services.AddTransient<IFilmTypeDAO, FilmTypeDAO>();
 

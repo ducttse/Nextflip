@@ -68,7 +68,7 @@ function renderMedia(media, index) {
           <td>${media.title}</td>
           <td class="text-center">
             <div>
-                <input class="status_btn" type="checkbox" mediaID="${media.mediaID}" value="${media.status}" ${media.status === "Enabled" ? "checked" : ""}  />
+                <input class="status_btn" type="checkbox" mediaID="${media.mediaID}" value="${media.status}" ${media.status === "Approved" ? "checked" : ""}  />
             </div>
           </td>
           <td  class="text-center">

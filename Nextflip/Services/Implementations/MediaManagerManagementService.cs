@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using Nextflip.APIControllers;
 using Nextflip.Models.episode;
 using Nextflip.Models.season;
-using Nextflip.Models.subtitle;
 
 namespace Nextflip.Services.Implementations
 {
@@ -16,14 +15,12 @@ namespace Nextflip.Services.Implementations
         private IMediaDAO _mediaDao;
         private IEpisodeDAO _episodeDAO;
         private ISeasonDAO _seasonDAO;
-        private ISubtitleDAO _subtitleDAO;
         public MediaManagerManagementService( IMediaDAO mediaDao, IEpisodeDAO episodeDao, 
-            ISeasonDAO seasonDao, ISubtitleDAO subtitleDao)
+            ISeasonDAO seasonDao)
         {
             _mediaDao = mediaDao;
             _episodeDAO = episodeDao;
             _seasonDAO = seasonDao;
-            _subtitleDAO = subtitleDao;
         }
 
         public bool ApproveChangeMedia(string mediaID) => _mediaDao.ApproveChangeMedia(mediaID);

@@ -204,12 +204,33 @@ namespace Nextflip.APIControllers
                 if (request.CategoryName.Trim() == "") request.CategoryName = "all";
                 IEnumerable<Media> mediaList = mediaManagerManagementService.ViewMediasFilterCategory_Status(request.CategoryName.Trim().ToLower(),
                     request.Status.Trim(), request.RowsOnPage, request.RequestPage);
+                List<MediaShow> mediaShowList = new List<MediaShow>();
+                foreach (var item in mediaList)
+                {
+                    mediaShowList.Add(new MediaShow
+                    {
+                        MediaID = item.MediaID,
+                        Status = item.Status,
+                        Title = item.Title,
+                        FilmType = item.FilmType,
+                        Director = item.Director,
+                        Cast = item.Cast,
+                        PublishYear = item.PublishYear,
+                        Duration = item.Duration,
+                        BannerURL = item.BannerURL,
+                        Language = item.Language,
+                        Description = item.Description,
+                        UploadDate = item.UploadDate,
+                        CountSeason = mediaManagerManagementService.NumberAvailableSeason(item.MediaID)
+                    });
+                }
                 int count = mediaManagerManagementService.NumberOfMediasFilterCategory_Status(request.CategoryName.Trim().ToLower(), request.Status.Trim());
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {
+                    TotalMedia = count,
                     TotalPage = (int)Math.Ceiling(totalPage),
-                    Data = mediaList
+                    Data = mediaShowList
                 };
                 return (new JsonResult(result));
             }
@@ -238,13 +259,34 @@ namespace Nextflip.APIControllers
                 if (request.CategoryName.Trim() == "") request.CategoryName = "all";
                 IEnumerable<Media> mediaList = mediaManagerManagementService.GetMediasByTitleFilterCategory_Status(request.SearchValue.Trim().ToLower(),
                     request.CategoryName.Trim().ToLower(), request.Status.Trim(), request.RowsOnPage, request.RequestPage);
+                List<MediaShow> mediaShowList = new List<MediaShow>();
+                foreach (var item in mediaList)
+                {
+                    mediaShowList.Add(new MediaShow
+                    {
+                        MediaID = item.MediaID,
+                        Status = item.Status,
+                        Title = item.Title,
+                        FilmType = item.FilmType,
+                        Director = item.Director,
+                        Cast = item.Cast,
+                        PublishYear = item.PublishYear,
+                        Duration = item.Duration,
+                        BannerURL = item.BannerURL,
+                        Language = item.Language,
+                        Description = item.Description,
+                        UploadDate = item.UploadDate,
+                        CountSeason = mediaManagerManagementService.NumberAvailableSeason(item.MediaID)
+                    });
+                }
                 int count = mediaManagerManagementService.NumberOfMediasBySearchingFilterCategory_Status(request.SearchValue.Trim().ToLower(),
                     request.CategoryName.Trim().ToLower(), request.Status.Trim());
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {
+                    TotalMedia = count,
                     TotalPage = (int)Math.Ceiling(totalPage),
-                    Data = mediaList
+                    Data = mediaShowList
                 };
                 return (new JsonResult(result));
             }
@@ -323,5 +365,22 @@ namespace Nextflip.APIControllers
             }
         }
 
+
+        public class MediaShow
+        {
+            public string MediaID { get; set; }
+            public string Status { get; set; }
+            public string Title { get; set; }
+            public string FilmType { get; set; }
+            public string Director { get; set; }
+            public string Cast { get; set; }
+            public int? PublishYear { get; set; }
+            public string Duration { get; set; }
+            public string BannerURL { get; set; }
+            public string Language { get; set; }
+            public string Description { get; set; }
+            public DateTime UploadDate { get; set; }
+            public int CountSeason { get; set; }
+        }
     }
 }

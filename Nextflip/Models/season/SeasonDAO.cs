@@ -330,5 +330,32 @@ namespace Nextflip.Models.season
             return false;
 
         }
+
+        public int NumberAvailableSeason(string mediaID)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string sql = "SELECT COUNT(mediaID) FROM Nextflip.season " +
+                                  " WHERE mediaID = @mediaID and status != 'Removed' " +
+                                  " GROUP BY(mediaID)";
+                    using (var command = new MySqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@mediaID", mediaID);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read()) return reader.GetInt32(0);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return 0;
+        }
     }
 }

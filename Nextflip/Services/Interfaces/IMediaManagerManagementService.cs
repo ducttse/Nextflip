@@ -29,5 +29,6 @@ namespace Nextflip.Services.Interfaces
         int NumberOfMediasBySearchingFilterCategory_Status(string SearchValue, string CategoryName, string Status);
         public bool CheckStatusEpisode(string seasonID);
         public bool CheckStatusSeason(string mediaID);
+        int NumberAvailableSeason(string mediaID);
     }
 }

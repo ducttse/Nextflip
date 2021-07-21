@@ -92,5 +92,7 @@ namespace Nextflip.Services.Implementations
         {
             return _mediaDAO.EditMedia(mediaForm);
         }
+
+        public int NumberAvailableSeason(string mediaID) => _seasonDAO.NumberAvailableSeason(mediaID);
     }
 }

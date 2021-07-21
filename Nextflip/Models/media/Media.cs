@@ -34,6 +34,7 @@ namespace Nextflip.Models.media
         public string BannerURL { get; set; }
         public string Language { get; set; }
         public string Description{ get; set; }
+        public DateTime UploadDate{ get; set; }
 
         public bool EqualWithoutStatus(Media anotherMedia)
         {
@@ -46,7 +47,8 @@ namespace Nextflip.Models.media
                    Duration == anotherMedia.Duration &&
                    BannerURL == anotherMedia.BannerURL &&
                    Language == anotherMedia.Language &&
-                   Description == anotherMedia.Description;
+                   Description == anotherMedia.Description &&
+                   UploadDate == anotherMedia.UploadDate;
         }
     }
 }

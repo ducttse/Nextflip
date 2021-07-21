@@ -270,30 +270,34 @@ namespace Nextflip.Models.media
                     string Sql;
                     if (CategoryName.Trim().ToLower().Equals("all") && Status.Trim().ToLower().Equals("all"))
                     {
-                        Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
+                        Sql = "Select M.mediaID, status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate " +
                                 "From media M, mediaCategory MC, category C " +
                                 "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID " +
+                                "Order by uploadDate ASC " +
                                 "LIMIT @offset, @limit";
                     }
                     else if (CategoryName.Trim().ToLower().Equals("all") && !Status.Trim().ToLower().Equals("all"))
                     {
-                        Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
+                        Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate " +
                                 "From media M, mediaCategory MC, category C " +
                                 "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and M.status = @Status " +
+                                "Order by uploadDate ASC " +
                                 "LIMIT @offset, @limit";
                     }
                     else if (!CategoryName.Trim().ToLower().Equals("all") && Status.Trim().ToLower().Equals("all"))
                     {
-                        Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
+                        Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate " +
                                 "From media M, mediaCategory MC, category C " +
                                 "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName " +
+                                "Order by uploadDate ASC " +
                                 "LIMIT @offset, @limit";
                     }
                     else
                     {
-                        Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
+                        Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate " +
                                 "From media M, mediaCategory MC, category C " +
                                 "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status " +
+                                "Order by uploadDate ASC " +
                                 "LIMIT @offset, @limit";
                     }
                     using (var command = new MySqlCommand(Sql, connection))
@@ -318,7 +322,8 @@ namespace Nextflip.Models.media
                                     Duration = reader.IsDBNull(7) ? null : reader.GetString(7),
                                     BannerURL = reader.GetString(8),
                                     Language = reader.GetString(9),
-                                    Description = reader.GetString(10)
+                                    Description = reader.GetString(10),
+                                    UploadDate = reader.GetDateTime(11)
                                 });
                             }
                         }
@@ -472,34 +477,38 @@ namespace Nextflip.Models.media
                     string Sql;
                     if (CategoryName.Trim().ToLower().Equals("all") && Status.Trim().ToLower().Equals("all"))
                     {
-                        Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
+                        Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate " +
                                 "From media M, mediaCategory MC, category C " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
                                 "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID " +
+                                "Order by uploadDate ASC " +
                                 "LIMIT @offset, @limit";
                     }
                     else if (CategoryName.Trim().ToLower().Equals("all") && !Status.Trim().ToLower().Equals("all"))
                     {
-                        Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
+                        Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate " +
                                 "From media M, mediaCategory MC, category C " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
                                 "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and M.status = @Status " +
+                                "Order by uploadDate ASC " +
                                 "LIMIT @offset, @limit";
                     }
                     else if (!CategoryName.Trim().ToLower().Equals("all") && Status.Trim().ToLower().Equals("all"))
                     {
-                        Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
+                        Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate " +
                                 "From media M, mediaCategory MC, category C " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
                                 "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName " +
+                                "Order by uploadDate ASC " +
                                 "LIMIT @offset, @limit";
                     }
                     else
                     {
-                        Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
+                        Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate " +
                                 "From media M, mediaCategory MC, category C " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
                                 "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status " +
+                                "Order by uploadDate ASC " +
                                 "LIMIT @offset, @limit";
                     }
                     using (var command = new MySqlCommand(Sql, connection))
@@ -525,7 +534,8 @@ namespace Nextflip.Models.media
                                     Duration = reader.IsDBNull(7) ? null : reader.GetString(7),
                                     BannerURL = reader.GetString(8),
                                     Language = reader.GetString(9),
-                                    Description = reader.GetString(10)
+                                    Description = reader.GetString(10),
+                                    UploadDate = reader.GetDateTime(11)
                                 });
                             }
                         }

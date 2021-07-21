@@ -51,5 +51,6 @@ namespace Nextflip.Services.Implementations
 
         public bool CheckStatusEpisode(string seasonID) => _episodeDAO.CheckStatusEpisode(seasonID);
         public bool CheckStatusSeason(string mediaID) => _seasonDAO.CheckStatusSeason(mediaID);
+        public int NumberAvailableSeason(string mediaID) => _seasonDAO.NumberAvailableSeason(mediaID);
     }
 }

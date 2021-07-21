@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Nextflip.Services.Interfaces;
 using Nextflip.Models.season;
 using Nextflip.Models.episode;
-using Nextflip.Models.subtitle;
 using Nextflip.Models.media;
 using System.Collections;
 using Microsoft.Extensions.Logging;
@@ -159,21 +158,6 @@ namespace Nextflip.APIControllers
             catch (Exception ex)
             {
                 _logger.LogInformation("GetEpisodeByID: " + ex.Message);
-                return new JsonResult("error occur");
-            }
-        }
-
-        [Route("GetSubtitle/{subtitleID}")]
-        public IActionResult GetSubtitleByID([FromServices] ISubscribedUserService subscribedUserService, string subtitleID)
-        {
-            try
-            {
-                Subtitle subtitle = subscribedUserService.GetSubtitleByID(subtitleID);
-                return new JsonResult(subtitle);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogInformation("GetSubtitleByID: " + ex.Message);
                 return new JsonResult("error occur");
             }
         }

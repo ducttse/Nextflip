@@ -5,7 +5,6 @@ using Nextflip.Models.media;
 using Nextflip.Models.mediaCategory;
 using Nextflip.Models.mediaFavorite;
 using Nextflip.Models.season;
-using Nextflip.Models.subtitle;
 using Nextflip.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -23,10 +22,9 @@ namespace Nextflip.Services.Implementations
         private readonly IMediaDAO _mediaDAO;
         private readonly ISeasonDAO _seasonDAO;
         private readonly IEpisodeDAO _episodeDAO;
-        private readonly ISubtitleDAO _subtitleDAO;
         public SubscribedUserService(ICategoryDAO categoryDAO, IMediaCategoryDAO mediaCategoryDAO,
                                 IFavoriteListDAO favoriteListDAO, IMediaFavoriteDAO mediaFavoriteDAO,
-                                IMediaDAO mediaDAO, ISeasonDAO seasonDAO, IEpisodeDAO episodeDAO, ISubtitleDAO subtitleDAO)
+                                IMediaDAO mediaDAO, ISeasonDAO seasonDAO, IEpisodeDAO episodeDAO)
         {
             _categoryDAO = categoryDAO;
             _mediaCategoryDAO = mediaCategoryDAO;
@@ -35,7 +33,6 @@ namespace Nextflip.Services.Implementations
             _mediaDAO = mediaDAO;
             _seasonDAO = seasonDAO;
             _episodeDAO = episodeDAO;
-            _subtitleDAO = subtitleDAO;
         }
 
         //category
@@ -104,9 +101,6 @@ namespace Nextflip.Services.Implementations
 
         IEnumerable<Episode> ISubscribedUserService.GetEpisodesBySeasonID(string seasonID,string status)
                                             => _episodeDAO.GetEpisodesBySeasonID(seasonID, status);
-        //subtitle
-        public Subtitle GetSubtitleByID(string subtitleID) => _subtitleDAO.GetSubtitleByID(subtitleID);
-        public IEnumerable<Subtitle> GetSubtitlesByEpisodeID(string episodeID) => _subtitleDAO.GetSubtitlesByEpisodeID(episodeID);
         // favorite list
         public void AddMediaToFavoriteList(string userID, string mediaID)
         {

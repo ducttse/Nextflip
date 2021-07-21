@@ -34,7 +34,7 @@ function setValue() {
             let episodes = season.episodes.map(episode => {
                 return renderEpisode(episode, '1')
             }).join("");
-            let seasonRendered = renderSeason(season).concat(episodes);
+            let seasonRendered = renderSeason(season).concat(episodes).concat("</div>");
             return seasonRendered;
         }
     ).join("");
@@ -46,13 +46,21 @@ function setChosenCategory() {
         .map(cate => cate.setAttribute("checked", true));
 }
 
-function renderCategoryCheckBox(category) {
-    return `
-        <div class="form-check form-check-inline">
-            <input class="form-check-input category" type="checkbox" id="inlineCheckbox1" value="${category.categoryID}">
-            <label class="form-check-label text-capitalize" for="inlineCheckbox1">${category.name}</label>
-        </div>
-    `;
+function renderCategory(category) {
+    return `<li id="category_${category.categoryID}" onclick="chooseCategory(this)" categoryID="${category.categoryID}"><p class="dropdown-item mb-0" >${category.name}</p></li>`;
+}
+
+function chooseCategory(obj) {
+    let id = obj.getAttribute("categoryID");
+    let category = obj.querySelector("p").textContent;
+    document.getElementById("category_holder").insertAdjacentHTML("afterbegin", `<p onclick="removeCategory(this)" class="mx-1 badge bg-primary category p-2" id="${id}">${category}</p>`)
+    obj.classList.add("d-none");
+}
+
+function removeCategory(obj) {
+    let id = obj.id; SeasonInfo
+    document.querySelector(`#category_${id}`).classList.remove("d-none");
+    obj.remove();
 }
 
 function setChosenMediaType() {
@@ -62,7 +70,7 @@ function setChosenMediaType() {
 function requestCategories() {
     fetch(`/api/ViewSubscribedUserDashboard/GetCategories`).then(res => res.json()).then(json => {
         let checkboxs = json.map(category => {
-            return renderCategoryCheckBox(category);
+            return renderCategory(category);
         }).join("");
         document.getElementById("CB_holder").insertAdjacentHTML("afterbegin", checkboxs);
     })
@@ -78,9 +86,11 @@ function requestMediaType() {
 }
 
 function renderSeason(item, num) {
+    console.log(item);
     return `
-        <div class="d-flex" id="season_${item.seasonInfo.number}">
-            <p class="me-4 mb-0 align-self-center">Season ${item.seasonInfo.number}: ${item.seasonInfo.title}</p>
+    <div class="d-flex flex-column mb-2" id="season_${item.seasonInfo.number}">
+        <div class="d-flex">
+            <p class="me-auto mb-0 align-self-center">Season ${item.seasonInfo.number}: ${item.seasonInfo.title}</p>
             <div class="btn btn-primary btn-sm me-2" onclick="setEpisodeNumber('${item.seasonInfo.number}'); setModalAddEpisode('${num}');" data-bs-toggle="modal" data-bs-target="#modalAddEpisodeForm">Add new episode</div>
             <div class="btn btn-danger btn-sm" onclick="showConfirm('season', '${item.seasonInfo.number}')" data-bs-toggle="modal" data-bs-target="#confirmModal">Delete</div>
         </div>
@@ -90,11 +100,10 @@ function renderSeason(item, num) {
 function renderEpisode(episode, index) {
     return `
     <div class="ps-3 mt-2 d-flex" id="episode_${episode.number}">
-        <p class="mb-1 me-4">Episode ${episode.number}: ${episode.title}</p>
-        <div class="btn btn-danger btn-sm" onclick="showConfirm('episode', '${episode.mumber}', '${index}')" data-bs-toggle="modal" data-bs-target="#confirmModal">Delete</div>
+        <p class="mb-1 me-auto">Episode ${episode.number}: ${episode.title}</p>
+        <div class="btn btn-danger btn-sm" onclick="showConfirm('episode', '${episode.number}', '${index}')" data-bs-toggle="modal" data-bs-target="#confirmModal">Delete</div>
     </div>
     `
 }
-
 requestCategories();
 requestMediaType();

@@ -7,8 +7,11 @@
     <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/css/Form.css")" rel="stylesheet" type="text/css" />
 }
-<div class="col-10">
-    <p class="fs-2 text-secondary ps-2">Edit media</p>
+<div class="col-10" style="background-color: #f8f9fa;">
+    <div class="d-flex">
+        <a href="/EditorDashboard/Index" class="link-dark"><i class="fas fa-arrow-left fa-2x pt-2"></i></a>
+        <p class="fs-2 text-secondary ps-2">Edit media</p>
+    </div>
     <div class="modal-body bg-light">
         <div>
             <div class="mb-3 row">
@@ -21,7 +24,18 @@
             </div>
             <div class="mb-3 row">
                 <label for="category" class="required col-sm-2 text-end col-form-label">Category</label>
-                <div class="col-sm-10" id="CB_holder">
+                <div class="col-sm-10">
+                    <div class="d-flex">
+                        <div class="dropdown">
+                            <button class="btn btn-primary  btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" id="CB_holder" style="overflow-y: scroll; max-height: 200px;">
+                            </ul>
+                        </div>
+                        <div id="category_holder" class="d-flex  justify-content-start">
+                        </div>
+                    </div>
                     <p class="d-none" id="empty_checkbox" style="color: #dc3545;margin-top: .25rem; font-size: .875em;">Must choose at least one</p>
                 </div>
             </div>
@@ -83,11 +97,11 @@
                 </div>
             </div>
             <div class="mb-3 row">
-                <p class="col-sm-2 text-end col-form-label"></p>
-                <div class="col-sm-8" id="season_container">
+                <p class="col-sm-2 text-end col-form-label">Season</p>
+                <div class="col-sm-8 pt-1" id="season_container">
                 </div>
             </div>
-            <div class="offset-1">
+            <div class="offset-2">
                 <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#modalAddSeasonForm">Add new season</button>
             </div>
             <div class="col-12 d-flex justify-content-end">

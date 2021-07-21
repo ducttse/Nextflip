@@ -2,3 +2,10 @@
     content: " *";
     color: red;
 }
+
+.category, .dropdown-item{
+    cursor: pointer;
+}
+.category:hover{
+    text-decoration: line-through;
+}

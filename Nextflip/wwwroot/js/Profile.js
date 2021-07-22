@@ -116,11 +116,7 @@ loadAccount().then(() => {
                     let button4 = `<a href="/EditorDashboard/Index" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
                                 Media manager
                               </a>`;
-                    let button5 = `<a href="/EditorDashboard/ViewEditRequest"  onclick="return showForm();" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
-                                View edit request
-                            </a>`;
                     appendButton(button4);
-                    appendButton(button5);
                     break;
                 case "SupporterDashboard":
                     role = "Ticket Supporter";

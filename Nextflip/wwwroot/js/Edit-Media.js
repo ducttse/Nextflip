@@ -30,9 +30,9 @@ function setValue() {
     setChosenCategory();
     setChosenMediaType();
     document.getElementById("season_container").innerHTML = MediaObj.seasons.map(
-        (season) => {
-            let episodes = season.episodes.map(episode => {
-                return renderEpisode(episode, '1')
+        (season, seasonIndex) => {
+            let episodes = season.episodes.map((episode, index) => {
+                return renderEpisode(episode, seasonIndex, index)
             }).join("");
             let seasonRendered = renderSeason(season).concat(episodes).concat("</div>");
             return seasonRendered;
@@ -86,24 +86,76 @@ function requestMediaType() {
 }
 
 function renderSeason(item, num) {
-    console.log(item);
     return `
     <div class="d-flex flex-column mb-2" id="season_${item.seasonInfo.number}">
         <div class="d-flex">
             <p class="me-auto mb-0 align-self-center">Season ${item.seasonInfo.number}: ${item.seasonInfo.title}</p>
             <div class="btn btn-primary btn-sm me-2" onclick="setEpisodeNumber('${item.seasonInfo.number}'); setModalAddEpisode('${num}');" data-bs-toggle="modal" data-bs-target="#modalAddEpisodeForm">Add new episode</div>
-            <div class="btn btn-danger btn-sm" onclick="showConfirm('season', '${item.seasonInfo.number}')" data-bs-toggle="modal" data-bs-target="#confirmModal">Delete</div>
+            <div class="btn btn-danger btn-sm me-2" onclick="showConfirm('season', '${item.seasonInfo.number}')" data-bs-toggle="modal" data-bs-target="#confirmModal">Delete</div>
+            <div class="btn btn-secondary btn-sm"  data-bs-toggle="modal" data-bs-target="#modalEditSeasonForm" onclick="setSeasonEditFormValue('${item.seasonInfo.number}')">Edit</div>
         </div>
     `
 }
 
-function renderEpisode(episode, index) {
+function renderEpisode(episode, seasonIndex, episodeIndex) {
     return `
     <div class="ps-3 mt-2 d-flex" id="episode_${episode.number}">
         <p class="mb-1 me-auto">Episode ${episode.number}: ${episode.title}</p>
-        <div class="btn btn-danger btn-sm" onclick="showConfirm('episode', '${episode.number}', '${index}')" data-bs-toggle="modal" data-bs-target="#confirmModal">Delete</div>
+        <div class="btn btn-danger btn-sm me-2" onclick="showConfirm('episode', '${episode.number}', '${seasonIndex}')" data-bs-toggle="modal" data-bs-target="#confirmModal">Delete</div>
+        <div class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditEpisodeForm")" onclick="setEpisodeFormValue('${seasonIndex}','${episodeIndex}')">Edit</div>
     </div>
     `
 }
+
 requestCategories();
 requestMediaType();
+
+async function changeSeason(obj) {
+    let seasonIndex = parseInt(obj.getAttribute("seasonIndex"));
+    let title = document.getElementById("editTitleSeason").value;
+    let file = getFile(document.getElementById("editBannerSeason"));
+    let season = MediaObj.seasons[ seasonIndex ];
+
+}
+
+function changeEpisode(obj) {
+    let seasonIndex = parseInt(obj.getAttribute("seasonIndex"));
+    let episodeIndex = parseInt(obj.getAttribute("episodeIndex"));
+
+}
+
+function requestEditMedia() {
+    let reqHeader = new Headers();
+    reqHeader.append("Content-Type", "text/json");
+    reqHeader.append("Accept", "application/json, text/plain, */*");
+    let initObject = {
+        method: "POST",
+        headers: reqHeader,
+        body: JSON.stringify(MediaObj)
+    };
+    fetch("/api/ViewEditorDashboard/EditMedia", initObject)
+        .then(res => res.json())
+        .then(json => {
+            if (json.message == "Success") {
+                isEdited = true;
+                location.replace("/EditorDashboard/Index")
+            }
+        })
+}
+
+function setSeasonEditFormValue(seasonIndex) {
+    let index = parseInt(seasonIndex - 1);
+    let season = MediaObj.seasons[ index ];
+    document.getElementById("editTitleSeason").value = season.seasonInfo.title;
+    document.getElementById("editNumberSeason").textContent = season.seasonInfo.number;
+    document.getElementById("editSeasonSubmit_btn").setAttribute("seasonIndex", seasonIndex);
+}
+
+function setEpisodeFormValue(seasonIndex, episodeIndex) {
+    let episode = MediaObj.seasons[ seasonIndex ].episodes[ episodeIndex ];
+    document.getElementById("editTitleEpisode").value = episode.title;
+    document.getElementById("editNumberEpisode").textContent = episode.number;
+    document.getElementById("editEpisode_submit_btn").setAttribute("seasonIndex", seasonIndex);
+    document.getElementById("editEpisode_submit_btn").setAttribute("episodeIndex", episodeIndex);
+
+}

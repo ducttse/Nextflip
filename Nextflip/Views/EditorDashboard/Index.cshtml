@@ -39,9 +39,11 @@
             <table class="table table-striped table-responsive table-borderless mb-0 table-hover w-100 shadow">
                 <thead class="table-secondary">
                     <tr>
-                        <th class="col">#</th>
+                        <th class="col" style="width: 50px;">#</th>
                         <th class="col">Media name</th>
+                        <th class="col text-center" style="width: 150px;">Total season</th>
                         <th class="col text-center">Status</th>
+                        <th class="col text-center" style="width: 120px;">Upload date</th>
                         <th class="col text-center">Action</th>
                     </tr>
                 </thead>
@@ -126,10 +128,6 @@
         let button1 = `<a href="/EditorDashboard/Index" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
                                 Manage Media
                               </a>`;
-        let button2 = `<a href="/EditorDashboard/ViewEditRequest"  onclick="return showForm();" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
-                                View edit request
-                            </a>`;
-        appendButton(button2);
         appendButton(button1);
     </script>
     <!-- <script src="~/js/MessageModal.js"></script> -->

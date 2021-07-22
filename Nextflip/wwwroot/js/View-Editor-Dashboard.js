@@ -62,16 +62,19 @@ function HideNotFound() {
 }
 
 function renderMedia(media, index) {
+    let date = media.uploadDate.slice(0, 10).split("-").reverse().join("-");
     return `
       <tr>
           <td>${index + 1}</td>
           <td>${media.title}</td>
+          <td class="text-center">${media.countSeason}</td>
           <td class="text-center">
             <div>
                 <input class="status_btn" type="checkbox" mediaID="${media.mediaID}" value="${media.status}" ${media.status === "Approved" ? "checked" : ""}  />
             </div>
           </td>
-          <td  class="text-center">
+          <td class="text-center">${date}</td>
+          <td class="text-center">
             <a class="btn btn-secondary" href="/EditorDashboard/ViewEditMedia/${media.mediaID}">Edit</a>
           </td>
       </tr>`;

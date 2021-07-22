@@ -29,8 +29,13 @@ async function loadAccount() {
         .then(res => res.json())
         .then(json => {
             let dob = json.dateOfBirth.split("-").reverse().join("-");
-            let date = json.subscriptionEndDate.slice(0, 10).split("-").reverse().join("-");
-            Profile = { ...json, dateOfBirth: dob, userID: ID, subscriptionEndDate: date }
+            if (json.subscriptionEndDate != null) {
+                let date = json.subscriptionEndDate.slice(0, 10).split("-").reverse().join("-");
+                Profile = { ...json, dateOfBirth: dob, userID: ID, subscriptionEndDate: date }
+            }
+            else {
+                Profile = { ...json, dateOfBirth: dob, userID: ID }
+            }
         })
     return new Promise(resolve => { resolve("resolved") })
 }

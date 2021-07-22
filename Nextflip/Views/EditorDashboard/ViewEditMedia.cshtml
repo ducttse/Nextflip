@@ -102,105 +102,15 @@
                 </div>
             </div>
             <div class="offset-2">
-                <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#modalAddSeasonForm">Add new season</button>
+                <button class="btn btn-primary btn-sm" type="button" onclick="setSeasonNumber()" data-bs-toggle="modal" data-bs-target="#modalAddSeasonForm">Add new season</button>
             </div>
             <div class="col-12 d-flex justify-content-end">
-                <button class="btn btn-primary" type="button" onclick="requestAddNewMedia()">Save</button>
+                <button class="btn btn-primary" type="button" onclick="requestEdit()">Save</button>
             </div>
         </div>
     </div>
     <div class="spinner-border text-primary position-fixed top-50 start-50 d-none" id="spinner" style="z-index:10000;pointer-events: none; cursor: default;" role="status">
         <span class="visually-hidden"></span>
-    </div>
-</div>
-<!-- Add season  modal -->
-<div class="modal fade" id="modalAddSeasonForm" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-md">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Add new season</h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3 row">
-                    <label for="titleSeason" class="required col-sm-3 col-form-label text-end">Title</label>
-                    <div class="col-sm-6">
-                        <input type="text" class="form-control" id="titleSeason" onkeyup="onInput(this)" />
-                        <div class="invalid-feedback">
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label for="numberSeason" class="col-sm-3 col-form-label text-end">Number</label>
-                    <div class="col-sm-6">
-                        <p class="mb-0 pt-1" id="numberSeason"></p>
-                        <div class="invalid-feedback">
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label for="bannerSeason" class="required col-sm-3 col-form-label text-end">Banner</label>
-                    <div class="col-sm-7">
-                        <input type="file" class="form-control" id="bannerSeason" onchange="getFile(this)" />
-                        <div class="invalid-feedback">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-bg-danger" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="submit_btn" onclick="addSeason()">Submit</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- Add episode modal -->
-<div class="modal fade" id="modalAddEpisodeForm" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered modal-md">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title">Add new episode</h3>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3 row">
-                    <label for="titleEpisode" class="required col-sm-3 col-form-label text-end">Title</label>
-                    <div class="col-sm-6">
-                        <input type="text" class="form-control" id="titleEpisode" onkeyup="onInput(this)" />
-                        <div class="invalid-feedback">
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label for="numberSeason" class="col-sm-3 col-form-label text-end">Number</label>
-                    <div class="col-sm-6">
-                        <p class="mb-0 pt-1" id="numberEpisode"></p>
-                        <div class="invalid-feedback">
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label for="bannerEpisode" class="required col-sm-3 col-form-label text-end">Banner</label>
-                    <div class="col-sm-7">
-                        <input type="file" class="form-control" accept="image/png, image/gif, image/jpeg" id="bannerEpisode" onchange="getFile(this)" />
-                        <div class="invalid-feedback">
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label for="videoEpisode" class="required col-sm-3 col-form-label text-end">Video</label>
-                    <div class="col-sm-7">
-                        <input type="file" class="form-control" accept="video/mp4,video/x-m4v,video/*" id="videoEpisode" onchange="getFile(this)" />
-                        <div class="invalid-feedback">
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-bg-danger" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="episode_submit_btn" index="" onclick="addEpisode(this)">Submit</button>
-            </div>
-        </div>
     </div>
 </div>
 <!-- Add season  modal -->
@@ -343,7 +253,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-bg-danger" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="editSeasonSubmit_btn" onclick="changeSeason()">Submit</button>
+                <button type="button" class="btn btn-primary" id="editSeasonSubmit_btn" onclick="changeSeason(this)">Submit</button>
             </div>
         </div>
     </div>

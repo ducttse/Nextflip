@@ -271,8 +271,7 @@ namespace Nextflip.Models.media
                     if (CategoryName.Trim().ToLower().Equals("all") && Status.Trim().ToLower().Equals("all"))
                     {
                         Sql = "Select M.mediaID, status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate " +
-                                "From media M, mediaCategory MC, category C " +
-                                "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID " +
+                                "From media M " +
                                 "Order by uploadDate ASC " +
                                 "LIMIT @offset, @limit";
                     }
@@ -347,8 +346,7 @@ namespace Nextflip.Models.media
                 if (CategoryName.Trim().ToLower().Equals("all") && Status.Trim().ToLower().Equals("all"))
                 {
                     Sql = "Select COUNT(M.mediaID) " +
-                          "From media M, mediaCategory MC, category C " +
-                          "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID";
+                          "From media M";
                 }
                 else if (CategoryName.Trim().ToLower().Equals("all") && !Status.Trim().ToLower().Equals("all"))
                 {
@@ -478,9 +476,8 @@ namespace Nextflip.Models.media
                     if (CategoryName.Trim().ToLower().Equals("all") && Status.Trim().ToLower().Equals("all"))
                     {
                         Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate " +
-                                "From media M, mediaCategory MC, category C " +
+                                "From media M " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
-                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID " +
                                 "Order by uploadDate ASC " +
                                 "LIMIT @offset, @limit";
                     }
@@ -559,9 +556,8 @@ namespace Nextflip.Models.media
                 if (CategoryName.Trim().ToLower().Equals("all") && Status.Trim().ToLower().Equals("all"))
                 {
                     Sql = "Select COUNT(M.mediaID) " +
-                                "From media M, mediaCategory MC, category C " +
-                                "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
-                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID";
+                                "From media M " +
+                                "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) ";
                 }
                 else if (CategoryName.Trim().ToLower().Equals("all") && !Status.Trim().ToLower().Equals("all"))
                 {

@@ -221,7 +221,7 @@ namespace Nextflip.Models.media
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select mediaID, status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
+                    string Sql = "Select mediaID, status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate " +
                                 "From media " +
                                 "Where mediaID = @mediaID and status != 'removed'";
                     using (var command = new MySqlCommand(Sql, connection))
@@ -243,7 +243,8 @@ namespace Nextflip.Models.media
                                     Duration = reader.IsDBNull(7) ? null : reader.GetString(7),
                                     BannerURL = reader.GetString(8),
                                     Language = reader.GetString(9),
-                                    Description = reader.GetString(10)
+                                    Description = reader.GetString(10),
+                                    UploadDate = reader.IsDBNull(11) ? DateTime.MinValue : reader.GetDateTime(11)
                                 };
                             }
                         }

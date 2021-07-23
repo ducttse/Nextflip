@@ -38,7 +38,7 @@ namespace Nextflip.utils
                 if (roleInCookie != null && userId != null && roleInCookie != "subscribed user")
                 {
                     //roleInDatabase = roleInCookie;
-                    roleInDatabase = new AccountDAO().GetAccountByID(userId).roleName;
+                    roleInDatabase = new AccountDAO().GetAccountByID(userId)?.roleName;
                     if (roleInDatabase != roleInCookie)
                     {
                         /*    var claims = new List<Claim>

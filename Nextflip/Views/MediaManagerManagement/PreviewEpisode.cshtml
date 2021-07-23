@@ -2,11 +2,22 @@
     ViewBag.Title = "Preview episode";
     Layout = "_PreviewEpisodeLayout";
 }
+@section Styles {
+    <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
+}
 <div class="col-10" style="min-height: 100vh;">
-    <div id="media_holder"  class="col-10 mx-auto p-2">
+    <div id="media_holder" class="col-10 mx-auto p-2">
     </div>
 </div>
 <script src="~/js/Episode-Prview.js"></script>
+<script src="~/js/Video-Tracking.js"></script>
+<script src="~/js/Slide-Bar.js"></script>
+<script>
+    let button = `<a id="back_btn" href="/MediaManagerManagement/Index" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
+                    Media Manager
+                  </a>`;
+    appendButton(button);
+</script>
 <script>
     requestEpisode('@ViewBag.MediaID');
 </script>

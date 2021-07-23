@@ -82,6 +82,7 @@ function renderRequest(request, index) {
       <tr>
           <td>${index + 1}</td> 
           <td>${request.title}</td>
+          <td class="text-center">${request.countSeason}</td>
           <td class="text-center"><p class="ticket_status ${bgcolor} rounded text-center text-light text-center px-2 py-1 mb-0">${request.status}</p></td>
           <td class="text-center"><a class="text-decoration-none" href="/MediaManagerManagement/DetailPreview/${request.mediaID}">Preview</a></td>
       </tr>`;
@@ -225,7 +226,7 @@ function requestWithFilter() {
         HideNotFound();
         appendRequestToWrapper();
       }
-    })
+    });
 }
 
 function requestWithFilterAndResetPage() {

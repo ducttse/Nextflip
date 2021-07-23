@@ -29,8 +29,13 @@ async function loadAccount() {
         .then(res => res.json())
         .then(json => {
             let dob = json.dateOfBirth.split("-").reverse().join("-");
-            let date = json.subscriptionEndDate.slice(0, 10).split("-").reverse().join("-");
-            Profile = { ...json, dateOfBirth: dob, userID: ID, subscriptionEndDate: date }
+            if (json.subscriptionEndDate != null) {
+                let date = json.subscriptionEndDate.slice(0, 10).split("-").reverse().join("-");
+                Profile = { ...json, dateOfBirth: dob, userID: ID, subscriptionEndDate: date }
+            }
+            else {
+                Profile = { ...json, dateOfBirth: dob, userID: ID }
+            }
         })
     return new Promise(resolve => { resolve("resolved") })
 }
@@ -111,11 +116,7 @@ loadAccount().then(() => {
                     let button4 = `<a href="/EditorDashboard/Index" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
                                 Media manager
                               </a>`;
-                    let button5 = `<a href="/EditorDashboard/ViewEditRequest"  onclick="return showForm();" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
-                                View edit request
-                            </a>`;
                     appendButton(button4);
-                    appendButton(button5);
                     break;
                 case "SupporterDashboard":
                     role = "Ticket Supporter";

@@ -48,6 +48,17 @@ function getFile(obj) {
         return true;
     }
 }
+
+function updateFile(obj) {
+    if (obj.files[ 0 ] == null) {
+        return false;
+    }
+    else {
+        file = obj.files[ 0 ];
+        return true;
+    }
+}
+
 async function requestUploadBanner() {
     if (file == null) {
         return "";

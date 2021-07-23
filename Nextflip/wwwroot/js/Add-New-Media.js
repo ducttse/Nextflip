@@ -9,7 +9,7 @@ let MediaInfo = {
     Language: "",
     Description: ""
 }
-
+let isAdded = false;
 let Media = {
     MediaInfo: MediaInfo,
     Seasons: [],
@@ -204,24 +204,6 @@ function setModalAddEpisode(number) {
     document.getElementById("episode_submit_btn").setAttribute("index", number);
 }
 
-/* 
-                    <div class="d-flex flex-column">
-                        <div class="d-flex" id="season_$">
-                            <p class="mb-0 align-self-center me-auto fw-bold">Season test</p>
-                            <div class="btn btn-primary btn-sm me-2" onclick="setEpisodeNumber('${item.SeasonInfo.Number}'); setModalAddEpisode('${num}');" data-bs-toggle="modal" data-bs-target="#modalAddEpisodeForm">Add new episode</div>
-                            <div class="btn btn-danger btn-sm" onclick="showConfirm('season', '${item.SeasonInfo.Number}')" data-bs-toggle="modal" data-bs-target="#confirmModal">Delete</div>
-                        </div>
-                        <div class="ps-3 mt-2 d-flex">
-                            <p class="mb-1 me-4 me-auto fw-bold">Episode test</p>
-                            <div class="btn btn-danger btn-sm" onclick="showConfirm('episode', '${episode.Number}', '${index}')" data-bs-toggle="modal" data-bs-target="#confirmModal">Delete</div>
-                        </div>
-                        <div class="ps-3 mt-2 d-flex">
-                            <p class="mb-1 me-4 me-auto fw-bold">Episode test</p>
-                            <div class="btn btn-danger btn-sm" onclick="showConfirm('episode', '${episode.Number}', '${index}')" data-bs-toggle="modal" data-bs-target="#confirmModal">Delete</div>
-                        </div>
-                    </div>
-*/
-
 function renderSeason(item, num) {
     return `
     <div class="d-flex flex-column" id="season_${item.SeasonInfo.Number}">
@@ -275,7 +257,6 @@ async function requestAddNewMedia() {
     if (validateInputAddMedia() == 0) {
         return;
     }
-
     let reqHeader = new Headers();
     reqHeader.append("Content-Type", "text/json");
     reqHeader.append("Accept", "application/json, text/plain, */*");
@@ -288,6 +269,7 @@ async function requestAddNewMedia() {
         .then(res => res.json())
         .then(json => {
             if (json.message == "Success") {
+                isAdded = true;
                 location.replace("/EditorDashboard/Index")
             }
         })

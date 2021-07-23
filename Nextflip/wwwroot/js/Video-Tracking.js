@@ -1,9 +1,12 @@
-﻿let video;
+﻿let videoEl;
 
 function getVideoEl() {
-    video = document.getElementById("video");
+    videoEl = document.getElementById("video");
 }
 
 function trackWatchTime() {
-    return ((video.currentTime / video.duration) >= 0.9);
+    if (videoEl == null) {
+        getVideoEl();
+    }
+    return ((videoEl.currentTime / videoEl.duration) >= 0.9);
 }

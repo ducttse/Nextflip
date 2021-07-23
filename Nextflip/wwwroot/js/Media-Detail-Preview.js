@@ -87,7 +87,7 @@ function renderCollapse(season) {
                     <span class="visually-hidden">New alerts</span>
                 </span>
             </p>
-            <a class="btn btn-secondary me-1 btn-sm text-center py-2" href="/MediaManagerManagement/PreviewEpisode/${episode.episodeID}">
+            <a class="btn btn-secondary me-1 btn-sm text-center py-2" onclick="return writeCurrentUrl()" href="/MediaManagerManagement/PreviewEpisode/${episode.episodeID}">
                 View detail
             </a>
             ${episode.status == "Pending" ? action : ""}
@@ -100,6 +100,10 @@ function renderCollapse(season) {
             ${episodes}
         </div>
     </div>`;
+}
+
+function writeCurrentUrl() {
+    localStorage.setItem("currentURL", location.pathname);
 }
 
 let seasonDetailModal;

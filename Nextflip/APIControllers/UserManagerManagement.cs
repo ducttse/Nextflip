@@ -624,7 +624,7 @@ namespace Nextflip.APIControllers
         */
         [Route("UpdatePaymentPlan")]
         [HttpPost]
-        public IActionResult UpdatePaymentPlane(
+        public IActionResult UpdatePaymentPlan(
             [FromServices] IUserManagerManagementService userManagerManagementService,
             [FromBody] PaymentPlanUpdateForm updateForm)
         {

@@ -5,7 +5,6 @@ using Nextflip.Models.media;
 using Nextflip.Models.mediaCategory;
 using Nextflip.Models.mediaFavorite;
 using Nextflip.Models.season;
-using Nextflip.Models.subtitle;
 using Nextflip.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -23,10 +22,9 @@ namespace Nextflip.Services.Implementations
         private readonly IMediaDAO _mediaDAO;
         private readonly ISeasonDAO _seasonDAO;
         private readonly IEpisodeDAO _episodeDAO;
-        private readonly ISubtitleDAO _subtitleDAO;
         public SubscribedUserService(ICategoryDAO categoryDAO, IMediaCategoryDAO mediaCategoryDAO,
                                 IFavoriteListDAO favoriteListDAO, IMediaFavoriteDAO mediaFavoriteDAO,
-                                IMediaDAO mediaDAO, ISeasonDAO seasonDAO, IEpisodeDAO episodeDAO, ISubtitleDAO subtitleDAO)
+                                IMediaDAO mediaDAO, ISeasonDAO seasonDAO, IEpisodeDAO episodeDAO)
         {
             _categoryDAO = categoryDAO;
             _mediaCategoryDAO = mediaCategoryDAO;
@@ -35,7 +33,6 @@ namespace Nextflip.Services.Implementations
             _mediaDAO = mediaDAO;
             _seasonDAO = seasonDAO;
             _episodeDAO = episodeDAO;
-            _subtitleDAO = subtitleDAO;
         }
 
         //category
@@ -72,7 +69,7 @@ namespace Nextflip.Services.Implementations
                     for (int i = start; i < end; i++)
                     {
                         Media media = _mediaDAO.GetMediaByID(favoriteMediaIDs[i]);
-                        if (media.Status.Equals("Enabled"))
+                        if (media.Status.Equals("Approved"))
                         {
                             favoriteMedias.Add(media);
                         }
@@ -92,21 +89,18 @@ namespace Nextflip.Services.Implementations
             foreach (var mediaID in mediaIDs)
             { 
                 Media media = _mediaDAO.GetMediaByID(mediaID);
-                medias.Add(media);
+                if(media.Status.Equals("Approved")) medias.Add(media);
             }
             return medias;
         }
         //season
         public Season GetSeasonByID(string seasonID) => _seasonDAO.GetSeasonByID(seasonID);
-        public IEnumerable<Season> GetSeasonsByMediaID(string mediaID) => _seasonDAO.GetSeasonsByMediaID(mediaID);
+        public IEnumerable<Season> GetSeasonsByMediaID(string mediaID,string status ) => _seasonDAO.GetSeasonsByMediaID(mediaID,status);
         //episode
         public Episode GetEpisodeByID(string episodeID) => _episodeDAO.GetEpisodeByID(episodeID);
 
-        IEnumerable<Episode> ISubscribedUserService.GetEpisodesBySeasonID(string seasonID)
-                                            => _episodeDAO.GetEpisodesBySeasonID(seasonID);
-        //subtitle
-        public Subtitle GetSubtitleByID(string subtitleID) => _subtitleDAO.GetSubtitleByID(subtitleID);
-        public IEnumerable<Subtitle> GetSubtitlesByEpisodeID(string episodeID) => _subtitleDAO.GetSubtitlesByEpisodeID(episodeID);
+        IEnumerable<Episode> ISubscribedUserService.GetEpisodesBySeasonID(string seasonID,string status)
+                                            => _episodeDAO.GetEpisodesBySeasonID(seasonID, status);
         // favorite list
         public void AddMediaToFavoriteList(string userID, string mediaID)
         {

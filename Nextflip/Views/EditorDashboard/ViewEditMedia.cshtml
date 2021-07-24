@@ -7,8 +7,11 @@
     <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/css/Form.css")" rel="stylesheet" type="text/css" />
 }
-<div class="col-10">
-    <p class="fs-2 text-secondary ps-2">Edit media</p>
+<div class="col-10" style="background-color: #f8f9fa;">
+    <div class="d-flex">
+        <a href="/EditorDashboard/Index" class="link-dark"><i class="fas fa-arrow-left fa-2x pt-2"></i></a>
+        <p class="fs-2 text-secondary ps-2">Edit media</p>
+    </div>
     <div class="modal-body bg-light">
         <div>
             <div class="mb-3 row">
@@ -20,8 +23,19 @@
                 </div>
             </div>
             <div class="mb-3 row">
-                <label for="category" class="col-sm-2 text-end col-form-label">Category</label>
-                <div class="col-sm-10" id="CB_holder">
+                <label for="category" class="required col-sm-2 text-end col-form-label">Category</label>
+                <div class="col-sm-10">
+                    <div class="d-flex">
+                        <div class="dropdown">
+                            <button class="btn btn-primary  btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" id="CB_holder" style="overflow-y: scroll; max-height: 200px;">
+                            </ul>
+                        </div>
+                        <div id="category_holder" class="d-flex  justify-content-start">
+                        </div>
+                    </div>
                     <p class="d-none" id="empty_checkbox" style="color: #dc3545;margin-top: .25rem; font-size: .875em;">Must choose at least one</p>
                 </div>
             </div>
@@ -83,15 +97,15 @@
                 </div>
             </div>
             <div class="mb-3 row">
-                <p class="col-sm-2 text-end col-form-label"></p>
-                <div class="col-sm-8" id="season_container">
+                <p class="col-sm-2 text-end col-form-label">Season</p>
+                <div class="col-sm-8 pt-1" id="season_container">
                 </div>
             </div>
-            <div class="offset-1">
-                <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal" data-bs-target="#modalAddSeasonForm">Add new season</button>
+            <div class="offset-2">
+                <button class="btn btn-primary btn-sm" type="button" onclick="setSeasonNumber()" data-bs-toggle="modal" data-bs-target="#modalAddSeasonForm">Add new season</button>
             </div>
             <div class="col-12 d-flex justify-content-end">
-                <button class="btn btn-primary" type="button" onclick="requestAddNewMedia()">Submit</button>
+                <button class="btn btn-primary" type="button" onclick="requestEdit()">Save</button>
             </div>
         </div>
     </div>
@@ -109,7 +123,7 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3 row">
-                    <label for="titleSeason" class=" col-sm-3 col-form-label text-end">Title</label>
+                    <label for="titleSeason" class="required col-sm-3 col-form-label text-end">Title</label>
                     <div class="col-sm-6">
                         <input type="text" class="form-control" id="titleSeason" onkeyup="onInput(this)" />
                         <div class="invalid-feedback">
@@ -117,17 +131,17 @@
                     </div>
                 </div>
                 <div class="mb-3 row">
-                    <label for="bannerSeason" class=" col-sm-3 col-form-label text-end">Banner</label>
-                    <div class="col-sm-7">
-                        <input type="file" class="form-control" id="bannerSeason" onchange="getFile(this)" />
+                    <label for="numberSeason" class="col-sm-3 col-form-label text-end">Number</label>
+                    <div class="col-sm-6">
+                        <p class="mb-0 pt-1" id="numberSeason"></p>
                         <div class="invalid-feedback">
                         </div>
                     </div>
                 </div>
                 <div class="mb-3 row">
-                    <label for="numberSeason" class=" col-sm-3 col-form-label text-end">Number</label>
-                    <div class="col-sm-6">
-                        <input type="text" class="form-control w-50" id="numberSeason" onkeyup="onInput(this)" />
+                    <label for="bannerSeason" class="required col-sm-3 col-form-label text-end">Banner</label>
+                    <div class="col-sm-7">
+                        <input type="file" class="form-control" id="bannerSeason" onchange="getFile(this)" />
                         <div class="invalid-feedback">
                         </div>
                     </div>
@@ -135,7 +149,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-bg-danger" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="submit_btn" onclick="setSeason()">Submit</button>
+                <button type="button" class="btn btn-primary" id="submit_btn" onclick="addSeason()">Submit</button>
             </div>
         </div>
     </div>
@@ -150,7 +164,7 @@
             </div>
             <div class="modal-body">
                 <div class="mb-3 row">
-                    <label for="titleEpisode" class=" col-sm-3 col-form-label text-end">Title</label>
+                    <label for="titleEpisode" class="required col-sm-3 col-form-label text-end">Title</label>
                     <div class="col-sm-6">
                         <input type="text" class="form-control" id="titleEpisode" onkeyup="onInput(this)" />
                         <div class="invalid-feedback">
@@ -158,15 +172,15 @@
                     </div>
                 </div>
                 <div class="mb-3 row">
-                    <label for="numberEpisode" class=" col-sm-3 col-form-label text-end">Number</label>
+                    <label for="numberSeason" class="col-sm-3 col-form-label text-end">Number</label>
                     <div class="col-sm-6">
-                        <input type="text" class="form-control w-50" id="numberEpisode" onkeyup="onInput(this)" />
+                        <p class="mb-0 pt-1" id="numberEpisode"></p>
                         <div class="invalid-feedback">
                         </div>
                     </div>
                 </div>
                 <div class="mb-3 row">
-                    <label for="bannerEpisode" class=" col-sm-3 col-form-label text-end">Banner</label>
+                    <label for="bannerEpisode" class="required col-sm-3 col-form-label text-end">Banner</label>
                     <div class="col-sm-7">
                         <input type="file" class="form-control" accept="image/png, image/gif, image/jpeg" id="bannerEpisode" onchange="getFile(this)" />
                         <div class="invalid-feedback">
@@ -174,7 +188,7 @@
                     </div>
                 </div>
                 <div class="mb-3 row">
-                    <label for="videoEpisode" class=" col-sm-3 col-form-label text-end">Video</label>
+                    <label for="videoEpisode" class="required col-sm-3 col-form-label text-end">Video</label>
                     <div class="col-sm-7">
                         <input type="file" class="form-control" accept="video/mp4,video/x-m4v,video/*" id="videoEpisode" onchange="getFile(this)" />
                         <div class="invalid-feedback">
@@ -184,25 +198,134 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-bg-danger" data-bs-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" id="episode_submit_btn" index="" onclick="setEpisode(this)">Submit</button>
+                <button type="button" class="btn btn-primary" id="episode_submit_btn" index="" onclick="addEpisode(this)">Submit</button>
             </div>
         </div>
     </div>
 </div>
-<div>
+<!-- Confirm modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-body d-flex flex-column">
+                <p class="text-center fs-4">Are you sure to delete this</p>
+                <div class="d-flex justify-content-center">
+                    <button class="btn btn-secondary me-2" id="hide_confirm" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-danger" id="confirm_btn" onclick="deleteItem(this)">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+<!-- Edit season modal-->
+<div class="modal fade" id="modalEditSeasonForm" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit season</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3 row">
+                    <label for="editTitleSeason" class="required col-sm-3 col-form-label text-end">Title</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="editTitleSeason" onkeyup="onInput(this)" />
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="editNumberSeason" class="col-sm-3 col-form-label text-end">Number</label>
+                    <div class="col-sm-6">
+                        <p class="mb-0 pt-1" id="editNumberSeason"></p>
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="editBannerSeason" class="required col-sm-3 col-form-label text-end">Banner</label>
+                    <div class="col-sm-7">
+                        <input type="file" class="form-control" id="editBannerSeason" onchange="getFile(this)" />
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-bg-danger" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="editSeasonSubmit_btn" onclick="changeSeason(this)">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Edit episode modal-->
+<div class="modal fade" id="modalEditEpisodeForm" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Edit episode</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3 row">
+                    <label for="editTitleEpisode" class="required col-sm-3 col-form-label text-end">Title</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="editTitleEpisode" onkeyup="onInput(this)" />
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="editNumberEpisode" class="col-sm-3 col-form-label text-end">Number</label>
+                    <div class="col-sm-6">
+                        <p class="mb-0 pt-1" id="editNumberEpisode"></p>
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="editBannerEpisode" class="required col-sm-3 col-form-label text-end">Banner</label>
+                    <div class="col-sm-7">
+                        <input type="file" class="form-control" accept="image/png, image/gif, image/jpeg" id="editBannerEpisode" onchange="getFile(this)" />
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3 row">
+                    <label for="editVideoEpisode" class="required col-sm-3 col-form-label text-end">Video</label>
+                    <div class="col-sm-7">
+                        <input type="file" class="form-control" accept="video/mp4,video/x-m4v,video/*" id="editVideoEpisode" onchange="getFile(this)" />
+                        <div class="invalid-feedback">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-bg-danger" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="editEpisode_submit_btn" index="" onclick="changeEpisode(this)">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section script {
     <script src="~/js/Slide-Bar.js"></script>
     <script src="~/js/File-Uploader.js"></script>
     <script src="~/js/Edit-Media.js"></script>
     <script>
+        getRequestObjID('@ViewBag.MediaID');
         let button1 = `<a href="/EditorDashboard/Index" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
                                         Media manager
                                       </a>`;
-        let button2 = `<a href="/EditorDashboard/ViewEditRequest"  onclick="return showForm();" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
-                                        View edit request
-                                    </a>`;
-        appendButton(button2);
         appendButton(button1);
+    </script>
+    <script type="text/javascript">
+        window.addEventListener("beforeunload", event => {
+            if (!isEdited) {
+                event.preventDefault();
+                event.returnValue = "";
+                return;
+            }
+        })
     </script>
 }

@@ -7,21 +7,35 @@
     <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/css/Form.css")" rel="stylesheet" type="text/css" />
 }
-<div class="col-10">
-    <p class="fs-2 text-secondary ps-2">Add new media</p>
+<div class="col-10" style="background-color: #f8f9fa;">
+    <div class="d-flex">
+        <a class="link-dark"  href="/EditorDashboard/Index" id="back_btn"><i class="fas fa-arrow-left fa-2x pt-2"></i></a>
+        <p class="fs-2 text-secondary ps-2">Add new media</p>
+    </div>
     <div class="modal-body bg-light">
         <div>
             <div class="mb-3 row">
                 <label for="title" class="required col-sm-2 text-end col-form-label">Title</label>
                 <div class="col-sm-4">
-                    <input type="text" class="form-control" id="title" onkeyup="onInput(this)" />
+                    <input placeholder="Media name" type="text" class="form-control" id="title" onkeyup="onInput(this)" />
                     <div class="invalid-feedback">
                     </div>
                 </div>
             </div>
             <div class="mb-3 row">
                 <label for="category" class="required col-sm-2 text-end col-form-label">Category</label>
-                <div class="col-sm-10" id="CB_holder">
+                <div class="col-sm-10">
+                    <div class="d-flex">
+                        <div class="dropdown">
+                            <button class="btn btn-primary  btn-sm" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1" id="CB_holder" style="overflow-y: scroll; max-height: 200px;">
+                            </ul>
+                        </div>
+                        <div id="category_holder" class="d-flex  justify-content-start">
+                        </div>
+                    </div>
                     <p class="d-none" id="empty_checkbox" style="color: #dc3545;margin-top: .25rem; font-size: .875em;">Must choose at least one</p>
                 </div>
             </div>
@@ -83,11 +97,11 @@
                 </div>
             </div>
             <div class="mb-3 row">
-                <p class="col-sm-2 text-end col-form-label"></p>
-                <div class="col-sm-8" id="season_container">
+                <p class="col-sm-2 text-end col-form-label">Season</p>
+                <div class="col-sm-8 pt-1" id="season_container">
                 </div>
             </div>
-            <div class="offset-1">
+            <div class="offset-2">
                 <button class="btn btn-primary btn-sm" type="button" onclick="setSeasonNumber()" data-bs-toggle="modal" data-bs-target="#modalAddSeasonForm">Add new season</button>
             </div>
             <div class="col-12 d-flex justify-content-end">
@@ -203,18 +217,37 @@
         </div>
     </div>
 </div>
+<!-- modal-->
+<div class="modal fade" id="Confirm_discard_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                If you leave this page all your change will not save
+                <div class="d-flex justify-content-center p-1">
+                    <button type="button" class="btn btn-secondary me-2" data-bs-dismiss="modal">Close</button>
+                    <a type="button" class="btn btn-primary" href="/EditorDashboard/Index">Discard</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @section script {
     <script src="~/js/Slide-Bar.js"></script>
     <script src="~/js/File-Uploader.js"></script>
     <script src="~/js/Add-New-Media.js"></script>
     <script>
         let button1 = `<a href="/EditorDashboard/Index" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
-                                                Media manager
-                                              </a>`;
-        let button2 = `<a href="/EditorDashboard/ViewEditRequest"  onclick="return showForm();" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
-                                                View edit request
-                                            </a>`;
-        appendButton(button2);
+                          Media manager
+                       </a>`;
         appendButton(button1);
+    </script>
+    <script type="text/javascript">
+        window.addEventListener("beforeunload", event => {
+            if (!isAdded) {
+                event.preventDefault();
+                event.returnValue = "";
+                return;
+            }
+        })
     </script>
 }

@@ -8,23 +8,99 @@
     <link rel="Stylesheet" href="@Href("~/css/Header.css")" />
     <link rel="Stylesheet" href="@Href("~/css/Subscription.css")" />
 }
-<p class="fs-1 text-center">Membership pricing</p>
-<div class="mt-5 pt-3">
-    <div class="d-flex justify-content-center" id="cardHolder">
+<div style="min-height:50vh">
+    <p class="fs-1 text-center">Membership pricing</p>
+    <div class="mt-5 pt-3">
+        <div class="d-flex justify-content-center" id="cardHolder">
+        </div>
     </div>
-</div>
-<div class="modal" id="Modal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-body d-flex flex-column justify-content-center">
+    <div class="modal" id="Modal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body d-flex flex-column justify-content-center">
+                </div>
             </div>
         </div>
     </div>
 </div>
-<script src="~/js/Search-In-Header.js"></script>
-<script src="~/js/Media-Details.js"></script>
-<script src="~/js/Subscription-Modifiler.js"></script>
-<script>
-    setGoToSearchEvent();
-    requestPlans();
-</script>
+<div class="accordion col-8 mx-auto mt-2 fs-4 mb-3" id="accordion" style="max-height: 90vh">
+    <div class="accordion-item border-0">
+        <h2 class="accordion-header" id="headingOne" style="background-color: #303030;">
+            <button class="accordion-button fs-4" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"
+                    style="background-color: #303030; color: #fff;">
+                What is Nextflip?
+            </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+             data-bs-parent="#accordion" style="background-color: #303030; color: #fff;">
+            <div class="accordion-body">
+                NextFlip is a streaming service that offers a wide variety of award-winning TV shows, movies,
+                anime, documentaries, and more on thousands of internet-connected devices.
+                <br>
+                You can watch as much as you want, whenever you want without a single commercial – all for one
+                low monthly price. There's always something new to discover and new TV shows and movies are
+                added every week!
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item border-0">
+        <h2 class="accordion-header" id="headingTwo">
+            <button class="accordion-button collapsed fs-4" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"
+                    style="background-color: #303030; color: #fff;">
+                How much does Netflix cost?
+            </button>
+        </h2>
+        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+             data-bs-parent="#accordion" style="background-color: #303030; color: #fff;">
+            <div class="accordion-body">
+                Watch NextFlip fixed monthly fee. Plans 3.99$ a month. No extra costs, no contracts.
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item border-0">
+        <h2 class="accordion-header" id="headingThree">
+            <button class="accordion-button collapsed fs-4" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree"
+                    style="background-color: #303030; color: #fff;">
+                How do I cancel?
+            </button>
+        </h2>
+        <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+             data-bs-parent="#accordion" style="background-color: #303030; color: #fff;">
+            <div class="accordion-body">
+                NextFlip is flexible. There are no pesky contracts and no commitments. You can easily cancel
+                your
+                account online in two clicks. There are no cancellation fees – start or stop your account
+                anytime.
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item border-0">
+        <h2 class="accordion-header" id="headingFour">
+            <button class="accordion-button collapsed fs-4" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour"
+                    style="background-color: #303030; color: #fff;">
+                What can I watch on NextFlip?
+            </button>
+        </h2>
+        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
+             data-bs-parent="#accordion" style="background-color: #303030; color: #fff;">
+            <div class="accordion-body">
+                NextFlip has an extensive library of feature films, documentaries, TV shows, anime,
+                award-winning
+                NextFlip originals, and more. Watch as much as you want, anytime you want.
+            </div>
+        </div>
+    </div>
+</div>
+@section script{
+    <script src="~/js/Search-In-Header.js"></script>
+    <script src="~/js/Media-Details.js"></script>
+    <script src="~/js/Subscription-Modifiler.js"></script>
+    <script>
+        setGoToSearchEvent();
+        requestPlans();
+    </script>
+}

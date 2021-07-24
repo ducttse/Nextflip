@@ -2,9 +2,9 @@
 let requestParam = {
     RowsOnPage: 12,
     RequestPage: 1,
-    CategoryID: "all",
+    CategoryName: "All",
     SearchValue: "",
-    Status: ""
+    Status: "All"
 };
 let isSearched = false;
 let isFiltered = false;
@@ -62,16 +62,19 @@ function HideNotFound() {
 }
 
 function renderMedia(media, index) {
+    let date = media.uploadDate.slice(0, 10).split("-").reverse().join("-");
     return `
       <tr>
           <td>${index + 1}</td>
           <td>${media.title}</td>
+          <td class="text-center">${media.countSeason}</td>
           <td class="text-center">
             <div>
-                <input class="status_btn" type="checkbox" mediaID="${media.mediaID}" value="${media.status}" ${media.status === "Enabled" ? "checked" : ""}  />
+                <input class="status_btn" type="checkbox" mediaID="${media.mediaID}" value="${media.status}" ${media.status === "Approved" ? "checked" : ""}  />
             </div>
           </td>
-          <td  class="text-center">
+          <td class="text-center">${date}</td>
+          <td class="text-center">
             <a class="btn btn-secondary" href="/EditorDashboard/ViewEditMedia/${media.mediaID}">Edit</a>
           </td>
       </tr>`;
@@ -145,10 +148,7 @@ function requestMediaDataOnly() {
         headers: reqHeader,
         body: JSON.stringify(requestParam)
     };
-    let url = (requestParam.CategoryName == "all")
-        ? "/api/ViewEditorDashboard/ViewAllMedia"
-        : "/api/ViewEditorDashboard/ViewMediasFilterCategory";
-    return fetch(url, initObject);
+    return fetch("/api/ViewEditorDashboard/GetMedia/", initObject);
 }
 
 function requestMediaData() {
@@ -182,10 +182,7 @@ function requestWithFilterOnly() {
         headers: reqHeader,
         body: JSON.stringify(requestParam)
     };
-    let url = (requestParam.CategoryName == "all")
-        ? (isFiltered ? "/api/ViewEditorDashboard/ViewAllMediaFilterStatus" : "/api/ViewEditorDashboard/ViewAllMedia")
-        : (isFiltered ? "/api/ViewEditorDashboard/ViewMediasFilterCategory_Status" : "/api/ViewEditorDashboard/ViewMediasFilterCategory");
-    return fetch(url, initObject);
+    return fetch("/api/ViewEditorDashboard/GetMedia/", initObject);
 }
 
 function requestWithFilter() {
@@ -219,10 +216,7 @@ function searchOnly(searchValue) {
         headers: reqHeader,
         body: JSON.stringify(requestParam)
     };
-    let url = (requestParam.CategoryName == "all")
-        ? (isFiltered ? "/api/ViewEditorDashboard/GetMediasByTitleFilterStatus" : "/api/ViewEditorDashboard/GetMediasByTitle")
-        : (isFiltered ? "/api/ViewEditorDashboard/GetMediasByTitleFilterCategory_Status" : "/api/ViewEditorDashboard/GetMediasByTitleFilterCategory");
-    return fetch(url, initObject);
+    return fetch("/api/ViewEditorDashboard/SearchingMedia/", initObject);
 }
 
 function searchWithFilterOnly() {
@@ -234,10 +228,7 @@ function searchWithFilterOnly() {
         headers: reqHeader,
         body: JSON.stringify(requestParam)
     };
-    let url = (requestParam.CategoryName == "all")
-        ? (isFiltered ? "/api/ViewEditorDashboard/GetMediasByTitleFilterStatus" : "/api/ViewEditorDashboard/GetMediasByTitle")
-        : (isFiltered ? "/api/ViewEditorDashboard/GetMediasByTitleFilterCategory_Status" : "/api/ViewEditorDashboard/GetMediasByTitleFilterCategory");
-    return fetch(url, initObject);
+    return fetch("/api/ViewEditorDashboard/SearchingMedia/", initObject);
 }
 
 function search(searchValue) {

@@ -9,8 +9,8 @@ namespace Nextflip.Models.subscription
     {
         bool UpdateExpiredDate(Subscription subsciption);
 
-        Subscription GetSubsciptionByUserID(string userID);
         public bool PurchaseSubscription(string userID, int interval);
+        Subscription GetSubsciptionByUserID(string userID);
         bool PurchaseSubscription(string extensionFormUserId, DateTime extensionFormIssueTime, int extensionFormExtensionDays, int extensionFormPaymentPlanId);
 
         IEnumerable<object> GetSubscriptions(int rows, int page, string status);

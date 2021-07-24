@@ -15,12 +15,10 @@ namespace Nextflip.Controllers
         {
             return View();
         }
-        [HttpGet("/MediaManagerManagement/DetailPreview/{type}/{id}/{requestid}")]
-        public IActionResult DetailPreview(string type,string id, string requestid)
+        [HttpGet("/MediaManagerManagement/DetailPreview/{id}")]
+        public IActionResult DetailPreview(string id)
         {
-            ViewBag.Type = type;
             ViewBag.MediaID = id;
-            ViewBag.RequestID = requestid;
             return View();
         }
         public IActionResult CategoryManager()
@@ -29,6 +27,12 @@ namespace Nextflip.Controllers
         }
         public IActionResult MediaTypeManager()
         {
+            return View();
+        }
+        [HttpGet("/MediaManagerManagement/PreviewEpisode/{id}")]
+        public IActionResult PreviewEpisode(string id)
+        {
+            ViewBag.MediaID = id;
             return View();
         }
     }

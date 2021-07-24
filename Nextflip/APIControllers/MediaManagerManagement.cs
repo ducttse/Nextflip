@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using Nextflip.Models.episode;
 using Nextflip.Models.media;
-using Nextflip.Models.mediaEditRequest;
 using Nextflip.Services.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -17,172 +16,89 @@ namespace Nextflip.APIControllers
     public class MediaManagerManagement : ControllerBase
     {
         private readonly ILogger _logger;
-
+        private const string DEFAULT_ACCOUNT = "technical.nextflipcompany@gmail.com";
         public MediaManagerManagement(ILogger<MediaManagerManagement> logger)
         {
             _logger = logger;
         }
-
-        /*[Route("GetAllPendingMedias")]
-        public JsonResult GetAllPendingMedias([FromServices] IMediaManagerManagementService mediaManagerManagementService)
+        public partial class MediaForm
         {
-            try
-            {
-            IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.GetAllPendingMedias();
-            return new JsonResult(requests);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogInformation("GetAllPendingMedias: " + ex.Message);
-                return new JsonResult("Error occur");
-            }
+            public string RequestID { get; set; }
+            public string Type { get; set; }
+
+            public string EditorEmail { get; set; }
+            public string Content { get; set; }
         }
 
-        //Search all
-        [Route("GetPendingMediaByUserEmail")]
-        public JsonResult GetPendingMediaByUserEmail([FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromBody] Request request)
-        {
-            try
-            {
-                var message = new
-                {
-                    message = "Empty searchValue"
-                };
-                if (request.SearchValue.Trim() == "") return new JsonResult(message);
-                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.GetPendingMediaByUserEmail(request.SearchValue.Trim(), request.RowsOnPage, request.RequestPage);
-                int count = mediaManagerManagementService.NumberOfPendingMediasBySearching(request.SearchValue.Trim());
-                double totalPage = (double)count / (double)request.RowsOnPage;
-                var result = new
-                {
-                    TotalPage = Math.Ceiling(totalPage),
-                    Data = requests
-                };
-                return (new JsonResult(result));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogInformation("GetPendingMediaByUserEmail: " + ex.Message);
-                return new JsonResult(new
-                {
-                    message = ex.Message
-                });
-            }
-        }
-
-        //Search all + filter status
-        [Route("GetPendingMediaByUserEmailFilterStatus")]
-        public JsonResult GetPendingMediaByUserEmailFilterStatus([FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromBody] Request request)
-        {
-            try
-            {
-                var message = new
-                {
-                    message = "Empty searchValue"
-                };
-                if (request.SearchValue.Trim() == "") return new JsonResult(message);
-                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.GetPendingMediaByUserEmailFilterStatus(request.SearchValue.Trim(), request.Status, request.RowsOnPage, request.RequestPage);
-                int count = mediaManagerManagementService.NumberOfPendingMediasBySearchingFilterStatus(request.SearchValue.Trim(), request.Status);
-                double totalPage = (double)count / (double)request.RowsOnPage;
-                var result = new
-                {
-                    TotalPage = Math.Ceiling(totalPage),
-                    Data = requests
-                };
-                return (new JsonResult(result));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogInformation("GetPendingMediaByUserEmailFilterStatus: " + ex.Message);
-                return new JsonResult(new
-                {
-                    message = ex.Message
-                });
-            }
-        }
-        */
+        
 
         [Route("ApproveRequest")]
-        public JsonResult ApproveRequest([FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromBody] Request request)
+        public JsonResult ApproveRequest([FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromBody] MediaForm request)
         {
             try
             {
-                var messageFail = new
+                bool isValid = true;
+                switch (request.Type.ToLower())
                 {
-                    message = "fail"
-                };
-                bool approveRequest = mediaManagerManagementService.ApproveRequest(request.RequestID);
-                if (!approveRequest) return new JsonResult(messageFail);
-                MediaEditRequest editRequest = mediaManagerManagementService.GetMediaEditRequestByID(request.RequestID);
-                bool approveChange = false;
-                if (editRequest.type.Trim().Equals("media"))
-                    approveChange = mediaManagerManagementService.ApproveChangeMedia(editRequest.ID);
-                else if (editRequest.type.Trim().Equals("season"))
-                    approveChange = mediaManagerManagementService.ApproveChangeSeason(editRequest.ID);
-                else if (editRequest.type.Trim().Equals("episode"))
-                    approveChange = mediaManagerManagementService.ApproveChangeEpisode(editRequest.ID);
-                else if (editRequest.type.Trim().Equals("subtitle"))
-                    approveChange = mediaManagerManagementService.ApproveChangeSubtitle(editRequest.ID);
-                if (!approveChange) return new JsonResult(messageFail);
-                var message = new
-                {
-                    message = "success"
-                };
-                return new JsonResult(message);
+                    case "media":
+                        if (mediaManagerManagementService.CheckStatusSeason(request.RequestID)) return new JsonResult(new { Message = "All seasons in media - " + request.RequestID + " have not approved yet !" });
+                        isValid = mediaManagerManagementService.ApproveChangeMedia(request.RequestID);
+                        break;
+                    case "season":
+                        if (mediaManagerManagementService.CheckStatusEpisode(request.RequestID)) return new JsonResult(new { Message = "All episodes in season -" + request.RequestID + " have not approved yet !" });
+                        isValid = mediaManagerManagementService.ApproveChangeSeason(request.RequestID);
+                        break;
+                    case "episode":
+                        isValid = mediaManagerManagementService.ApproveChangeEpisode(request.RequestID);
+                        break;
+                    default:
+                        isValid = false;
+                        break;
+                }
+                if (!isValid) return new JsonResult(new { Message = "Failed" });
+                return new JsonResult(new { Message = "Success" });
             }
             catch (Exception ex)
             {
                 _logger.LogInformation("ApproveRequest: " + ex.Message);
-                var result = new
-                {
-                    message = ex.Message
-                };
-                return new JsonResult(result);
+                return new JsonResult(new { Message = ex.Message });
             }
 
         }
 
         [Route("DisapproveRequest")]
-        public async Task<IActionResult> DisapproveRequest([FromServices] IMediaManagerManagementService mediaManagerManagementService,
-                                        [FromServices] ISendMailService sendMailService, [FromBody] Request request)
+        public async Task<JsonResult> DisapproveRequest([FromServices] IMediaManagerManagementService mediaManagerManagementService, [FromServices] ISendMailService sendMailService, [FromBody] MediaForm request)
         {
             try
             {
-                var messageFail = new
+                bool isValid = true;
+                switch (request.Type.ToLower())
                 {
-                    message = "fail"
-                };
-                bool disapproveRequest = mediaManagerManagementService.DisappoveRequest(request.RequestID, request.note);
-                if (!disapproveRequest) return new JsonResult(messageFail);
-                MediaEditRequest editRequest = mediaManagerManagementService.GetMediaEditRequestByID(request.RequestID);
-                bool disapproveChange = false;
-                if (editRequest.type.Trim().Equals("media"))
-                    disapproveChange = mediaManagerManagementService.DisapproveChangeMedia(editRequest.ID);
-                else if (editRequest.type.Trim().Equals("season"))
-                    disapproveChange = mediaManagerManagementService.DisapproveChangeSeason(editRequest.ID);
-                else if (editRequest.type.Trim().Equals("episode"))
-                    disapproveChange = mediaManagerManagementService.DisapproveChangeEpisode(editRequest.ID);
-                else if (editRequest.type.Trim().Equals("subtitle"))
-                    disapproveChange = mediaManagerManagementService.DisapproveChangeSubtitle(editRequest.ID);
-                if (!disapproveChange) return new JsonResult(messageFail);
-                string toEmail = editRequest.userEmail;
-                string body = $"Dear,\n" +
-                                $"your request about: << {editRequest.mediaTitle} >> is disapproved \n" +
-                                $"Because: {request.note}";
-                await sendMailService.SendEmailAsync(toEmail, "Notification of your request", body);
-                var message = new
-                {
-                    message = "success"
-                };
-                return new JsonResult(message);
+                    case "media":
+                        isValid = mediaManagerManagementService.DisapproveChangeMedia(request.RequestID);
+                        break;
+                    case "season":
+                        isValid = mediaManagerManagementService.DisapproveChangeSeason(request.RequestID);
+                        break;
+                    case "episode":
+                        isValid = mediaManagerManagementService.DisapproveChangeEpisode(request.RequestID);
+                        break;
+                    default:
+                        isValid = false;
+                        break;
+                }
+                if (!isValid) return new JsonResult(new { Message = "Failed" });
+                string toEmail = DEFAULT_ACCOUNT;
+                string body = $"Dear Editor,\n" +
+                                $"Your request about: << " + request.Type + " - " + request.RequestID + " >> is disapproved \n" +
+                                $"Because: {request.Content}";
+                await sendMailService.SendEmailAsync(toEmail, "Disapproval of your request", body);
+                return new JsonResult(new { Message = "Success" });
             }
             catch (Exception ex)
             {
                 _logger.LogInformation("ApproveRequest: " + ex.Message);
-                var result = new
-                {
-                    message = ex.Message
-                };
-                return new JsonResult(result);
+                return new JsonResult(new { Message = ex.Message });
             }
         }
 
@@ -284,17 +200,37 @@ namespace Nextflip.APIControllers
         {
             try
             {
-                //if (request.SortBy.Trim() == "") request.SortBy = "asc";
                 if (request.Status.Trim() == "") request.Status = "all";
-                if (request.CategoryName.Trim() == "") request.Status = "all";
+                if (request.CategoryName.Trim() == "") request.CategoryName = "all";
                 IEnumerable<Media> mediaList = mediaManagerManagementService.ViewMediasFilterCategory_Status(request.CategoryName.Trim().ToLower(),
                     request.Status.Trim(), request.RowsOnPage, request.RequestPage);
+                List<MediaShow> mediaShowList = new List<MediaShow>();
+                foreach (var item in mediaList)
+                {
+                    mediaShowList.Add(new MediaShow
+                    {
+                        MediaID = item.MediaID,
+                        Status = item.Status,
+                        Title = item.Title,
+                        FilmType = item.FilmType,
+                        Director = item.Director,
+                        Cast = item.Cast,
+                        PublishYear = item.PublishYear,
+                        Duration = item.Duration,
+                        BannerURL = item.BannerURL,
+                        Language = item.Language,
+                        Description = item.Description,
+                        UploadDate = item.UploadDate,
+                        CountSeason = mediaManagerManagementService.NumberAvailableSeason(item.MediaID)
+                    });
+                }
                 int count = mediaManagerManagementService.NumberOfMediasFilterCategory_Status(request.CategoryName.Trim().ToLower(), request.Status.Trim());
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {
+                    TotalMedia = count,
                     TotalPage = (int)Math.Ceiling(totalPage),
-                    Data = mediaList
+                    Data = mediaShowList
                 };
                 return (new JsonResult(result));
             }
@@ -320,15 +256,37 @@ namespace Nextflip.APIControllers
                 };
                 if (request.SearchValue.Trim() == "") return new JsonResult(message);
                 if (request.Status.Trim() == "") request.Status = "all";
+                if (request.CategoryName.Trim() == "") request.CategoryName = "all";
                 IEnumerable<Media> mediaList = mediaManagerManagementService.GetMediasByTitleFilterCategory_Status(request.SearchValue.Trim().ToLower(),
                     request.CategoryName.Trim().ToLower(), request.Status.Trim(), request.RowsOnPage, request.RequestPage);
+                List<MediaShow> mediaShowList = new List<MediaShow>();
+                foreach (var item in mediaList)
+                {
+                    mediaShowList.Add(new MediaShow
+                    {
+                        MediaID = item.MediaID,
+                        Status = item.Status,
+                        Title = item.Title,
+                        FilmType = item.FilmType,
+                        Director = item.Director,
+                        Cast = item.Cast,
+                        PublishYear = item.PublishYear,
+                        Duration = item.Duration,
+                        BannerURL = item.BannerURL,
+                        Language = item.Language,
+                        Description = item.Description,
+                        UploadDate = item.UploadDate,
+                        CountSeason = mediaManagerManagementService.NumberAvailableSeason(item.MediaID)
+                    });
+                }
                 int count = mediaManagerManagementService.NumberOfMediasBySearchingFilterCategory_Status(request.SearchValue.Trim().ToLower(),
                     request.CategoryName.Trim().ToLower(), request.Status.Trim());
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {
+                    TotalMedia = count,
                     TotalPage = (int)Math.Ceiling(totalPage),
-                    Data = mediaList
+                    Data = mediaShowList
                 };
                 return (new JsonResult(result));
             }
@@ -389,31 +347,6 @@ namespace Nextflip.APIControllers
             }
         }
 
-        [Route("GetMediaEditRequestByID/{RequestID}")]
-        public JsonResult GetMediaEditRequestByID([FromServices] IMediaManagerManagementService mediaManagerManagementService, int RequestID)
-        {
-            try
-            {
-                int a;
-                if (!int.TryParse(RequestID.ToString(), out a) || RequestID <= 0) return new JsonResult(new { Message = "fail" });
-                MediaEditRequest EditRequest = mediaManagerManagementService.GetMediaEditRequestByID(RequestID);
-                var result = new
-                {
-                    Message = "success",
-                    Data = EditRequest
-                };
-                if (EditRequest != null) return (new JsonResult(result));
-                else return new JsonResult(new { Message = "fail" });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogInformation("GetMediaEditRequestByID: " + ex.Message);
-                return new JsonResult(new
-                {
-                    message = "fail"
-                });
-            }
-        }
 
         [Route("GetDetailedMedia/{mediaID}")]
         [HttpGet]
@@ -432,5 +365,22 @@ namespace Nextflip.APIControllers
             }
         }
 
+
+        public class MediaShow
+        {
+            public string MediaID { get; set; }
+            public string Status { get; set; }
+            public string Title { get; set; }
+            public string FilmType { get; set; }
+            public string Director { get; set; }
+            public string Cast { get; set; }
+            public int? PublishYear { get; set; }
+            public string Duration { get; set; }
+            public string BannerURL { get; set; }
+            public string Language { get; set; }
+            public string Description { get; set; }
+            public DateTime UploadDate { get; set; }
+            public int CountSeason { get; set; }
+        }
     }
 }

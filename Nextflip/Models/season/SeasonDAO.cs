@@ -50,6 +50,48 @@ namespace Nextflip.Models.season
                 throw new Exception(ex.Message);
             }
         }
+        public IEnumerable<Season> GetSeasonsByMediaID(string mediaID,string status)
+        {
+            try
+            {
+                var seasons = new List<Season>();
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select seasonID, title, thumbnailURL, status, number " +
+                                "From season " +
+                                "Where mediaID = @mediaID And Status = @status " +
+                                "Order By number";
+
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@mediaID", mediaID);
+                        command.Parameters.AddWithValue("@status", status);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                seasons.Add(new Season
+                                {
+                                    SeasonID = reader.GetString(0),
+                                    Title = reader.GetString(1),
+                                    ThumbnailURL = reader.GetString(2),
+                                    MediaID = mediaID,
+                                    Status = reader.GetString(3),
+                                    Number = reader.GetInt32(4)
+                                });
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+                return seasons;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
 
         public Season GetSeasonByID(string seasonID)
         {
@@ -97,73 +139,17 @@ namespace Nextflip.Models.season
             var result = false;
             try
             {
-                string SqlUpdate = null;
-                string SqlDelete = null;
-
-                MySqlCommand command1;
-                MySqlCommand command2;
-                int rowEffects1 = 0;
-                int rowEffects2 = 0;
-                string seasonID = ID.Split('_')[0];
-                Season season = new Season();
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    if (seasonID.Equals(ID))
+                    string sql = "approveSeason";
+                    using (var command = new MySqlCommand(sql, connection))
                     {
-                        SqlUpdate = "Update season " +
-                            "Set status = 'Available' " +
-                            "Where seasonID = @seasonID";
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("seasonID_Input", ID);
+                        int affectedRow = command.ExecuteNonQuery();
+                        if (affectedRow == 1) result = true;
                     }
-                    else
-                    {
-                        if (ID.Split('_')[1].Trim().ToLower().Equals("preview"))
-                        {
-                            SqlUpdate = "Update season " +
-                                "Set mediaID = @mediaID, title = @title, thumbnailURL = @thumbnailURL, number = @number " +
-                                "Where seasonID = @seasonID";
-                            season = GetSeasonByID(ID);
-                        }
-                        if (ID.Split('_')[1].Trim().ToLower().Equals("available"))
-                        {
-                            SqlUpdate = "Update season " +
-                                "Set status = 'Available' " +
-                                "Where seasonID = @seasonID";
-                        }
-                        if (ID.Split('_')[1].Trim().ToLower().Equals("unavailable"))
-                        {
-                            SqlUpdate = "Update season " +
-                                "Set status = 'Unavailable' " +
-                                "Where seasonID = @seasonID";
-                        }
-                        SqlDelete = "Delete from season " +
-                            "Where seasonID = @ID";
-                        command2 = new MySqlCommand(SqlDelete, connection);
-                        command2.Parameters.AddWithValue("@ID", ID);
-                        rowEffects2 = command2.ExecuteNonQuery();
-                    }
-                    command1 = new MySqlCommand(SqlUpdate, connection);
-                    command1.Parameters.AddWithValue("@seasonID", seasonID);
-                    if (!seasonID.Equals(ID))
-                    {
-                        if (ID.Split('_')[1].Trim().ToLower().Equals("preview"))
-                        {
-                            command1.Parameters.AddWithValue("@title", season.Title);
-                            command1.Parameters.AddWithValue("@mediaID", season.MediaID);
-                            command1.Parameters.AddWithValue("@thumbnailURL", season.ThumbnailURL);
-                            command1.Parameters.AddWithValue("@number", season.Number);
-                        }
-                    }
-                    rowEffects1 = command1.ExecuteNonQuery();
-                    if (rowEffects1 > 0 && rowEffects2 > 0)
-                    {
-                        result = true;
-                    }
-                    if (rowEffects1 > 0 && seasonID.Equals(ID))
-                    {
-                        result = true;
-                    }
-                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -176,28 +162,19 @@ namespace Nextflip.Models.season
         public bool DisapproveChangeSeason(string ID)
         {
             var result = false;
-            string SqlSeason;
             try
             {
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    if (ID.Split('_')[0].Equals(ID))
+                    string sql = "disapproveSeason";
+                    using (var command = new MySqlCommand(sql, connection))
                     {
-                        SqlSeason = "Update season " +
-                            "Set status = 'Unavailable' " +
-                            "Where seasonID = @ID";
-                    } else
-                    SqlSeason = "Delete from season " +
-                            "Where seasonID = @ID";
-                    MySqlCommand command = new MySqlCommand(SqlSeason, connection);
-                    command.Parameters.AddWithValue("@ID", ID);
-                    int rowEffects = command.ExecuteNonQuery();
-                    if (rowEffects > 0)
-                    {
-                        result = true;
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("seasonID_Input", ID);
+                        int affectedRow = command.ExecuteNonQuery();
+                        if (affectedRow == 1) result = true;
                     }
-                    connection.Close();
                 }
             }
             catch (Exception ex)
@@ -326,6 +303,59 @@ namespace Nextflip.Models.season
             command.CommandText = "removeSeason";
             command.Parameters.AddWithValue("@seasonID", seasonId);
             return command.ExecuteNonQuery();
+        }
+
+        public bool CheckStatusSeason(string mediaID)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string sql = "Select exists (select status from season where mediaID = @mediaID AND status != 'Approved' AND status != 'Removed')";
+                    using (var command = new MySqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@mediaID", mediaID);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read()) return reader.GetBoolean(0);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return false;
+
+        }
+
+        public int NumberAvailableSeason(string mediaID)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string sql = "SELECT COUNT(mediaID) FROM Nextflip.season " +
+                                  " WHERE mediaID = @mediaID and status != 'Removed' " +
+                                  " GROUP BY(mediaID)";
+                    using (var command = new MySqlCommand(sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@mediaID", mediaID);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read()) return reader.GetInt32(0);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return 0;
         }
     }
 }

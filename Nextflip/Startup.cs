@@ -19,7 +19,6 @@ using Nextflip.utils;
 using Nextflip.Models.account;
 using Nextflip.Services.Implementations;
 using Nextflip.Services.Interfaces;
-using Nextflip.Models.mediaEditRequest;
 using Nextflip.Models.category;
 using Nextflip.Models.episode;
 using Nextflip.Models.favoriteList;
@@ -27,7 +26,6 @@ using Nextflip.Models.media;
 using Nextflip.Models.mediaCategory;
 using Nextflip.Models.mediaFavorite;
 using Nextflip.Models.season;
-using Nextflip.Models.subtitle;
 using Nextflip.Models.notification;
 using Nextflip.Models.supportTopic;
 using Nextflip.Models.supportTicket;
@@ -60,7 +58,6 @@ namespace Nextflip
             services.AddTransient<IMediaCategoryDAO, MediaCategoryDAO>();
             services.AddTransient<IMediaFavoriteDAO, MediaFavoriteDAO>();
             services.AddTransient<ISeasonDAO, SeasonDAO>();
-            services.AddTransient<ISubtitleDAO, SubtitleDAO>();
             services.AddTransient<INotificationDAO, NotificationDAO>();
             services.AddTransient<IFilmTypeDAO, FilmTypeDAO>();
 
@@ -74,7 +71,6 @@ namespace Nextflip
             services.AddControllers().AddNewtonsoftJson();
             services.AddTransient<IAccountDAO, AccountDAO>();
             services.AddTransient<IUserManagerManagementService, UserManagerManagementService>();
-            services.AddTransient<IMediaEditRequestDAO, MediaEditRequestDAO>();
             services.AddTransient<IMediaManagerManagementService, MediaManagerManagementService>();
             services.AddTransient<ISubscribedUserService, SubscribedUserService>();
             services.AddTransient<IEditorService, EditorService>();
@@ -112,9 +108,9 @@ namespace Nextflip
             services.AddScoped<CookieUtil>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options => {
-                options.AccessDeniedPath = "/Common/AccessDenied";
-                options.LoginPath = "/Account/Login";
-                options.EventsType = typeof(CookieUtil);
+                    options.AccessDeniedPath = "/Common/AccessDenied";
+                    options.LoginPath = "/Account/Login";
+                    options.EventsType = typeof(CookieUtil);
                 });
             services.AddAuthorization(options =>
             {

@@ -26,7 +26,5 @@ namespace Nextflip.Services.Implementations
         public bool ChangePassword(string userID, string password) => _accountDAO.ChangePassword(userID, password);
         public Account CheckGoogleLogin(string googleID) => _accountDAO.CheckGoogleLogin(googleID);
         public Account GetProfile(string userID) => _accountDAO.GetAccountByID(userID);
-        public bool CheckWallet(string userID, double money) => _accountDAO.CheckWallet(userID, money);
-        public bool PurchaseSubscription(string userID, double money) => _accountDAO.PurchaseSubscription(userID, money);
     }
 }

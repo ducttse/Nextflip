@@ -44,7 +44,8 @@ function requestMediaTypes() {
 }
 
 function create(obj) {
-    let type = obj.getAttribute("type");
+    let type = obj.getAttribute("itemType");
+    console.log(type);
     let value = document.getElementById("item_name").value;
     switch (type) {
         case "category":
@@ -57,9 +58,10 @@ function create(obj) {
 }
 
 function update(obj) {
-    let type = obj.getAttribute("type");
+    let type = obj.getAttribute("itemType");
+    console.log(type);
     let value = document.getElementById("item_edit_name").value;
-    let id = obj.getAttribute("id");
+    let id = obj.getAttribute("cateID");
     switch (type) {
         case "category":
             updateCategory(id, value);
@@ -168,10 +170,10 @@ function setAddModalContent(title, label) {
     document.getElementById("add_title").textContent = title;
     document.getElementById("add_label").textContent = label;
     if (title == "Create new category") {
-        document.getElementById("trigger_add").setAttribute("type", "category");
+        document.getElementById("trigger_add").setAttribute("itemType", "category");
     }
     else if (title == "Create new meida type") {
-        document.getElementById("trigger_add").setAttribute("type", "media type");
+        document.getElementById("trigger_add").setAttribute("itemType", "media type");
     }
     addModal.show();
 }
@@ -180,12 +182,12 @@ function setEditModalContent(title, label, value, id) {
     document.getElementById("edit_title").textContent = title;
     document.getElementById("edit_label").textContent = label;
     document.getElementById("item_edit_name").value = value;
-    document.getElementById("trigger_update").setAttribute("id", id);
+    document.getElementById("trigger_update").setAttribute("cateID", id);
     if (label == "Category") {
-        document.getElementById("trigger_update").setAttribute("type", "category");
+        document.getElementById("trigger_update").setAttribute("itemType", "category");
     }
-    else if (label == "Meida type") {
-        document.getElementById("trigger_update").setAttribute("type", "media type");
+    else if (label == "Media type") {
+        document.getElementById("trigger_update").setAttribute("itemType", "media type");
     }
     editModal.show();
 }

@@ -1,0 +1,68 @@
+﻿@{
+    ViewBag.Title = "Preview episode";
+    Layout = "_PreviewEpisodeLayout";
+}
+@section Styles {
+    <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
+}
+<div class="col-10" style="min-height: 100vh;">
+    <div>
+        <div class="offset-1 d-flex">
+            <span onclick="backToMedia()" class="text-dark" style="cursor:pointer;"><i class="fas fa-arrow-left fa-2x pt-2"></i></span>
+            <p class="h2 text-dark">Episode Preview</p>
+        </div>
+        <div class="d-flex flex-column text-dark col-10 mx-auto">
+            <div class="d-flex">
+                <p id="title"></p>
+            </div>
+            <div class="d-flex">
+                <p id="number"></p>
+            </div>
+        </div>
+        <div id="btn_group" class="d-none col-10 offset-1">
+            <button class="btn btn-primary" onclick="requestApprove('@ViewBag.MediaID')">Approve</button>
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#noteModal">Disapprove</button>
+        </div>
+        <div id="media_holder" class="col-10 mx-auto p-2">
+        </div>
+    </div>
+</div>
+<!--Modal-->
+<div class="modal fade" id="noteModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="d-flex justify-content-between">
+                    <p class="h3">Leave a note for this activity</p>
+                    <p class="h2"></p>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div>
+                    <textarea class="form-control" style="background-color: #F0F0F0" rows="15" cols="90" id="note_input"></textarea>
+                    <button class="btn btn-primary mt-1 offset-10" id="submit_btn"  onclick="requestDisapprove('@ViewBag.MediaID')">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/js/Episode-Preview.js"></script>
+<script src="~/js/Video-Tracking.js"></script>
+<script src="~/js/Slide-Bar.js"></script>
+<script>
+
+    let button2 = `<a id="back_btn" href="/MediaManagerManagement/CategoryManager" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
+                                    Category & type manage
+                                  </a>`;
+    appendButton(button2);
+    let button = `<a id="back_btn" href="/MediaManagerManagement/Index" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
+                    Media Manage
+                  </a>`;
+    appendButton(button);
+</script>
+<script>
+    requestEpisode('@ViewBag.MediaID');
+    function backToMedia() {
+        location.replace(localStorage.getItem("currentURL"));
+        localStorage.removeItem("currentURL");
+    }
+</script>

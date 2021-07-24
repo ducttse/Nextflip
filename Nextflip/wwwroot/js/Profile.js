@@ -29,8 +29,13 @@ async function loadAccount() {
         .then(res => res.json())
         .then(json => {
             let dob = json.dateOfBirth.split("-").reverse().join("-");
-            let date = json.subscriptionEndDate.slice(0, 10).split("-").reverse().join("-");
-            Profile = { ...json, dateOfBirth: dob, userID: ID, subscriptionEndDate: date }
+            if (json.subscriptionEndDate != null) {
+                let date = json.subscriptionEndDate.slice(0, 10).split("-").reverse().join("-");
+                Profile = { ...json, dateOfBirth: dob, userID: ID, subscriptionEndDate: date }
+            }
+            else {
+                Profile = { ...json, dateOfBirth: dob, userID: ID }
+            }
         })
     return new Promise(resolve => { resolve("resolved") })
 }
@@ -72,8 +77,21 @@ loadAccount().then(() => {
     }
     if (document.getElementById("sideBar") != null) {
         let role;
-        console.log(localStorage.getItem("URL").split("/")[ 1 ]);
-        if (document.getElementById("imgAndName_holder") != null) {
+        switch (localStorage.getItem("URL").split("/")[ 1 ]) {
+            case "UserManagerManagement":
+                role = "User Manager";
+                break;
+            case "MediaManagerManagement":
+                role = "Media Manager";
+                break;
+            case "EditorDashboard":
+                role = "Media Editor";
+                break;
+            case "SupporterDashboard":
+                role = "Ticket Supporter";
+                break;
+        }
+        if (document.getElementById("imgAndName_holder") != null || location.pathname.split("/")[ 2 ] == "AdminProfile") {
             switch (localStorage.getItem("URL").split("/")[ 1 ]) {
                 case "UserManagerManagement":
                     role = "User Manager";
@@ -89,20 +107,20 @@ loadAccount().then(() => {
                 case "MediaManagerManagement":
                     role = "Media Manager";
                     let button3 = `<a id="back_btn" href="/MediaManagerManagement/Index" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
-                            Media Manager
+                            Media Manage
                           </a>`;
+                    let button5 = `<a id="back_btn" href="/MediaManagerManagement/CategoryManager" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
+                          Category & type manage
+                        </a>`;
+                    appendButton(button5);
                     appendButton(button3);
                     break;
                 case "EditorDashboard":
                     role = "Media Editor";
                     let button4 = `<a href="/EditorDashboard/Index" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
-                                Media manager
+                                Media manage
                               </a>`;
-                    let button5 = `<a href="/EditorDashboard/ViewEditRequest"  onclick="return showForm();" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
-                                View edit request
-                            </a>`;
                     appendButton(button4);
-                    appendButton(button5);
                     break;
                 case "SupporterDashboard":
                     role = "Ticket Supporter";

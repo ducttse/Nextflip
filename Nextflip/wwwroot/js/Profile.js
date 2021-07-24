@@ -107,14 +107,18 @@ loadAccount().then(() => {
                 case "MediaManagerManagement":
                     role = "Media Manager";
                     let button3 = `<a id="back_btn" href="/MediaManagerManagement/Index" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
-                            Media Manager
+                            Media Manage
                           </a>`;
+                    let button5 = `<a id="back_btn" href="/MediaManagerManagement/CategoryManager" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
+                          Category & type manage
+                        </a>`;
+                    appendButton(button5);
                     appendButton(button3);
                     break;
                 case "EditorDashboard":
                     role = "Media Editor";
                     let button4 = `<a href="/EditorDashboard/Index" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
-                                Media manager
+                                Media manage
                               </a>`;
                     appendButton(button4);
                     break;

@@ -63,8 +63,12 @@
 <script src="~/js/Slide-Bar.js"></script>
 <script>
     getRequestDetail("@ViewBag.MediaID");
+    let button2 = `<a id="back_btn" href="/MediaManagerManagement/CategoryManager" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
+                                    Category & type manage
+                                  </a>`;
+    appendButton(button2);
     let button = `<a id="back_btn" href="/MediaManagerManagement/Index" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
-                    Media Manager
+                    Media Manage
                   </a>`;
     appendButton(button);
 </script>

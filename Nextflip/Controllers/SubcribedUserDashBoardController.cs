@@ -36,5 +36,14 @@ namespace Nextflip.Controllers
         {
             return View();
         }
+        public IActionResult ViewNotification()
+        {
+            return View();
+        }
+        [HttpGet("SubcribedUserDashBoard/ViewNotificationDetail/{id}")]
+        public IActionResult ViewNotificationDetail(String id)
+        {
+            return View();
+        }
     }
 }

@@ -40,37 +40,37 @@
 }
 
 <div class="col-10 d-flex">
-    <div class="col-6">
-        <div>
-            <p class="h3 mb-1 mt-3 text-muted">Category</p>
-            <div class="d-flex justify-content-start">
-                <div class="btn btn-primary btn-sm mt-1" onclick="setAddModalContent('Create new category', 'Category name')">Create new category</div>
+        <div class="offset-2 col-4">
+            <div class="align-self-center">
+                <p class="h3 mb-1 mt-3 text-muted">Category</p>
+                <div class="d-flex justify-content-start">
+                    <div class="btn btn-primary btn-sm mt-1" onclick="setAddModalContent('Create new category', 'Category name')">Create new category</div>
+                </div>
+            </div>
+            <div class="w-75 align-self-center mt-2">
+                <table class="table table-striped">
+                    <thead class="w-100">
+                        <tr class="">
+                            <th scope="col" class="col-3 bg-light">#</th>
+                            <th scope="col" class="col-6 bg-light">Category</th>
+                            <th scope="col" class="col-3 bg-light">Edit</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dataContainer" style="height:60vh; overflow-y:auto; width: 100%;">
+                    </tbody>
+                </table>
             </div>
         </div>
-        <div class="w-50">
-            <table class="table">
-                <thead class="w-100">
-                    <tr>
-                        <th scope="col" class="col-3 bg-light">#</th>
-                        <th scope="col" class="col-6 bg-light">Category</th>
-                        <th scope="col" class="col-3 bg-light">Edit</th>
-                    </tr>
-                </thead>
-                <tbody id="dataContainer" style="height:60vh; overflow-y:auto; width: 100%;">
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div class="col-6">
+    <div class="col-4">
         <div>
             <p class="h3 mb-1 mt-3 text-muted">Media type</p>
             <div class="d-flex justify-content-start">
                 <div class="btn btn-primary btn-sm mt-1" onclick="setAddModalContent('Create new meida type', 'Media type')">Create new media type</div>
             </div>
         </div>
-        <div class="w-50">
+        <div class="w-75 mt-2">
             <table class="table">
-                <thead class="w-100">
+                <thead class="w-100 table-striped">
                     <tr>
                         <th scope="col" class="col-3 bg-light">#</th>
                         <th scope="col" class="col-6 bg-light">Media type</th>
@@ -132,7 +132,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" id="trigger_update" class="btn btn-primary">Save</button>
+                <button type="button" id="trigger_update" onclick="update(this)" class="btn btn-primary">Save</button>
             </div>
         </div>
     </div>
@@ -157,9 +157,13 @@
     <script>
         requestCategories();
         requestMediaTypes();
-        let button = `<a id="back_btn" href="/MediaManagerManagement/Index" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
-                                    Media Manager
+        let button2 = `<a id="back_btn" href="/MediaManagerManagement/CategoryManager" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
+                                    Category & type manage
                                   </a>`;
-        appendButton(button);
+        appendButton(button2);
+        let button1 = `<a id="back_btn" href="/MediaManagerManagement/Index" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
+                                    Media Manage
+                                  </a>`;
+        appendButton(button1)
     </script>
 }

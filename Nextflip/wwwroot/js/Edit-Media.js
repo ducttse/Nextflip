@@ -1,4 +1,5 @@
 ﻿let MediaObj;
+let isEdited = false;
 async function getRequestObjID(id) {
     let result = "";
     await fetch(`/api/MediaManagerManagement/GetDetailedMedia/${id}`)

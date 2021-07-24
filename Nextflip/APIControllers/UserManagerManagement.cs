@@ -520,6 +520,78 @@ namespace Nextflip.APIControllers
             }
             return new JsonResult(profile);
         }
+        public partial class SubscriptionRequest
+        {
+            public int Rows { get; set; } = 10;
+            public int Page { get; set; } = 1;
+            public string Status { get; set; } = "%%";
+            public string UserEmail { get; set; }
+        }
+
+        [Route("GetSubscriptions")]
+        [HttpPost]
+        public IActionResult GetSubscriptions([FromServices] IUserManagerManagementService userManagerManagementService,
+                                                [FromBody] SubscriptionRequest request)
+        {
+            IEnumerable<object> subscriptions = null;
+            try
+            {
+                 subscriptions = userManagerManagementService.GetSubscriptions(request.Rows, request.Page, request.Status);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetSubscriptions: " + ex.Message);
+                return new JsonResult("error"+ex.Message);
+            }
+            return new JsonResult(subscriptions);
+        }
+
+        [Route("GetSubscriptionsByUserEmail")]
+        [HttpPost]
+        public IActionResult GetSubscriptionsByUserEmail([FromServices] IUserManagerManagementService userManagerManagementService,
+                                                            [FromBody] SubscriptionRequest request)
+        {
+            IEnumerable<object> subscriptions = null;
+            try
+            {
+                if (request.UserEmail.Trim() != string.Empty)
+                {
+                    subscriptions = userManagerManagementService.GetSubscriptionsByUserEmail(request.UserEmail, request.Rows, request.Page, request.Status);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("GetSubscriptionsByUserEmail: " + ex.Message);
+                return new JsonResult("error" + ex.Message );
+            }
+            return new JsonResult(subscriptions);
+        }
+
+        [Route("RefundSubscription")]
+        [HttpPost]
+        public IActionResult RefundSubscription([FromServices] IUserManagerManagementService userManagerManagementService,
+                                                [FromBody] Subscription subscription)
+        {
+            try
+            {
+                var _subscription = userManagerManagementService.GetSubsciptionByUserID(subscription.UserID);
+                if (_subscription != null && subscription.SubscriptionID.Equals(_subscription.SubscriptionID))
+                {
+                    if (_subscription.StartDate > DateTime.Now)
+                    {
+                        bool result = userManagerManagementService.RefundSubscription(subscription.SubscriptionID);
+                        if (result == true) return new JsonResult(new { Message = "Success" });
+                    }
+                }
+                return new JsonResult(new { Message = "Fail"});
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("RefundSubscription: " + ex.Message);
+                return new JsonResult(new { Message = "Fail " +ex.Message } );
+            }
+        }
+
         /*        [Route("GetAllActiveAccounts")]
                 public JsonResult GetAllActiveAccounts([FromServices] IUserManagerManagementService userManagerManagementService)
                 {

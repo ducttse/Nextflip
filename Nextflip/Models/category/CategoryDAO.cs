@@ -153,14 +153,14 @@ namespace Nextflip.Models.category
             {
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
-                    string sql = "Insert into category (name) " +
-                                "Value(@categoryName)";
+                    string sql = "createCategory";
                     connection.Open();
                     using (var command = new MySqlCommand(sql, connection))
                     {
+                        command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("@categoryName", categoryName);
-
                         int result = command.ExecuteNonQuery();
+                        connection.Close();
                         if (result == 1) return true;
                     }
                 }

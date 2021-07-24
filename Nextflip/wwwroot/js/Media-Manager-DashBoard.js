@@ -75,6 +75,7 @@ function renderRequest(request, index) {
     <tr>
         <td>${index + 1}</td> 
         <td>${request.title}</td>
+        <td class="text-center">${request.countSeason}</td>
         <td class="text-center"><a class="text-decoration-none" href="/MediaManagerManagement/DetailPreview/${request.mediaID}">Preview</a></td>
     </tr>`;
   }

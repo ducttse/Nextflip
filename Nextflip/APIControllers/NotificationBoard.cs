@@ -64,7 +64,7 @@ namespace Nextflip.APIControllers
                 double totalPage = (double)count / (double)request.RowsOnPage;
                 var result = new
                 {
-                    TotalPage = Math.Ceiling(totalPage),
+                    TotalPage = (int)Math.Ceiling(totalPage),
                     Data = notifications
                 };
                 return (new JsonResult(result));
@@ -140,7 +140,8 @@ namespace Nextflip.APIControllers
                 {
                     message = "success"
                 };
-                return new JsonResult(message);
+                if (result) return new JsonResult(message);
+                else return new JsonResult(new {message = "fail" });
             }
             catch (Exception e)
             {

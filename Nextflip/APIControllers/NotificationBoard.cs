@@ -108,8 +108,10 @@ namespace Nextflip.APIControllers
 
 
         [Route("AddNotification")]
-        public IActionResult AddNotification([FromServices] INotificationService notificationService, [FromForm] Notification notificationAdding)
+        public IActionResult AddNotification([FromServices] INotificationService notificationService, [FromBody] Notification notificationAdding)
         {
+            if (notificationAdding.title.Trim().Length == 0) return new JsonResult(new { message = "fail. Title is required" });
+            if (notificationAdding.content.Trim().Length == 0) return new JsonResult(new { message = "fail. Content is required" });
             try 
             { 
                 bool result = notificationService.AddNotification(notificationAdding.title, notificationAdding.content);
@@ -131,10 +133,14 @@ namespace Nextflip.APIControllers
         }
 
         [Route("EditNotification")]
-        public IActionResult EditNotification([FromServices] INotificationService notificationService, [FromForm] Notification notification)
+        public IActionResult EditNotification([FromServices] INotificationService notificationService, [FromBody] Notification notification)
         {
             try
             {
+                if (notification.notificationID == 0) return new JsonResult(new { message = "fail. NotificationID is required" });
+                if (notification.title.Trim().Length == 0) notification.title = notificationService.GetDetailOfNotification(notification.notificationID).title;
+                if (notification.content.Trim().Length == 0) notification.content = notificationService.GetDetailOfNotification(notification.notificationID).content;
+                if (notification.status.Trim().Length == 0) notification.status = notificationService.GetDetailOfNotification(notification.notificationID).status;
                 bool result = notificationService.EditNotification(notification.notificationID , notification.title, notification.content, notification.status);
                 var message = new
                 {
@@ -154,11 +160,29 @@ namespace Nextflip.APIControllers
             }
         }
 
-        /*[Route("CountNotification")]
-        public IActionResult CountNotification([FromServices] INotificationService notificationService)
+        [HttpPost]
+        [Route("ViewNotifications")]
+        public IActionResult ViewNotifications([FromServices] INotificationService notificationService,
+            [FromBody] Request request)
         {
-            int count = notificationService.CountNotification();
-            return new JsonResult(count);
-        }*/
+            if (request.status.Trim().Length == 0) request.status = "All";
+            try
+            {
+                IEnumerable<Notification> notifications = notificationService.ViewAllNotifications(request.status, request.RowsOnPage, request.RequestPage);
+                int count = notificationService.CountNotification(request.status);
+                double totalPage = (double)count / (double)request.RowsOnPage;
+                var result = new
+                {
+                    TotalPage = (int)Math.Ceiling(totalPage),
+                    Data = notifications
+                };
+                return (new JsonResult(result));
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("ViewNotifications: " + e.Message);
+                return new JsonResult("An error occurred");
+            }
+        }
     }
 }

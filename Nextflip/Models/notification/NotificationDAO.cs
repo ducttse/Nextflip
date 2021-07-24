@@ -14,17 +14,24 @@ namespace Nextflip.Models.notification
         {
             int offset = ((int)(RequestPage - 1)) * RowsOnPage;
             var notifications = new List<Notification>();
+            string Sql;
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = "Select notificationID, title, status, publishedDate, content " +
+                if (status.Trim().ToLower() == "all") 
+                    Sql = "Select notificationID, title, status, publishedDate, content " +
+                                "From notification " +
+                                "Order By publishedDate DESC " +
+                                "Limit @offset, @limit";
+                else
+                Sql = "Select notificationID, title, status, publishedDate, content " +
                                 "From notification " +
                                 "Where status = @status " +
                                 "Order By publishedDate DESC " +
                                 "Limit @offset, @limit";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
-                    command.Parameters.AddWithValue("@status", status);
+                    if (status.Trim().ToLower() != "all") command.Parameters.AddWithValue("@status", status);
                     command.Parameters.AddWithValue("@offset", offset);
                     command.Parameters.AddWithValue("@limit", RowsOnPage);
                     using (var reader = command.ExecuteReader())

@@ -534,16 +534,21 @@ namespace Nextflip.APIControllers
                                                 [FromBody] SubscriptionRequest request)
         {
             IEnumerable<object> subscriptions = null;
+            int totalRows = 0;
             try
             {
                  subscriptions = userManagerManagementService.GetSubscriptions(request.Rows, request.Page, request.Status);
+                 totalRows = userManagerManagementService.CountTotalResult(request.UserEmail, request.Status);
             }
             catch (Exception ex)
             {
                 _logger.LogInformation("GetSubscriptions: " + ex.Message);
                 return new JsonResult("error"+ex.Message);
             }
-            return new JsonResult(subscriptions);
+            return new JsonResult(new {
+                                        TotalPage = (int)Math.Ceiling((decimal)totalRows / request.Rows),
+                                        Data = subscriptions
+                                    });
         }
 
         [Route("GetSubscriptionsByUserEmail")]
@@ -552,11 +557,13 @@ namespace Nextflip.APIControllers
                                                             [FromBody] SubscriptionRequest request)
         {
             IEnumerable<object> subscriptions = null;
+            int totalRows = 0;
             try
             {
                 if (request.UserEmail.Trim() != string.Empty)
                 {
                     subscriptions = userManagerManagementService.GetSubscriptionsByUserEmail(request.UserEmail, request.Rows, request.Page, request.Status);
+                    totalRows = userManagerManagementService.CountTotalResult(request.UserEmail, request.Status);
                 }
             }
             catch (Exception ex)
@@ -564,7 +571,10 @@ namespace Nextflip.APIControllers
                 _logger.LogInformation("GetSubscriptionsByUserEmail: " + ex.Message);
                 return new JsonResult("error" + ex.Message );
             }
-            return new JsonResult(subscriptions);
+            return new JsonResult(new{
+                                        TotalPage = (int)Math.Ceiling((decimal)totalRows/request.Rows),
+                                        Data = subscriptions
+                                    });
         }
 
         [Route("RefundSubscription")]

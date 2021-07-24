@@ -232,7 +232,7 @@ namespace Nextflip.Models.subscription
                     string Sql = "Select SubscriptionID, S.userID, A.userEmail, S.Status, StartDate, EndDate, issueDate, paymentPlanID " +
                                 "From subscription as S Inner Join account as A on S.userID = A.userID " +
                                 "Where A.userEmail Like @userEmail And S.status Like @status " +
-                                "Order By EndDate desc " +
+                                "Order By A.userEmail, EndDate desc " +
                                 "Limit @limit " +
                                 "Offset @offset";
                     using (var command = new MySqlCommand(Sql, connection))
@@ -267,6 +267,35 @@ namespace Nextflip.Models.subscription
             {
                 throw new Exception(ex.Message);
             }
+        }
+
+        public int CountTotalResult(string userEmail, string status)
+        {
+            int totalPage = 0;
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select Count(SubscriptionID) as totalPage " +
+                                "From subscription as S Inner Join account as A on S.userID = A.userID " +
+                                "Where A.userEmail Like @userEmail And S.status Like @status " ;
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userEmail", $"%{userEmail}%");
+                        command.Parameters.AddWithValue("@status", status);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read()) totalPage = reader.GetInt32("totalPage");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return totalPage;
         }
         public bool RefundSubscription(string subscriptionID)
         {

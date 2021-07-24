@@ -622,5 +622,39 @@ namespace Nextflip.APIControllers
                     }
                 }
         */
+        [Route("UpdatePaymentPlan")]
+        [HttpPost]
+        public IActionResult UpdatePaymentPlan(
+            [FromServices] IUserManagerManagementService userManagerManagementService,
+            [FromBody] PaymentPlanUpdateForm updateForm)
+        {
+            try
+            {
+                if (updateForm.Duration == 30 || updateForm.Duration == 90 || updateForm.Duration == 180)
+                {
+                    if (updateForm.NewPrice <= 0)
+                    {
+                        return new JsonResult("Invalid price");
+                    }
+                    else
+                    {
+                        userManagerManagementService.UpdatePaymentPlan(updateForm.Duration, updateForm.NewPrice);
+                        return new JsonResult("Ok");
+                    }
+
+                }
+                else return new JsonResult("Invalid duration");
+            }
+            catch (Exception exception)
+            {
+                _logger.LogInformation("Update Payment Plan: " + exception.Message);
+                return new JsonResult("Error occur");
+            }
+        }
+        public class PaymentPlanUpdateForm
+        {
+            public int Duration { get; set; }
+            public decimal NewPrice { get; set; }
+        }
     }
 }

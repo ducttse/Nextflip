@@ -8,5 +8,6 @@ namespace Nextflip.Models.paymentPlan
     public interface IPaymentPlanDAO
     {
         IList<PaymentPlan> GetPaymentPlan();
+        void UpdatePaymentPlan(int updateFormDuration, decimal updateFormNewPrice);
     }
 }

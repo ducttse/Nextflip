@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Nextflip.Models.account;
+using Nextflip.Models.paymentPlan;
 using Nextflip.Models.subscription;
 using Nextflip.Services.Interfaces;
 
@@ -12,11 +13,12 @@ namespace Nextflip.Services.Implementations
     {
         private IAccountDAO _accountDao;
         private ISubscriptionDAO _subscription;
-        public UserManagerManagementService(IAccountDAO accountDao, ISubscriptionDAO subscription)
+        private IPaymentPlanDAO _paymentPlan;
+        public UserManagerManagementService(IAccountDAO accountDao, ISubscriptionDAO subscription, IPaymentPlanDAO paymentPlan)
         {
             _accountDao = accountDao;
             _subscription = subscription;
-
+            _paymentPlan = paymentPlan;
         }
         public IEnumerable<Account> GetAllAccounts() => _accountDao.GetAllAccounts();
         public IEnumerable<Account> GetAccountListByEmailFilterRoleStatus(string searchValue, string roleName, string status, int RowsOnPage, int RequestPage) 
@@ -55,5 +57,9 @@ namespace Nextflip.Services.Implementations
         public IEnumerable<object> GetSubscriptions(int rows, int page, string status) => _subscription.GetSubscriptions(rows,page,status);
         public IEnumerable<object> GetSubscriptionsByUserEmail(string userEmail, int rows, int page, string status) => _subscription.GetSubscriptionsByUserEmail(userEmail,rows,page,status);
         public bool RefundSubscription(string subscriptionID) => _subscription.RefundSubscription(subscriptionID);
+        public void UpdatePaymentPlan(int updateFormDuration, decimal updateFormNewPrice)
+        {
+            _paymentPlan.UpdatePaymentPlan(updateFormDuration, updateFormNewPrice);
+        }
     }
 }

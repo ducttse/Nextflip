@@ -38,5 +38,6 @@ namespace Nextflip.Services.Interfaces
         IEnumerable<object> GetSubscriptionsByUserEmail(string userEmail, int rows, int page, string status);
         bool RefundSubscription(string subscriptionID);
 
+        void UpdatePaymentPlan(int updateFormDuration, decimal updateFormNewPrice);
     }
 }

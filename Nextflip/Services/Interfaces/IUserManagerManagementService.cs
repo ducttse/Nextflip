@@ -36,6 +36,7 @@ namespace Nextflip.Services.Interfaces
 
         IEnumerable<object> GetSubscriptions(int rows, int page, string status);
         IEnumerable<object> GetSubscriptionsByUserEmail(string userEmail, int rows, int page, string status);
+        int CountTotalResult(string userEmail, string status);
         bool RefundSubscription(string subscriptionID);
 
     }

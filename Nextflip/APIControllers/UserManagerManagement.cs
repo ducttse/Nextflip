@@ -575,9 +575,9 @@ namespace Nextflip.APIControllers
             try
             {
                 var _subscription = userManagerManagementService.GetSubsciptionByUserID(subscription.UserID);
-                if (_subscription != null)
+                if (_subscription != null && subscription.SubscriptionID.Equals(_subscription.SubscriptionID))
                 {
-                    if (subscription.StartDate > DateTime.Now && subscription.EndDate == _subscription.EndDate)
+                    if (_subscription.StartDate > DateTime.Now)
                     {
                         bool result = userManagerManagementService.RefundSubscription(subscription.SubscriptionID);
                         if (result == true) return new JsonResult(new { Message = "Success" });

@@ -33,5 +33,6 @@ namespace Nextflip.Services.Interfaces
         bool UpdateStaffInfo(Account account);
         Subscription GetSubsciptionByUserID(string userID);
         bool IsSubscribedUser(string userID);
+        void UpdatePaymentPlan(int updateFormDuration, decimal updateFormNewPrice);
     }
 }

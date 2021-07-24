@@ -48,5 +48,31 @@ namespace Nextflip.Models.paymentPlan
                 throw new Exception(ex.Message);
             }
         }
+
+        public void UpdatePaymentPlan(int duration, decimal newPrice)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = @"INSERT INTO paymentplan(duration, price) VALUES(@duration, @price)";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@duration", duration);
+                        command.Parameters.AddWithValue("@price", newPrice);
+                        int result = command.ExecuteNonQuery();
+                        if (result <= 0)
+                        {
+                            throw new Exception("Update seems failed");
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

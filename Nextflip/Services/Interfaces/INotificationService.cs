@@ -16,5 +16,7 @@ namespace Nextflip.Services.Interfaces
         bool EditNotification(int notificationID, string title, string content, string status);
         int CountNotification(string status);
         int CountAvailableNotification();
+        IEnumerable<Notification> SearchNotifications(string searchValue, string status, int RowsOnPage, int RequestPage);
+        int CountSearchNotification(string searchValue, string status);
     }
 }

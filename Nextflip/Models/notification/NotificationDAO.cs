@@ -230,15 +230,100 @@ namespace Nextflip.Models.notification
         public int CountNotification(string status)
         {
             int count = 0;
+            string Sql;
             using (var connection = new MySqlConnection(DbUtil.ConnectionString))
             {
                 connection.Open();
-                string Sql = "Select COUNT(notificationID) " +
+                if (status.Trim().ToLower() == "all")
+                    Sql = "Select COUNT(notificationID) " +
+                                "From notification ";
+                else
+                    Sql = "Select COUNT(notificationID) " +
                                 "From notification " +
                                 "Where status = @status";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
-                    command.Parameters.AddWithValue("@status", status);
+                    if (status.Trim().ToLower() != "all") command.Parameters.AddWithValue("@status", status);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            count = reader.GetInt32(0);
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return count;
+        }
+
+        public IEnumerable<Notification> SearchNotifications(string searchValue, string status, int RowsOnPage, int RequestPage)
+        {
+            int offset = ((int)(RequestPage - 1)) * RowsOnPage;
+            var notifications = new List<Notification>();
+            string Sql;
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            {
+                connection.Open();
+                if (status.Trim().ToLower() == "all")
+                    Sql = "Select notificationID, title, status, publishedDate, content " +
+                                "From notification " +
+                                "Where MATCH (title)  AGAINST (@searchValue in natural language mode) " +
+                                "Order By publishedDate DESC " +
+                                "Limit @offset, @limit";
+                else
+                    Sql = "Select notificationID, title, status, publishedDate, content " +
+                                    "From notification " +
+                                    "Where MATCH (title)  AGAINST (@searchValue in natural language mode) " +
+                                    "and status = @status " +
+                                    "Order By publishedDate DESC " +
+                                    "Limit @offset, @limit";
+                using (var command = new MySqlCommand(Sql, connection))
+                {
+                    command.Parameters.AddWithValue("@searchValue", searchValue);
+                    if (status.Trim().ToLower() != "all") command.Parameters.AddWithValue("@status", status);
+                    command.Parameters.AddWithValue("@offset", offset);
+                    command.Parameters.AddWithValue("@limit", RowsOnPage);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            notifications.Add(new Notification
+                            {
+                                notificationID = reader.GetInt32(0),
+                                title = reader.GetString(1),
+                                status = reader.GetString(2),
+                                publishedDate = reader.GetDateTime(3),
+                                content = reader.GetString(4)
+                            });
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return notifications;
+        }
+
+        public int CountSearchNotification(string searchValue, string status)
+        {
+            int count = 0;
+            string Sql;
+            using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+            {
+                connection.Open();
+                if (status.Trim().ToLower() == "all")
+                    Sql = "Select COUNT(notificationID) " +
+                                "From notification " +
+                                "Where MATCH (title)  AGAINST (@searchValue in natural language mode) ";
+                else
+                    Sql = "Select COUNT(notificationID) " +
+                                "From notification " +
+                                "Where MATCH (title)  AGAINST (@searchValue in natural language mode) " +
+                                "and status = @status";
+                using (var command = new MySqlCommand(Sql, connection))
+                {
+                    command.Parameters.AddWithValue("@searchValue", searchValue);
+                    if (status.Trim().ToLower() != "all") command.Parameters.AddWithValue("@status", status);
                     using (var reader = command.ExecuteReader())
                     {
                         if (reader.Read())

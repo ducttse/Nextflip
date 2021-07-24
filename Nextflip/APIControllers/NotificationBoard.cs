@@ -48,6 +48,7 @@ namespace Nextflip.APIControllers
         public class Request
         {
             public string status { get; set; }
+            public string SearchValue { get; set; }
             public int RowsOnPage { get; set; }
             public int RequestPage { get; set; }
         } 
@@ -165,6 +166,7 @@ namespace Nextflip.APIControllers
         public IActionResult ViewNotifications([FromServices] INotificationService notificationService,
             [FromBody] Request request)
         {
+            if (request.SearchValue.Trim() == "") return new JsonResult(new { message = "Empty searchValue"});
             if (request.status.Trim().Length == 0) request.status = "All";
             try
             {
@@ -182,6 +184,31 @@ namespace Nextflip.APIControllers
             {
                 _logger.LogInformation("ViewNotifications: " + e.Message);
                 return new JsonResult("An error occurred");
+            }
+        }
+
+        [HttpPost]
+        [Route("SearchNotifications")]
+        public IActionResult SearchNotifications([FromServices] INotificationService notificationService,
+            [FromBody] Request request)
+        {
+            if (request.status.Trim().Length == 0) request.status = "All";
+            try
+            {
+                IEnumerable<Notification> notifications = notificationService.SearchNotifications(request.SearchValue, request.status, request.RowsOnPage, request.RequestPage);
+                int count = notificationService.CountSearchNotification(request.SearchValue, request.status);
+                double totalPage = (double)count / (double)request.RowsOnPage;
+                var result = new
+                {
+                    TotalPage = (int)Math.Ceiling(totalPage),
+                    Data = notifications
+                };
+                return (new JsonResult(result));
+            }
+            catch (Exception e)
+            {
+                _logger.LogInformation("SearchNotifications: " + e.Message);
+                return new JsonResult("fail");
             }
         }
     }

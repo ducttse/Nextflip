@@ -19,5 +19,8 @@ namespace Nextflip.Services.Implementations
         public bool EditNotification(int notificationID, string title, string content, string status) => _notificationDao.EditNotification(notificationID,title,content,status);
         public int CountAvailableNotification() => _notificationDao.CountAvailableNotification();
         public int CountNotification(string status) => _notificationDao.CountNotification(status);
+        public IEnumerable<Notification> SearchNotifications(string searchValue, string status, int RowsOnPage, int RequestPage) =>
+            _notificationDao.SearchNotifications(searchValue, status, RowsOnPage, RequestPage);
+        public int CountSearchNotification(string searchValue, string status) => _notificationDao.CountSearchNotification(searchValue, status);
     }
 }

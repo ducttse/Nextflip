@@ -15,5 +15,7 @@ namespace Nextflip.Models.notification
         bool EditNotification(int notificationID, string title, string content, string status);
         int CountAvailableNotification();
         int CountNotification(string status);
+        IEnumerable<Notification> SearchNotifications(string searchValue, string status, int RowsOnPage, int RequestPage);
+        int CountSearchNotification(string searchValue, string status);
     }
 }

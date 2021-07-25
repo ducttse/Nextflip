@@ -166,7 +166,6 @@ namespace Nextflip.APIControllers
         public IActionResult ViewNotifications([FromServices] INotificationService notificationService,
             [FromBody] Request request)
         {
-            if (request.SearchValue.Trim() == "") return new JsonResult(new { message = "Empty searchValue"});
             if (request.status.Trim().Length == 0) request.status = "All";
             try
             {
@@ -192,6 +191,7 @@ namespace Nextflip.APIControllers
         public IActionResult SearchNotifications([FromServices] INotificationService notificationService,
             [FromBody] Request request)
         {
+            if (request.SearchValue.Trim() == "") return new JsonResult(new { message = "Empty searchValue" });
             if (request.status.Trim().Length == 0) request.status = "All";
             try
             {

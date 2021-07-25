@@ -68,7 +68,7 @@ namespace Nextflip.APIControllers
                 //    "<p><strong>Sincerly</strong></p> " +
                 //    "<p><strong>Nextflip Company</strong></p>";
                 Debug.WriteLine(userID);
-                string body = "Hi " + "Phan Ngoc Hoang Long" + "\n" +
+                string body = "Hi " + form.Fullname + "\n" +
                         "Your account is ready. Please click the link below to activate your account.\n" +
                         "https://localhost:44341/Account/ConfirmEmail/" + userID + "/" + token + "\n" +
                         "Thank you for using Nextflip.\n" +

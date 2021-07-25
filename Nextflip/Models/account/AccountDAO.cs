@@ -997,7 +997,7 @@ namespace Nextflip.Models.account
             return null;
         }
 
-        public string ConfirmEmail(string userID, string token)
+        public Account ConfirmEmail(string userID, string token)
         {
             try
             {
@@ -1011,12 +1011,20 @@ namespace Nextflip.Models.account
                         command.Parameters.AddWithValue("token_Input", token);
                         command.Parameters.Add(new MySqlParameter("role_Output", MySqlDbType.String));
                         command.Parameters["role_Output"].Direction = ParameterDirection.Output;
+                        command.Parameters.Add(new MySqlParameter("fullname_Output", MySqlDbType.String));
+                        command.Parameters["fullname_Output"].Direction = ParameterDirection.Output;
                         command.CommandType = CommandType.StoredProcedure;
 
                         command.ExecuteNonQuery();
                         connection.Close();
-                        if (command.Parameters["role_Output"] == null) return null;
-                        return (string)command.Parameters["role_Output"].Value;
+                        if (command.Parameters["role_Output"].Value == null) return null;
+                        if (command.Parameters["fullname_Output"].Value == null) return null;
+                        return new Account
+                        {
+                            userID = userID,
+                            roleName = (string)command.Parameters["role_Output"].Value,
+                            fullname = (string)command.Parameters["fullname_Output"].Value
+                        };
                     }
                 }
             }
@@ -1025,7 +1033,6 @@ namespace Nextflip.Models.account
                 throw new Exception(ex.Message);
             }
         }
-
         public string ForgotPassword(string userEmail, string token)
         {
             try

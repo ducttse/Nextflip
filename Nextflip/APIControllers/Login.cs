@@ -91,20 +91,65 @@ namespace Nextflip.APIControllers
 
         [Route("ForgotPassword")]
         [HttpPost]
-        public IActionResult ForgotPassword([FromServices] IAccountService accountService, [FromBody] LoginForm form)
+        public async Task<IActionResult> ForgotPassword([FromServices] IAccountService accountService, [FromServices] ISendMailService sendMailService, [FromBody] LoginForm form)
         {
             try
             {
                 bool isValid = accountService.IsExistedEmail(form.Email);
                 if (!isValid) return new JsonResult(new { Message = "Not existed email !" });
-                string token = new RandomUtil().GetRandomString(256);
+                string token = new RandomUtil().GetRandomString(20);
                 string userID = accountService.ForgotPassword(form.Email, token);
                 if(userID == null) return new JsonResult(new { Message = "An error occurred" });
+                string body = "Hi \n" +
+                        "You have requested to recover your account.Please click the link below to verify your identity.\n" +
+                        "Your recovery code: " + token + "\n" +
+                        "If it isn't you, please ignore this email.\n" +
+                        "Thank you for using Nextflip.\n" +
+                        "Sincerly\n" +
+                        "Nextflip Company";
+                await sendMailService.SendEmailAsync(form.Email.ToLower(), "Nextflip Account Activation", body);
                 return new JsonResult(new { Message = "Success" });
             }
             catch(Exception ex)
             {
                 _logger.LogInformation("Login/ForgotPassword: " + ex.Message);
+                return new JsonResult(new { Message = ex.Message });
+            }
+        }
+
+        [Route("VerifyAccountV1")]
+        [HttpPost]
+        public IActionResult VerifyAccountV1([FromServices] IAccountService accountService, [FromBody] LoginForm form)
+        {
+            try
+            {
+                if (form.UserID == null || form.Token == null) return new JsonResult(new { Message = "Invalid authentication factor" });
+                Account account = accountService.ConfirmEmail(form.UserID, form.Token);
+                if(account == null) return new JsonResult(new { Message = "Incorrect Access Code" });
+                return new JsonResult(new { Message = "Success" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("Login/VerifyAccount: " + ex.Message);
+                return new JsonResult(new { Message = ex.Message });
+            }
+        }
+
+        [Route("VerifyAccountV2")]
+        [HttpPost]
+        public IActionResult VerifyAccountV2([FromServices] IAccountService accountService, [FromBody] LoginForm form)
+        {
+            try
+            {
+                if (form.UserID == null || form.Token == null) return new JsonResult(new { Message = "Invalid authentication factor" });
+                Account account = accountService.ConfirmEmail(form.UserID, form.Token);
+                if (account == null) return new JsonResult(new { Message = "Incorrect Access Token" });
+                var x = SignIn(account);
+                return new JsonResult(new { Message = "Success", URL = "/Profle/Index" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("Login/VerifyAccountV2: " + ex.Message);
                 return new JsonResult(new { Message = ex.Message });
             }
         }
@@ -137,7 +182,9 @@ namespace Nextflip.APIControllers
 
     public partial class LoginForm
     {
+        public string UserID { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public string Token { get; set; }
     }
 }

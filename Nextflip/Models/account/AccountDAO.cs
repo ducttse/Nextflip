@@ -852,7 +852,7 @@ namespace Nextflip.Models.account
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.Add(new MySqlParameter("userID_Output", DbType.String));
+                        command.Parameters.Add(new MySqlParameter("userID_Output", MySqlDbType.String));
                         command.Parameters["userID_Output"].Direction = ParameterDirection.Output;
 
                         command.Parameters.AddWithValue("userEmail_Input", userEmail);
@@ -1009,13 +1009,14 @@ namespace Nextflip.Models.account
                     {
                         command.Parameters.AddWithValue("userID_Input", userID);
                         command.Parameters.AddWithValue("token_Input", token);
-                        command.Parameters.Add(new MySqlParameter("role", MySqlDbType.String));
-                        command.Parameters["role"].Direction = ParameterDirection.Output;
+                        command.Parameters.Add(new MySqlParameter("role_Output", MySqlDbType.String));
+                        command.Parameters["role_Output"].Direction = ParameterDirection.Output;
                         command.CommandType = CommandType.StoredProcedure;
 
                         command.ExecuteNonQuery();
                         connection.Close();
-                        return (string)command.Parameters["role"].Value;
+                        if (command.Parameters["role_Output"] == null) return null;
+                        return (string)command.Parameters["role_Output"].Value;
                     }
                 }
             }

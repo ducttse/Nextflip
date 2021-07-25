@@ -61,7 +61,6 @@ namespace Nextflip
             services.AddTransient<INotificationDAO, NotificationDAO>();
             services.AddTransient<IFilmTypeDAO, FilmTypeDAO>();
 
-
             services.AddTransient<IMediaService, MediaService>();
             services.AddTransient<INotificationService, NotificationService>();
             services.AddTransient<IRoleDAO, RoleDAO>();
@@ -188,7 +187,7 @@ namespace Nextflip
                         Subject = "Kiểm tra thử",
                         Body = "<p>Hi " + "Phan Ngoc Hoang Long" + "</p>" +
                         "<p> Your account is ready.Please click the link below to activate your account.<p> "
-                        
+
                         //"<p>Thank you for using nextflip.</p> " +
                         //"<p><strong>Sincerly</strong></p> " +
                         //"<p><strong>Nextflip Company</strong></p>"

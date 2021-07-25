@@ -60,9 +60,9 @@ namespace Nextflip.APIControllers
                 if (!isValid) return new JsonResult(error);
                 string token = new RandomUtil().GetRandomString(256);
                 string userID = accountService.RegisterAccount(form.UserEmail.ToLower(), form.Password, form.Fullname, date, defaultPictureURL, token);
-                string body = "<p>Hi + " + form.Fullname +" </p> " +
+                string body = "<p>Hi + " + form.Fullname + " </p> " +
                     "<p> Your account is ready.Please click the link below to activate your account.<p> " +
-                    "<a href=\"localhost: 44341 / Account / ConfirmEmail /" + userID + "/" + token  +"/>Verify your account.</a><br/> " +
+                    "<a href=\"localhost: 44341 / Account / ConfirmEmail /" + userID + "/" + token  +"\"/>Verify your account.</a><br/> " +
                     "<p>Thank you for using nextflip.</p> " +
                     "<p><strong>Sincerly</strong></p> " +
                     "<p><strong>Nextflip Company</strong></p>";

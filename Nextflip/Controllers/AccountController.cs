@@ -22,6 +22,7 @@ namespace Nextflip.Controllers
         }
 
         [Route("ConfirmEmail/{userID}/{token}")]
+        [HttpGet]
         public IActionResult ConfirmEmail([FromServices] AccountService accountService, string userID, string token)
         {
             if (userID == null || token == null) return NotFound();
@@ -30,5 +31,7 @@ namespace Nextflip.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult ForgotPassword([FromServices] AccountService accountService, string userID, string token) => View();
     }
 }

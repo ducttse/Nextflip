@@ -184,12 +184,17 @@ namespace Nextflip
 
                     MailContent content = new MailContent
                     {
-                        To = "technical.nextflipcompany@gmail.com",
+                        To = "longpnhse150499@fpt.edu.vn",
                         Subject = "Kiểm tra thử",
-                        Body = "Test"
+                        Body = "<p>Hi " + "Phan Ngoc Hoang Long" + "</p>" +
+                        "<p> Your account is ready.Please click the link below to activate your account.<p> "
+                        
+                        //"<p>Thank you for using nextflip.</p> " +
+                        //"<p><strong>Sincerly</strong></p> " +
+                        //"<p><strong>Nextflip Company</strong></p>"
                     };
 
-                    await sendmailservice.SendMail(content);
+                    await sendmailservice.SendMailHTML(content);
                     await context.Response.WriteAsync("Send mail");
                 });
 

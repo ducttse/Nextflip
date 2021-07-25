@@ -89,6 +89,26 @@ namespace Nextflip.APIControllers
             }
         }
 
+        [Route("ForgotPassword")]
+        [HttpPost]
+        public IActionResult ForgotPassword([FromServices] IAccountService accountService, [FromBody] LoginForm form)
+        {
+            try
+            {
+                bool isValid = accountService.IsExistedEmail(form.Email);
+                if (!isValid) return new JsonResult(new { Message = "Not existed email !" });
+                string token = new RandomUtil().GetRandomString(256);
+                string userID = accountService.ForgotPassword(form.Email, token);
+                if(userID == null) return new JsonResult(new { Message = "An error occurred" });
+                return new JsonResult(new { Message = "Success" });
+            }
+            catch(Exception ex)
+            {
+                _logger.LogInformation("Login/ForgotPassword: " + ex.Message);
+                return new JsonResult(new { Message = ex.Message });
+            }
+        }
+
         [Route("LoginByGmail")]
         [HttpPost]
         public async Task<IActionResult> LoginByGmail([FromServices] IAccountService accountService, [FromBody] LoginForm form)
@@ -105,12 +125,12 @@ namespace Nextflip.APIControllers
                 else if (account.roleName.Equals("user manager")) url = "/UserManagerManagement/Index";
                 else if (account.roleName.Equals("media manager")) url = "/MediaManagerManagement/Index";
                 var x = await SignIn(account);
-                return new JsonResult(new { Message = true , URL = url, UserID = account.userID});
+                return new JsonResult(new { Message = true, URL = url, UserID = account.userID });
             }
             catch (Exception ex)
             {
                 _logger.LogInformation("Login/LoginByGmail: " + ex.Message);
-                return new JsonResult(new { Message = ex.Message});
+                return new JsonResult(new { Message = ex.Message });
             }
         }
     }

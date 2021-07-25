@@ -16,5 +16,6 @@ namespace Nextflip.Services.Interfaces
         public Account CheckGoogleLogin(string googleID);
         public Account GetProfile(string userID);
         public string ConfirmEmail(string userID, string token);
+        public string ForgotPassword(string userEmail, string token);
     }
 }

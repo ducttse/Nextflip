@@ -36,6 +36,7 @@ namespace Nextflip.Models.account
         public bool ChangePassword(string userID, string password);
         public Account CheckGoogleLogin(string googleID);
         public string ConfirmEmail(string userID, string token);
+        public string ForgotPassword(string userEmail, string token);
     }
 
 }

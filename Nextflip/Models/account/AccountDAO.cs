@@ -797,7 +797,7 @@ namespace Nextflip.Models.account
                                     userEmail = reader.GetString("userEmail"),
                                     dateOfBirth = reader.GetDateTime("dateOfBirth"),
                                     roleName = reader.GetString("roleName"),
-                                    pictureURL =  reader.IsDBNull(reader.GetOrdinal("pictureURL")) ? null : reader.GetString("pictureURL")
+                                    pictureURL = reader.IsDBNull(reader.GetOrdinal("pictureURL")) ? null : reader.GetString("pictureURL")
                                 };
                             }
                         }
@@ -865,7 +865,7 @@ namespace Nextflip.Models.account
 
                         int result = command.ExecuteNonQuery();
                         connection.Close();
-                        return (string)command.Parameters["userID_Output"].Value;   
+                        return (string)command.Parameters["userID_Output"].Value;
                     }
                 }
             }
@@ -1009,13 +1009,45 @@ namespace Nextflip.Models.account
                     {
                         command.Parameters.AddWithValue("userID_Input", userID);
                         command.Parameters.AddWithValue("token_Input", token);
-                        command.Parameters.Add(new MySqlParameter("role", DbType.String));
+                        command.Parameters.Add(new MySqlParameter("role", MySqlDbType.String));
                         command.Parameters["role"].Direction = ParameterDirection.Output;
                         command.CommandType = CommandType.StoredProcedure;
 
                         command.ExecuteNonQuery();
                         connection.Close();
                         return (string)command.Parameters["role"].Value;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public string ForgotPassword(string userEmail, string token)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "forgotPassword";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.Add(new MySqlParameter("userID_Output", MySqlDbType.String));
+                        command.Parameters["userID_Output"].Direction = ParameterDirection.Output;
+                        Debug.WriteLine("userID");
+                        command.Parameters.AddWithValue("userEmail_Input", userEmail);
+                        Debug.WriteLine(userEmail);
+                        command.Parameters.AddWithValue("token_Input", token);
+                        Debug.WriteLine(token);
+
+                        command.CommandType = CommandType.StoredProcedure;
+                        
+                        command.ExecuteNonQuery();
+                        connection.Close();
+                        return (string)command.Parameters["userID_Output"].Value;
                     }
                 }
             }

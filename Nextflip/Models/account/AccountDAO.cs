@@ -837,32 +837,35 @@ namespace Nextflip.Models.account
                 throw new Exception(ex.Message);
             }
         }
-        public bool RegisterAnAccount(string userEmail, string password, string fullname, DateTime dateOfBirth, string pictureURL)
+        public string RegisterAnAccount(string userEmail, string password, string fullname, DateTime dateOfBirth, string pictureURL, string token)
         {
             string roleName = "subscribed user";
-            string status = "Active";
-            if (pictureURL == null) pictureURL = "";
+            if (pictureURL == null) pictureURL = "https://storage.googleapis.com/next-flip/User%20Profile%20Image/Default";
             try
             {
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
-                    Random random = new Random();
                     connection.Open();
-                    string Sql = "INSERT INTO account(userID, userEmail, roleName, hashedPassword, fullname, dateOfBirth , status, pictureURL) " +
-                                   "VALUES( @userID, @userEmail, @roleName, @hashedPassword, @fullname, @dateOfBirth, @status, @pictureURL); ";
+                    string Sql = "registerAccount";
                     Debug.WriteLine(Sql);
+                    Debug.WriteLine(fullname);
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        command.Parameters.AddWithValue("@userID", random.Next(0, 1000000000));
-                        command.Parameters.AddWithValue("@userEmail", userEmail);
-                        command.Parameters.AddWithValue("@roleName", roleName);
-                        command.Parameters.AddWithValue("@hashedPassword", password);
-                        command.Parameters.AddWithValue("@fullname", fullname);
-                        command.Parameters.AddWithValue("@dateOfBirth", dateOfBirth);
-                        command.Parameters.AddWithValue("@status", status);
-                        command.Parameters.AddWithValue("@pictureURL", pictureURL);
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.Add(new MySqlParameter("userID_Output", DbType.String));
+                        command.Parameters["userID_Output"].Direction = ParameterDirection.Output;
+
+                        command.Parameters.AddWithValue("userEmail_Input", userEmail);
+                        command.Parameters.AddWithValue("roleName_Input", roleName);
+                        command.Parameters.AddWithValue("password_Input", password);
+                        command.Parameters.AddWithValue("fullname_Input", fullname);
+                        command.Parameters.AddWithValue("dateOfBirth_Input", dateOfBirth);
+                        command.Parameters.AddWithValue("pictureURL_Input", pictureURL);
+                        command.Parameters.AddWithValue("token_Input", token);
+
                         int result = command.ExecuteNonQuery();
-                        if (result > 0) return true;
+                        connection.Close();
+                        return (string)command.Parameters["userID_Output"].Value;   
                     }
                 }
             }
@@ -870,7 +873,6 @@ namespace Nextflip.Models.account
             {
                 throw new Exception(ex.Message);
             }
-            return false;
         }
         public bool ChangeProfile(string userID, string fullname, DateTime dateOfBirth, string pictureURL)
         {
@@ -993,6 +995,34 @@ namespace Nextflip.Models.account
                 throw new Exception(ex.Message);
             }
             return null;
+        }
+
+        public string ConfirmEmail(string userID, string token)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "confirmEmail";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("userID_Input", userID);
+                        command.Parameters.AddWithValue("token_Input", token);
+                        command.Parameters.Add(new MySqlParameter("role", DbType.String));
+                        command.Parameters["role"].Direction = ParameterDirection.Output;
+                        command.CommandType = CommandType.StoredProcedure;
+
+                        command.ExecuteNonQuery();
+                        connection.Close();
+                        return (string)command.Parameters["role"].Value;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

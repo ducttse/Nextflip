@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+
 namespace Nextflip.APIControllers
 {
     [Route("api/[controller]")]
@@ -22,7 +23,7 @@ namespace Nextflip.APIControllers
 
         [Route("Register")]
         [HttpPost]
-        public IActionResult Register([FromServices] IAccountService accountService, [FromBody]AccountRegisterForm form)
+        public async Task<IActionResult>Register([FromServices] IAccountService accountService, [FromServices] ISendMailService sendMailService,[FromBody]AccountRegisterForm form)
         {
             string defaultPictureURL = "https://storage.googleapis.com/next-flip/User%20Profile%20Image/Default";
             bool isValid = true;
@@ -57,9 +58,19 @@ namespace Nextflip.APIControllers
                     error.DateOfBirthError = "Date of birth is Invalid";
                 }
                 if (!isValid) return new JsonResult(error);
-                bool result = accountService.RegisterAccount(form.UserEmail.ToLower(), form.Password, form.Fullname.Trim(), date, defaultPictureURL);
-                if (!result) return new JsonResult(new { Message = "An Error Occurred ! Please try again" });
-                return new JsonResult(new { Message = "Success" });
+                string token = new RandomUtil().GetRandomString(256);
+                string userID = accountService.RegisterAccount(form.UserEmail.ToLower(), form.Password, form.Fullname, date, defaultPictureURL, token);
+                string body = "<p>Hi + " + form.Fullname +" </p> " +
+                    "<p> Your account is ready.Please click the link below to activate your account.<p> " +
+                    "<a href=\"localhost: 44341 / Account / ConfirmEmail /" + userID + "/" + token  +"/>Verify your account.</a><br/> " +
+                    "<p>Thank you for using nextflip.</p> " +
+                    "<p><strong>Sincerly</strong></p> " +
+                    "<p><strong>Nextflip Company</strong></p>";
+
+                await sendMailService.SendEmailHTMLAsync(form.UserEmail.ToLower(), "Nextflip Account Activation", body);
+                if (userID == null) return new JsonResult(new { Message = "An Error Occurred ! Please try again" });
+
+                return new JsonResult(new { Message = "Success" }); 
             }
             catch(Exception ex)
             {

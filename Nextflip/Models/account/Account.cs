@@ -19,6 +19,6 @@ namespace Nextflip.Models.account
         public string status { get; set; }
         public string pictureURL { get; set; }
         public string note { get; set; }
-
+        public string token { get; set; }
     }
 }

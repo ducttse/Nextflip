@@ -114,6 +114,7 @@ namespace Nextflip.APIControllers
             }
         }
     }
+
     public partial class LoginForm
     {
         public string Email { get; set; }

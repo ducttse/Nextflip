@@ -522,9 +522,9 @@ namespace Nextflip.APIControllers
         }
         public partial class SubscriptionRequest
         {
-            public int Rows { get; set; } = 10;
-            public int Page { get; set; } = 1;
-            public string Status { get; set; } = "%%";
+            public int Rows { get; set; } 
+            public int Page { get; set; } 
+            public string Status { get; set; } 
             public string UserEmail { get; set; }
         }
 
@@ -535,10 +535,11 @@ namespace Nextflip.APIControllers
         {
             IEnumerable<object> subscriptions = null;
             int totalRows = 0;
+            string status = request.Status.Equals("All") ? "%%" : request.Status;
             try
             {
-                 subscriptions = userManagerManagementService.GetSubscriptions(request.Rows, request.Page, request.Status);
-                 totalRows = userManagerManagementService.CountTotalResult(request.UserEmail, request.Status);
+                 subscriptions = userManagerManagementService.GetSubscriptions(request.Rows, request.Page, status);
+                 totalRows = userManagerManagementService.CountTotalResult(request.UserEmail, status);
             }
             catch (Exception ex)
             {
@@ -558,12 +559,13 @@ namespace Nextflip.APIControllers
         {
             IEnumerable<object> subscriptions = null;
             int totalRows = 0;
+            string status = request.Status.Equals("All") ? "%%" : request.Status;
             try
             {
                 if (request.UserEmail.Trim() != string.Empty)
                 {
-                    subscriptions = userManagerManagementService.GetSubscriptionsByUserEmail(request.UserEmail, request.Rows, request.Page, request.Status);
-                    totalRows = userManagerManagementService.CountTotalResult(request.UserEmail, request.Status);
+                    subscriptions = userManagerManagementService.GetSubscriptionsByUserEmail(request.UserEmail, request.Rows, request.Page, status);
+                    totalRows = userManagerManagementService.CountTotalResult(request.UserEmail, status);
                 }
             }
             catch (Exception ex)

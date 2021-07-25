@@ -175,7 +175,6 @@ namespace Nextflip.Models.subscription
         {
             try
             {
-                int limit = 2 * rows;
                 int offset = rows * (page - 1);
                 var subscriptions = new List<object>();
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
@@ -191,7 +190,7 @@ namespace Nextflip.Models.subscription
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@status", status);
-                        command.Parameters.AddWithValue("@limit", limit);
+                        command.Parameters.AddWithValue("@limit", rows);
                         command.Parameters.AddWithValue("@offset", offset);
                         using (var reader = command.ExecuteReader())
                         {
@@ -234,7 +233,6 @@ namespace Nextflip.Models.subscription
         {
             try
             {
-                int limit = 2 * rows;
                 int offset = rows * (page - 1);
                 var subscriptions = new List<object>();
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
@@ -251,7 +249,7 @@ namespace Nextflip.Models.subscription
                     {
                         command.Parameters.AddWithValue("@userEmail", $"%{userEmail}%");
                         command.Parameters.AddWithValue("@status", status);
-                        command.Parameters.AddWithValue("@limit", limit);
+                        command.Parameters.AddWithValue("@limit", rows);
                         command.Parameters.AddWithValue("@offset", offset);
                         using (var reader = command.ExecuteReader())
                         {

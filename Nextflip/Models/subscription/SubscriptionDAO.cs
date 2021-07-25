@@ -181,10 +181,11 @@ namespace Nextflip.Models.subscription
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select SubscriptionID, S.userID,A.userEmail, S.Status, StartDate, EndDate, issueDate, paymentPlanID " +
+                    string Sql = "Select SubscriptionID, S.userID,A.userEmail, S.Status, StartDate, EndDate, S.paymentPlanID, price " +
                                 "From subscription as S Inner Join account as A on S.userID = A.userID " +
+                                "Inner Join paymentplan as P on P.paymentPlanID = S.paymentPlanID " +
                                 "Where S.status Like @status " +
-                                "Order By EndDate desc " +
+                                "Order By A.userEmail,S.status ,EndDate desc " +
                                 "Limit @limit " +
                                 "Offset @offset";
                     using (var command = new MySqlCommand(Sql, connection))
@@ -196,16 +197,26 @@ namespace Nextflip.Models.subscription
                         {
                             while (reader.Read())
                             {
+                                string subscriptionID = reader.GetString("SubscriptionID");
+                                string userID = reader.GetString("userID");
+                                string subStatus = reader.GetString("Status");
+                                bool canRefund = false;
+                                if (subStatus.Equals("Approved"))
+                                {
+                                    var _sub = GetSubsciptionByUserID(userID);
+                                    if (subscriptionID.Equals(_sub.SubscriptionID) && _sub.StartDate > DateTime.Now) canRefund = true;
+                                }
                                 var subscription = new 
                                 {
-                                    SubscriptionID = reader.GetString("SubscriptionID"),
-                                    UserID = reader.GetString("userID"),
+                                    SubscriptionID = subscriptionID,
+                                    UserID = userID,
                                     UserEmail = reader.GetString("userEmail"),
-                                    Status = reader.GetString("Status"),
+                                    Status = subStatus,
                                     StartDate = reader.GetDateTime("StartDate"),
                                     EndDate = reader.GetDateTime("EndDate"),
-                                    IssueDate = reader.GetDateTime("issueDate"),
-                                    PaymentPlanID = reader.GetInt32("paymentPlanID")
+                                    Price = reader.GetDecimal("price"),
+                                    PaymentPlanID = reader.GetInt32("paymentPlanID"),
+                                    CanRefund = canRefund
                                 };
                                 subscriptions.Add(subscription);
                             }
@@ -229,10 +240,11 @@ namespace Nextflip.Models.subscription
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select SubscriptionID, S.userID, A.userEmail, S.Status, StartDate, EndDate, issueDate, paymentPlanID " +
+                    string Sql = "Select SubscriptionID, S.userID, A.userEmail, S.Status, StartDate, EndDate, S.paymentPlanID, price " +
                                 "From subscription as S Inner Join account as A on S.userID = A.userID " +
+                                "Inner Join paymentplan as P on P.paymentPlanID = S.paymentPlanID " +
                                 "Where A.userEmail Like @userEmail And S.status Like @status " +
-                                "Order By A.userEmail, EndDate desc " +
+                                "Order By A.userEmail,S.status, EndDate desc " +
                                 "Limit @limit " +
                                 "Offset @offset";
                     using (var command = new MySqlCommand(Sql, connection))
@@ -245,16 +257,26 @@ namespace Nextflip.Models.subscription
                         {
                             while (reader.Read())
                             {
-                                var subscription = new 
+                                string subscriptionID = reader.GetString("SubscriptionID");
+                                string userID = reader.GetString("userID");
+                                string subStatus = reader.GetString("Status");
+                                bool canRefund = false;
+                                if (subStatus.Equals("Approved"))
                                 {
-                                    SubscriptionID = reader.GetString("SubscriptionID"),
-                                    UserID = reader.GetString("userID"),
+                                    var _sub = GetSubsciptionByUserID(userID);
+                                    if (subscriptionID.Equals(_sub.SubscriptionID) && _sub.StartDate > DateTime.Now) canRefund = true;
+                                }
+                                var subscription = new
+                                {
+                                    SubscriptionID = subscriptionID,
+                                    UserID = userID,
                                     UserEmail = reader.GetString("userEmail"),
-                                    Status = reader.GetString("Status"),
+                                    Status = subStatus,
                                     StartDate = reader.GetDateTime("StartDate"),
                                     EndDate = reader.GetDateTime("EndDate"),
-                                    IssueDate = reader.GetDateTime("issueDate"),
-                                    PaymentPlanID = reader.GetInt32("paymentPlanID")
+                                    Price = reader.GetDecimal("price"),
+                                    PaymentPlanID = reader.GetInt32("paymentPlanID"),
+                                    CanRefund = canRefund
                                 };
                                 subscriptions.Add(subscription);
                             }

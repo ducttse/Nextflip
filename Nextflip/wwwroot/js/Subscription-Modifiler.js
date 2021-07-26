@@ -50,10 +50,14 @@ function changeContent(text, bool) {
             </button>` :
         ` <i class="far fa-check-circle fa-5x text-center" style="color: #4bca81"></i>
             <p class="fs-5 text-center text-dark">${text}</p>
-            <button type="button" class="col-4 mx-auto btn btn-success text-white"  style=" background-color: #4bca81 !important; border: #4bca81 !important;" data-bs-dismiss="modal">
-                Continue
+            <button onclick = "BackToDashboard()" type="button" class="col-4 mx-auto btn btn-success text-white"  style=" background-color: #4bca81 !important; border: #4bca81 !important;" data-bs-dismiss="modal">
+                Back to dashboard
             </button>`;
     document.querySelector(".modal .modal-body").innerHTML = content;
+}
+
+function BackToDashboard() {
+    window.location.href = "/SubcribedUserDashBoard/Index";
 }
 
 function renderCard(index, plan) {

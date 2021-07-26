@@ -43,9 +43,20 @@ namespace Nextflip.Controllers
             return View();
         }
         [HttpGet("/EditorDashboard/ViewEditMedia/{id}")]
-        public IActionResult ViewEditMedia(String id)
+        public IActionResult ViewEditMedia(String id, [FromServices] IMediaService mediaService)
         {
             ViewBag.MediaID = id;
+            var mediaInfo = mediaService.GetMediaByID(id);
+            if (mediaInfo.Status == "Approved")
+            {
+                TempData["clone message"] =
+                    "You are trying to edit a published media so we create a drafted version of the media. " +
+                    "Change to the published media will be reflect once Media Manager approve to the new version. " +
+                    "Feel free to delete the draft version if needed.";
+                TempData["oldMediaID"] = id;
+                var newMediaID = mediaService.CloneMedia(id);
+                RedirectToAction("ViewEditMedia", "EditorDashboard", newMediaID);
+            }
             return View();
         }
     }

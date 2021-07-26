@@ -973,8 +973,8 @@ namespace Nextflip.Models.account
 
                         command.ExecuteNonQuery();
                         connection.Close();
-                        if (command.Parameters["role_Output"].Value == null) return null;
-                        if (command.Parameters["fullname_Output"].Value == null) return null;
+                        if (command.Parameters["role_Output"].Value == DBNull.Value) return null;
+                        if (command.Parameters["fullname_Output"].Value == DBNull.Value) return null;
                         return new Account
                         {
                             userID = userID,

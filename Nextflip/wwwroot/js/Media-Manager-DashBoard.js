@@ -69,6 +69,9 @@ function renderRequest(request, index) {
     case "Approved":
       bgcolor = "bg-primary";
       break;
+    case "Ready":
+      bgcolor = "bg-success";
+      break;
   }
   if (isFiltered) {
     return `

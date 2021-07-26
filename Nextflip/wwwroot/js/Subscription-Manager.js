@@ -166,3 +166,22 @@ function searchAndResetPage(searchValue) {
     search(searchValue);
 }
 setAppendToDataWrapper(appendToDataWrapper);
+
+function updatePaymentPlan() {
+    let reqHeader = new Headers();
+    reqHeader.append("Content-Type", "text/json");
+    reqHeader.append("Accept", "application/json, text/plain, */*");
+    let initObject = {
+        method: "POST",
+        headers: reqHeader,
+        body: JSON.stringify({
+            duration: document.getElementById("duration").value,
+            newPrice: document.getElementById("price").value
+        })
+    };
+    fetch("/api/UserManagerManagement/UpdatePlan", initObject)
+        .then(res => res.json())
+        .then(json => {
+            console.log(json);
+        });
+}

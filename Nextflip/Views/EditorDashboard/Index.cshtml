@@ -7,7 +7,7 @@
     <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/css/Form.css")" rel="stylesheet" type="text/css" />
 }
-<div class="ui_wrapper col-10" style="background-color: #fff">
+<div class="ui_wrapper col-10">
     <p class="fs-3 text-secondary ps-2 mb-0">Manage media</p>
     <div class=" ms-3 p-2 col-3  d-flex  justify-content-start">
         <a class="offset-3 btn btn-primary d-flex" href="/EditorDashboard/ViewAddNewMedia">
@@ -26,10 +26,13 @@
             </div>
             <div class="col-2 offset-1 d-flex">
                 <label class="form-label mt-2 text-dark">Status</label>
-                <select id="status_filter" class="ms-2 form-select h-85" onchange="setSelectedStatus(this)">
+                <select id="status_filter" class="ms-2 form-select h-100" onchange="setSelectedStatus(this)">
                     <option selected>All</option>
                     <option value="Approved">Approved</option>
                     <option value="Disapproved">Disapproved</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Ready">Ready</option>
+                    <option value="Removed">Removed</option>
                 </select>
             </div>
         </div>

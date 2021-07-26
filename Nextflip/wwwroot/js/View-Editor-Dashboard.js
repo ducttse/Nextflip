@@ -68,11 +68,7 @@ function renderMedia(media, index) {
           <td>${index + 1}</td>
           <td>${media.title}</td>
           <td class="text-center">${media.countSeason}</td>
-          <td class="text-center">
-            <div>
-                <input class="status_btn" type="checkbox" mediaID="${media.mediaID}" value="${media.status}" ${media.status === "Approved" ? "checked" : ""}  />
-            </div>
-          </td>
+          <td class="text-center">${media.status}</td>
           <td class="text-center">${date}</td>
           <td class="text-center">
             <a class="btn btn-secondary" href="/EditorDashboard/ViewEditMedia/${media.mediaID}">Edit</a>

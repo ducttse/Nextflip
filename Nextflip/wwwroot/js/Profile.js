@@ -96,10 +96,10 @@ loadAccount().then(() => {
                 case "UserManagerManagement":
                     role = "User Manager";
                     let button1 = `<a href="/UserManagerManagement/Index" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100">
-                                        Account
+                                    Account
                                     </a>`;
-                    let button2 = `<a href="/UserManagerManagement/ViewNotificationManage" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100">
-                                        Notification
+                    let button2 = `<a href="/UserManagerManagement/ViewSubscriptionManage" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100">
+                                    Subscription
                                     </a>`;
                     appendButton(button1);
                     appendButton(button2);

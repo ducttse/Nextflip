@@ -6,9 +6,9 @@
     <link href="@Url.Content("~/css/User-Manager.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
 }
-<div class="col-10">
+<div class="col-10"> 
     <div>
-        <p class="h2 text-secondary">Subscription Management</p>
+        <p class="h2 text-secondary  offset-1">Subscription Management</p>
     </div>
     <div>
         <div class="btn btn-primary offset-1" data-bs-toggle="modal" data-bs-target="#updateModal">Update plan</div>
@@ -73,7 +73,7 @@
                 <div class="mb-3 row col-10 mx-auto">
                     <label for="duration" class="offset-2 col-sm-3 col-form-label">Duration</label>
                     <div class="col-sm-6">
-                        <select class="form-select">
+                        <select class="form-select" id="duration">
                             <option value="1">1 month</option>
                             <option value="2">3 months</option>
                             <option value="3">6 months</option>
@@ -89,7 +89,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary" onclick="updatePaymentPlan()">Save changes</button>
             </div>
         </div>
     </div>
@@ -116,11 +116,11 @@
         appendSearch("Search account's email", "");
         setEnterEvent();
         let button1 = `<a href="/UserManagerManagement/Index" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100">
-                                                    Account
-                                              </a>`;
-        let button2 = `<a href="/UserManagerManagement/ViewNotificationManage" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100">
-                                                    Notification
-                                                  </a>`;
+                                            Account
+                                      </a>`;
+        let button2 = `<a href="/UserManagerManagement/ViewSubscriptionManage" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100">
+                                            Subscription
+                                          </a>`;
         appendButton(button1);
         appendButton(button2);
     </script>

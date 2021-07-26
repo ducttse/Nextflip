@@ -39,7 +39,7 @@ function renderMedia(media) {
 }
 
 function setSubmit(id, type) {
-    document.getElementById("submit_btn").setAttribute("id", id);
+    document.getElementById("submit_btn").setAttribute("itemId", id);
     document.getElementById("submit_btn").setAttribute("type", type);
 }
 
@@ -50,7 +50,7 @@ function renderCollapseTrigger(season) {
             <button class="btn btn-primary me-1 btn-sm" onclick="approve('${seasonInfo.seasonID}','season')">
                 Approve
             </button>
-            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#noteModal" onclick="setSubmit("${seasonInfo.seasonID}", 'season')">
+            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#noteModal" onclick="setSubmit('${seasonInfo.seasonID}', 'season')">
                 Disapprove
             </button>`;
     let status = seasonInfo.status == "Pending" ? ("bg-warning") : (seasonInfo.status == "Approved" ? ("bg-primary") : (seasonInfo.status == "Disapproved" ? "bg-danger" : "bg-light"));
@@ -77,7 +77,7 @@ function renderCollapse(season) {
             <button class="btn btn-primary me-1 btn-sm" onclick="approve('${episode.episodeID}','episode')">
                 Approve
             </button>
-            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#noteModal" onclick="setSubmit("${episode.episodeID}", 'episode')">
+            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#noteModal" onclick="setSubmit('${episode.episodeID}', 'episode')">
                 Disapprove
             </button>`;
         return `
@@ -169,8 +169,10 @@ function approve(id, type) {
 }
 
 function disapprove(obj) {
-    let id = obj.getAttribute("id");
+    let id = obj.getAttribute("itemId");
     let type = obj.getAttribute("type");
+    console.log(id);
+    console.log(type);
     let note = document.getElementById("note_input").value;
     let reqHeader = new Headers();
     reqHeader.append("Content-Type", "text/json");
@@ -179,12 +181,12 @@ function disapprove(obj) {
         method: "POST",
         headers: reqHeader,
         body: JSON.stringify({
-            RequestID: id.trim(),
-            Type: type.trim(),
+            RequestID: id,
+            Type: type,
             Content: note
         })
     };
-    fetch(`/api/MediaManagerManagement/ApproveRequest`, initObject)
+    fetch(`/api/MediaManagerManagement/DisapproveRequest`, initObject)
         .then(res => res.json())
         .then(json => {
             if (json.message == "Success") {

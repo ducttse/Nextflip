@@ -326,7 +326,11 @@ namespace Nextflip.APIControllers
                 };
                 if (request.Status.ToLower().Trim().Equals(editorService.GetMediaByID(request.ID).Status.ToLower()))
                     return new JsonResult(new { messageFail = "fail. A wrong process." });
-                bool requestChange = editorService.RequestChangeMediaStatus(request.ID, request.Status, request.Note);
+                bool requestChange;
+                if (request.Status.ToLower().Trim().Equals("approved"))
+                    requestChange = editorService.RequestChangeMediaStatus(request.ID, request.Status, null);
+                else 
+                    requestChange = editorService.RequestChangeMediaStatus(request.ID, request.Status, request.Note);
                 if (!requestChange) return new JsonResult(messageFail);
                 var message = new
                 {
@@ -374,7 +378,8 @@ namespace Nextflip.APIControllers
                         Language = item.Language,
                         Description = item.Description,
                         UploadDate = item.UploadDate,
-                        CountSeason = editorService.NumberAvailableSeason(item.MediaID)
+                        CountSeason = editorService.NumberAvailableSeason(item.MediaID),
+                        Note = item.Note
                     });
                 }
                 int count = editorService.NumberOfMediasFilterCategory_Status(request.CategoryName.Trim().ToLower(), request.Status.Trim());
@@ -429,7 +434,8 @@ namespace Nextflip.APIControllers
                         Language = item.Language,
                         Description = item.Description,
                         UploadDate = item.UploadDate,
-                        CountSeason = editorService.NumberAvailableSeason(item.MediaID)
+                        CountSeason = editorService.NumberAvailableSeason(item.MediaID),
+                        Note = item.Note
                     });
                 }
                 int count = editorService.NumberOfMediasBySearchingFilterCategory_Status(request.SearchValue.Trim().ToLower(),
@@ -838,6 +844,7 @@ namespace Nextflip.APIControllers
             public string Description { get; set; }
             public DateTime UploadDate { get; set; }
             public int CountSeason { get; set; }
+            public string Note { get; set; }
         }
     }
 }

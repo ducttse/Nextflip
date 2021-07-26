@@ -35,6 +35,7 @@ namespace Nextflip.Models.media
         public string Language { get; set; }
         public string Description{ get; set; }
         public DateTime UploadDate{ get; set; }
+        public string Note{ get; set; }
 
         public bool EqualWithoutStatus(Media anotherMedia)
         {

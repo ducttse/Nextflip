@@ -122,7 +122,7 @@ loadAccount().then(() => {
                 case "EditorDashboard":
                     role = "Media Editor";
                     let button6 = `<a href="/EditorDashboard/Index" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100" onclick="showAddStaffModal()">
-                                Media manage
+                                Media
                               </a>`;
                     appendButton(button6);
                     break;

@@ -3,7 +3,7 @@ let requestParam = {
   SearchValue: "",
   Status: "All",
   CategoryName: "All",
-  RowsOnPage: 6,
+  RowsOnPage: 8,
   RequestPage: 1
 };
 let isFiltered = false;

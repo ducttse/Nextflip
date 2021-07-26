@@ -59,7 +59,7 @@ namespace Nextflip.Models.season
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select seasonID, title, thumbnailURL, status, number " +
+                    string Sql = "Select seasonID, title, thumbnailURL, status, number, note " +
                                 "From season " +
                                 "Where mediaID = @mediaID And Status = @status " +
                                 "Order By number";

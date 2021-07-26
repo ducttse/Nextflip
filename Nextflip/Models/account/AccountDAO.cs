@@ -56,7 +56,7 @@ namespace Nextflip.Models.account
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select userID, userEmail, roleName, fullname, status " +
+                    string Sql = "Select userID, userEmail, roleName, fullname, dateOfBirth, status, pictureURL, note, token " +
                             "From account " +
                             "Where roleName = @roleName and status = @status and userEmail LIKE @userEmail " +
                             "LIMIT @offset, @limit";
@@ -77,7 +77,12 @@ namespace Nextflip.Models.account
                                     userEmail = reader.GetString("userEmail"),
                                     roleName = reader.GetString("roleName"),
                                     fullname = reader.GetString("fullname"),
-                                    status = reader.GetString("status")
+                                    dateOfBirth = reader.GetDateTime("dateOfBirth"),
+                                    status = reader.GetString("status"),
+                                    pictureURL = reader.IsDBNull(reader.GetOrdinal("pictureURL")) ? null : reader.GetString("pictureURL"),
+                                    note = reader.IsDBNull(reader.GetOrdinal("note")) ? null : reader.GetString("note"),
+                                    token = reader.IsDBNull(reader.GetOrdinal("token")) ? null : reader.GetString("token")
+
                                 });
                             }
                         }
@@ -181,7 +186,7 @@ namespace Nextflip.Models.account
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select userID, userEmail, roleName, fullname, status " +
+                    string Sql = "Select userID, userEmail, roleName, fullname, dateOfBirth, status, pictureURL, note, token " +
                             "From account " +
                             "Where userEmail LIKE @userEmail " +
                             "Order by status ASC " +
@@ -201,7 +206,11 @@ namespace Nextflip.Models.account
                                     userEmail = reader.GetString("userEmail"),
                                     roleName = reader.GetString("roleName"),
                                     fullname = reader.GetString("fullname"),
-                                    status = reader.GetString("status")
+                                    dateOfBirth = reader.GetDateTime("dateOfBirth"),
+                                    status = reader.GetString("status"),
+                                    pictureURL = reader.IsDBNull(reader.GetOrdinal("pictureURL")) ? null : reader.GetString("pictureURL"),
+                                    note = reader.IsDBNull(reader.GetOrdinal("note")) ? null : reader.GetString("note"),
+                                    token = reader.IsDBNull(reader.GetOrdinal("token")) ? null : reader.GetString("token")
                                 });
                             }
                         }
@@ -249,7 +258,7 @@ namespace Nextflip.Models.account
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select userID, userEmail, roleName, fullname, status " +
+                    string Sql = "Select userID, userEmail, roleName, fullname, dateOfBirth, status, pictureURL, note, token " +
                             "From account " +
                             "LIMIT @offset, @limit";
                     Debug.WriteLine(Sql);
@@ -267,7 +276,11 @@ namespace Nextflip.Models.account
                                     userEmail = reader.GetString("userEmail"),
                                     roleName = reader.GetString("roleName"),
                                     fullname = reader.GetString("fullname"),
-                                    status = reader.GetString("status")
+                                    dateOfBirth = reader.GetDateTime("dateOfBirth"),
+                                    status = reader.GetString("status"),
+                                    pictureURL = reader.IsDBNull(reader.GetOrdinal("pictureURL")) ? null : reader.GetString("pictureURL"),
+                                    note = reader.IsDBNull(reader.GetOrdinal("note")) ? null : reader.GetString("note"),
+                                    token = reader.IsDBNull(reader.GetOrdinal("token")) ? null : reader.GetString("token")
                                 });
                             }
                         }
@@ -280,82 +293,6 @@ namespace Nextflip.Models.account
             }
             return accounts;
         }
-        /*
-                public IEnumerable<Account> GetAllActiveAccounts()
-                {
-                    var accounts = new List<Account>();
-                    try
-                    {
-                        using (var connection = new MySqlConnection(DbUtil.ConnectionString))
-                        {
-                            connection.Open();
-                            string Sql = "Select userID, userEmail, roleName, fullname, status " +
-                                    "From account " +
-                                    "Where status = 'Active' ";
-                            Debug.WriteLine(Sql);
-                            using (var command = new MySqlCommand(Sql, connection))
-                            {
-                                using (var reader = command.ExecuteReader())
-                                {
-                                    while (reader.Read())
-                                    {
-                                        accounts.Add(new Account
-                                        {
-                                            userID = reader.GetString(0),
-                                            userEmail = reader.GetString(1),
-                                            roleName = reader.GetString(2),
-                                            fullname = reader.GetString(3),
-                                            status = reader.GetString(4)
-                                        });
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception(ex.Message);
-                    }
-                    return accounts;
-                }
-                public IEnumerable<Account> GetAllInactiveAccounts()
-                {
-                    var accounts = new List<Account>();
-                    try
-                    {
-                        using (var connection = new MySqlConnection(DbUtil.ConnectionString))
-                        {
-                            connection.Open();
-                            string Sql = "Select userID, userEmail, roleName, fullname, status " +
-                                    "From account " +
-                                    "Where status = 'InActive' ";
-                            Debug.WriteLine(Sql);
-                            using (var command = new MySqlCommand(Sql, connection))
-                            {
-                                using (var reader = command.ExecuteReader())
-                                {
-                                    while (reader.Read())
-                                    {
-                                        accounts.Add(new Account
-                                        {
-                                            userID = reader.GetString(0),
-                                            userEmail = reader.GetString(1),
-                                            roleName = reader.GetString(2),
-                                            fullname = reader.GetString(3),
-                                            status = reader.GetString(4)
-                                        });
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception(ex.Message);
-                    }
-                    return accounts;
-                }
-        */
 
         public IEnumerable<Account> GetAccountsListByRoleAccordingRequest(string roleName, string status, int RowsOnPage, int RequestPage)
         {
@@ -366,7 +303,7 @@ namespace Nextflip.Models.account
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select userID, userEmail, roleName, fullname, status " +
+                    string Sql = "Select userID, userEmail, roleName, fullname, dateOfBirth, status, pictureURL, note, token " +
                             "From account " +
                             "Where roleName = @roleName and status = @status " +
                             "LIMIT @offset, @limit";
@@ -387,7 +324,11 @@ namespace Nextflip.Models.account
                                     userEmail = reader.GetString("userEmail"),
                                     roleName = reader.GetString("roleName"),
                                     fullname = reader.GetString("fullname"),
-                                    status = reader.GetString("status")
+                                    dateOfBirth = reader.GetDateTime("dateOfBirth"),
+                                    status = reader.GetString("status"),
+                                    pictureURL = reader.IsDBNull(reader.GetOrdinal("pictureURL")) ? null : reader.GetString("pictureURL"),
+                                    note = reader.IsDBNull(reader.GetOrdinal("note")) ? null : reader.GetString("note"),
+                                    token = reader.IsDBNull(reader.GetOrdinal("token")) ? null : reader.GetString("token")
                                 });
                             }
                         }
@@ -435,7 +376,7 @@ namespace Nextflip.Models.account
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select userID, userEmail, roleName, fullname, status " +
+                    string Sql = "Select userID, userEmail, roleName, fullname, dateOfBirth, status, pictureURL, note, token " +
                             "From account " +
                             "Where roleName = @roleName and userEmail LIKE @userEmail " +
                             "LIMIT @offset, @limit";
@@ -455,7 +396,11 @@ namespace Nextflip.Models.account
                                     userEmail = reader.GetString("userEmail"),
                                     roleName = reader.GetString("roleName"),
                                     fullname = reader.GetString("fullname"),
-                                    status = reader.GetString("status")
+                                    dateOfBirth = reader.GetDateTime("dateOfBirth"),
+                                    status = reader.GetString("status"),
+                                    pictureURL = reader.IsDBNull(reader.GetOrdinal("pictureURL")) ? null : reader.GetString("pictureURL"),
+                                    note = reader.IsDBNull(reader.GetOrdinal("note")) ? null : reader.GetString("note"),
+                                    token = reader.IsDBNull(reader.GetOrdinal("token")) ? null : reader.GetString("token")
                                 });
                             }
                         }
@@ -505,7 +450,7 @@ namespace Nextflip.Models.account
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select userID, userEmail, roleName, fullname, status " +
+                    string Sql = "Select userID, userEmail, roleName, fullname, dateOfBirth, status, pictureURL, note, token " +
                             "From account " +
                             "Where roleName = @roleName " +
                             "LIMIT @offset, @limit";
@@ -525,7 +470,11 @@ namespace Nextflip.Models.account
                                     userEmail = reader.GetString("userEmail"),
                                     roleName = reader.GetString("roleName"),
                                     fullname = reader.GetString("fullname"),
-                                    status = reader.GetString("status")
+                                    dateOfBirth = reader.GetDateTime("dateOfBirth"),
+                                    status = reader.GetString("status"),
+                                    pictureURL = reader.IsDBNull(reader.GetOrdinal("pictureURL")) ? null : reader.GetString("pictureURL"),
+                                    note = reader.IsDBNull(reader.GetOrdinal("note")) ? null : reader.GetString("note"),
+                                    token = reader.IsDBNull(reader.GetOrdinal("token")) ? null : reader.GetString("token")
                                 });
                             }
                         }
@@ -573,7 +522,7 @@ namespace Nextflip.Models.account
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select userID, userEmail, roleName, fullname, dateOfBirth, status " +
+                    string Sql = "Select userID, userEmail, roleName, fullname, dateOfBirth, status, pictureURL, note, token " +
                                     "From account " +
                                     "Where userID = @userID";
                     using (var command = new MySqlCommand(Sql, connection))
@@ -589,7 +538,11 @@ namespace Nextflip.Models.account
                                     userEmail = reader.GetString("userEmail"),
                                     roleName = reader.GetString("roleName"),
                                     fullname = reader.GetString("fullname"),
-                                    status = reader.GetString("status")
+                                    dateOfBirth = reader.GetDateTime("dateOfBirth"),
+                                    status = reader.GetString("status"),
+                                    pictureURL = reader.IsDBNull(reader.GetOrdinal("pictureURL")) ? null : reader.GetString("pictureURL"),
+                                    note = reader.IsDBNull(reader.GetOrdinal("note")) ? null : reader.GetString("note"),
+                                    token = reader.IsDBNull(reader.GetOrdinal("token")) ? null : reader.GetString("token")
                                 };
                             }
                         }
@@ -612,7 +565,7 @@ namespace Nextflip.Models.account
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select userID, userEmail, roleName, fullname, dateOfBirth, status, note " +
+                    string Sql = "Select userID, userEmail, roleName, fullname, dateOfBirth, status, pictureURL, note, token " +
                                     "From account " +
                                     "Where userID = @userID";
                     using (var command = new MySqlCommand(Sql, connection))
@@ -628,8 +581,11 @@ namespace Nextflip.Models.account
                                     userEmail = reader.GetString("userEmail"),
                                     roleName = reader.GetString("roleName"),
                                     fullname = reader.GetString("fullname"),
+                                    dateOfBirth = reader.GetDateTime("dateOfBirth"),
                                     status = reader.GetString("status"),
-                                    note = reader.GetString("note")
+                                    pictureURL = reader.IsDBNull(reader.GetOrdinal("pictureURL")) ? null : reader.GetString("pictureURL"),
+                                    note = reader.IsDBNull(reader.GetOrdinal("note")) ? null : reader.GetString("note"),
+                                    token = reader.IsDBNull(reader.GetOrdinal("token")) ? null : reader.GetString("token")
                                 };
                             }
                         }

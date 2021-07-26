@@ -13,9 +13,12 @@ function changeContent(text, bool) {
         </button>` :
         ` <i class="far fa-check-circle fa-5x text-center" style="color: #4bca81"></i>
         <p class="fs-5 text-center">${text}</p>
-        <button type="button" class="col-4 mx-auto btn btn-success text-white"  style=" background-color: #4bca81 !important; border: #4bca81 !important;" data-bs-dismiss="modal">
+        <button type="button" class="col-4 mx-auto btn btn-success text-white" onclick="location.reload()"  style=" background-color: #4bca81 !important; border: #4bca81 !important;" data-bs-dismiss="modal">
             Continue
         </button>`;
     document.getElementById("messageModal").querySelector(".modal-body").innerHTML = content;
 }
 
+function showMessageModal() {
+    messageModal.show();
+}

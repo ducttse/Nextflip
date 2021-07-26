@@ -31,19 +31,6 @@ function selectForm(role) {
               <p class="py-2 pe-0 mb-0" id="plain_name_text"> </p>
             </div>
           </div>
-          <div class="mb-3 row ms-3">
-            <label id="dob_edit_label" for="dob" class="col-form-label col-4 pe-0">Expiration date</label>
-            <div class="col-5 ps-0 me-0">
-              <div class="d-inline-flex ps-0 pe-0">
-                <div>
-                    <input type="date" class="form-control pe-0 mb-0" id="plain_date_text" required/>
-                </div>
-              </div>
-            </div>
-            <div class="btn btn-primary col-2" onclick="requestUpdateDate()">
-              Extend
-            </div>
-          </div>
         </div>`
   }
   else {

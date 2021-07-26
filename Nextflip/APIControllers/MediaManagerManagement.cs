@@ -146,6 +146,7 @@ namespace Nextflip.APIControllers
                         Language = item.Language,
                         Description = item.Description,
                         UploadDate = item.UploadDate,
+                        Note = item.Note,
                         CountSeason = mediaManagerManagementService.NumberAvailableSeason(item.MediaID)
                     });
                 }
@@ -201,6 +202,7 @@ namespace Nextflip.APIControllers
                         Language = item.Language,
                         Description = item.Description,
                         UploadDate = item.UploadDate,
+                        Note = item.Note,
                         CountSeason = mediaManagerManagementService.NumberAvailableSeason(item.MediaID)
                     });
                 }
@@ -305,6 +307,7 @@ namespace Nextflip.APIControllers
             public string Language { get; set; }
             public string Description { get; set; }
             public DateTime UploadDate { get; set; }
+            public string Note { get; set; }
             public int CountSeason { get; set; }
         }
     }

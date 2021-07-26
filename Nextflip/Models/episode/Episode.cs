@@ -28,6 +28,7 @@ namespace Nextflip.Models.episode
         }
         public int Number { get; set; }
         public string EpisodeURL { get; set; }
+        public string Note { get; set; }
 
         public bool EqualWithoutStatus (Episode anotherEpisode)
         {

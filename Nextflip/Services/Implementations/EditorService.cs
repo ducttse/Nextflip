@@ -39,14 +39,14 @@ namespace Nextflip.Services.Implementations
         public IEnumerable<Media> GetMediaFilterCategory(string CategoryName, int RowsOnPage, int RequestPage) => _mediaDAO.GetMediaFilterCategory(CategoryName, RowsOnPage, RequestPage);
         public int NumberOfMediasFilterCategory(string CategoryName) => _mediaDAO.NumberOfMediasFilterCategory(CategoryName);
 
-        public IEnumerable<Media> ViewMediasFilterCategory_Status(string CategoryName, string Status, int RowsOnPage, int RequestPage) => _mediaDAO.ViewMediasFilterCategory_Status(CategoryName, Status, RowsOnPage, RequestPage);
-        public int NumberOfMediasFilterCategory_Status(string CategoryName, string Status) => _mediaDAO.NumberOfMediasFilterCategory_Status(CategoryName, Status);
+        public IEnumerable<Media> ViewMediasFilterCategory_Status(string CategoryName, string Status, int RowsOnPage, int RequestPage) => _mediaDAO.EditorViewMediasFilterCategory_Status(CategoryName, Status, RowsOnPage, RequestPage);
+        public int NumberOfMediasFilterCategory_Status(string CategoryName, string Status) => _mediaDAO.EditorNumberOfMediasFilterCategory_Status(CategoryName, Status);
 
         public IEnumerable<Media> GetMediasByTitleFilterCategory_Status(string SearchValue, string CategoryName, string Status, int RowsOnPage, int RequestPage)
-             => _mediaDAO.GetMediasByTitleFilterCategory_Status(SearchValue, CategoryName, Status, RowsOnPage, RequestPage);
+             => _mediaDAO.EditorGetMediasByTitleFilterCategory_Status(SearchValue, CategoryName, Status, RowsOnPage, RequestPage);
 
         public int NumberOfMediasBySearchingFilterCategory_Status(string SearchValue, string CategoryName, string Status)
-            => _mediaDAO.NumberOfMediasBySearchingFilterCategory_Status(SearchValue, CategoryName, Status);
+            => _mediaDAO.EditorNumberOfMediasBySearchingFilterCategory_Status(SearchValue, CategoryName, Status);
 
         public bool RequestDisableMedia(string mediaID) => _mediaDAO.RequestDisableMedia(mediaID);
         public Media GetMediaByID(string mediaID) => _mediaDAO.GetMediaByID(mediaID);

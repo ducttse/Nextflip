@@ -4,8 +4,6 @@
 }
 @section styles{
     <link rel="Stylesheet" href="@Href("~/css/Register.css")" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 }
 <div id="wrapper" class="d-flex align-items-center" style="background-color: #171717">
     <a class="navbar-brand fw-normal ps-5 position-absolute top-0 start-0 fs-2" style="color: red" href="#">NextFlip</a>
@@ -65,26 +63,25 @@
         </div>
         <!-- </form> -->
         <!-- Button trigger modal -->
-        <!--<button id="respondModal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" hidden>
-            Launch demo modal
-        </button>-->
+        <button id="btn-modal" type="button" class="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal"></button>
 
         <!-- Modal -->
-        <!--<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Success</h5>
+                    <div class="modal-header bg-success">
+                        <h5 class="modal-title" id="exampleModalLabel">Success</h5>
                     </div>
-                    <div class="modal-body">
-                        We have send validation link in your email. Please verify your account in the email !
+                    <div id="respose-modal-body" class="modal-body text-dark">
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <form action="/">
+                            <input type="submit" value="Return to Login Page" class="btn btn-primary" />
+                        </form>
                     </div>
                 </div>
             </div>
-        </div>-->
+        </div>
 
 
     </div>

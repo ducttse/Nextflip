@@ -46,5 +46,10 @@ namespace Nextflip.Models.media
         ViewEditorDashboard.PrototypeMediaForm GetDetailedMedia(string mediaId);
         public string CloneMedia(string mediaID);
         string EditMedia(ViewEditorDashboard.PrototypeMediaForm mediaForm);
+        IEnumerable<Media> EditorViewMediasFilterCategory_Status(string CategoryName, string Status, int RowsOnPage, int RequestPage);
+        int EditorNumberOfMediasFilterCategory_Status(string CategoryName, string Status);
+        IEnumerable<Media> EditorGetMediasByTitleFilterCategory_Status(string SearchValue, string CategoryName, string Status, int RowsOnPage, int RequestPage);
+        int EditorNumberOfMediasBySearchingFilterCategory_Status(string SearchValue, string CategoryName, string Status);
+
     }
 }

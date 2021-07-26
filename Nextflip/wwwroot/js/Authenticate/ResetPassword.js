@@ -35,7 +35,7 @@ function verirfyCode() {
             Token: document.getElementById("code").value
         })
     };
-    fetch("/api/Login/ForgotPassword", initObject)
+    fetch("/api/Login/VerifyAccount", initObject)
         .then(res => res.json())
         .then(json => {
             if (json.message == "Success") {
@@ -43,7 +43,9 @@ function verirfyCode() {
                 document.getElementById("resetPassword_wrapper").classList.remove("d-none");
             }
             else {
-                document.getElementById("alert").classList.remove("d-none");
+                let alert = document.getElementById("alert");
+                alert.textContent = json.message;
+                alert.classList.remove("d-none");
             }
         })
 }

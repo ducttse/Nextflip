@@ -14,12 +14,12 @@ namespace Nextflip.Services.Interfaces
     {
       
         bool ApproveChangeMedia(string mediaID);
-        bool DisapproveChangeMedia(string mediaID);
+        bool DisapproveChangeMedia(string mediaID, string note);
         Media GetMediaByID(string mediaID);
         bool ApproveChangeEpisode(string ID);
-        bool DisapproveChangeEpisode(string ID);
+        bool DisapproveChangeEpisode(string ID, string note);
         bool ApproveChangeSeason(string ID);
-        bool DisapproveChangeSeason(string ID);
+        bool DisapproveChangeSeason(string ID, string note);
         Season GetSeasonByID(string seasonID);
         Episode GetEpisodeByID(string episodeID);
         ViewEditorDashboard.PrototypeMediaForm GetDetailedMediaByMediaId(string mediaId);

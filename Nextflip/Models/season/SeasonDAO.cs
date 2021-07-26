@@ -159,7 +159,7 @@ namespace Nextflip.Models.season
             return result;
         }
 
-        public bool DisapproveChangeSeason(string ID)
+        public bool DisapproveChangeSeason(string ID, string note)
         {
             var result = false;
             try
@@ -172,6 +172,7 @@ namespace Nextflip.Models.season
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("seasonID_Input", ID);
+                        command.Parameters.AddWithValue("note_Input", note);
                         int affectedRow = command.ExecuteNonQuery();
                         if (affectedRow == 1) result = true;
                     }

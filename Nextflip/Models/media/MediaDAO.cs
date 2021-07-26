@@ -648,6 +648,7 @@ namespace Nextflip.Models.media
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("mediaID_Input", ID);
+                        command.Parameters.AddWithValue("note_Input", ID);
                         int affectedRow = command.ExecuteNonQuery();
                         if (affectedRow == 1) result = true;
                     }
@@ -660,7 +661,7 @@ namespace Nextflip.Models.media
             return result;
         }
 
-        public bool DisapproveChangeMedia(string ID)
+        public bool DisapproveChangeMedia(string ID, string note)
         {
             var result = false;
             try
@@ -673,6 +674,7 @@ namespace Nextflip.Models.media
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("mediaID_Input", ID);
+                        command.Parameters.AddWithValue("note_Input", note);
                         int affectedRow = command.ExecuteNonQuery();
                         if (affectedRow == 1) result = true;
                     }

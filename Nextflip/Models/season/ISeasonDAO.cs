@@ -11,7 +11,7 @@ namespace Nextflip.Models.season
         IEnumerable<Season> GetSeasonsByMediaID(string mediaID, string status);
         Season GetSeasonByID(string seasonID);
         bool ApproveChangeSeason(string ID);
-        bool DisapproveChangeSeason(string ID);
+        bool DisapproveChangeSeason(string ID, string note);
         bool RequestChangeSeasonStatus(string seasonID, string newStatus);
         string AddSeason(Season season);
         string UpdateSeason(Season season);

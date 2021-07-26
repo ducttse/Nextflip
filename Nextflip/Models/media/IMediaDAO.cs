@@ -28,7 +28,7 @@ namespace Nextflip.Models.media
 
         bool RequestDisableMedia(string mediaID);
         bool ApproveChangeMedia(string mediaID);
-        bool DisapproveChangeMedia(string mediaID);
+        bool DisapproveChangeMedia(string mediaID, string note);
         IEnumerable<Media> GetAllMedia(int RowsOnPage, int RequestPage);
         int NumberOfMedias();
         IEnumerable<Media> GetAllMediaFilterStatus(string Status, int RowsOnPage, int RequestPage);

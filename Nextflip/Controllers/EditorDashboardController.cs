@@ -28,7 +28,7 @@ namespace Nextflip.Controllers
                     "Feel free to delete the draft version if needed.";
                 TempData["oldMediaID"] = id;
                 var newMediaID = mediaService.CloneMedia(id);
-                RedirectToAction("Edit", "EditorDashboard", newMediaID);
+                return RedirectToAction("Edit", "EditorDashboard", newMediaID);
             }
             return View();
         }
@@ -55,7 +55,7 @@ namespace Nextflip.Controllers
                     "Feel free to delete the draft version if needed.";
                 TempData["oldMediaID"] = id;
                 var newMediaID = mediaService.CloneMedia(id);
-                RedirectToAction("ViewEditMedia", "EditorDashboard", newMediaID);
+                return RedirectToAction("ViewEditMedia", "EditorDashboard", newMediaID);
             }
             return View();
         }

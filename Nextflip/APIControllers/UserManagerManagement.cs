@@ -338,8 +338,8 @@ namespace Nextflip.APIControllers
         }
         [Route("CreateStaff")]
         [HttpPost]
-        public IActionResult CreateStaff([FromServices] IUserManagerManagementService userManagerManagementService,
-                                        [FromBody] JsonAccount _staffInfo)
+        public async Task<IActionResult> CreateStaff([FromServices] IUserManagerManagementService userManagerManagementService,
+                                        [FromServices] ISendMailService sendMailService, [FromBody] JsonAccount _staffInfo)
         {
             NotificationObject noti = new NotificationObject();
             try
@@ -376,6 +376,12 @@ namespace Nextflip.APIControllers
                         dateOfBirth = date
 
                     });
+                    string toEmail = _staffInfo.userEmail;
+                    Account _user = userManagerManagementService.GetAccountByEmail(_staffInfo.userEmail);
+                    string body = $"Dear: {_user.fullname},\n" +
+                                    $"your role: {_user.roleName}  \n" +
+                                    $"Password: {_user.hashedPassword}";
+                    await sendMailService.SendEmailAsync(toEmail, "Password of Staff Account", body);
                     noti.message = "Success";
                 }
                 else noti.message = "Fail";

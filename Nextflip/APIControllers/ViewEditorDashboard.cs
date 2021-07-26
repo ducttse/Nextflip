@@ -324,25 +324,9 @@ namespace Nextflip.APIControllers
                 {
                     message = "fail"
                 };
-                Media mediaByChildID = editorService.GetMediaByChildID(request.ID, request.Type);
-                bool requestChange = false;
-                bool addMediaRequest = false;
-                request.ID = request.ID + "_" + request.Status;
-                if (request.Type.Trim().Equals("media"))
-                {
-                    requestChange = editorService.RequestChangeMediaStatus(request.ID, request.Status);
-                }
-                else if (request.Type.Trim().Equals("season"))
-                {
-                    requestChange = editorService.RequestChangeSeasonStatus(request.ID, request.Status);
-                }
-                else if (request.Type.Trim().Equals("episode"))
-                {
-                    requestChange = editorService.RequestChangeEpisodeStatus(request.ID, request.Status);
-                }
-                if (request.Note.Trim() == "") request.Note = "Request change status";
-                //addMediaRequest = editorService.AddMediaRequest(request.UserEmail, mediaByChildID.MediaID, request.Note, request.Type, request.ID);
-
+                if (request.Status.ToLower().Trim().Equals(editorService.GetMediaByID(request.ID).Status.ToLower()))
+                    return new JsonResult(new { messageFail = "fail. A wrong process." });
+                bool requestChange = editorService.RequestChangeMediaStatus(request.ID, request.Status);
                 if (!requestChange) return new JsonResult(messageFail);
                 var message = new
                 {
@@ -352,7 +336,7 @@ namespace Nextflip.APIControllers
             }
             catch (Exception e)
             {
-                _logger.LogInformation("RequestDisabledMedia: " + e.Message);
+                _logger.LogInformation("RequestChangeMediaStatus: " + e.Message);
                 var result = new
                 {
                     message = e.Message
@@ -360,67 +344,6 @@ namespace Nextflip.APIControllers
                 return new JsonResult(result);
             }
         }
-
-        //Get RequestMedia Filter Status
-        //[HttpPost]
-        //[Route("GetRequestMediaFilterStatus")]
-        //public IActionResult GetRequestMediaFilterStatus([FromServices] IEditorService editorService,
-        //    [FromBody] Request request)
-        //{
-        //    try
-        //    {
-        //        IEnumerable<MediaEditRequest> requests = editorService.GetRequestMediaFilterStatus(request.UserEmail, request.Status, request.RowsOnPage, request.RequestPage);
-        //        int count = editorService.NumberOfRequestMediaFilterStatus(request.UserEmail, request.Status);
-        //        double totalPage = (double)count / (double)request.RowsOnPage;
-        //        var result = new
-        //        {
-        //            TotalPage = (int)Math.Ceiling(totalPage),
-        //            Data = requests
-        //        };
-        //        return (new JsonResult(result));
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        _logger.LogInformation("GetRequestMediaFilterStatus: " + e.Message);
-        //        return new JsonResult(new
-        //        {
-        //            Message = "fail"
-        //        });
-        //    }
-        //}
-
-        //Search RequestMedia Filter Status
-        //[HttpPost]
-        //[Route("SearchingRequestMediaFilterStatus")]
-        //public IActionResult SearchingRequestMediaFilterStatus([FromServices] IEditorService editorService,
-        //    [FromBody] Request request)
-        //{
-        //    try
-        //    {
-        //        var message = new
-        //        {
-        //            message = "Empty searchValue"
-        //        };
-        //        if (request.SearchValue.Trim() == "") return new JsonResult(message);
-        //        IEnumerable<MediaEditRequest> requests = editorService.SearchingRequestMediaFilterStatus(request.SearchValue, request.UserEmail, request.Status, request.RowsOnPage, request.RequestPage);
-        //        int count = editorService.NumberOfSearchingRequestMediaFilterStatus(request.SearchValue, request.UserEmail, request.Status);
-        //        double totalPage = (double)count / (double)request.RowsOnPage;
-        //        var result = new
-        //        {
-        //            TotalPage = (int)Math.Ceiling(totalPage),
-        //            Data = requests
-        //        };
-        //        return (new JsonResult(result));
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        _logger.LogInformation("SearchingRequestMediaFilterStatus: " + e.Message);
-        //        return new JsonResult(new
-        //        {
-        //            Message = "fail"
-        //        });
-        //    }
-        //}
 
         //Get
         [HttpPost]

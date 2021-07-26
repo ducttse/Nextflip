@@ -96,26 +96,26 @@ loadAccount().then(() => {
                 case "UserManagerManagement":
                     role = "User Manager";
                     let button1 = `<a href="/UserManagerManagement/Index" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100">
-                                    Account
+                                        Account
                                     </a>`;
                     let button2 = `<a href="/UserManagerManagement/ViewNotificationManage" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100">
-                                    Notification
-                                    </a>`;
-                    let button3 = `<a href="/UserManagerManagement/ViewSubscriptionManage" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100">
-                                    Subscription
+                                        Notification
                                     </a>`;
                     appendButton(button1);
                     appendButton(button2);
-                    appendButton(button3);
                     break;
                 case "MediaManagerManagement":
                     role = "Media Manager";
-                    let button4 = `<a id="back_btn" href="/MediaManagerManagement/Index" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
-                            Media Manage
-                          </a>`;
-                    let button5 = `<a id="back_btn" href="/MediaManagerManagement/CategoryManager" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
-                          Category & type manage
-                        </a>`;
+                    let button3 = `<a id="back_btn" href="/MediaManagerManagement/Index" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
+                                    Media
+                                    </a>`;
+                    let button4 = `<a id="back_btn" href="/MediaManagerManagement/CategoryManager" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
+                                    Category & type
+                                    </a>`;
+                    let button5 = `<a href="/MediaManagerManagement/ViewNotificationManage" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100">
+                                    Notification
+                                    </a>`;
+                    appendButton(button3);
                     appendButton(button4);
                     appendButton(button5);
                     break;

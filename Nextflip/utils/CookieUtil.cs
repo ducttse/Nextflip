@@ -35,6 +35,17 @@ namespace Nextflip.utils
                         userId = claim.Value;
                     }
                 }
+
+                if (userId != null)
+                {
+                    string status = new AccountDAO().GetDetailOfInactiveAccount(userId)?.status;
+                    if (status == "Inactive")
+                    {
+                        await context.HttpContext.SignOutAsync(
+                            CookieAuthenticationDefaults.AuthenticationScheme);
+                        context.HttpContext.Response.Redirect("/Account/AccessDeny");
+                    }
+                }
                 if (roleInCookie != null && userId != null && roleInCookie != "subscribed user")
                 {
                     //roleInDatabase = roleInCookie;

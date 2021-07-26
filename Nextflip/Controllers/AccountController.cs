@@ -42,5 +42,8 @@ namespace Nextflip.Controllers
             if (account == null) return NotFound();
             return RedirectToAction("Login", "Account");
         }
+
+        public IActionResult AccessDeny() => View();
+
     }
 }

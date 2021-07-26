@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Views\SharedComponents\Access-Deny.html" />
     <Content Include="Views\SharedComponents\Index.html" />
   </ItemGroup>
 
@@ -25,7 +24,10 @@
 
   <ItemGroup>
     <Folder Include="Pages\" />
-    <Folder Include="Views\Home\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Views\SharedComponents\Access-Deny.cshtml" />
   </ItemGroup>
 
 </Project>

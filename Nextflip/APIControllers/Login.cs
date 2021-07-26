@@ -108,7 +108,7 @@ namespace Nextflip.APIControllers
                         "Sincerly\n" +
                         "Nextflip Company";
                 await sendMailService.SendEmailAsync(form.Email.ToLower(), "Nextflip Account Activation", body);
-                return new JsonResult(new { Message = "Success" });
+                return new JsonResult(new { Message = "Success" , UserID = userID});
             }
             catch(Exception ex)
             {

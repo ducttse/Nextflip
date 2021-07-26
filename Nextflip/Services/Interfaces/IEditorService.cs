@@ -33,7 +33,7 @@ namespace Nextflip.Services.Interfaces
         int NumberOfMediasFilterStatus(string Status);
         IEnumerable<Media> GetMediasByTitleFilterStatus(string searchValue, string Status, int RowsOnPage, int RequestPage);
         int NumberOfMediasBySearchingFilterStatus(string searchValue, string Status);
-        bool RequestChangeMediaStatus(string mediaID, string newStatus);
+        bool RequestChangeMediaStatus(string mediaID, string newStatus, string note);
         bool RequestChangeEpisodeStatus(string episodeID, string newStatus);
         Media GetMediaByChildID(string childID, string type);
         bool RequestChangeSeasonStatus(string seasonID, string newStatus);

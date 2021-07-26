@@ -35,7 +35,7 @@ namespace Nextflip.Models.media
         int NumberOfMediasFilterStatus(string Status);
         IEnumerable<Media> GetMediasByTitleFilterStatus(string searchValue, string Status, int RowsOnPage, int RequestPage);
         int NumberOfMediasBySearchingFilterStatus(string searchValue, string Status);
-        bool RequestChangeMediaStatus(string mediaID, string newStatus);
+        bool RequestChangeMediaStatus(string mediaID, string newStatus, string note);
         Media GetMediaByChildID(string childID, string type);
         IEnumerable<Media> GetNewestMedias(int limit);
         string AddMedia(string Title, string FilmType, string Director, string Cast, int? PublishYear, 

@@ -326,7 +326,7 @@ namespace Nextflip.APIControllers
                 };
                 if (request.Status.ToLower().Trim().Equals(editorService.GetMediaByID(request.ID).Status.ToLower()))
                     return new JsonResult(new { messageFail = "fail. A wrong process." });
-                bool requestChange = editorService.RequestChangeMediaStatus(request.ID, request.Status);
+                bool requestChange = editorService.RequestChangeMediaStatus(request.ID, request.Status, request.Note);
                 if (!requestChange) return new JsonResult(messageFail);
                 var message = new
                 {
@@ -509,6 +509,7 @@ namespace Nextflip.APIControllers
             public int[] CategoryIDArray { get; set; }
             public string UserEmail { get; set; }
         }
+
         [HttpPost]
         [Route("EditMedia")]
         public IActionResult EditMedia([FromServices] IEditorService editorService, [FromBody] MediaForm frmMedia)

@@ -75,13 +75,13 @@ namespace Nextflip.APIControllers
                 switch (request.Type.ToLower())
                 {
                     case "media":
-                        isValid = mediaManagerManagementService.DisapproveChangeMedia(request.RequestID);
+                        isValid = mediaManagerManagementService.DisapproveChangeMedia(request.RequestID, request.Content);
                         break;
                     case "season":
-                        isValid = mediaManagerManagementService.DisapproveChangeSeason(request.RequestID);
+                        isValid = mediaManagerManagementService.DisapproveChangeSeason(request.RequestID, request.Content);
                         break;
                     case "episode":
-                        isValid = mediaManagerManagementService.DisapproveChangeEpisode(request.RequestID);
+                        isValid = mediaManagerManagementService.DisapproveChangeEpisode(request.RequestID, request.Content);
                         break;
                     default:
                         isValid = false;

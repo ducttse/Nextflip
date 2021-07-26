@@ -81,7 +81,7 @@ namespace Nextflip.Models.supportTicket
                                 string createdDate = reader.GetMySqlDateTime("createdDate").ToString();
                                 string status = reader.GetString("status");
                                 string content = reader.GetString("content");
-                                supportTickets.Add(new SupportTicket(supportTicketID, userEmail, createdDate, topicName, status, content));
+                                supportTickets.Add(new SupportTicket(supportTicketID, userEmail, createdDate, reader.GetString("topicName"), status, content));
                             }
                             connection.Close();
                         }

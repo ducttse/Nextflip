@@ -1,0 +1,117 @@
+﻿@model dynamic
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous" />
+    <!-- font awesome -->
+    <script src="https://kit.fontawesome.com/c82ac77d9b.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="Landing.css">
+    <title>Document</title>
+</head>
+
+<body class="bg-dark">
+    <header class="d-flex justify-content-between p-2" style="background-color: #212326;">
+        <p class="fs-4 ps-3 text-danger me-auto">NextFlip</p>
+        <div>
+        </div>
+        <div>
+            <a class="btn btn-danger btn-lg me-2" href="/Account/Login">Sign In</a>
+            <a class="btn btn-light btn-lg me-4" href="/Account/Register">Sign Up</a>
+        </div>
+    </header>
+    <section class="d-flex justify-content-center">
+        <p class="position-absolute text-center top-50 h1 text-light" style="z-index: 10000;">100+ Movies & Shows</p>
+        <img src="https://storage.googleapis.com/next-flip/Image/Landing/Landing.png" id="img" alt="landing"
+             class="w-100 h-100">
+    </section>
+    <section class="mt-5">
+        <p class="h1 text-center text-light mb-5">Frequently Asked Questions</p>
+        <div class="accordion col-8 mx-auto mt-2 fs-4" id="accordion">
+            <div class="accordion-item border-0">
+                <h2 class="accordion-header" id="headingOne" style="background-color: #303030;">
+                    <button class="accordion-button fs-4" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne"
+                            style="background-color: #303030; color: #fff;">
+                        What is Nextflip?
+                    </button>
+                </h2>
+                <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+                     data-bs-parent="#accordion" style="background-color: #303030; color: #fff;">
+                    <div class="accordion-body">
+                        NextFlip is a streaming service that offers a wide variety of award-winning TV shows, movies,
+                        anime, documentaries, and more on thousands of internet-connected devices.
+                        <br>
+                        You can watch as much as you want, whenever you want without a single commercial – all for one
+                        low monthly price. There's always something new to discover and new TV shows and movies are
+                        added every week!
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item border-0">
+                <h2 class="accordion-header" id="headingTwo">
+                    <button class="accordion-button collapsed fs-4" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo"
+                            style="background-color: #303030; color: #fff;">
+                        How much does Netflix cost?
+                    </button>
+                </h2>
+                <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+                     data-bs-parent="#accordion" style="background-color: #303030; color: #fff;">
+                    <div class="accordion-body">
+                        Watch NextFlip fixed monthly fee. Plans 3.99$ a month. No extra costs, no contracts.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item border-0">
+                <h2 class="accordion-header" id="headingThree">
+                    <button class="accordion-button collapsed fs-4" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree"
+                            style="background-color: #303030; color: #fff;">
+                        How do I cancel?
+                    </button>
+                </h2>
+                <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree"
+                     data-bs-parent="#accordion" style="background-color: #303030; color: #fff;">
+                    <div class="accordion-body">
+                        NextFlip is flexible. There are no pesky contracts and no commitments. You can easily cancel
+                        your
+                        account online in two clicks. There are no cancellation fees – start or stop your account
+                        anytime.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item border-0">
+                <h2 class="accordion-header" id="headingFour">
+                    <button class="accordion-button collapsed fs-4" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour"
+                            style="background-color: #303030; color: #fff;">
+                        What can I watch on NextFlip?
+                    </button>
+                </h2>
+                <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
+                     data-bs-parent="#accordion" style="background-color: #303030; color: #fff;">
+                    <div class="accordion-body">
+                        NextFlip has an extensive library of feature films, documentaries, TV shows, anime,
+                        award-winning
+                        NextFlip originals, and more. Watch as much as you want, anytime you want.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+            crossorigin="anonymous"></script>
+</body>
+
+</html>

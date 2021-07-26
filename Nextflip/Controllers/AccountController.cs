@@ -35,6 +35,7 @@ namespace Nextflip.Controllers
             return RedirectToAction("Login", "Account");
         }
 
+        public IActionResult ForgotPassword() => View();
         public IActionResult ForgotPassword([FromServices] AccountService accountService, string userID, string token)
         {
             if(userID == null || token == null) return NotFound();
@@ -42,5 +43,8 @@ namespace Nextflip.Controllers
             if (account == null) return NotFound();
             return RedirectToAction("Login", "Account");
         }
+
+        public IActionResult AccessDeny() => View();
+
     }
 }

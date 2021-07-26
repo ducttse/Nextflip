@@ -117,9 +117,9 @@ namespace Nextflip.APIControllers
             }
         }
 
-        [Route("VerifyAccountV1")]
+        [Route("VerifyAccount")]
         [HttpPost]
-        public IActionResult VerifyAccountV1([FromServices] IAccountService accountService, [FromBody] LoginForm form)
+        public IActionResult VerifyAccount([FromServices] IAccountService accountService, [FromBody] LoginForm form)
         {
             try
             {
@@ -135,24 +135,6 @@ namespace Nextflip.APIControllers
             }
         }
 
-        [Route("VerifyAccountV2")]
-        [HttpPost]
-        public IActionResult VerifyAccountV2([FromServices] IAccountService accountService, [FromBody] LoginForm form)
-        {
-            try
-            {
-                if (form.UserID == null || form.Token == null) return new JsonResult(new { Message = "Invalid authentication factor" });
-                Account account = accountService.ConfirmEmail(form.UserID, form.Token);
-                if (account == null) return new JsonResult(new { Message = "Incorrect Access Token" });
-                var x = SignIn(account);
-                return new JsonResult(new { Message = "Success", URL = "/Profle/Index" });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogInformation("Login/VerifyAccountV2: " + ex.Message);
-                return new JsonResult(new { Message = ex.Message });
-            }
-        }
 
         [Route("LoginByGmail")]
         [HttpPost]

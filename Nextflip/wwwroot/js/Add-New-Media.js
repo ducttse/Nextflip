@@ -136,7 +136,7 @@ async function setEpisode(obj) {
     getFile(document.getElementById("videoEpisode"));
     Episode.EpisodeURL = await requestUploadVideo(Media.Seasons[ index ].SeasonInfo.Number, Episode.Number);
     Media.Seasons[ index ].Episodes.push(Episode);
-    document.getElementById(`season_${index}`).insertAdjacentHTML("beforeend", renderEpisode(Episode, index));
+    document.getElementById(`season_${index + 1}`).insertAdjacentHTML("beforeend", renderEpisode(Episode, index));
     document.getElementById("spinner").classList.add("d-none");
     document.querySelector("#modalAddEpisodeForm .btn-close").click();
     document.getElementById("episode_submit_btn").disabled = false;

@@ -914,7 +914,7 @@ namespace Nextflip.Models.media
             return count;
         }
 
-        public bool RequestChangeMediaStatus(string ID, string newStatus)
+        public bool RequestChangeMediaStatus(string ID, string newStatus, string note)
         {
             var result = false;
             try
@@ -923,12 +923,13 @@ namespace Nextflip.Models.media
                 {
                     connection.Open();
                     string Sql = "UPDATE media " +
-                        "SET status = @newStatus " +
+                        "SET status = @newStatus, note = @note " +
                         "where mediaID = @ID";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@newStatus", newStatus);
                         command.Parameters.AddWithValue("@ID", ID);
+                        command.Parameters.AddWithValue("@note", note);
                         int rowEffects = command.ExecuteNonQuery();
                         if (rowEffects > 0)
                         {
@@ -940,7 +941,8 @@ namespace Nextflip.Models.media
             }
             catch (Exception ex)
             {
-                throw new Exception("fail. This media is requesting to change status");
+                //throw new Exception("fail. This media is requesting to change status");
+                throw new Exception(ex.Message);
             }
             return result;
         }

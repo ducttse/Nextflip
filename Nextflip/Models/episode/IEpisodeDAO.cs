@@ -11,7 +11,7 @@ namespace Nextflip.Models.episode
         IEnumerable<Episode> GetEpisodesBySeasonID(string seasonID,string status);
         Episode GetEpisodeByID(string episodeID);
         bool ApproveChangeEpisode(string ID);
-        bool DisapproveChangeEpisode(string ID);
+        bool DisapproveChangeEpisode(string ID, string note);
         bool RequestChangeEpisodeStatus(string episodeID, string newStatus);
         string AddEpisode(Episode episode);
         string UpdateEpisode(Episode episode);

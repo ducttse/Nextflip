@@ -24,13 +24,13 @@ namespace Nextflip.Services.Implementations
         }
 
         public bool ApproveChangeMedia(string mediaID) => _mediaDao.ApproveChangeMedia(mediaID);
-        public bool DisapproveChangeMedia(string mediaID) => _mediaDao.DisapproveChangeMedia(mediaID);
+        public bool DisapproveChangeMedia(string mediaID, string note) => _mediaDao.DisapproveChangeMedia(mediaID, note);
        
         public Media GetMediaByID(string mediaID) => _mediaDao.GetMediaByID(mediaID);
         public bool ApproveChangeEpisode(string episodeID) => _episodeDAO.ApproveChangeEpisode(episodeID);
-        public bool DisapproveChangeEpisode(string episodeID) => _episodeDAO.DisapproveChangeEpisode(episodeID);
+        public bool DisapproveChangeEpisode(string episodeID, string note) => _episodeDAO.DisapproveChangeEpisode(episodeID, note);
         public bool ApproveChangeSeason(string seasonID) => _seasonDAO.ApproveChangeSeason(seasonID);
-        public bool DisapproveChangeSeason(string seasonID) => _seasonDAO.DisapproveChangeSeason(seasonID);
+        public bool DisapproveChangeSeason(string seasonID, string note) => _seasonDAO.DisapproveChangeSeason(seasonID, note);
         public Season GetSeasonByID(string seasonID) => _seasonDAO.GetSeasonByID(seasonID);
         public Episode GetEpisodeByID(string episodeID) => _episodeDAO.GetEpisodeByID(episodeID);
 

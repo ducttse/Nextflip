@@ -75,13 +75,13 @@ namespace Nextflip.APIControllers
                 switch (request.Type.ToLower())
                 {
                     case "media":
-                        isValid = mediaManagerManagementService.DisapproveChangeMedia(request.RequestID);
+                        isValid = mediaManagerManagementService.DisapproveChangeMedia(request.RequestID, request.Content);
                         break;
                     case "season":
-                        isValid = mediaManagerManagementService.DisapproveChangeSeason(request.RequestID);
+                        isValid = mediaManagerManagementService.DisapproveChangeSeason(request.RequestID, request.Content);
                         break;
                     case "episode":
-                        isValid = mediaManagerManagementService.DisapproveChangeEpisode(request.RequestID);
+                        isValid = mediaManagerManagementService.DisapproveChangeEpisode(request.RequestID, request.Content);
                         break;
                     default:
                         isValid = false;
@@ -102,25 +102,6 @@ namespace Nextflip.APIControllers
             }
         }
 
-        /*
-        [Route("NumberOfPendingMedias")]
-        public JsonResult NumberOfPendingMedias([FromServices] IMediaManagerManagementService mediaManagerManagementService)
-        {
-            try
-            {
-                int count = mediaManagerManagementService.NumberOfPendingMedias();
-                return new JsonResult(count);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogInformation("NumberOfPendingMedias: " + ex.Message);
-                return new JsonResult(new
-                {
-                    message = ex.Message
-                });
-            }
-        }
-        */
         public class Request
         {
             public int RequestID { get; set; }
@@ -136,62 +117,6 @@ namespace Nextflip.APIControllers
             public int RequestPage { get; set; }
         }
 
-        /*/Get All
-        [HttpPost]
-        [Route("GetPendingMediasListAccordingRequest")]
-        public JsonResult GetPendingMediasListAccordingRequest([FromServices] IMediaManagerManagementService mediaManagerManagementService,
-                                [FromBody] Request request)
-        {
-            try
-            {
-                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.GetPendingMediasListAccordingRequest(request.RowsOnPage, request.RequestPage);
-                int count = mediaManagerManagementService.NumberOfPendingMedias();
-                double totalPage = (double)count / (double)request.RowsOnPage;
-                var result = new
-                {
-                    TotalPage = Math.Ceiling(totalPage),
-                    Data = requests
-                };
-                return (new JsonResult(result));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogInformation("GetPendingMediasListAccordingRequest: " + ex.Message);
-                return new JsonResult(new
-                {
-                    message = ex.Message
-                });
-            }
-        }
-        
-        //Get All + Filter Status
-        [HttpPost]
-        [Route("GetPendingMediasFilterStatus")]
-        public JsonResult GetPendingMediasFilterStatus([FromServices] IMediaManagerManagementService mediaManagerManagementService,
-                                [FromBody] Request request)
-        {
-            try
-            {
-                IEnumerable<MediaEditRequest> requests = mediaManagerManagementService.GetPendingMediasFilterStatus(request.Status, request.RowsOnPage, request.RequestPage);
-                int count = mediaManagerManagementService.NumberOfPendingMediasFilterStatus(request.Status);
-                double totalPage = (double)count / (double)request.RowsOnPage;
-                var result = new
-                {
-                    TotalPage = Math.Ceiling(totalPage),
-                    Data = requests
-                };
-                return (new JsonResult(result));
-            }
-            catch (Exception ex)
-            {
-                _logger.LogInformation("GetPendingMediasFilterStatus: " + ex.Message);
-                return new JsonResult(new
-                {
-                    message = ex.Message
-                });
-            }
-        }
-        */
         //Get
         [HttpPost]
         [Route("GetMediaRequest")]

@@ -72,13 +72,13 @@ namespace Nextflip.Models.media
                     connection.Open();
                     string Sql = "Select mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media " +
-                                "Where MATCH (title)  AGAINST (@searchValue in natural language mode) " +
+                                "Where MATCH (title)  AGAINST (@searchValue in boolean mode) " +
                                 "and (status = 'Approved' or status = 'Disapproved') " +
                                 "ORDER BY status DESC " +
                                 "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        command.Parameters.AddWithValue("@searchValue", searchValue);
+                        command.Parameters.AddWithValue("@searchValue", $"{searchValue}*");
                         command.Parameters.AddWithValue("@offset", offset);
                         command.Parameters.AddWithValue("@limit", RowsOnPage);
                         using (var reader = command.ExecuteReader())
@@ -119,7 +119,7 @@ namespace Nextflip.Models.media
                 connection.Open();
                 string Sql = "Select COUNT(mediaID) " +
                                 "From media " +
-                                "Where MATCH (title)  AGAINST (@searchValue in natural language mode) " +
+                                "Where MATCH (title)  AGAINST (@searchValue in boolean mode) " +
                                 "and (status = 'Approved' or status = 'Disapproved')";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
@@ -279,8 +279,8 @@ namespace Nextflip.Models.media
                     else if (CategoryName.Trim().ToLower().Equals("all") && !Status.Trim().ToLower().Equals("all"))
                     {
                         Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate " +
-                                "From media M, mediaCategory MC, category C " +
-                                "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and M.status = @Status " +
+                                "From media M " +
+                                "where M.status = @Status " +
                                 "Order by uploadDate ASC " +
                                 "LIMIT @offset, @limit";
                     }
@@ -352,8 +352,8 @@ namespace Nextflip.Models.media
                 else if (CategoryName.Trim().ToLower().Equals("all") && !Status.Trim().ToLower().Equals("all"))
                 {
                     Sql = "Select COUNT(M.mediaID) " +
-                          "From media M, mediaCategory MC, category C " +
-                          "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and  M.status = @Status ";
+                        "From media M " +
+                        "where M.status = @Status ";
                 }
                 else if (!CategoryName.Trim().ToLower().Equals("all") && Status.Trim().ToLower().Equals("all"))
                 {
@@ -395,14 +395,14 @@ namespace Nextflip.Models.media
                     connection.Open();
                     string Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media M, mediaCategory MC, category C " +
-                                "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
+                                "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) " +
                                 "and M.mediaID = MC.mediaID and MC.categoryID=C.categoryID and C.name = @CategoryName " +
                                 "and (status = 'Approved' or status = 'Disapproved') " +
                                 "ORDER BY status DESC " +
                                 "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        command.Parameters.AddWithValue("@searchValue", SearchValue);
+                        command.Parameters.AddWithValue("@searchValue", $"{SearchValue}*");
                         command.Parameters.AddWithValue("@CategoryName", CategoryName);
                         command.Parameters.AddWithValue("@offset", offset);
                         command.Parameters.AddWithValue("@limit", RowsOnPage);
@@ -444,12 +444,12 @@ namespace Nextflip.Models.media
                 connection.Open();
                 string Sql = "Select COUNT(M.mediaID) " +
                                 "From media M, mediaCategory MC, category C " +
-                                "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
+                                "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) " +
                                 "and M.mediaID = MC.mediaID and MC.categoryID=C.categoryID and C.name = @CategoryName " +
                                 "and (status = 'Approved' or status = 'Disapproved') ";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
-                    command.Parameters.AddWithValue("@SearchValue", SearchValue);
+                    command.Parameters.AddWithValue("@searchValue", $"{SearchValue}*");
                     command.Parameters.AddWithValue("@CategoryName", CategoryName);
                     using (var reader = command.ExecuteReader())
                     {
@@ -478,7 +478,7 @@ namespace Nextflip.Models.media
                     {
                         Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate " +
                                 "From media M " +
-                                "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
+                                "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) " +
                                 "Order by uploadDate ASC " +
                                 "LIMIT @offset, @limit";
                     }
@@ -486,7 +486,7 @@ namespace Nextflip.Models.media
                     {
                         Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate " +
                                 "From media M, mediaCategory MC, category C " +
-                                "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
+                                "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) " +
                                 "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and M.status = @Status " +
                                 "Order by uploadDate ASC " +
                                 "LIMIT @offset, @limit";
@@ -495,7 +495,7 @@ namespace Nextflip.Models.media
                     {
                         Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate " +
                                 "From media M, mediaCategory MC, category C " +
-                                "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
+                                "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) " +
                                 "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName " +
                                 "Order by uploadDate ASC " +
                                 "LIMIT @offset, @limit";
@@ -504,14 +504,14 @@ namespace Nextflip.Models.media
                     {
                         Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate " +
                                 "From media M, mediaCategory MC, category C " +
-                                "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
+                                "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) " +
                                 "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status " +
                                 "Order by uploadDate ASC " +
                                 "LIMIT @offset, @limit";
                     }
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        command.Parameters.AddWithValue("@searchValue", SearchValue);
+                        command.Parameters.AddWithValue("@searchValue", $"{SearchValue}*");
                         if (!CategoryName.Trim().ToLower().Equals("all")) command.Parameters.AddWithValue("@CategoryName", CategoryName);
                         if (!Status.Trim().ToLower().Equals("all")) command.Parameters.AddWithValue("@Status", Status);
                         command.Parameters.AddWithValue("@offset", offset);
@@ -558,32 +558,32 @@ namespace Nextflip.Models.media
                 {
                     Sql = "Select COUNT(M.mediaID) " +
                                 "From media M " +
-                                "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) ";
+                                "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) ";
                 }
                 else if (CategoryName.Trim().ToLower().Equals("all") && !Status.Trim().ToLower().Equals("all"))
                 {
                     Sql = "Select COUNT(M.mediaID) " +
                                 "From media M, mediaCategory MC, category C " +
-                                "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
+                                "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) " +
                                 "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and M.status = @Status ";
                 }
                 else if (!CategoryName.Trim().ToLower().Equals("all") && Status.Trim().ToLower().Equals("all"))
                 {
                     Sql = "Select COUNT(M.mediaID) " +
                                 "From media M, mediaCategory MC, category C " +
-                                "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
+                                "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) " +
                                 "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName";
                 }
                 else
                 {
                     Sql = "Select COUNT(M.mediaID) " +
                                 "From media M, mediaCategory MC, category C " +
-                                "Where MATCH (M.title)  AGAINST (@searchValue in natural language mode) " +
+                                "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) " +
                                 "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status ";
                 }
                 using (var command = new MySqlCommand(Sql, connection))
                 {
-                    command.Parameters.AddWithValue("@SearchValue", SearchValue);
+                    command.Parameters.AddWithValue("@searchValue", $"{SearchValue}*");
                     if (!CategoryName.Trim().ToLower().Equals("all")) command.Parameters.AddWithValue("@CategoryName", CategoryName);
                     if (!Status.Trim().ToLower().Equals("all")) command.Parameters.AddWithValue("@Status", Status);
                     using (var reader = command.ExecuteReader())
@@ -648,6 +648,7 @@ namespace Nextflip.Models.media
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("mediaID_Input", ID);
+                        command.Parameters.AddWithValue("note_Input", ID);
                         int affectedRow = command.ExecuteNonQuery();
                         if (affectedRow == 1) result = true;
                     }
@@ -660,7 +661,7 @@ namespace Nextflip.Models.media
             return result;
         }
 
-        public bool DisapproveChangeMedia(string ID)
+        public bool DisapproveChangeMedia(string ID, string note)
         {
             var result = false;
             try
@@ -673,6 +674,7 @@ namespace Nextflip.Models.media
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("mediaID_Input", ID);
+                        command.Parameters.AddWithValue("note_Input", note);
                         int affectedRow = command.ExecuteNonQuery();
                         if (affectedRow == 1) result = true;
                     }
@@ -844,13 +846,13 @@ namespace Nextflip.Models.media
                     connection.Open();
                     string Sql = "Select mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description " +
                                 "From media " +
-                                "Where MATCH (title)  AGAINST (@searchValue in natural language mode) and status = @Status " +
+                                "Where MATCH (title)  AGAINST (@searchValue in boolean mode) and status = @Status " +
                                 "and (status = 'Approved' or status = 'Disapproved') " +
                                 "ORDER BY status DESC " +
                                 "LIMIT @offset, @limit";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        command.Parameters.AddWithValue("@searchValue", searchValue);
+                        command.Parameters.AddWithValue("@searchValue", $"{searchValue}*");
                         command.Parameters.AddWithValue("@Status", Status);
                         command.Parameters.AddWithValue("@offset", offset);
                         command.Parameters.AddWithValue("@limit", RowsOnPage);
@@ -893,11 +895,11 @@ namespace Nextflip.Models.media
                 connection.Open();
                 string Sql = "Select COUNT(mediaID) " +
                                 "From media " +
-                                "Where MATCH (title)  AGAINST (@searchValue in natural language mode) and status = @Status " +
+                                "Where MATCH (title)  AGAINST (@searchValue in boolean mode) and status = @Status " +
                                 "and (status = 'Approved' or status = 'Disapproved') ";
                 using (var command = new MySqlCommand(Sql, connection))
                 {
-                    command.Parameters.AddWithValue("@searchValue", searchValue);
+                    command.Parameters.AddWithValue("@searchValue", $"{searchValue}*");
                     command.Parameters.AddWithValue("@Status", Status);
                     using (var reader = command.ExecuteReader())
                     {
@@ -912,32 +914,22 @@ namespace Nextflip.Models.media
             return count;
         }
 
-        public bool RequestChangeMediaStatus(string ID, string newStatus)
+        public bool RequestChangeMediaStatus(string ID, string newStatus, string note)
         {
             var result = false;
             try
             {
-                string mediaID = ID.Split('_')[0];
-                Media media = GetMediaByID(mediaID);
-                if (media.Status.Trim().Equals("Pending")) return false;
-                string title_preview = media.Title + "_preview";
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "INSERT INTO media (mediaID, status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description) " +
-                        "VALUES (@mediaID_preview, 'Pending', @title, @filmType, @director, @cast, @publishYear, @duration, @bannerURL, @language, @description) ";
+                    string Sql = "UPDATE media " +
+                        "SET status = @newStatus, note = @note " +
+                        "where mediaID = @ID";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        command.Parameters.AddWithValue("@mediaID_preview", ID);
-                        command.Parameters.AddWithValue("@title", title_preview);
-                        command.Parameters.AddWithValue("@filmType", media.FilmType);
-                        command.Parameters.AddWithValue("@director", media.Director);
-                        command.Parameters.AddWithValue("@cast", media.Cast);
-                        command.Parameters.AddWithValue("@publishYear", media.PublishYear);
-                        command.Parameters.AddWithValue("@duration", media.Duration);
-                        command.Parameters.AddWithValue("@bannerURL", media.BannerURL);
-                        command.Parameters.AddWithValue("@language", media.Language);
-                        command.Parameters.AddWithValue("@description", media.Description);
+                        command.Parameters.AddWithValue("@newStatus", newStatus);
+                        command.Parameters.AddWithValue("@ID", ID);
+                        command.Parameters.AddWithValue("@note", note);
                         int rowEffects = command.ExecuteNonQuery();
                         if (rowEffects > 0)
                         {
@@ -949,7 +941,8 @@ namespace Nextflip.Models.media
             }
             catch (Exception ex)
             {
-                throw new Exception("fail. This media is requesting to change status");
+                //throw new Exception("fail. This media is requesting to change status");
+                throw new Exception(ex.Message);
             }
             return result;
         }

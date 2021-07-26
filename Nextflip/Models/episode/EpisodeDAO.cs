@@ -160,7 +160,7 @@ namespace Nextflip.Models.episode
             return result;
         }
 
-        public bool DisapproveChangeEpisode(string ID)
+        public bool DisapproveChangeEpisode(string ID, string note)
         {
             var result = false;
             try
@@ -173,6 +173,7 @@ namespace Nextflip.Models.episode
                     {
                         command.CommandType = CommandType.StoredProcedure;
                         command.Parameters.AddWithValue("episodeID_Input", ID);
+                        command.Parameters.AddWithValue("note_Input", note);
                         int affectedRow = command.ExecuteNonQuery();
                         if (affectedRow == 1) result = true;
                     }

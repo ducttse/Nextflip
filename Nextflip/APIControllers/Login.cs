@@ -101,7 +101,7 @@ namespace Nextflip.APIControllers
                 string userID = accountService.ForgotPassword(form.Email, token);
                 if(userID == null) return new JsonResult(new { Message = "An error occurred" });
                 string body = "Hi \n" +
-                        "You have requested to recover your account.Please click the link below to verify your identity.\n" +
+                        "You have requested to recover your account.\n" +
                         "Your recovery code: " + token + "\n" +
                         "If it isn't you, please ignore this email.\n" +
                         "Thank you for using Nextflip.\n" +

@@ -19,7 +19,7 @@ namespace Nextflip.Models.season
                     connection.Open();
                     string Sql = "Select seasonID, title, thumbnailURL, status, number, note " +
                                 "From season " +
-                                "Where mediaID = @mediaID " +
+                                "Where mediaID = @mediaID and status != 'Removed' " +
                                 "Order By number";
 
                     using (var command = new MySqlCommand(Sql, connection))

@@ -7,10 +7,11 @@
 
 function loadProfileData() {
     let data = getProfile();
+    console.log(data);
     requestEditOBj.UserID = data.userID;
     requestEditOBj.PictureURL = data.pictureURL;
     document.getElementById("fullname_edit").value = data.fullname;
-    document.getElementById("dob_edit").value = data.dateOfBirth;
+    document.getElementById("dob_edit").value = data.dateOfBirth.split("-").reverse().join("-");
 }
 
 function setTriggerLoadProfile() {

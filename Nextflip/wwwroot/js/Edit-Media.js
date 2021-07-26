@@ -1,4 +1,5 @@
-﻿let MediaObj;
+﻿let
+    ;
 let isEdited = false;
 async function getRequestObjID(id) {
     let result = "";

@@ -81,11 +81,12 @@ function renderTicket(ticket, index) {
 
   let shortContent = makeShortContent(ticket.content);
   let topic;
-  if (ticket.topicName == "All") {
+  if (document.getElementById("status_filter").value != "All") {
     topic = "";
     document.getElementById("topic").classList.add("d-none");
   }
   else {
+    console.log(ticket);
     topic = `<td class="text-center">${ticket.topicName}</td>`;
     document.getElementById("topic").classList.remove("d-none");
   }

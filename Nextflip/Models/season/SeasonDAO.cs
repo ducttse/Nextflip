@@ -17,7 +17,7 @@ namespace Nextflip.Models.season
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select seasonID, title, thumbnailURL, status, number " +
+                    string Sql = "Select seasonID, title, thumbnailURL, status, number, note " +
                                 "From season " +
                                 "Where mediaID = @mediaID " +
                                 "Order By number";
@@ -36,7 +36,8 @@ namespace Nextflip.Models.season
                                     ThumbnailURL = reader.GetString(2),
                                     MediaID = mediaID,
                                     Status = reader.GetString(3),
-                                    Number = reader.GetInt32(4)
+                                    Number = reader.GetInt32(4),
+                                    Note = reader.IsDBNull(5) ? null : reader.GetString(5)
                                 });
                             }
                         }
@@ -78,7 +79,8 @@ namespace Nextflip.Models.season
                                     ThumbnailURL = reader.GetString(2),
                                     MediaID = mediaID,
                                     Status = reader.GetString(3),
-                                    Number = reader.GetInt32(4)
+                                    Number = reader.GetInt32(4),
+                                    Note = reader.IsDBNull(5) ? null : reader.GetString(5)
                                 });
                             }
                         }
@@ -101,7 +103,7 @@ namespace Nextflip.Models.season
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select  title, thumbnailURL, mediaID, status, number " +
+                    string Sql = "Select  title, thumbnailURL, mediaID, status, number, note " +
                                 "From season " +
                                 "Where seasonID = @seasonID";
 
@@ -119,7 +121,8 @@ namespace Nextflip.Models.season
                                     ThumbnailURL = reader.GetString(1),
                                     MediaID = reader.GetString(2),
                                     Status = reader.GetString(3),
-                                    Number = reader.GetInt32(4)
+                                    Number = reader.GetInt32(4),
+                                    Note = reader.IsDBNull(5) ? null : reader.GetString(5)
                                 };
                             }
                         }

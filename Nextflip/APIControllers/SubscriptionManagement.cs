@@ -64,7 +64,7 @@ namespace Nextflip.APIControllers
                 IList<PaymentPlan> result = paymentPlanService.GetPaymentPlan();
                 if (result != null)
                 {
-                    result = result.OrderBy(pp => pp.Duration);
+                    result = result.OrderBy(pp => pp.Duration).ToList();
                 }
                 return new JsonResult(result);
             }

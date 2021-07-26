@@ -54,6 +54,12 @@ function requestFavourite() {
     fetch("/api/ViewSubscribedUserDashboard/GetFavoriteList/", initObject)
         .then(res => res.json())
         .then(json => {
-            appendMedia(json);
+            if (json.length == 0) {
+                document.getElementById("empty").classList.remove("d-none");
+            }
+            else {
+                document.getElementById("empty").classList.add("d-none");
+                appendMedia(json);
+            }
         })
 }

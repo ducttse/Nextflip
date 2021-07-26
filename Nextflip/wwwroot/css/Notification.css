@@ -1,0 +1,6 @@
+﻿.notification{
+	cursor: pointer
+}
+.notification:hover .card-body{
+	background-color: #606060;
+}

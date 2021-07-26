@@ -34,5 +34,13 @@ namespace Nextflip.Controllers
             ViewBag.UserID = id;
             return View();
         }
+        public ActionResult ViewSubscriptionManage()
+        {
+            return View();
+        }
+        public ActionResult ViewNotificationManage()
+        {
+            return View();
+        }
     }
 }

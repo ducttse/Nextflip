@@ -9,7 +9,30 @@
     <link rel="Stylesheet" href="@Href("~/css/Notification.css")" />
 }
 <div style="min-height: 100vh">
-    <div class="col-8 mt-3 mx-auto" id="notification_wrapper">
+    <div class="col-8 mt-3 mx-auto d-none" id="notification_detail">
+    </div>
+    <div class="col-8 mt-3 mx-auto d-none" id="notification_wrapper">
+    </div>
+    <div id="pagination" class="d-flex justify-content-center">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item" onclick="previousPage()">
+                    <a class="page-link bg-dark link-light border-0 mx-2" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+                <li class="page-item d-flex">
+                    <p class="pt-1 mb-0">Page</p>
+                    <p class="page-link bg-dark link-light border-0 mx-2"  id="currentPage">1</p>
+                    <p class="pt-1 mb-0" id="totalPage">of num</p>
+                </li>
+                <li class="page-item" onclick="nextPage()">
+                    <a class="page-link bg-dark link-light border-0 mx-2" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
     </div>
 </div>
 <script src="~/js/Notification.js"></script>

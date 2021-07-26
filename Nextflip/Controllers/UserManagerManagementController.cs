@@ -38,9 +38,5 @@ namespace Nextflip.Controllers
         {
             return View();
         }
-        public ActionResult ViewNotificationManage()
-        {
-            return View();
-        }
     }
 }

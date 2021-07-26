@@ -155,17 +155,17 @@
         requestNotifications();
         appendSearch("Search account's email", "");
         setEnterEvent();
-        let button1 = `<a href="/UserManagerManagement/Index" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100">
-                                            Account
-                                      </a>`;
-        let button2 = `<a href="/UserManagerManagement/ViewNotificationManage" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100">
+        let button = `<a id="back_btn" href="/MediaManagerManagement/Index" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
+                                Media
+                              </a>`;
+        let button2 = `<a id="back_btn" href="/MediaManagerManagement/CategoryManager" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
+                                    Category & type
+                                  </a>`;
+        let button3 = `<a href="/MediaManagerManagement/ViewNotificationManage" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100">
                                             Notification
                                           </a>`;
-        let button3 = `<a href="/UserManagerManagement/ViewSubscriptionManage" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100">
-                                            Subscription
-                                          </a>`;
-        appendButton(button1);
-        appendButton(button2);
         appendButton(button3);
+        appendButton(button2);
+        appendButton(button);
     </script>
 }

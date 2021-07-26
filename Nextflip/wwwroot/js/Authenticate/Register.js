@@ -157,25 +157,26 @@ function requestSignUp() {
     $("#dob").datepicker("option", "dateFormat", "dd-mm-yy");
     fetch("/api/RegisterAccount/Register", initObject).then(res => res.json()).then(json => {
         if (json.message != null && json.message == "Success") {
-            fetch("/api/Login/LoginAccount", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "text/json",
-                    "Accept": "application/json, text/plain, */*"
-                },
-                body: JSON.stringify({
-                    Email: document.getElementById("email").value,
-                    Password: document.getElementById("password").value
-                })
-            })
-                .then(res => res.json())
-                .then(json => {
-                    if (json.message == true) {
-                        localStorage.setItem("ID", json.userID)
-                        localStorage.setItem("URL", json.url)
-                        window.location.replace(json.url);
-                    }
-                })
+            //fetch("/api/Login/LoginAccount", {
+            //    method: "POST",
+            //    headers: {
+            //        "Content-Type": "text/json",
+            //        "Accept": "application/json, text/plain, */*"
+            //    },
+            //    body: JSON.stringify({
+            //        Email: document.getElementById("email").value,
+            //        Password: document.getElementById("password").value
+            //    })
+            //})
+            //    .then(res => res.json())
+            //    .then(json => {
+            //        if (json.message == true) {
+            //            localStorage.setItem("ID", json.userID)
+            //            localStorage.setItem("URL", json.url)
+            //            window.location.replace(json.url);
+            //        }
+            //    })
+            displayModal();
         }
         else {
             checkMail(document.getElementById("email").value);
@@ -185,4 +186,11 @@ function requestSignUp() {
             checkDOB(json.dateOfBirthError);
         }
     })
+
+    function displayModal() {
+        let btn = document.getElementById("btn-modal");
+        let body = document.getElementById("respose-modal-body");
+        body.innerHTML = "We have send validation link in your email. Please verify your account in the email !";
+        if (btn != null) btn.click();
+    }
 }

@@ -47,7 +47,7 @@ namespace Nextflip.Controllers
         {
             ViewBag.MediaID = id;
             var mediaInfo = mediaService.GetMediaByID(id);
-            if (mediaInfo.Status == "Approved")
+            if (mediaInfo.Status == "Approved" && !mediaInfo.Title.EndsWith("_preview"))
             {
                 TempData["clone message"] =
                     "You are trying to edit a published media so we create a drafted version of the media. " +
@@ -55,7 +55,7 @@ namespace Nextflip.Controllers
                     "Feel free to delete the draft version if needed.";
                 TempData["oldMediaID"] = id;
                 var newMediaID = mediaService.CloneMedia(id);
-                return RedirectToAction("ViewEditMedia", "EditorDashboard", newMediaID);
+                return RedirectToAction("ViewEditMedia", "EditorDashboard", new { id = newMediaID });
             }
             return View();
         }

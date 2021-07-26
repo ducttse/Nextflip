@@ -62,6 +62,10 @@ namespace Nextflip.APIControllers
             try
             {
                 IList<PaymentPlan> result = paymentPlanService.GetPaymentPlan();
+                if (result != null)
+                {
+                    result.OrderBy(pp => pp.Duration);
+                }
                 return new JsonResult(result);
             }
             catch (Exception exception)

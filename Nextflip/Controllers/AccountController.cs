@@ -35,12 +35,6 @@ namespace Nextflip.Controllers
             return RedirectToAction("Login", "Account");
         }
 
-        public IActionResult ForgotPassword([FromServices] AccountService accountService, string userID, string token)
-        {
-            if(userID == null || token == null) return NotFound();
-            Account account = accountService.ConfirmEmail(userID, token);
-            if (account == null) return NotFound();
-            return RedirectToAction("Login", "Account");
-        }
+        public IActionResult ForgotPassword() => View();
     }
 }

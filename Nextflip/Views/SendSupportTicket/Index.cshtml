@@ -4,6 +4,7 @@
 }
 @section styles{
     <link rel="Stylesheet" href="@Href("~/css/Header.css")" />
+    
 }
 <div class="w-100 pt-4 align-self-center" style="background-color: #171717">
     <div id="form_cotainer" class="mx-auto col-8 p-3 mb-5 rounded needs-validation text-light" style="background-color: #171717">
@@ -41,6 +42,16 @@
         <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close" onclick="hideToast()"></button>
     </div>
 </div>
+
+<div class="modal" id="Modal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body d-flex flex-column justify-content-center">
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="~/js/SendSupportTicket.js"></script>
 <script>
   // requestTopic();

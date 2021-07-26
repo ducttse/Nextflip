@@ -640,6 +640,31 @@ namespace Nextflip.Models.media
             return result;
         }
 
+        public void RemoveMedia(string mediaID)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+
+                    using MySqlCommand command = new MySqlCommand();
+                    command.Connection = connection;
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.CommandText = "removeMedia";
+                    command.Parameters.AddWithValue("@mediaID", mediaID);
+                    int result = command.ExecuteNonQuery();
+                    if (result == 0)
+                    {
+                        throw new Exception("Remove clone failed");
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                throw new Exception("Fail. " + exception.Message);
+            }
+        }
+
         public bool ApproveChangeMedia(string ID)
         {
             var result = false;
@@ -652,10 +677,11 @@ namespace Nextflip.Models.media
                     var oldMediaID = GetMediasByTitle(trueTitle);
                     if (oldMediaID != null)
                     {
-                        mediaForm.MediaInfo.MediaID = oldMediaID.First().MediaID;
+                        mediaForm.MediaInfo.MediaID = oldMediaID.FirstOrDefault().MediaID;
                         mediaForm.MediaInfo.Title = trueTitle;
                         EditMedia(mediaForm);
                         ApproveChangeMedia(mediaForm.MediaInfo.MediaID);
+                        RemoveMedia(ID);
                     }
                 }
                 else
@@ -1351,7 +1377,7 @@ namespace Nextflip.Models.media
                 foreach (var newSeasonForm in mediaForm.Seasons)
                 {
                     var oldSeason =
-                        oldMedia.Seasons.First(ss => ss.SeasonInfo.SeasonID == newSeasonForm.SeasonInfo.SeasonID);
+                        oldMedia.Seasons.FirstOrDefault(ss => ss.SeasonInfo.SeasonID == newSeasonForm.SeasonInfo.SeasonID);
                     ///check if not changed
                     if (newSeasonForm.SeasonInfo.EqualWithoutStatus(oldSeason.SeasonInfo)) {
                         if (newSeasonForm.Episodes.Count() == oldSeason.Episodes.Count())
@@ -1378,7 +1404,7 @@ namespace Nextflip.Models.media
                     {
                         if (episode.EpisodeID != null && episode.EpisodeID.Trim() != "" && oldSeason != null)
                         {
-                            var oldEpisode = oldSeason.Episodes.Where(ep => ep.EpisodeID == episode.EpisodeID).First();
+                            var oldEpisode = oldSeason.Episodes.Where(ep => ep.EpisodeID == episode.EpisodeID).FirstOrDefault();
                             if (episode.EqualWithoutStatus(oldEpisode))
                             {
                                 episode.Status = oldEpisode.Status;

@@ -86,6 +86,7 @@ public class SendMailService : ISendMailService
         builder.HtmlBody = mailContent.Body;
         email.Body = builder.ToMessageBody();
 
+        // dùng SmtpClient của MailKit
         using var smtp = new MailKit.Net.Smtp.SmtpClient();
 
         try
@@ -96,8 +97,9 @@ public class SendMailService : ISendMailService
         }
         catch (Exception ex)
         {
-            System.IO.Directory.CreateDirectory("MailsSave");
-            var emailsavefile = string.Format(@"MailsSave/{0}.eml", Guid.NewGuid());
+            // Gửi mail thất bại, nội dung email sẽ lưu vào thư mục mailssave
+            System.IO.Directory.CreateDirectory("mailssave");
+            var emailsavefile = string.Format(@"mailssave/{0}.eml", Guid.NewGuid());
             await email.WriteToAsync(emailsavefile);
 
             logger.LogInformation("Lỗi gửi mail, lưu tại - " + emailsavefile);

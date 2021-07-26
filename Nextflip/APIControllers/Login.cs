@@ -89,6 +89,71 @@ namespace Nextflip.APIControllers
             }
         }
 
+        [Route("ForgotPassword")]
+        [HttpPost]
+        public async Task<IActionResult> ForgotPassword([FromServices] IAccountService accountService, [FromServices] ISendMailService sendMailService, [FromBody] LoginForm form)
+        {
+            try
+            {
+                bool isValid = accountService.IsExistedEmail(form.Email);
+                if (!isValid) return new JsonResult(new { Message = "Not existed email !" });
+                string token = new RandomUtil().GetRandomString(20);
+                string userID = accountService.ForgotPassword(form.Email, token);
+                if(userID == null) return new JsonResult(new { Message = "An error occurred" });
+                string body = "Hi \n" +
+                        "You have requested to recover your account.Please click the link below to verify your identity.\n" +
+                        "Your recovery code: " + token + "\n" +
+                        "If it isn't you, please ignore this email.\n" +
+                        "Thank you for using Nextflip.\n" +
+                        "Sincerly\n" +
+                        "Nextflip Company";
+                await sendMailService.SendEmailAsync(form.Email.ToLower(), "Nextflip Account Activation", body);
+                return new JsonResult(new { Message = "Success" });
+            }
+            catch(Exception ex)
+            {
+                _logger.LogInformation("Login/ForgotPassword: " + ex.Message);
+                return new JsonResult(new { Message = ex.Message });
+            }
+        }
+
+        [Route("VerifyAccountV1")]
+        [HttpPost]
+        public IActionResult VerifyAccountV1([FromServices] IAccountService accountService, [FromBody] LoginForm form)
+        {
+            try
+            {
+                if (form.UserID == null || form.Token == null) return new JsonResult(new { Message = "Invalid authentication factor" });
+                Account account = accountService.ConfirmEmail(form.UserID, form.Token);
+                if(account == null) return new JsonResult(new { Message = "Incorrect Access Code" });
+                return new JsonResult(new { Message = "Success" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("Login/VerifyAccount: " + ex.Message);
+                return new JsonResult(new { Message = ex.Message });
+            }
+        }
+
+        [Route("VerifyAccountV2")]
+        [HttpPost]
+        public IActionResult VerifyAccountV2([FromServices] IAccountService accountService, [FromBody] LoginForm form)
+        {
+            try
+            {
+                if (form.UserID == null || form.Token == null) return new JsonResult(new { Message = "Invalid authentication factor" });
+                Account account = accountService.ConfirmEmail(form.UserID, form.Token);
+                if (account == null) return new JsonResult(new { Message = "Incorrect Access Token" });
+                var x = SignIn(account);
+                return new JsonResult(new { Message = "Success", URL = "/Profle/Index" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("Login/VerifyAccountV2: " + ex.Message);
+                return new JsonResult(new { Message = ex.Message });
+            }
+        }
+
         [Route("LoginByGmail")]
         [HttpPost]
         public async Task<IActionResult> LoginByGmail([FromServices] IAccountService accountService, [FromBody] LoginForm form)
@@ -98,26 +163,28 @@ namespace Nextflip.APIControllers
             {
                 if (form.Email == null || form.Email.Trim().Length == 0 || !EmailUtil.IsValidEmail(form.Email)) return new JsonResult(new { Message = "Error ! Please try again !" });
                 Account account = accountService.CheckGoogleLogin(form.Email);
-                if (account == null) return new JsonResult(new { Message = "New Account", URL = "/Register/Index" });
+                if (account == null) return new JsonResult(new { Message = "New Account", URL = "/Account/Register" });
                 if (account.roleName.Equals("customer supporter")) url = "/SupporterDashboard/Index";
                 else if (account.roleName.Equals("subscribed user")) url = "/SubcribedUserDashBoard/Index";
                 else if (account.roleName.Equals("media editor")) url = "/EditorDashboard/Index";
                 else if (account.roleName.Equals("user manager")) url = "/UserManagerManagement/Index";
                 else if (account.roleName.Equals("media manager")) url = "/MediaManagerManagement/Index";
                 var x = await SignIn(account);
-                return new JsonResult(new { Message = true , URL = url, UserID = account.userID});
+                return new JsonResult(new { Message = true, URL = url, UserID = account.userID });
             }
             catch (Exception ex)
             {
                 _logger.LogInformation("Login/LoginByGmail: " + ex.Message);
-                return new JsonResult(new { Message = ex.Message});
+                return new JsonResult(new { Message = ex.Message });
             }
         }
     }
 
     public partial class LoginForm
     {
+        public string UserID { get; set; }
         public string Email { get; set; }
         public string Password { get; set; }
+        public string Token { get; set; }
     }
 }

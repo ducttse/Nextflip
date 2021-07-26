@@ -645,17 +645,32 @@ namespace Nextflip.Models.media
             var result = false;
             try
             {
-               using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                var mediaForm = GetDetailedMedia(ID);
+                if (mediaForm.MediaInfo.Title != null && mediaForm.MediaInfo.Title.EndsWith("_preview"))
                 {
-                    connection.Open();
-                    string sql = "approveMedia";
-                    using (var command = new MySqlCommand(sql, connection))
+                    var trueTitle = mediaForm.MediaInfo.Title.Remove(mediaForm.MediaInfo.Title.LastIndexOfAny("_preview".ToCharArray()), 8);
+                    var oldMediaID = GetMediasByTitle(trueTitle);
+                    if (oldMediaID != null)
                     {
-                        command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("mediaID_Input", ID);
-                        command.Parameters.AddWithValue("note_Input", ID);
-                        int affectedRow = command.ExecuteNonQuery();
-                        if (affectedRow == 1) result = true;
+                        mediaForm.MediaInfo.MediaID = oldMediaID.First().MediaID;
+                        mediaForm.MediaInfo.Title = trueTitle;
+                        EditMedia(mediaForm);
+                        ApproveChangeMedia(mediaForm.MediaInfo.MediaID);
+                    }
+                }
+                else
+                {
+                    using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                    {
+                        connection.Open();
+                        string sql = "approveMedia";
+                        using (var command = new MySqlCommand(sql, connection))
+                        {
+                            command.CommandType = CommandType.StoredProcedure;
+                            command.Parameters.AddWithValue("mediaID_Input", ID);
+                            int affectedRow = command.ExecuteNonQuery();
+                            if (affectedRow == 1) result = true;
+                        }
                     }
                 }
             }
@@ -1273,12 +1288,12 @@ namespace Nextflip.Models.media
             connection.Open();
             try
             {
+                string title = GetMediaByID(mediaID).Title + "_preview";
                 using var command = connection.CreateCommand();
-                command.CommandText = "select mediaID into cloneMediaID_Output " +
-                    "from media " +
-                    "where status != 'removed' and concat(title, '_preview') in " +
-                    "(select title from media where media.mediaID = @mediaID) ";
-                command.Parameters.AddWithValue("@mediaID", mediaID);
+                command.CommandText = "select mediaID " +
+                                      "from media " +
+                                      "where status != 'removed' and title = @title";
+                command.Parameters.AddWithValue("@title", title);
                 using (var reader = command.ExecuteReader())
                 {
                     if (reader.Read() && reader.IsDBNull(0) is false)

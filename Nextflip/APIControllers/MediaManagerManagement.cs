@@ -146,8 +146,8 @@ namespace Nextflip.APIControllers
                         Language = item.Language,
                         Description = item.Description,
                         UploadDate = item.UploadDate,
-                        CountSeason = mediaManagerManagementService.NumberAvailableSeason(item.MediaID),
-                        Note = item.Note
+                        Note = item.Note,
+                        CountSeason = mediaManagerManagementService.NumberAvailableSeason(item.MediaID)
                     });
                 }
                 int count = mediaManagerManagementService.NumberOfMediasFilterCategory_Status(request.CategoryName.Trim().ToLower(), request.Status.Trim());
@@ -202,8 +202,8 @@ namespace Nextflip.APIControllers
                         Language = item.Language,
                         Description = item.Description,
                         UploadDate = item.UploadDate,
-                        CountSeason = mediaManagerManagementService.NumberAvailableSeason(item.MediaID),
-                        Note = item.Note
+                        Note = item.Note,
+                        CountSeason = mediaManagerManagementService.NumberAvailableSeason(item.MediaID)
                     });
                 }
                 int count = mediaManagerManagementService.NumberOfMediasBySearchingFilterCategory_Status(request.SearchValue.Trim().ToLower(),
@@ -307,6 +307,7 @@ namespace Nextflip.APIControllers
             public string Language { get; set; }
             public string Description { get; set; }
             public DateTime UploadDate { get; set; }
+            public string Note { get; set; }
             public int CountSeason { get; set; }
             public string Note { get; set; }
         }

@@ -27,6 +27,7 @@ namespace Nextflip.Models.season
             set;
         }
         public int Number { get; set; }
+        public string Note { get; set; }
 
         public bool EqualWithoutStatus(Season anotherSeason)
         {

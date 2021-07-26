@@ -18,7 +18,7 @@ namespace Nextflip.Models.episode
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select episodeID, title, thumbnailURL, status, number, episodeURL " +
+                    string Sql = "Select episodeID, title, thumbnailURL, status, number, episodeURL, note " +
                                 "From episode " +
                                 "Where seasonID = @seasonID and status != 'Removed' " +
                                 "Order By number";
@@ -37,7 +37,8 @@ namespace Nextflip.Models.episode
                                     SeasonID = seasonID,
                                     Status = reader.GetString(3),
                                     Number = reader.GetInt32(4),
-                                    EpisodeURL = reader.GetString(5)
+                                    EpisodeURL = reader.GetString(5),
+                                    Note = reader.IsDBNull(6) ? null : reader.GetString(6)
                                 });
                             }
                         }
@@ -59,7 +60,7 @@ namespace Nextflip.Models.episode
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select episodeID, title, thumbnailURL, status, number, episodeURL " +
+                    string Sql = "Select episodeID, title, thumbnailURL, status, number, episodeURL, note " +
                                 "From episode " +
                                 "Where seasonID = @seasonID and status = @status " +
                                 "Order By number";
@@ -79,7 +80,8 @@ namespace Nextflip.Models.episode
                                     SeasonID = seasonID,
                                     Status = reader.GetString(3),
                                     Number = reader.GetInt32(4),
-                                    EpisodeURL = reader.GetString(5)
+                                    EpisodeURL = reader.GetString(5),
+                                    Note = reader.IsDBNull(6) ? null : reader.GetString(6)
                                 });
                             }
                         }
@@ -102,7 +104,7 @@ namespace Nextflip.Models.episode
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "Select title, thumbnailURL, seasonID, status, number, episodeURL " +
+                    string Sql = "Select title, thumbnailURL, seasonID, status, number, episodeURL, note " +
                                 "From episode " +
                                 "Where episodeID = @episodeID and status != 'Removed'";
                     using (var command = new MySqlCommand(Sql, connection))
@@ -120,7 +122,8 @@ namespace Nextflip.Models.episode
                                     SeasonID = reader.GetString(2),
                                     Status = reader.GetString(3),
                                     Number = reader.GetInt32(4),
-                                    EpisodeURL = reader.GetString(5)
+                                    EpisodeURL = reader.GetString(5),
+                                    Note = reader.IsDBNull(6) ? null : reader.GetString(6)
                                 };
                             }
                         }

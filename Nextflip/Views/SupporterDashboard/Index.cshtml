@@ -7,6 +7,9 @@
     <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
 }
 <div class="ui_wrapper col-10">
+    <div>
+        <p class="h2 text-secondary ps-1">Support ticket management</p>
+    </div>
     <div class="table_container p-2 w-100 mx-auto rounded" style="background-color: #ffffff">
         <div class="ms-3 btn-group">
             <div class="status_btn">
@@ -43,13 +46,13 @@
                 <thead class="table-secondary">
                     <tr>
                         <th class="col">#</th>
-                        <th class="col text-center"  style="width: 300px">User email</th>
+                        <th class="col text-center" style="width: 300px">User email</th>
                         <th class="col text-center" style="width: 150px">
                             Create Date
                             <i class="fas fa-sort-up" id="sort" onclick="sort(this)"></i>
                         </th>
                         <th class="col text-center" id="topic">Topic</th>
-                        <th class="col text-center">Content</th>
+                        <th class="col text-center" style="width: 440px">Content</th>
                         <th class="col text-center" id="status">Status</th>
                         <th class="col">Details</th>
                     </tr>
@@ -112,7 +115,7 @@
             appendSearch("Search user's email", "");
             setEnterEvent();
             let button = `<a id="back_btn" href="/SupporterDashboard/Index" class="side_bar_btn btn btn-dark text-decoration-none text-start link-light mx-auto w-100">
-                            Support Ticket
-                          </a>`;
+                                    Support Ticket
+                                  </a>`;
             appendButton(button);
         </script>

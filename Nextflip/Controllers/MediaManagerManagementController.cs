@@ -35,5 +35,9 @@ namespace Nextflip.Controllers
             ViewBag.MediaID = id;
             return View();
         }
+        public ActionResult ViewNotificationManage()
+        {
+            return View();
+        }
     }
 }

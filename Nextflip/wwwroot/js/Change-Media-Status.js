@@ -2,12 +2,9 @@
 let isSuccess = false;
 let isRequest = false;
 let RequestOBj = {
-    UserEmail: "vlxx.com@gmail.com",
     ID: "",
     Note: "",
-    LinkPreview: "N/A",
-    Status: "Disabled",
-    Type: "media"
+    Status: ""
 }
 function setChosenCheckBox(item) {
     ChosenCheckBox = item;
@@ -141,7 +138,7 @@ function addSetStatusEvent() {
         let item = collection[ i ];
         item.addEventListener("change", (evt) => {
             setChosenCheckBox(evt.target);
-            RequestOBj.Status = evt.target.value == "Enabled" ? "Disabled" : "Enabled";
+            RequestOBj.Status = evt.target.value == "Approved" ? "Disapproved" : "Approved";
             RequestOBj.ID = evt.target.getAttribute("mediaID");
             if (item.checked) {
                 showModal("modalCheck");

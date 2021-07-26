@@ -44,7 +44,7 @@ function HideNotFound() {
     document.getElementById("table_holder").classList.remove("hide");
     document.getElementById("pagination").classList.remove("hide");
     if (!isFiltered) {
-      document.getElementById("status_filter").removeAttribute("disabled");
+      document.getElementById("type_filter").removeAttribute("disabled");
     }
   }
 }

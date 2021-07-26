@@ -158,3 +158,10 @@ async function AppendDetails(id) {
   }
   processChange();
 }
+
+function goToFirst() {
+  let mediaID = mediaData.media.mediaID;
+  let seasonID = mediaData.seasons[ 0 ].seasonID;
+  let episodeID = mediaData.episodesMapSeason[ `${seasonID}` ][ 0 ].episodeID;
+  location.replace(`/WatchMedia/Watch/${mediaID}/${episodeID}`);
+}

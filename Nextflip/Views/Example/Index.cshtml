@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "Register";
+    Layout = "_AuthenticationLayout";
+}
+@section styles{
+    <link rel="Stylesheet" href="@Href("~/css/Register.css")" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+}
+
+<!-- Button trigger modal -->
+<button id="respondModal" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" hidden>
+    Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Success</h5>
+            </div>
+            <div class="modal-body">
+                We have send validation link in your email. Please verify your account in the email !
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

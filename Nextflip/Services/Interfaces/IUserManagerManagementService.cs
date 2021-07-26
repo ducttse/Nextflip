@@ -33,7 +33,7 @@ namespace Nextflip.Services.Interfaces
         bool UpdateStaffInfo(Account account);
         Subscription GetSubsciptionByUserID(string userID);
         bool IsSubscribedUser(string userID);
-
+        Account GetAccountByEmail(string email);
         IEnumerable<object> GetSubscriptions(int rows, int page, string status);
         IEnumerable<object> GetSubscriptionsByUserEmail(string userEmail, int rows, int page, string status);
         int CountTotalResult(string userEmail, string status);

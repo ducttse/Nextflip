@@ -1064,5 +1064,43 @@ namespace Nextflip.Models.account
                 throw new Exception(ex.Message);
             }
         }
+        public Account GetAccountByEmail(string email)
+        {
+            try
+            {
+                Account account = null;
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    connection.Open();
+                    string Sql = "Select userID, fullname, hashedPassword, roleName " +
+                                    "From account " +
+                                    "Where userEmail = @userEmail";
+                    using (var command = new MySqlCommand(Sql, connection))
+                    {
+                        command.Parameters.AddWithValue("@userEmail", email);
+                        using (var reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                account = new Account
+                                {
+                                    userID = reader.GetString("userID"),
+                                    fullname = reader.GetString("fullname"),
+                                    userEmail = email,
+                                    hashedPassword = reader.GetString("hashedPassword"),
+                                    roleName = reader.GetString("roleName")
+                                };
+                            }
+                        }
+                    }
+                    connection.Close();
+                }
+                return account;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

@@ -279,8 +279,8 @@ namespace Nextflip.Models.media
                     else if (CategoryName.Trim().ToLower().Equals("all") && !Status.Trim().ToLower().Equals("all"))
                     {
                         Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate " +
-                                "From media M, mediaCategory MC, category C " +
-                                "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and M.status = @Status " +
+                                "From media M " +
+                                "where M.status = @Status " +
                                 "Order by uploadDate ASC " +
                                 "LIMIT @offset, @limit";
                     }
@@ -352,8 +352,8 @@ namespace Nextflip.Models.media
                 else if (CategoryName.Trim().ToLower().Equals("all") && !Status.Trim().ToLower().Equals("all"))
                 {
                     Sql = "Select COUNT(M.mediaID) " +
-                          "From media M, mediaCategory MC, category C " +
-                          "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and  M.status = @Status ";
+                        "From media M " +
+                        "where M.status = @Status ";
                 }
                 else if (!CategoryName.Trim().ToLower().Equals("all") && Status.Trim().ToLower().Equals("all"))
                 {
@@ -917,27 +917,16 @@ namespace Nextflip.Models.media
             var result = false;
             try
             {
-                string mediaID = ID.Split('_')[0];
-                Media media = GetMediaByID(mediaID);
-                if (media.Status.Trim().Equals("Pending")) return false;
-                string title_preview = media.Title + "_preview";
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "INSERT INTO media (mediaID, status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description) " +
-                        "VALUES (@mediaID_preview, 'Pending', @title, @filmType, @director, @cast, @publishYear, @duration, @bannerURL, @language, @description) ";
+                    string Sql = "UPDATE media " +
+                        "SET status = @newStatus " +
+                        "where mediaID = @ID";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
-                        command.Parameters.AddWithValue("@mediaID_preview", ID);
-                        command.Parameters.AddWithValue("@title", title_preview);
-                        command.Parameters.AddWithValue("@filmType", media.FilmType);
-                        command.Parameters.AddWithValue("@director", media.Director);
-                        command.Parameters.AddWithValue("@cast", media.Cast);
-                        command.Parameters.AddWithValue("@publishYear", media.PublishYear);
-                        command.Parameters.AddWithValue("@duration", media.Duration);
-                        command.Parameters.AddWithValue("@bannerURL", media.BannerURL);
-                        command.Parameters.AddWithValue("@language", media.Language);
-                        command.Parameters.AddWithValue("@description", media.Description);
+                        command.Parameters.AddWithValue("@newStatus", newStatus);
+                        command.Parameters.AddWithValue("@ID", ID);
                         int rowEffects = command.ExecuteNonQuery();
                         if (rowEffects > 0)
                         {

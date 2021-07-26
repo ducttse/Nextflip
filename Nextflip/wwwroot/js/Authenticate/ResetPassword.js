@@ -73,7 +73,9 @@ function requestResetPassword() {
             }
             else {
                 if (confirmPassword.value != newPassword.value) {
-
+                    let alert = document.getElementById("ResetAlert");
+                    alert.textContent = json.message;
+                    alert.classList.remove("d-none");
                 }
             }
         })

@@ -309,7 +309,6 @@ namespace Nextflip.APIControllers
             public DateTime UploadDate { get; set; }
             public string Note { get; set; }
             public int CountSeason { get; set; }
-            public string Note { get; set; }
         }
     }
 }

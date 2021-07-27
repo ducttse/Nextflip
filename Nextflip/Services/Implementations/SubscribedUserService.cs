@@ -89,7 +89,7 @@ namespace Nextflip.Services.Implementations
             foreach (var mediaID in mediaIDs)
             { 
                 Media media = _mediaDAO.GetMediaByID(mediaID);
-                if(media.Status.Equals("Approved")) medias.Add(media);
+                if(media != null && media.Status.Equals("Approved")) medias.Add(media);
             }
             return medias;
         }

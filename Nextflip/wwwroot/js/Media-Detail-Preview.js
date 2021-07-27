@@ -32,7 +32,6 @@ function renderMedia(media) {
         <p>Cast: ${info.cast}</p>
         <p>Public year: ${info.publishYear}</p>
         <p>Duration: ${info.duration}</p>
-        <p>Category: ${category}</p>
         <p>Language: ${info.language}</p>
         <p>Desscription: ${info.description}</p>
     </div>`
@@ -73,13 +72,6 @@ function renderCollapse(season) {
     let seasonEL = renderCollapseTrigger(season);
     let episodes = season.episodes.map(episode => {
         let status = episode.status == "Pending" ? ("bg-warning") : (episode.status == "Approved" ? ("bg-primary") : (episode.status == "Disapproved" ? "bg-danger" : "bg-light"));
-        let action = `
-            <button class="btn btn-primary me-1 btn-sm" onclick="approve('${episode.episodeID}','episode')">
-                Approve
-            </button>
-            <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#noteModal" onclick="setSubmit('${episode.episodeID}', 'episode')">
-                Disapprove
-            </button>`;
         return `
         <div class="d-flex">
             <p class="me-auto position-relative btn mb-0">Episode ${episode.number}: ${episode.title}
@@ -90,7 +82,6 @@ function renderCollapse(season) {
             <a class="btn btn-secondary me-1 btn-sm text-center py-2" onclick="return writeCurrentUrl()" href="/MediaManagerManagement/PreviewEpisode/${episode.episodeID}">
                 View detail
             </a>
-            ${episode.status == "Pending" ? action : ""}
         </div>`
     }).join("");
     return `

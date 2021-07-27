@@ -648,7 +648,7 @@ namespace Nextflip.Models.media
             {
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
-
+                    connection.Open();
                     using MySqlCommand command = new MySqlCommand();
                     command.Connection = connection;
                     command.CommandType = CommandType.StoredProcedure;
@@ -675,7 +675,7 @@ namespace Nextflip.Models.media
                 var mediaForm = GetDetailedMedia(ID);
                 if (mediaForm.MediaInfo.Title != null && mediaForm.MediaInfo.Title.EndsWith("_preview"))
                 {
-                    var trueTitle = mediaForm.MediaInfo.Title.Remove(mediaForm.MediaInfo.Title.LastIndexOfAny("_preview".ToCharArray()), 8);
+                    var trueTitle = mediaForm.MediaInfo.Title.Remove(mediaForm.MediaInfo.Title.LastIndexOf("_preview"), 8);
                     var oldMediaID = GetMediasByTitle(trueTitle);
                     if (oldMediaID != null)
                     {
@@ -684,6 +684,7 @@ namespace Nextflip.Models.media
                         EditMedia(mediaForm);
                         ApproveChangeMedia(mediaForm.MediaInfo.MediaID);
                         RemoveMedia(ID);
+                        result = true;
                     }
                 }
                 else
@@ -1382,7 +1383,7 @@ namespace Nextflip.Models.media
                     var oldSeason =
                         oldMedia.Seasons.FirstOrDefault(ss => ss.SeasonInfo.SeasonID == newSeasonForm.SeasonInfo.SeasonID);
                     ///check if not changed
-                    if (newSeasonForm.SeasonInfo.EqualWithoutStatus(oldSeason.SeasonInfo)) {
+                    if (oldSeason != null && newSeasonForm.SeasonInfo.EqualWithoutStatus(oldSeason.SeasonInfo)) {
                         if (newSeasonForm.Episodes.Count() == oldSeason.Episodes.Count())
                         {
                             bool flag = false;
@@ -1456,6 +1457,7 @@ namespace Nextflip.Models.media
                 command.Parameters.AddWithValue("@bannerURL_Input", mediaInfo.BannerURL);
                 command.Parameters.AddWithValue("@language_Input", mediaInfo.Language);
                 command.Parameters.AddWithValue("@description_Input", mediaInfo.Description);
+                command.Parameters.AddWithValue("@status_Input", mediaInfo.Status);
                 result = command.ExecuteNonQuery();
             }
             return result;

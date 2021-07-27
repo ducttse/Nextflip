@@ -25,35 +25,35 @@ function loadTopic(data) {
 let modal;
 
 function showModal() {
-    if (modal == null) {
-        modal = new bootstrap.Modal(document.getElementById('Modal'), {
-            keyboard: false
-        })
-    }
-    modal.show();
+  if (modal == null) {
+    modal = new bootstrap.Modal(document.getElementById('Modal'), {
+      keyboard: false
+    })
+  }
+  modal.show();
 }
 
 function changeContent(text, bool) {
-    let content = !bool ?
-        ` <i class="far fa-times-circle fa-5x text-danger text-center"></i>
+  let content = !bool ?
+    ` <i class="far fa-times-circle fa-5x text-danger text-center"></i>
             <p class="fs-5 text-center text-dark">${text}</p>
-            <button type="button" class="col-4 mx-auto btn btn-danger text-white" data-bs-dismiss="modal">
+            <button type="button" class="col-6 mx-auto btn btn-danger text-white" data-bs-dismiss="modal">
                 Close
             </button>` :
-        ` <i class="far fa-check-circle fa-5x text-center" style="color: #4bca81"></i>
+    ` <i class="far fa-check-circle fa-5x text-center" style="color: #4bca81"></i>
             <p class="fs-5 text-center text-dark">${text}</p>
-            <button onclick = "BackToDashboard()" type="button" class="col-4 mx-auto btn btn-success text-white"  style=" background-color: #4bca81 !important; border: #4bca81 !important;" data-bs-dismiss="modal">
+            <button onclick = "BackToDashboard()" type="button" class="col-6 mx-auto btn btn-success text-white"  style=" background-color: #4bca81 !important; border: #4bca81 !important;" data-bs-dismiss="modal">
                 Back to dashboard
             </button>`;
-    document.querySelector(".modal .modal-body").innerHTML = content;
+  document.querySelector(".modal .modal-body").innerHTML = content;
 }
 
 function BackToDashboard() {
-    window.location.href = "/SubcribedUserDashBoard/Index";
+  window.location.href = "/SubcribedUserDashBoard/Index";
 }
 function renderCard(index, plan) {
-    let month = Math.floor(plan.duration / 30);
-    return `
+  let month = Math.floor(plan.duration / 30);
+  return `
     <div id="item${index}" class="col-4 card text-white bg-primary mb-3 me-3" style="max-width: 18rem;">
         <div class="card-body d-flex flex-column justify-content-between">
             <p class="card-title text-center h5">${month} ${month > 1 ? "months" : "month"}</p>
@@ -137,14 +137,14 @@ function sendTicket() {
   fetch("/api/SendSupportTicket/SendTicket", initObject)
     .then(res => res.json())
     .then(json => {
-        console.log(json);
-        if (json.message == "Success") {
-            console.log("modal")
-          changeContent(json.message, true);
-          showModal();
+      console.log(json);
+      if (json.message == "Success") {
+        console.log("modal")
+        changeContent(json.message, true);
+        showModal();
       }
-        else {
-            console.log("toast")
+      else {
+        console.log("toast")
         setToastContent(false);
         showToast();
       }

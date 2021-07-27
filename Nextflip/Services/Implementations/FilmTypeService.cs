@@ -19,5 +19,6 @@ namespace Nextflip.Services.Implementations
         public IEnumerable<FilmType> GetFilmTypes() => _filmTypeDAO.GetFilmTypes();
 
         public bool UpdateFilmType(int typeID, string filmType) => _filmTypeDAO.UpdateFilmType(typeID, filmType);
+        public bool RemoveFilmType(string filmTypeName) => _filmTypeDAO.RemoveFilmType(filmTypeName);
     }
 }

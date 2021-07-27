@@ -1333,6 +1333,7 @@ namespace Nextflip.Models.media
                 {
                     ViewEditorDashboard.PrototypeMediaForm detailCloneMedia = GetDetailedMedia(mediaID);
                     detailCloneMedia.MediaInfo.Title += "_preview";
+                    detailCloneMedia.MediaInfo.Status = "Ready";
                     cloneMediaID = AddNewMedia(detailCloneMedia);
                 }
             }

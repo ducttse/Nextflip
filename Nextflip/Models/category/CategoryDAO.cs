@@ -172,5 +172,31 @@ namespace Nextflip.Models.category
             return false;
 
         }
+
+        public bool RemoveCategory(string categoryName)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    string sql = "removeCategory";
+                    connection.Open();
+                    using (var command = new MySqlCommand(sql, connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@categoryName", categoryName);
+                        int result = command.ExecuteNonQuery();
+                        connection.Close();
+                        if (result == 1) return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return false;
+
+        }
     }
 }

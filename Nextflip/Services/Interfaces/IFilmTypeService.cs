@@ -14,5 +14,6 @@ namespace Nextflip.Services.Interfaces
         public bool UpdateFilmType(int typeID, string filmType);
 
         public bool CreateNewFilmType(string filmTypeName);
+        public bool RemoveFilmType(string filmTypeName);
     }
 }

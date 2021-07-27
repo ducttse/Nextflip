@@ -9,5 +9,6 @@ namespace Nextflip.Services.Interfaces
     {
         public bool UpdateCategory(int categoryID, string newCategoryName);
         public bool CreateNewCategory(string categoryName);
+        public bool RemoveCategory(string categoryName);
     }
 }

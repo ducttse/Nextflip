@@ -52,7 +52,7 @@ function renderCollapseTrigger(season) {
             <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#noteModal" onclick="setSubmit('${seasonInfo.seasonID}', 'season')">
                 Disapprove
             </button>`;
-    let status = seasonInfo.status == "Pending" ? ("bg-warning") : (seasonInfo.status == "Approved" ? ("bg-primary") : (seasonInfo.status == "Disapproved" ? "bg-danger" : "bg-light"));
+    let status = seasonInfo.status == "Pending" ? ("bg-warning") : (seasonInfo.status == "Approved" ? ("bg-primary") : (seasonInfo.status == "Disapproved" ? "bg-danger" : "bg-success"));
     return `
         <p class="d-flex">
             <button class="btn btn-light position-relative me-auto" type="button" data-bs-toggle="collapse" data-bs-target="#season_${seasonInfo.number}" aria-expanded="false" aria-controls="collapseExample">
@@ -71,7 +71,7 @@ function renderCollapseTrigger(season) {
 function renderCollapse(season) {
     let seasonEL = renderCollapseTrigger(season);
     let episodes = season.episodes.map(episode => {
-        let status = episode.status == "Pending" ? ("bg-warning") : (episode.status == "Approved" ? ("bg-primary") : (episode.status == "Disapproved" ? "bg-danger" : "bg-light"));
+        let status = episode.status == "Pending" ? ("bg-warning") : (episode.status == "Approved" ? ("bg-primary") : (episode.status == "Disapproved" ? "bg-danger" : "bg-success"));
         return `
         <div class="d-flex">
             <p class="me-auto position-relative btn mb-0">Episode ${episode.number}: ${episode.title}

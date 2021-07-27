@@ -1,4 +1,4 @@
-﻿let MediaObj;
+let MediaObj;
 let isEdited = false;
 async function getRequestObjID(id) {
     let result = "";
@@ -128,7 +128,7 @@ function renderSeason(item, num) {
     <div class="d-flex flex-column mb-2" id="season_${item.seasonInfo.number}">
         <div class="d-flex">
             <p class="me-auto mb-0 align-self-center" id="season_title_${item.seasonInfo.number}">Season ${item.seasonInfo.number}: ${item.seasonInfo.title}</p>
-            <div class="btn btn-primary btn-sm me-2" onclick="setEpisodeNumber('${item.seasonInfo.number}'); setModalAddEpisode('${item.episodes.length}');" data-bs-toggle="modal" data-bs-target="#modalAddEpisodeForm">Add new episode</div>
+            <div class="btn btn-primary btn-sm me-2" onclick="setEpisodeNumber('${item.seasonInfo.number}'); setModalAddEpisode('${item.episodes.length + 1}');" data-bs-toggle="modal" data-bs-target="#modalAddEpisodeForm">Add new episode</div>
             <div class="btn btn-danger btn-sm me-2" onclick="showConfirm('season', '${item.seasonInfo.number}')" data-bs-toggle="modal" data-bs-target="#confirmModal">Delete</div>
             <div class="btn btn-secondary btn-sm"  data-bs-toggle="modal" data-bs-target="#modalEditSeasonForm" onclick="setSeasonEditFormValue('${item.seasonInfo.number}')">Edit</div>
         </div>
@@ -188,9 +188,6 @@ async function setEpisode(obj) {
     document.getElementById("spinner").classList.remove("d-none");
     document.getElementById("submit_btn").disabled = true;
     episode.title = document.getElementById("titleEpisode").value;
-    console.log(MediaObj);
-    console.log(MediaObj.seasons[ index - 1 ]);
-    console.log(MediaObj.seasons[ index ].episodes);
     episode.number = MediaObj.seasons[ index ].episodes.length + 1;
     getFile(document.getElementById("bannerEpisode"));
     episode.thumbnailURL = await requestUploadEpisodeThumbnail(MediaObj.seasons[ index ].seasonInfo.number, episode.number);

@@ -31,14 +31,6 @@ namespace Nextflip.Services.Implementations
         public IEnumerable<Media> GetMediasByTitle(string searchValue, int RowsOnPage, int RequestPage) => _mediaDAO.GetMediasByTitle(searchValue, RowsOnPage, RequestPage);
         public int NumberOfMediasBySearching(string searchValue) => _mediaDAO.NumberOfMediasBySearching(searchValue);
 
-        public IEnumerable<Media> GetMediasByTitleFilterCategory(string SearchValue, string CategoryName, int RowsOnPage, int RequestPage)
-            => _mediaDAO.GetMediasByTitleFilterCategory(SearchValue, CategoryName, RowsOnPage, RequestPage);
-        public int NumberOfMediasBySearchingFilterCategory(string SearchValue, string CategoryName)
-            => _mediaDAO.NumberOfMediasBySearchingFilterCategory(SearchValue, CategoryName);
-
-        public IEnumerable<Media> GetMediaFilterCategory(string CategoryName, int RowsOnPage, int RequestPage) => _mediaDAO.GetMediaFilterCategory(CategoryName, RowsOnPage, RequestPage);
-        public int NumberOfMediasFilterCategory(string CategoryName) => _mediaDAO.NumberOfMediasFilterCategory(CategoryName);
-
         public IEnumerable<Media> ViewMediasFilterCategory_Status(string CategoryName, string Status, int RowsOnPage, int RequestPage) => _mediaDAO.EditorViewMediasFilterCategory_Status(CategoryName, Status, RowsOnPage, RequestPage);
         public int NumberOfMediasFilterCategory_Status(string CategoryName, string Status) => _mediaDAO.EditorNumberOfMediasFilterCategory_Status(CategoryName, Status);
 
@@ -50,15 +42,6 @@ namespace Nextflip.Services.Implementations
 
         public bool RequestDisableMedia(string mediaID) => _mediaDAO.RequestDisableMedia(mediaID);
         public Media GetMediaByID(string mediaID) => _mediaDAO.GetMediaByID(mediaID);
-        public IEnumerable<Media> GetAllMedia(int RowsOnPage, int RequestPage) => _mediaDAO.GetAllMedia(RowsOnPage, RequestPage);
-        public int NumberOfMedias() => _mediaDAO.NumberOfMedias();
-        public IEnumerable<Media> GetAllMediaFilterStatus(string Status, int RowsOnPage, int RequestPage)
-            => _mediaDAO.GetAllMediaFilterStatus(Status, RowsOnPage, RequestPage);
-        public int NumberOfMediasFilterStatus(string Status) => _mediaDAO.NumberOfMediasFilterStatus(Status);
-        public IEnumerable<Media> GetMediasByTitleFilterStatus(string searchValue, string Status, int RowsOnPage, int RequestPage)
-            => _mediaDAO.GetMediasByTitleFilterStatus(searchValue, Status, RowsOnPage, RequestPage);
-        public int NumberOfMediasBySearchingFilterStatus(string searchValue, string Status)
-            => _mediaDAO.NumberOfMediasBySearchingFilterStatus(searchValue, Status);
         public bool RequestChangeMediaStatus(string mediaID, string newStatus, string note)
             => _mediaDAO.RequestChangeMediaStatus(mediaID, newStatus, note);
         public bool RequestChangeEpisodeStatus(string episodeID, string newStatus)

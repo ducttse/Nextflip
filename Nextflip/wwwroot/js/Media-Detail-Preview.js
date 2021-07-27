@@ -45,6 +45,7 @@ function setSubmit(id, type) {
 
 function renderCollapseTrigger(season) {
     let seasonInfo = season.seasonInfo;
+    let isHaveAction = false;
     let action = `
             <button class="btn btn-primary me-1 btn-sm" onclick="approve('${seasonInfo.seasonID}','season')">
                 Approve
@@ -52,6 +53,9 @@ function renderCollapseTrigger(season) {
             <button class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#noteModal" onclick="setSubmit('${seasonInfo.seasonID}', 'season')">
                 Disapprove
             </button>`;
+    if (seasonInfo.status == "Pending" || seasonInfo.status == "Ready") {
+        isHaveAction = true
+    }
     let status = seasonInfo.status == "Pending" ? ("bg-warning") : (seasonInfo.status == "Approved" ? ("bg-primary") : (seasonInfo.status == "Disapproved" ? "bg-danger" : "bg-success"));
     return `
         <p class="d-flex">
@@ -64,7 +68,7 @@ function renderCollapseTrigger(season) {
             <button class="btn btn-secondary me-1 btn-sm" onclick="viewDetail('${seasonInfo.seasonID}')">
                 View detail
             </button>
-            ${seasonInfo.status == "Pending" ? action : ""}
+            ${isHaveAction ? action : ""}
         </p>`;
 }
 

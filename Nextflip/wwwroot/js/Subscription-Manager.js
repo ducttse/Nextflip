@@ -21,8 +21,8 @@ function setRequestPage(num) {
 }
 
 function requestRefund(obj) {
-    let userID = this.getAttribute("userID");
-    let subID = this.getAttribute("subID");
+    let userID = obj.getAttribute("userID");
+    let subID = obj.getAttribute("subID");
     let reqHeader = new Headers();
     reqHeader.append("Content-Type", "text/json");
     reqHeader.append("Accept", "application/json, text/plain, */*");
@@ -38,9 +38,14 @@ function requestRefund(obj) {
         .then(res => res.json())
         .then(json => {
             if (json.message == "Success") {
-
+                changeContent("Success", true);
             }
+            else {
+                changeContent("Fail", false);
+            }
+            showMessageModal();
         })
+
 }
 
 function renderSubscription(subscription, index) {

@@ -1,9 +1,5 @@
 ﻿let messageModal;
-if (messageModal == null) {
-    messageModal = new bootstrap.Modal(document.getElementById('messageModal'), {
-        keyboard: false
-    })
-}
+
 function changeContent(text, bool) {
     let content = !bool ?
         ` <i class="far fa-times-circle fa-5x text-danger text-center"></i>
@@ -16,9 +12,14 @@ function changeContent(text, bool) {
         <button type="button" class="col-4 mx-auto btn btn-success text-white" onclick="location.reload()"  style=" background-color: #4bca81 !important; border: #4bca81 !important;" data-bs-dismiss="modal">
             Continue
         </button>`;
-    document.getElementById("messageModal").querySelector(".modal-body").innerHTML = content;
+    document.querySelector("#messageModal .modal-body").innerHTML = content;
 }
 
 function showMessageModal() {
+    if (messageModal == null) {
+        messageModal = new bootstrap.Modal(document.getElementById('messageModal'), {
+            keyboard: false
+        })
+    }
     messageModal.show();
 }

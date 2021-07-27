@@ -150,7 +150,7 @@ namespace Nextflip.Models.episode
                     using (var command = new MySqlCommand(sql, connection))
                     {
                         command.CommandType = CommandType.StoredProcedure;
-                        command.Parameters.AddWithValue("episodeID_Input", ID);
+                        command.Parameters.AddWithValue("@episodeID_Input", ID);
                         int affectedRow = command.ExecuteNonQuery();
                         if (affectedRow == 1) result = true;
                     }

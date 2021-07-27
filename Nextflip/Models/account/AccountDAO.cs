@@ -641,8 +641,8 @@ namespace Nextflip.Models.account
                 using (var connection = new MySqlConnection(DbUtil.ConnectionString))
                 {
                     connection.Open();
-                    string Sql = "insert into account(userID, hashedPassword, fullname, userEmail, roleName, dateOfBirth, status) " +
-                                   "values(@userID, @hashedPassword, @fullname, @userEmail, @roleName, @dateOfBirth, @status)";
+                    string Sql = "insert into account(userID, hashedPassword, fullname, userEmail, roleName, dateOfBirth, status, pictureURL) " +
+                                   "values(@userID, @hashedPassword, @fullname, @userEmail, @roleName, @dateOfBirth, @status, 'a')";
                     using (var command = new MySqlCommand(Sql, connection))
                     {
                         command.Parameters.AddWithValue("@userID", generateID());

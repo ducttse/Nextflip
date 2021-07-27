@@ -1,9 +1,5 @@
 ﻿let messageModal;
-if (messageModal == null) {
-    messageModal = new bootstrap.Modal(document.getElementById('messageModal'), {
-        keyboard: false
-    })
-}
+
 function changeContent(text, bool) {
     let content = !bool ?
         ` <i class="far fa-times-circle fa-5x text-danger text-center"></i>
@@ -20,5 +16,10 @@ function changeContent(text, bool) {
 }
 
 function showMessageModal() {
+    if (messageModal == null) {
+        messageModal = new bootstrap.Modal(document.getElementById('messageModal'), {
+            keyboard: false
+        })
+    }
     messageModal.show();
 }

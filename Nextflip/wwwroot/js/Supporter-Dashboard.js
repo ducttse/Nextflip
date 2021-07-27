@@ -95,7 +95,7 @@ function renderTicket(ticket, index) {
     <tr>
         <td class="text-center">${index + 1}</td>
         <td>${ticket.userEmail}</td>
-        <td class="text-center">${ticket.createdDate.slice(0, 9)}</td>
+        <td class="text-center">${ticket.createdDate.slice(0, 10).split("-").reverse().join("-")}</td>
         ${topic}
         <td>${shortContent}</td>
         <td>
@@ -109,7 +109,7 @@ function renderTicket(ticket, index) {
       <tr>
           <td class="text-center">${index + 1}</td>
           <td>${ticket.userEmail}</td>
-          <td class="text-center">${ticket.createdDate.slice(0, 9)}</td>
+          <td class="text-center">${ticket.createdDate.slice(0, 10).split("-").reverse().join("-")}</td>
           ${topic}
           <td>${shortContent}</td>
           <td><p class="ticket_status ${bgcolor} rounded text-center text-light px-2 py-1">${ticket.status}<p></td>

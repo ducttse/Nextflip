@@ -22,10 +22,9 @@ namespace Nextflip.Models.supportTicket
 
                     connection.Open();
                     string sql = "INSERT INTO supportTicket(supportTicketID, userEmail, topicName, status, content) " +
-                                                            "Value(@supportTicketID, @userEmail, @topicName, 'Pending', @content);";
+                                                            "Value(uuid(), @userEmail, @topicName, 'Pending', @content);";
                     using (var command = new MySqlCommand(sql, connection))
                     {
-                        command.Parameters.AddWithValue("@supportTicketID", new Random().Next());
                         command.Parameters.AddWithValue("@userEmail", userEmail);
                         command.Parameters.AddWithValue("@topicName", topicName);
                         command.Parameters.AddWithValue("@content", content);
@@ -78,7 +77,7 @@ namespace Nextflip.Models.supportTicket
                             {
                                 string supportTicketID = reader.GetString("supportTicketID");
                                 string userEmail = reader.GetString("userEmail");
-                                string createdDate = reader.GetMySqlDateTime("createdDate").ToString();
+                                string createdDate = reader.GetDateTime("createdDate").ToString("yyyy-MM-dd HH:mm:ss");
                                 string status = reader.GetString("status");
                                 string content = reader.GetString("content");
                                 supportTickets.Add(new SupportTicket(supportTicketID, userEmail, createdDate, reader.GetString("topicName"), status, content));
@@ -159,9 +158,9 @@ namespace Nextflip.Models.supportTicket
                             {
                                 string supportTicketID = reader.GetString("supportTicketID");
                                 string userEmail = reader.GetString("userEmail");
-                                string createdDate = reader.GetMySqlDateTime("createdDate").ToString();
+                                string createdDate = reader.GetDateTime("createdDate").ToString("yyyy-MM-dd HH:mm:ss");
                                 string content = reader.GetString("content");
-                                supportTickets.Add(new SupportTicket(supportTicketID, userEmail, createdDate, topicName, status, content));
+                                supportTickets.Add(new SupportTicket(supportTicketID, userEmail, createdDate, reader.GetString("topicName"), status, content));
                             }
                             connection.Close();
                         }
@@ -232,11 +231,11 @@ namespace Nextflip.Models.supportTicket
                             {
                                 string userEmail = reader.GetString("userEmail");
                                 string topicName = reader.GetString("topicName");
-                                string createdDate = reader.GetMySqlDateTime("createdDate").ToString();
+                                string createdDate = reader.GetDateTime("createdDate").ToString("yyyy-MM-dd HH:mm:ss");
                                 string status = reader.GetString("status");
                                 string content = reader.GetString("content");
                                 connection.Close();
-                                return new SupportTicket(supportTicketID, userEmail, createdDate,topicName, status, content);
+                                return new SupportTicket(supportTicketID, userEmail, createdDate, reader.GetString("topicName"), status, content);
                             }
                             connection.Close();
                         }
@@ -304,10 +303,10 @@ namespace Nextflip.Models.supportTicket
                             {
                                 string supportTicketID = reader.GetString("supportTicketID");
                                 string userEmail = reader.GetString("userEmail");
-                                string createdDate = reader.GetMySqlDateTime("createdDate").ToString();
+                                string createdDate = reader.GetDateTime("createdDate").ToString("yyyy-MM-dd HH:mm:ss");
                                 string status = reader.GetString("status");
                                 string content = reader.GetString("content");
-                                supportTickets.Add(new SupportTicket(supportTicketID, userEmail, createdDate, topicName, status, content));
+                                supportTickets.Add(new SupportTicket(supportTicketID, userEmail, createdDate, reader.GetString("topicName"), status, content));
                             }
                             connection.Close();
                         }
@@ -388,9 +387,9 @@ namespace Nextflip.Models.supportTicket
                             {
                                 string supportTicketID = reader.GetString("supportTicketID");
                                 string userEmail = reader.GetString("userEmail");
-                                string createdDate = reader.GetMySqlDateTime("createdDate").ToString();
+                                string createdDate = reader.GetDateTime("createdDate").ToString("yyyy-MM-dd HH:mm:ss");
                                 string content = reader.GetString("content");
-                                supportTickets.Add(new SupportTicket(supportTicketID, userEmail, createdDate, topicName, status, content));
+                                supportTickets.Add(new SupportTicket(supportTicketID, userEmail, createdDate, reader.GetString("topicName"), status, content));
                             }
                             connection.Close();
                         }

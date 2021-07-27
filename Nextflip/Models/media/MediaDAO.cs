@@ -274,6 +274,7 @@ namespace Nextflip.Models.media
                     {
                         Sql = "Select M.mediaID, status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate, note " +
                                 "From media M " +
+                                "where M.status != 'Removed' " +
                                 "Order by uploadDate ASC " +
                                 "LIMIT @offset, @limit";
                     }
@@ -281,7 +282,7 @@ namespace Nextflip.Models.media
                     {
                         Sql = "Select M.mediaID, status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate, note " +
                                 "From media M " +
-                                "where M.status = @Status " +
+                                "where M.status = @Status and M.status != 'Removed' " +
                                 "Order by uploadDate ASC " +
                                 "LIMIT @offset, @limit";
                     }
@@ -289,7 +290,7 @@ namespace Nextflip.Models.media
                     {
                         Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate, note " +
                                 "From media M, mediaCategory MC, category C " +
-                                "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName " +
+                                "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status != 'Removed' " +
                                 "Order by uploadDate ASC " +
                                 "LIMIT @offset, @limit";
                     }
@@ -297,7 +298,7 @@ namespace Nextflip.Models.media
                     {
                         Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate, note " +
                                 "From media M, mediaCategory MC, category C " +
-                                "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status " +
+                                "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status and M.status != 'Removed' " +
                                 "Order by uploadDate ASC " +
                                 "LIMIT @offset, @limit";
                     }
@@ -349,25 +350,26 @@ namespace Nextflip.Models.media
                 if (CategoryName.Trim().ToLower().Equals("all") && Status.Trim().ToLower().Equals("all"))
                 {
                     Sql = "Select COUNT(M.mediaID) " +
-                          "From media M";
+                          "From media M " +
+                          "Where M.status != 'Removed' ";
                 }
                 else if (CategoryName.Trim().ToLower().Equals("all") && !Status.Trim().ToLower().Equals("all"))
                 {
                     Sql = "Select COUNT(M.mediaID) " +
                         "From media M " +
-                        "where M.status = @Status ";
+                        "where M.status = @Status and M.status != 'Removed' ";
                 }
                 else if (!CategoryName.Trim().ToLower().Equals("all") && Status.Trim().ToLower().Equals("all"))
                 {
                     Sql = "Select COUNT(M.mediaID) " +
                           "From media M, mediaCategory MC, category C " +
-                          "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName";
+                          "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status != 'Removed' ";
                 }
                 else
                 {
                     Sql = "Select COUNT(M.mediaID) " +
                           "From media M, mediaCategory MC, category C " +
-                          "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status ";
+                          "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status and M.status != 'Removed' ";
                 }
                 using (var command = new MySqlCommand(Sql, connection))
                 {
@@ -482,7 +484,7 @@ namespace Nextflip.Models.media
                     {
                         Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate, note " +
                                 "From media M " +
-                                "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) " +
+                                "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) and M.status != 'Removed' " +
                                 "Order by uploadDate ASC " +
                                 "LIMIT @offset, @limit";
                     }
@@ -491,7 +493,7 @@ namespace Nextflip.Models.media
                         Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate, note " +
                                 "From media M " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) " +
-                                "and M.status = @Status " +
+                                "and M.status = @Status and M.status != 'Removed' " +
                                 "Order by uploadDate ASC " +
                                 "LIMIT @offset, @limit";
                     }
@@ -500,7 +502,7 @@ namespace Nextflip.Models.media
                         Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate, note " +
                                 "From media M, mediaCategory MC, category C " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) " +
-                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName " +
+                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status != 'Removed' " +
                                 "Order by uploadDate ASC " +
                                 "LIMIT @offset, @limit";
                     }
@@ -509,7 +511,7 @@ namespace Nextflip.Models.media
                         Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate, note " +
                                 "From media M, mediaCategory MC, category C " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) " +
-                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status " +
+                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status and M.status != 'Removed' " +
                                 "Order by uploadDate ASC " +
                                 "LIMIT @offset, @limit";
                     }
@@ -563,28 +565,28 @@ namespace Nextflip.Models.media
                 {
                     Sql = "Select COUNT(M.mediaID) " +
                                 "From media M " +
-                                "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) ";
+                                "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) and M.status != 'Removed' ";
                 }
                 else if (CategoryName.Trim().ToLower().Equals("all") && !Status.Trim().ToLower().Equals("all"))
                 {
                     Sql = "Select COUNT(M.mediaID) " +
                                 "From media M " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) " +
-                                "and M.status = @Status ";
+                                "and M.status = @Status and M.status != 'Removed' ";
                 }
                 else if (!CategoryName.Trim().ToLower().Equals("all") && Status.Trim().ToLower().Equals("all"))
                 {
                     Sql = "Select COUNT(M.mediaID) " +
                                 "From media M, mediaCategory MC, category C " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) " +
-                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName";
+                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status != 'Removed' ";
                 }
                 else
                 {
                     Sql = "Select COUNT(M.mediaID) " +
                                 "From media M, mediaCategory MC, category C " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) " +
-                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status ";
+                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status and M.status != 'Removed' ";
                 }
                 using (var command = new MySqlCommand(Sql, connection))
                 {
@@ -1475,6 +1477,7 @@ namespace Nextflip.Models.media
                     {
                         Sql = "Select M.mediaID, status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate, note " +
                                 "From media M " +
+                                "Where status != 'Removed' " +
                                 "Order by status ASC " +
                                 "LIMIT @offset, @limit";
                     }
@@ -1482,7 +1485,7 @@ namespace Nextflip.Models.media
                     {
                         Sql = "Select M.mediaID, status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate, note " +
                                 "From media M " +
-                                "where M.status = @Status " +
+                                "where M.status = @Status and status != 'Removed' " +
                                 "Order by status ASC " +
                                 "LIMIT @offset, @limit";
                     }
@@ -1490,7 +1493,7 @@ namespace Nextflip.Models.media
                     {
                         Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate, note " +
                                 "From media M, mediaCategory MC, category C " +
-                                "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName " +
+                                "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and status != 'Removed' " +
                                 "Order by status ASC " +
                                 "LIMIT @offset, @limit";
                     }
@@ -1498,7 +1501,7 @@ namespace Nextflip.Models.media
                     {
                         Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate, note " +
                                 "From media M, mediaCategory MC, category C " +
-                                "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status " +
+                                "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status and status != 'Removed' " +
                                 "Order by status ASC " +
                                 "LIMIT @offset, @limit";
                     }
@@ -1551,25 +1554,26 @@ namespace Nextflip.Models.media
                 if (CategoryName.Trim().ToLower().Equals("all") && Status.Trim().ToLower().Equals("all"))
                 {
                     Sql = "Select COUNT(M.mediaID) " +
-                          "From media M ";
+                          "From media M " +
+                          "Where status != 'Removed' ";
                 }
                 else if (CategoryName.Trim().ToLower().Equals("all") && !Status.Trim().ToLower().Equals("all"))
                 {
                     Sql = "Select COUNT(M.mediaID) " +
                         "From media M " +
-                        "where M.status = @Status";
+                        "where M.status = @Status and status != 'Removed' ";
                 }
                 else if (!CategoryName.Trim().ToLower().Equals("all") && Status.Trim().ToLower().Equals("all"))
                 {
                     Sql = "Select COUNT(M.mediaID) " +
                           "From media M, mediaCategory MC, category C " +
-                          "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName ";
+                          "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and status != 'Removed' ";
                 }
                 else
                 {
                     Sql = "Select COUNT(M.mediaID) " +
                           "From media M, mediaCategory MC, category C " +
-                          "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status ";
+                          "where M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status and status != 'Removed' ";
                 }
                 using (var command = new MySqlCommand(Sql, connection))
                 {
@@ -1602,7 +1606,7 @@ namespace Nextflip.Models.media
                     {
                         Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate, note " +
                                 "From media M " +
-                                "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) " +
+                                "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) and status != 'Removed' " +
                                 "Order by status ASC " +
                                 "LIMIT @offset, @limit";
                     }
@@ -1611,8 +1615,8 @@ namespace Nextflip.Models.media
                         Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate, note " +
                                 "From media M " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) " +
-                                "and M.status = @Status " +
-                                "Order by uploadDate ASC " +
+                                "and M.status = @Status and status != 'Removed' " +
+                                "Order by status ASC " +
                                 "LIMIT @offset, @limit";
                     }
                     else if (!CategoryName.Trim().ToLower().Equals("all") && Status.Trim().ToLower().Equals("all"))
@@ -1620,7 +1624,7 @@ namespace Nextflip.Models.media
                         Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate, note " +
                                 "From media M, mediaCategory MC, category C " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) " +
-                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName " +
+                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and status != 'Removed' " +
                                 "Order by status ASC " +
                                 "LIMIT @offset, @limit";
                     }
@@ -1629,7 +1633,7 @@ namespace Nextflip.Models.media
                         Sql = "Select M.mediaID,status, title, filmType, director, cast, publishYear, duration, bannerURL, language, description, uploadDate, note " +
                                 "From media M, mediaCategory MC, category C " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) " +
-                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status " +
+                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status and status != 'Removed' " +
                                 "Order by status ASC " +
                                 "LIMIT @offset, @limit";
                     }
@@ -1683,28 +1687,28 @@ namespace Nextflip.Models.media
                 {
                     Sql = "Select COUNT(M.mediaID) " +
                                 "From media M " +
-                                "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode)";
+                                "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) and status != 'Removed' ";
                 }
                 else if (CategoryName.Trim().ToLower().Equals("all") && !Status.Trim().ToLower().Equals("all"))
                 {
                     Sql = "Select COUNT(M.mediaID) " +
                                 "From media M " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) " +
-                                "and M.status = @Status";
+                                "and M.status = @Status and status != 'Removed' ";
                 }
                 else if (!CategoryName.Trim().ToLower().Equals("all") && Status.Trim().ToLower().Equals("all"))
                 {
                     Sql = "Select COUNT(M.mediaID) " +
                                 "From media M, mediaCategory MC, category C " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) " +
-                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName";
+                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and status != 'Removed' ";
                 }
                 else
                 {
                     Sql = "Select COUNT(M.mediaID) " +
                                 "From media M, mediaCategory MC, category C " +
                                 "Where MATCH (M.title)  AGAINST (@searchValue in boolean mode) " +
-                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status ";
+                                "and M.mediaID = MC.mediaID and MC.categoryID = C.categoryID and C.name = @CategoryName and M.status = @Status and status != 'Removed' ";
                 }
                 using (var command = new MySqlCommand(Sql, connection))
                 {

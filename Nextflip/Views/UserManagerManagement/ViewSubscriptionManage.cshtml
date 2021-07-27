@@ -6,7 +6,7 @@
     <link href="@Url.Content("~/css/User-Manager.css")" rel="stylesheet" type="text/css" />
     <link href="@Url.Content("~/css/Slide-Bar.css")" rel="stylesheet" type="text/css" />
 }
-<div class="col-10"> 
+<div class="col-10">
     <div>
         <p class="h2 text-secondary  offset-1">Subscription Management</p>
     </div>
@@ -94,33 +94,33 @@
         </div>
     </div>
 </div>
-<!--flash message-->
-<div class="modal fade" id="messageModal" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
+
+<!--modal-->
+<div class="modal" id ="messageModal"tabindex="-1">
+    <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-body d-flex flex-column justify-content-center">
-                <div class="row text-center" id="flash_message">
-                </div>
+            <div class="modal-body  d-flex flex-column justify-content-center">
             </div>
         </div>
     </div>
 </div>
+
 @section script{
+    <script src="~/js/MessageModal.js"></script>
     <script src="~/js/Pagination.js"></script>
     <script src="~/js/Slide-Bar.js"></script>
     <script src="~/js/Search-Component.js"></script>
     <script src="~/js/Subscription-Manager.js"></script>
-    <script src="~/js/MessageModal.js"></script>
     <script>
         getUserSubscription();
         appendSearch("Search account's email", "");
         setEnterEvent();
         let button1 = `<a href="/UserManagerManagement/Index" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100">
-                                            Account
-                                      </a>`;
+                                                    Account
+                                              </a>`;
         let button2 = `<a href="/UserManagerManagement/ViewSubscriptionManage" class="side_bar_btn btn btn-dark text-decoration-none link-light text-start w-100">
-                                            Subscription
-                                          </a>`;
+                                                    Subscription
+                                                  </a>`;
         appendButton(button1);
         appendButton(button2);
     </script>

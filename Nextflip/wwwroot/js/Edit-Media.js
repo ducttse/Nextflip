@@ -1,4 +1,4 @@
-﻿let MediaObj;
+let MediaObj;
 let isEdited = false;
 async function getRequestObjID(id) {
     let result = "";
@@ -128,7 +128,7 @@ function renderSeason(item, num) {
     <div class="d-flex flex-column mb-2" id="season_${item.seasonInfo.number}">
         <div class="d-flex">
             <p class="me-auto mb-0 align-self-center" id="season_title_${item.seasonInfo.number}">Season ${item.seasonInfo.number}: ${item.seasonInfo.title}</p>
-            <div class="btn btn-primary btn-sm me-2" onclick="setEpisodeNumber('${item.seasonInfo.number}'); setModalAddEpisode('${item.episodes.length}');" data-bs-toggle="modal" data-bs-target="#modalAddEpisodeForm">Add new episode</div>
+            <div class="btn btn-primary btn-sm me-2" onclick="setEpisodeNumber('${item.seasonInfo.number}'); setModalAddEpisode('${num}');" data-bs-toggle="modal" data-bs-target="#modalAddEpisodeForm">Add new episode</div>
             <div class="btn btn-danger btn-sm me-2" onclick="showConfirm('season', '${item.seasonInfo.number}')" data-bs-toggle="modal" data-bs-target="#confirmModal">Delete</div>
             <div class="btn btn-secondary btn-sm"  data-bs-toggle="modal" data-bs-target="#modalEditSeasonForm" onclick="setSeasonEditFormValue('${item.seasonInfo.number}')">Edit</div>
         </div>
@@ -164,14 +164,13 @@ async function setSeason() {
     getFile(document.getElementById("bannerSeason"));
     Season.seasonInfo.thumbnailURL = await requestUploadBanner();
     MediaObj.seasons.push(Season);
-    document.getElementById("season_container").insertAdjacentHTML("beforeend", renderSeason(Season, MediaObj.seasons.length + 1));
+    document.getElementById("season_container").insertAdjacentHTML("beforeend", renderSeason(Season, MediaObj.seasons.length - 1));
     document.getElementById("spinner").classList.add("d-none");
     document.querySelector("#modalAddSeasonForm .btn-close").click();
     document.getElementById("submit_btn").disabled = false;
 }
 
 const addEpisode = debounce((obj) => {
-    console.log(obj);
     setEpisode(obj)
 });
 async function setEpisode(obj) {
@@ -188,9 +187,6 @@ async function setEpisode(obj) {
     document.getElementById("spinner").classList.remove("d-none");
     document.getElementById("submit_btn").disabled = true;
     episode.title = document.getElementById("titleEpisode").value;
-    console.log(MediaObj);
-    console.log(MediaObj.seasons[ index - 1 ]);
-    console.log(MediaObj.seasons[ index ].episodes);
     episode.number = MediaObj.seasons[ index ].episodes.length + 1;
     getFile(document.getElementById("bannerEpisode"));
     episode.thumbnailURL = await requestUploadEpisodeThumbnail(MediaObj.seasons[ index ].seasonInfo.number, episode.number);
@@ -351,3 +347,24 @@ function requestEdit() {
         console.log(json);
     })
 }
+
+document.getElementById("modalAddSeasonForm").addEventListener("hidden.bs.modal", () => {
+    let title = document.getElementById("titleSeason");
+    let banner = document.getElementById("bannerSeason");
+    banner.value = "";
+    title.value = "";
+    banner.parentNode.classList.remove("was-validated");
+    title.parentNode.classList.remove("was-validated");
+})
+
+document.getElementById("modalAddEpisodeForm").addEventListener("hidden.bs.modal", () => {
+    let title = document.getElementById("titleEpisode");
+    let banner = document.getElementById("bannerEpisode");
+    let video = document.getElementById("videoEpisode");
+    title.value = "";
+    banner.value = "";
+    video.value = "";
+    title.parentNode.classList.remove("was-validated");
+    banner.parentNode.classList.remove("was-validated");
+    video.parentNode.classList.remove("was-validated");
+})

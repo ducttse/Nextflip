@@ -50,5 +50,21 @@ namespace Nextflip.APIControllers
                 return new JsonResult(new { Message = ex.Message });
             }
         }
+
+        [Route("RemoveCategory/{categoryName}")]
+        public IActionResult RemoveCategory([FromServices] ICategoryService categoryService, string categoryName)
+        {
+            try
+            {
+                bool result = categoryService.RemoveCategory(categoryName);
+                if (result) return new JsonResult(new { Message = "Success" });
+                return new JsonResult(new { Message = "Failed" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("CategoryManagement/RemoveCategory: " + ex.Message);
+                return new JsonResult(new { Message = ex.Message });
+            }
+        }
     }
 }

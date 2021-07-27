@@ -72,6 +72,20 @@ function update(obj) {
     }
 }
 
+function remove(obj) {
+    let type = obj.getAttribute("itemType");
+    console.log(type);
+    let value = document.getElementById("item_edit_name").value;
+    switch (type) {
+        case "category":
+            removeCategory(value);
+            break;
+        case "media type":
+            removeMediaType(value);
+            break;
+    }
+}
+
 
 function createCategory(name) {
     fetch(`/api/CategoryManagement/CreateNewCategory/${name}`)
@@ -101,8 +115,36 @@ function updateCategory(id, newName) {
         })
 }
 
+function removeCategory(newName) {
+    fetch(`/api/CategoryManagement/RemoveCategory/${newName}`)
+        .then(res => res.json())
+        .then(json => {
+            editModal.hide();
+            if (json.message == "Success") {
+                setFlashModalContent(true);
+            }
+            else {
+                setFlashModalContent(false);
+            }
+        })
+}
+
 function createMediaType(type) {
     fetch(`/api/FilmTypeManagement/CreateNewFilmType/${type}`)
+        .then(res => res.json())
+        .then(json => {
+            addModal.hide();
+            if (json.message == "Success") {
+                setFlashModalContent(true);
+            }
+            else {
+                setFlashModalContent(false);
+            }
+        })
+}
+
+function removeMediaType(type) {
+    fetch(`/api/FilmTypeManagement/RemoveFilmType/${type}`)
         .then(res => res.json())
         .then(json => {
             addModal.hide();
@@ -188,6 +230,13 @@ function setEditModalContent(title, label, value, id) {
     }
     else if (label == "Media type") {
         document.getElementById("trigger_update").setAttribute("itemType", "media type");
+    }
+    document.getElementById("trigger_remove").setAttribute("cateID", id);
+    if (label == "Category") {
+        document.getElementById("trigger_remove").setAttribute("itemType", "category");
+    }
+    else if (label == "Media type") {
+        document.getElementById("trigger_remove").setAttribute("itemType", "media type");
     }
     editModal.show();
 }

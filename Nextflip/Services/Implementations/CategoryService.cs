@@ -13,5 +13,6 @@ namespace Nextflip.Services.Implementations
         public CategoryService(ICategoryDAO categoryDAO) => _categoryDAO = categoryDAO;
         public bool UpdateCategory(int categoryID, string newCategoryName) => _categoryDAO.UpdateCategory(categoryID, newCategoryName);
         public bool CreateNewCategory(string categoryName) => _categoryDAO.CreateNewCategory(categoryName);
+        public bool RemoveCategory(string categoryName) => _categoryDAO.RemoveCategory(categoryName);
     }
 }

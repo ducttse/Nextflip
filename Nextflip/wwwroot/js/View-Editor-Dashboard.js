@@ -281,7 +281,9 @@ function resetFilter() {
 function requestCategories() {
     fetch(`/api/ViewSubscribedUserDashboard/GetCategories`).then(res => res.json()).then(json => {
         let checkboxs = json.map(category => {
-            return `<option value="${category.name}">${category.name}</option>`;
+            if (category.categoryID != 0) {
+                return `<option value="${category.name}">${category.name}</option>`;
+            }
         }).join("");
         document.getElementById("category_filter").insertAdjacentHTML("beforeend", checkboxs);
     })

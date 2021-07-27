@@ -13,5 +13,6 @@ namespace Nextflip.Models.filmType
         public bool UpdateFilmType(int typeID, string type);
 
         public bool CreateNewFilmType(string filmTypeName);
+        public bool RemoveFilmType(string filmTypeName);
     }
 }

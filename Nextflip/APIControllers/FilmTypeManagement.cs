@@ -83,5 +83,21 @@ namespace Nextflip.APIControllers
                 return new JsonResult(new { Message = ex.Message });
             }
         }
+
+        [Route("RemoveFilmType/{filmTypeName}")]
+        public IActionResult RemoveFilmType([FromServices] IFilmTypeService filmTypeService, string filmTypeName)
+        {
+            try
+            {
+                bool result = filmTypeService.RemoveFilmType(filmTypeName);
+                if (result) return new JsonResult(new { Message = "Success" });
+                return new JsonResult(new { Message = "Failed" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogInformation("FilmTypeManagement/RemoveFilmType: " + ex.Message);
+                return new JsonResult(new { Message = ex.Message });
+            }
+        }
     }
 }

@@ -2,6 +2,7 @@
 using Nextflip.utils;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -122,6 +123,31 @@ namespace Nextflip.Models.filmType
                         command.Parameters.AddWithValue("@filmTypeName", filmTypeName);
 
                         int result = command.ExecuteNonQuery();
+                        if (result == 1) return true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            return false;
+        }
+
+        public bool RemoveFilmType(string filmTypeName)
+        {
+            try
+            {
+                using (var connection = new MySqlConnection(DbUtil.ConnectionString))
+                {
+                    string sql = "removeFilmType";
+                    connection.Open();
+                    using (var command = new MySqlCommand(sql, connection))
+                    {
+                        command.CommandType = CommandType.StoredProcedure;
+                        command.Parameters.AddWithValue("@filmTypeName", filmTypeName);
+                        int result = command.ExecuteNonQuery();
+                        connection.Close();
                         if (result == 1) return true;
                     }
                 }

@@ -39,8 +39,24 @@
                 </div>
                 <div>
                     <textarea class="form-control" style="background-color: #F0F0F0" rows="15" cols="90" id="note_input"></textarea>
-                    <button class="btn btn-primary mt-1 offset-10" id="submit_btn"  onclick="requestDisapprove('@ViewBag.MediaID')">Submit</button>
+                    <button class="btn btn-primary mt-1 offset-10" id="submit_btn" onclick="requestDisapprove('@ViewBag.MediaID')">Submit</button>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary  d-none" id="flash_trigger" data-bs-toggle="modal" data-bs-target="#flash_message">
+    Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="flash_message" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body d-flex flex-column justify-content-center">
+                <p class="text-center">Your watch time is  not enough</p>
+                <button  class="btn btn-danger  col-4 mx-auto"  data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

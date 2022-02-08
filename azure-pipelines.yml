@@ -27,3 +27,4 @@ steps:
   inputs:
     targetPath: '$(Build.ArtifactStagingDirectory)' 
     artifactName: 'nextflip.zip'
+    
